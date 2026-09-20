@@ -1,0 +1,13 @@
+{
+ "title": "Naruto RP - Contenu",
+ "type": "servercontent",
+ "tags": [
+  "roleplay",
+  "scenic"
+ ],
+ "ignore": [
+  "*.psd",
+  "*.vcproj",
+  "*.svn*"
+ ]
+}

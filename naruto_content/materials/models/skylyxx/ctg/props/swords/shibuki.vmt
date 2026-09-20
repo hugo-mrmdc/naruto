@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/skylyxx/ctg/props/swords/shibuki"
+	"$lightwarptexture" "models/skylyxx/ctg/props/swords/toon"
+}
