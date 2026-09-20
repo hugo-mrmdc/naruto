@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\OldJimmy/Naruto/Mask/Mask"
+	$alphatest 1
+	$nocull 1
+	"$lightwarptexture" "models\OldJimmy/Naruto/Mask/toon"
+}

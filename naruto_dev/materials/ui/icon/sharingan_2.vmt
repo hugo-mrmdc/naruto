@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "ui/icon/sharingan_2"
+	"%keywords" "sharingan_2"
+	"$nocull" 1
+	"$nodecal" 1
+}

@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve/billy/merzsusanoosolve/8mrkcrack_0"
+                 "$nocull" "1"
+                 "$alphatest" "1"	
+	"$additive" "0"
+}

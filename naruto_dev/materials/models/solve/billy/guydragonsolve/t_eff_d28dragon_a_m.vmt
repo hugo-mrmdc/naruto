@@ -1,0 +1,9 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve/billy/guydragonsolve/T_EFF_D28Dragon_A_M"
+	"$alphatest" 1
+                " $selfillum" 0
+	"$additive" "1"
+                "$translucent" "1"
+                "$nocull" "1"
+}

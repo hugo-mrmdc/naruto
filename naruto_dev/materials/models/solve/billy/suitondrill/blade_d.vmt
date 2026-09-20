@@ -1,0 +1,10 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve/billy/suitondrill/1seceff1_06_0"
+	"$lightwarptexture" "models/falko_naruto_solve/lightwarpshader"
+                 "$nocull" "1"
+                 " $alphatest" "1"	
+	"$additive" "0"
+	"$detail"    "models/falko_naruto_solve/noise3_solve"
+	"$detailscale" "5"
+}

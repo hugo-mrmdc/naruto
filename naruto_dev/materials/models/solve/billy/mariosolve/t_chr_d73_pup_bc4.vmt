@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve/billy/mariosolve/T_CHR_D73_pup_BC4"
+	"$lightwarptexture" "models/solve/lightwarpshader"
+                "$alphatest" "0"
+                "$nocull" "1"
+}

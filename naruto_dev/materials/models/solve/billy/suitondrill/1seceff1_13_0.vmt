@@ -1,0 +1,19 @@
+"UnlitGeneric"
+{
+	"$basetexture" "models/solve/billy/suitondrill/1seceff1_13_0"
+                "$alphatest" 1
+ 	"$model" 1
+	"$nocull" "1"
+	"$additive" "0"
+	"Proxies"
+	{
+ 
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" -.9
+			"texturescrollangle" 0
+		}
+	}
+ 
+}

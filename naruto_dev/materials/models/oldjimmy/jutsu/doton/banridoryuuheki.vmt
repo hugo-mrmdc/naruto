@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\OldJimmy\Jutsu\Doton\BanriDoryuuHeki"
+	"$nocull" 1
+	"$nodecal" 1
+	"$AlphaTest" "1"
+	"$lightwarptexture" "models\OldJimmy\Jutsu\toon"
+}

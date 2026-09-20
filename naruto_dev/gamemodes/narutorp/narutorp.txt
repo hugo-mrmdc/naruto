@@ -1,0 +1,21 @@
+"narutorp"
+{
+	"base"			"sandbox"
+	"title"			"Naruto RP"
+	"maps"			"^rp_"
+	"menusystem"	"1"
+	"workshopid"	""
+
+	"settings"
+	{
+		1
+		{
+			"name"		"nrp_debug"
+			"text"		"Mode debug Naruto RP"
+			"help"		"Affiche des logs supplementaires dans la console"
+			"type"		"CheckBox"
+			"default"	"0"
+			"singleplayer" "1"
+		}
+	}
+}

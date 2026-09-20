@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve/billy/solveos/T_WEP_Eff_D44NJ2_01"
+	"$lightwarptexture" "models/solve/lightwarpshader"
+        "$additive" 1
+
+
+}

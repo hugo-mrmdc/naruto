@@ -1,0 +1,17 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\OldJimmy\Jutsu\Raiton\Chidori"
+	"$model" 1
+	"$nodecal" 1
+	"$AlphaTest" "1"
+	"$lightwarptexture" "models\OldJimmy\Jutsu\toon"
+	"proxies" 
+	{
+	    "Animatedtexture"
+		{
+		 "Animatedtexturevar" "$basetexture"
+		 "Animatedtextureframenumvar" "$frame"
+		 "Animatedtextureframerate" "2"
+		 }
+    }
+}

@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture" "models/solve/billy/kgparticule/T_WEP_Eff_D26NJ3_A_01_M"
+                 "$additive" 1
+                "$alphatest" "0"
+                "$nocull" 1
+}

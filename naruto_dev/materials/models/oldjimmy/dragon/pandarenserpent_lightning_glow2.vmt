@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\OldJimmy\dragon\pandarenserpent_lightning_glow2"
+	$alphatest 1
+	$nocull 1
+	"$lightwarptexture" "models\OldJimmy\dragon\toon"
+}

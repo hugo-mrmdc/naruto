@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve/billy/inkutonmonkey/T_WEP_SSp_Brushscroll_Monkey_M"
+	"$lightwarptexture" "models/solve/lightwarpshader"
+                "$alphatest" "0"
+                "$nocull" "1"
+}

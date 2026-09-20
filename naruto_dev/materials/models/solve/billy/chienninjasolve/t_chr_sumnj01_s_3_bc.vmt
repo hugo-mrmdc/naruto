@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve/billy/chienninjasolve/T_CHR_SumNJ01_S_3_BC"
+	"$lightwarptexture" "models/solve/lightwarpshader"
+                "$alphatest" "0"
+                "$nocull" "1"
+}

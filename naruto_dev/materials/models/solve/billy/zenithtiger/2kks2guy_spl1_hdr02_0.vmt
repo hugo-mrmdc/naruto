@@ -1,0 +1,9 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve/billy/zenithtiger/2kks2guy_spl1_hdr02_0"
+	"$alphatest" 1
+                " $selfillum" 1
+	"$additive" "1"
+	"$nocull" "1"
+                "$translucent" 1
+}

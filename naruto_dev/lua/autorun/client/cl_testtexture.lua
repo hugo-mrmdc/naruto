@@ -1,0 +1,6 @@
+concommand.Add("fuma_matcheck", function()
+    local m = Material("tkr/particles/jump_smoke")
+    print("Material name:", m:GetName())
+    print("IsError:", m:IsError())
+    print("Shader:", m:GetShader())
+end)

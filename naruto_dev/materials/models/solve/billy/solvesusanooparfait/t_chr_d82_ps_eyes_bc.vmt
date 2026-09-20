@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve/billy/solvesusanooparfait/T_CHR_D82_PS_Eyes_BC"
+	"$lightwarptexture" "models/solve/lightwarpshader"
+                 "$nocull" "1"
+                 " $alphatest" "1"	
+	"$additive" "1"
+}

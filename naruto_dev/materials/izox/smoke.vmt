@@ -1,0 +1,7 @@
+"Spritecard"
+{
+	"$basetexture" "izox/smoke"
+	"$translucent" "1"
+	"$addself" "3"
+	"srgb?$overbrightfactor" "1"
+}

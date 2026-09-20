@@ -1,0 +1,10 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve/billy/solvesusanooparfait/T_CHR_D82_PS_BC2"
+                 "$nocull" "1"
+                 " $alphatest" "1"	
+	"$additive" "1"
+
+
+
+}

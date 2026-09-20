@@ -1,0 +1,6 @@
+VertexLitGeneric
+{
+    "$basetexture" "models/Mask_Hanzou/Mask_Hanzou"
+    "$surfaceprop" "metal"
+    "%keywords" "Mask_Hanzou"
+}

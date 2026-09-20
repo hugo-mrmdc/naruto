@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+
+	"$basetexture" "models/solve/billy/kirinsolve/bleuclair"
+                " $selfillum" 1
+                "$translucent" 1
+    "Proxies" {
+        "ForceBloom" {}

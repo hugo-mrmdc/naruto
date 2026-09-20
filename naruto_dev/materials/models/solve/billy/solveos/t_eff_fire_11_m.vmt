@@ -1,0 +1,22 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve/billy/solveos/T_EFF_Fire_11_M"
+	"$nocull" "1"
+	"$alphatest" "1"
+	"$additive" "1"
+
+
+
+	"Proxies"
+	{
+ 
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" -.9
+			"texturescrollangle" 0
+
+ 
+
+
+}

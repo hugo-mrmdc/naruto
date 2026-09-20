@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve/billy/cubesable/3garspl1_snd03_0"
+	"$lightwarptexture" "models/solve/lightwarpshader"
+
+}

@@ -1,0 +1,9 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve/billy/paumeagiles/2hnteff1_01_2"
+	"$alphatest" 1
+                " $selfillum" 1
+	"$additive" "1"
+	"$nocull" "1"
+                "$translucent" 1
+}
