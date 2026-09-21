@@ -17,6 +17,7 @@
 --           ou texte ("Clic gauche") -> affiché tel quel
 --   id    = identifiant NA_Cast de la technique (la rend équipable dans la barre)
 --   court = nom court affiché dans l'emplacement de la barre
+--   rang  = rang de la technique : "C", "B", "A" ou "S" (affiché dans les menus)
 --   cd       = recharge en secondes comptée côté client dès le lancement (bloque la touche)
 --   cooldown = vrai cooldown du serveur, AFFICHÉ dans les menus (ne bloque rien)
 --   icone = image de la technique, chemin RELATIF au dossier materials/
@@ -27,21 +28,21 @@ local OPEN_KEY = KEY_F2
 
 local TECHNIQUES = {
     -- ===== KATON =====
-    { cat = "Katon", name = "Boule de feu", key = KEY_Y, id = "katon_boule", icone = "ui/icon/katon_boule_feu.png", court = "Feu", cooldown = 1, cd = 3,
+    { cat = "Katon", name = "Boule de feu", key = KEY_Y, id = "katon_boule", rang = "C", icone = "ui/icon/katon_boule_feu.png", court = "Feu", cooldown = 1, cd = 3,
       desc = "Projette une boule de feu qui suit la direction du regard." },
-    { cat = "Katon", name = "Boule de feu sautée", key = KEY_J, id = "katon_saut", icone = "", court = "Saut feu", cooldown = 1, cd = 2,
+    { cat = "Katon", name = "Boule de feu sautée", key = KEY_J, id = "katon_saut", rang = "C", icone = "", court = "Saut feu", cooldown = 1, cd = 2,
       desc = "Charge de chakra puis boule de feu avec un bond." },
 
     -- ===== SUITON =====
-    { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", icone = "", court = "Requin", cooldown = 5, cd = 5.3,
+    { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "", court = "Requin", cooldown = 5, cd = 5.3,
       desc = "Envoie un requin d'eau sur la cible visée." },
 
     -- ===== MOKUTON =====
-    { cat = "Mokuton", name = "Arche", key = KEY_K, id = "mokuton_arche", icone = "", court = "Arche", cd = 2,
+    { cat = "Mokuton", name = "Arche", key = KEY_K, id = "mokuton_arche", rang = "C", icone = "", court = "Arche", cd = 2,
       desc = "Fait jaillir une arche de bois devant toi." },
-    { cat = "Mokuton", name = "Fleur", key = KEY_O, id = "mokuton_fleur", icone = "", court = "Fleur", cd = 1.5,
+    { cat = "Mokuton", name = "Fleur", key = KEY_O, id = "mokuton_fleur", rang = "C", icone = "", court = "Fleur", cd = 1.5,
       desc = "Fait pousser une fleur de bois à l'endroit visé." },
-    { cat = "Mokuton", name = "Dragon", key = "B / L", id = "mokuton_dragon", icone = "", court = "Dragon", cooldown = 1,
+    { cat = "Mokuton", name = "Dragon", key = "B / L", id = "mokuton_dragon", rang = "A", icone = "", court = "Dragon", cooldown = 1,
       desc = "Invoque le dragon et monte dessus (B), ou le renvoie (L). Dans la barre, un seul emplacement fait les deux. En vol : Espace pour monter, Ctrl pour descendre." },
     { cat = "Mokuton", name = "Dragon : attraper", key = KEY_E,
       desc = "En vol, attrape la cible devant toi dans la gueule. Rappuie pour la lâcher." },
@@ -49,76 +50,76 @@ local TECHNIQUES = {
     -- ===== SALAMANDRE =====
     { cat = "Salamandre", name = "Invocation", key = KEY_E,
       desc = "En regardant le vide, fait apparaître la salamandre. E sur elle pour la monter." },
-    { cat = "Salamandre", name = "Dôme de brume", key = KEY_T, id = "salamandre_dome", icone = "ui/icon/salamandre_nuage_poison.png", court = "Dôme", cooldown = 6,
+    { cat = "Salamandre", name = "Dôme de brume", key = KEY_T, id = "salamandre_dome", rang = "B", icone = "ui/icon/salamandre_nuage_poison.png", court = "Dôme", cooldown = 6,
       desc = "Pose au sol un dôme de brume toxique pendant 5 secondes : il blesse et empoisonne tous ceux qui sont dedans, sauf toi. Coûte 15 de chakra.",
       dmg = "5 par demi-seconde + poison" },
-    { cat = "Salamandre", name = "Crachat de poison", key = KEY_I, id = "salamandre_poison", icone = "ui/icon/salamandre_tir_poison.png", court = "Poison", cooldown = 1, cd = 2.5,
+    { cat = "Salamandre", name = "Crachat de poison", key = KEY_I, id = "salamandre_poison", rang = "C", icone = "ui/icon/salamandre_tir_poison.png", court = "Poison", cooldown = 1, cd = 2.5,
       desc = "Crache un projectile empoisonné : dégâts à l'impact puis poison pendant quelques secondes. Coûte 10 de chakra.",
       dmg = "50 + 10 par seconde" },
-    { cat = "Salamandre", name = "Typhon de poison", key = "Barre", id = "salamandre_tornade", icone = "ui/icon/salamandre_tornade_poison.png", court = "Typhon", cooldown = 12,
+    { cat = "Salamandre", name = "Typhon de poison", key = "Barre", id = "salamandre_tornade", rang = "A", icone = "ui/icon/salamandre_tornade_poison.png", court = "Typhon", cooldown = 12,
       desc = "Fait naître un typhon là où tu regardes (900 unités max) pendant 6 secondes : il aspire les ennemis vers son cœur, qui les blesse et les empoisonne. Un cercle au sol montre l'endroit pendant l'incantation. Uniquement depuis la barre. Coûte 25 de chakra.",
       dmg = "8 par demi-seconde au cœur + poison" },
-    { cat = "Salamandre", name = "Corps de poison", key = "Barre", id = "salamandre_corps", icone = "ui/icon/salamandre_corp_poison.png", court = "Corps", cooldown = 15,
+    { cat = "Salamandre", name = "Corps de poison", key = "Barre", id = "salamandre_corps", rang = "B", icone = "ui/icon/salamandre_corp_poison.png", court = "Corps", cooldown = 15,
       desc = "Ton corps suinte le poison pendant 10 secondes : ceux qui te collent sont brûlés et empoisonnés, ceux qui te frappent de près sont empoisonnés, et tu es immunisé contre le poison. Uniquement depuis la barre. Coûte 20 de chakra.",
       dmg = "4 par demi-seconde au contact + poison" },
 
     -- ===== FUMA =====
-    { cat = "Fuma", name = "Téléportation", key = KEY_G, id = "fuma_tp", icone = "ui/icon/fuma_shuriken.png", court = "TP", cooldown = 2,
+    { cat = "Fuma", name = "Téléportation", key = KEY_G, id = "fuma_tp", rang = "C", icone = "ui/icon/fuma_shuriken.png", court = "TP", cooldown = 2,
       desc = "Lance un shuriken : rappuie pour te téléporter dessus. S'il touche un mur, tu y es téléporté automatiquement ; s'il touche un ennemi, il explose. S'il ne touche rien, il disparaît.",
       dmg = "60 (explosion sur un ennemi)" },
-    { cat = "Fuma", name = "Jugement des Quatre Lames", key = "", id = "fuma_jugement", icone = "ui/icon/fuma_jugement_shuriken.png", court = "Jugement", cooldown = 18,
+    { cat = "Fuma", name = "Jugement des Quatre Lames", key = "", id = "fuma_jugement", rang = "A", icone = "ui/icon/fuma_jugement_shuriken.png", court = "Jugement", cooldown = 18,
       desc = "Lance un fil d'acier là où tu vises. S'il touche un ennemi, il est étourdi 2,5 secondes : quatre shurikens apparaissent au-dessus de lui, un de chaque côté, et foncent sur lui. Coûte 25 de chakra.",
       dmg = "4 x 20" },
-    { cat = "Fuma", name = "Aura Fuma", key = "", id = "fuma_aura", icone = "ui/icon/fuma_morsure_sanglante.png", court = "Aura", cooldown = 25,
+    { cat = "Fuma", name = "Aura Fuma", key = "", id = "fuma_aura", rang = "B", icone = "ui/icon/fuma_morsure_sanglante.png", court = "Aura", cooldown = 25,
       desc = "Une aura t'entoure pendant 12 secondes : tu infliges 30 % de dégâts en plus et tu en encaisses 25 % de moins. Coûte 20 de chakra.",
       dmg = "+30 % de dégâts, -25 % de dégâts subis" },
-    { cat = "Fuma", name = "Shuriken Céleste", key = "", id = "fuma_ciel", icone = "ui/icon/fuma_shuriken_acier.png", court = "Céleste", cooldown = 28,
+    { cat = "Fuma", name = "Shuriken Céleste", key = "", id = "fuma_ciel", rang = "A", icone = "ui/icon/fuma_shuriken_acier.png", court = "Céleste", cooldown = 28,
       desc = "Un shuriken géant tombe du ciel sur le point que tu vises et explose en fumée au sol : dégâts de zone et projection. Coûte 35 de chakra.",
       dmg = "70 au centre" },
-    { cat = "Fuma", name = "Invisibilité", key = KEY_F, id = "fuma_invisibilite", icone = "ui/icon/fuma_invisible.png", court = "Invisible", cooldown = 8,
+    { cat = "Fuma", name = "Invisibilité", key = KEY_F, id = "fuma_invisibilite", rang = "C", icone = "ui/icon/fuma_invisible.png", court = "Invisible", cooldown = 8,
       desc = "Te rend invisible 10 secondes après une seconde d'incantation, dans un nuage de fumée. Rappuie pour réapparaître plus tôt ; lancer un autre jutsu te fait aussi réapparaître." },
 
     -- ===== KAMI =====
-    { cat = "Kami", name = "Kami Circle", key = KEY_N, id = "kami_circle", icone = "ui/icon/kami_tornade_papier.png", court = "Cercle", cooldown = 12,
+    { cat = "Kami", name = "Kami Circle", key = KEY_N, id = "kami_circle", rang = "B", icone = "ui/icon/kami_tornade_papier.png", court = "Cercle", cooldown = 12,
       desc = "Zone de dégâts posée au sol. Touche tout le monde sauf toi. Réglable en console (kami_circle_damage, kami_circle_tick).",
       dmg = "20 par tick" },
-    { cat = "Kami", name = "Shuriken de papier", key = KEY_M, id = "kami_shuriken", icone = "ui/icon/kami_shuriken_papier.png", court = "Shuriken", cooldown = 1.5, cd = 25,
+    { cat = "Kami", name = "Shuriken de papier", key = KEY_M, id = "kami_shuriken", rang = "C", icone = "ui/icon/kami_shuriken_papier.png", court = "Shuriken", cooldown = 1.5, cd = 25,
       desc = "Lance un shuriken de papier tournoyant dans la direction du regard. Coûte 8 de chakra.",
       dmg = "35 (70 à la tête)" },
-    { cat = "Kami", name = "Paper Shield", key = KEY_P, id = "kami_bouclier", icone = "ui/icon/kami_bouclier_papier.png", court = "Bouclier", cooldown = 15,
+    { cat = "Kami", name = "Paper Shield", key = KEY_P, id = "kami_bouclier", rang = "B", icone = "ui/icon/kami_bouclier_papier.png", court = "Bouclier", cooldown = 15,
       desc = "Enveloppe ton corps de papier : tu encaisses moitié moins de dégâts. Coûte 25 de chakra.",
       dmg = "-50 % de dégâts reçus" },
-    { cat = "Kami", name = "Ailes de papier", key = KEY_H, id = "kami_ailes", icone = "ui/icon/kami_aile_papier.png", court = "Ailes", cooldown = 3,
+    { cat = "Kami", name = "Ailes de papier", key = KEY_H, id = "kami_ailes", rang = "C", icone = "ui/icon/kami_aile_papier.png", court = "Ailes", cooldown = 3,
       desc = "Fait apparaître des ailes dans ton dos et te permet de voler. Direction avec ZQSD, Espace pour monter, Ctrl pour descendre, rappuie pour te poser.",
       dmg = "6 chakra par seconde" },
 
     -- ===== JINTON =====
-    { cat = "Jinton", name = "Cube de confinement", key = "", id = "jinton_cube", icone = "ui/icon/jinton_cube_confinement.png", court = "Cube", cooldown = 1,
+    { cat = "Jinton", name = "Cube de confinement", key = "", id = "jinton_cube", rang = "B", icone = "ui/icon/jinton_cube_confinement.png", court = "Cube", cooldown = 1,
       desc = "Vise un ennemi à portée : un cube l'enferme, l'immobilise 4 secondes et le ronge à chaque tick. Coûte 30 de chakra.",
       dmg = "8 par tick (toutes les 0,5 s)" },
-    { cat = "Jinton", name = "Bouclier Jinton", key = "", id = "jinton_bouclier", icone = "ui/icon/jinton_bulle_poussiere.png", court = "Bouclier", cooldown = 20,
+    { cat = "Jinton", name = "Bouclier Jinton", key = "", id = "jinton_bouclier", rang = "B", icone = "ui/icon/jinton_bulle_poussiere.png", court = "Bouclier", cooldown = 20,
       desc = "Une sphère de poussière t'entoure pendant 10 secondes : un bouclier égal à 20 % de ta vie max encaisse les dégâts à ta place. Coûte 25 de chakra.",
       dmg = "Bouclier de 20 % de la vie" },
-    { cat = "Jinton", name = "Rayon de dissolution", key = "", id = "jinton_laser", icone = "ui/icon/jinton_rayon_dissolution.png", court = "Rayon", cooldown = 30,
+    { cat = "Jinton", name = "Rayon de dissolution", key = "", id = "jinton_laser", rang = "A", icone = "ui/icon/jinton_rayon_dissolution.png", court = "Rayon", cooldown = 30,
       desc = "Pendant 15 secondes, tu t'envoles et un laser part de ta main vers là où tu vises. Il traverse tout jusqu'au premier mur et ronge ce qu'il touche. Vol : ZQSD, Espace pour monter, Ctrl pour descendre. Coûte 40 de chakra.",
       dmg = "6 par tick (toutes les 0,25 s)" },
 
     -- ===== KAGUYA =====
-    { cat = "Kaguya", name = "Armure d'os", key = "", id = "kaguya_armure", icone = "ui/icon/kaguya_armure_os.png", court = "Armure", cooldown = 30,
+    { cat = "Kaguya", name = "Armure d'os", key = "", id = "kaguya_armure", rang = "B", icone = "ui/icon/kaguya_armure_os.png", court = "Armure", cooldown = 30,
       desc = "Une armure d'os pousse sur ton corps pendant 15 secondes : tu encaisses 40 % de dégâts en moins. Coûte 25 de chakra.",
       dmg = "-40 % de dégâts subis" },
-    { cat = "Kaguya", name = "Légion d'os", key = "", id = "kaguya_legion", icone = "ui/icon/kaguya_legion_os.png", court = "Légion", cooldown = 25,
+    { cat = "Kaguya", name = "Légion d'os", key = "", id = "kaguya_legion", rang = "A", icone = "ui/icon/kaguya_legion_os.png", court = "Légion", cooldown = 25,
       desc = "Des os jaillissent autour de toi pendant 8 secondes et blessent tous les ennemis proches à chaque tick. Coûte 30 de chakra.",
       dmg = "12 par tick (toutes les 0,5 s)" },
-    { cat = "Kaguya", name = "Danse des os", key = "", id = "kaguya_danse", icone = "ui/icon/kaguya_danse_des_os.png", court = "Danse", cooldown = 20,
+    { cat = "Kaguya", name = "Danse des os", key = "", id = "kaguya_danse", rang = "B", icone = "ui/icon/kaguya_danse_des_os.png", court = "Danse", cooldown = 20,
       desc = "Vise un ennemi : un lien s'accroche entre ton torse et lui pendant 6 secondes. Il perd de la vie à chaque tick et tu la récupères. Coûte 30 de chakra.",
       dmg = "12 par tick, +8 de vie pour toi" },
 
     -- ===== CHINOIKE =====
-    { cat = "Chinoike", name = "Pluie de sang", key = "", id = "chinoike_pluie", icone = "ui/icon/chinoike_zone_de_sang.png", court = "Pluie", cooldown = 22,
+    { cat = "Chinoike", name = "Pluie de sang", key = "", id = "chinoike_pluie", rang = "A", icone = "ui/icon/chinoike_zone_de_sang.png", court = "Pluie", cooldown = 22,
       desc = "Une pluie de sang s'abat sur l'endroit que tu vises pendant 8 secondes : tout ennemi qui reste dessous est blessé et ralenti. Coûte 35 de chakra.",
       dmg = "8 par tick (toutes les 0,5 s)" },
-    { cat = "Chinoike", name = "Vortex de sang", key = "", id = "chinoike_vortex", icone = "ui/icon/typhon_chinoike.png", court = "Vortex", cd = 20,
+    { cat = "Chinoike", name = "Vortex de sang", key = "", id = "chinoike_vortex", rang = "A", icone = "ui/icon/typhon_chinoike.png", court = "Vortex", cd = 20,
       desc = "Un vortex de sang s'ouvre au sol là où tu vises (900 unités max) pendant 3,5 secondes : il aspire les ennemis vers son cœur, qui les blesse. Coûte 30 de chakra.",
       dmg = "10 par tick (toutes les 0,5 s)" },
 
@@ -150,6 +151,19 @@ local TECHNIQUES = {
       desc = "Ouvre ce menu. Les techniques se lancent uniquement avec les touches 1 à 6 de la barre." },
 }
 
+-- Affichage trié par rang : C, puis B, puis A, puis S (F2 et bibliothèque F6).
+-- À rang égal, l'ordre de la liste ci-dessus est gardé ; sans rang = à la fin.
+local ORDRE_RANG = { C = 1, B = 2, A = 3, S = 4 }
+do
+    local place = {}
+    for i, t in ipairs(TECHNIQUES) do place[t] = i end
+    table.sort(TECHNIQUES, function(a, b)
+        local ra, rb = ORDRE_RANG[a.rang] or 99, ORDRE_RANG[b.rang] or 99
+        if ra ~= rb then return ra < rb end
+        return place[a] < place[b]
+    end)
+end
+
 -- Accès pour la barre de techniques (cl_skillbar.lua)
 local parId = {}
 for _, t in ipairs(TECHNIQUES) do
@@ -159,6 +173,29 @@ end
 NA_TechniquesListe = TECHNIQUES
 function NA_TechniqueParId(id)
     return parId[id]
+end
+
+-- Rangs des techniques, du plus faible au plus fort : image (materials/ui/main_menu/)
+-- et largeur / hauteur de l'image (pour garder ses proportions)
+NA_RANGS = {
+    C = { "ui/main_menu/icon_rank_c.png", 30 / 38 },
+    B = { "ui/main_menu/icon_rank_b.png", 30 / 36 },
+    A = { "ui/main_menu/icon_rank_a.png", 28 / 40 },
+    S = { "ui/main_menu/icon_rank_s.png", 33 / 39 },   -- aucune technique pour l'instant
+}
+
+-- Dessine l'image du rang de la technique, "haut" pixels de haut.
+-- ax = 0 : x est le bord gauche ; ax = 0.5 : x est le centre.
+-- Renvoie la largeur dessinée (0 si la technique n'a pas de rang).
+function NA_DessinerRang(t, x, y, haut, ax, a)
+    local r = t and t.rang and NA_RANGS[t.rang]
+    if not r then return 0 end
+    local larg = haut * r[2]
+    r.mat = r.mat or Material(r[1], "smooth mips")
+    surface.SetMaterial(r.mat)
+    surface.SetDrawColor(255, 255, 255, a or 255)
+    surface.DrawTexturedRect(x - larg * (ax or 0), y, larg, haut)
+    return larg
 end
 
 -- Cooldown de base affiché dans les menus (nil = pas de cooldown connu)
@@ -354,11 +391,12 @@ local function CadreSombre(w, h)
 end
 
 -- Petite pastille numérotée en bas à droite d'une case
+-- en haut à droite (le bas à droite est pour le rang)
 local function Pastille(n, w, h)
     local r = w * 0.16
     surface.SetDrawColor(90, 40, 25, 255)
-    Disque(w - r, h - r, r)
-    draw.SimpleText(n, "NA.Jutsu.Court", w - r, h - r, C_OR, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    Disque(w - r, r, r)
+    draw.SimpleText(n, "NA.Jutsu.Court", w - r, r, C_OR, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 ----------------------------------------------------------
@@ -588,13 +626,15 @@ local function Open()
                 Disque(w / 2, h / 2, w / 2)
             end
             local m = choisie and 3 or 0
+            -- technique verrouillée : case grisée
             DessinerCaseTechnique(tech, m, m, w - m * 2, Verrouillee(tech) and 90 or ((sur or choisie) and 255 or 215))
-            if Verrouillee(tech) then
-                draw.SimpleTextOutlined("F6", "NA.Jutsu.Petit", w / 2, h / 2, C_OR, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
-            end
         end
 
         b.PaintOver = function(pan, w, h)
+            -- rang (C, B, A, S) en bas à droite de l'icône
+            local haut = h * 0.4
+            NA_DessinerRang(tech, w, h - haut, haut, 1)
+
             local n = tech.id and EmplacementDe(tech.id)
             if n then Pastille(n, w, h) end
         end
@@ -760,6 +800,8 @@ local function Open()
         else
             DessinerCaseTechnique(t, w / 2 - ti / 2, y, ti)
         end
+        -- rang (C, B, A, S) en bas à droite de l'icône
+        NA_DessinerRang(t, w / 2 + ti / 2, y + ti * 0.6, ti * 0.4, 1)
         y = y + ti + h * 0.03
 
         surface.SetFont("NA.Jutsu.Nom")
@@ -797,7 +839,7 @@ local function Open()
         local cd = NA_CooldownAuNiveau(t, t.id and NA_Niveau and NA_Niveau(LocalPlayer(), t.id) or 1)
         Ligne("COOLDOWN : " .. (cd and (string.format(cd == math.floor(cd) and "%d" or "%.1f", cd) .. " S") or "-"), C_RECHARGE)
         if Verrouillee(t) then
-            Ligne("VERROUILLÉE : DÉBLOQUE-LA (F6)", C_DEGATS)
+            -- rien : la case grisée suffit
         elseif Equipable(t) then
             local n = EmplacementDe(t.id)
             Ligne(n and ("ÉQUIPÉE : TOUCHE " .. n) or "NON ÉQUIPÉE", n and C_OK or C_DOUX)

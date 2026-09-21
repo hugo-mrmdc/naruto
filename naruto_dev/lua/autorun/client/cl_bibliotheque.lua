@@ -424,10 +424,23 @@ local function Ouvrir()
         liens:SetPos(0, 0)
         liens:SetSize(sW, sH)
         liens:SetMouseInputEnabled(false)
+        -- petit trait fin qui s'arrête avant les cercles ; allumé si la technique
+        -- suivante est débloquée, sinon grisé
+        local ecart = t / 2 + 8 * S   -- rayon du cercle + espace
         liens.Paint = function()
-            surface.SetDrawColor(C_OR.r, C_OR.g, C_OR.b, 170)
             for i = 1, #pos - 1 do
-                Trait(pos[i].x, pos[i].y, pos[i + 1].x, pos[i + 1].y, 3 * S)
+                local a, b = pos[i], pos[i + 1]
+                local dx, dy = b.x - a.x, b.y - a.y
+                local l = math.sqrt(dx * dx + dy * dy)
+                if l > ecart * 2 then
+                    local ux, uy = dx / l, dy / l
+                    if NA_Niveau(LocalPlayer(), techs[i + 1].id) > 0 then
+                        surface.SetDrawColor(C_OR.r, C_OR.g, C_OR.b, 200)
+                    else
+                        surface.SetDrawColor(C_DOUX.r, C_DOUX.g, C_DOUX.b, 110)
+                    end
+                    Trait(a.x + ux * ecart, a.y + uy * ecart, b.x - ux * ecart, b.y - uy * ecart, 1.5 * S)
+                end
             end
         end
 
@@ -480,6 +493,7 @@ local function Ouvrir()
                 draw.SimpleText(verrou and "VERROUILLÉE" or ("NIV. " .. niv), "NA.Bib.Petit", w - pad, y + 4 * S,
                     verrou and C_DEGATS or C_OR, TEXT_ALIGN_RIGHT)
                 y = y + 34 * S
+
 
                 draw.SimpleText("DESCRIPTION :", "NA.Bib.Petit", pad, y, C_DOUX)
                 y = y + 20 * S
@@ -535,16 +549,28 @@ local function Ouvrir()
             b:SetText("")
             b:SetSize(fw - pad * 2, 44 * S)
             b:SetPos(pad, fh - pad - b:GetTall())
+            -- technique d'avant à débloquer d'abord (nil = rien ne bloque)
+            local function Manque()
+                if NA_Niveau(LocalPlayer(), tech.id) > 0 then return nil end
+                local ok, prec = NA_NIV.DeblocagePossible(LocalPlayer(), tech.id)
+                if ok then return nil end
+                local t = NA_TechniqueParId and NA_TechniqueParId(prec)
+                return t and t.name or prec
+            end
+
             b.Paint = function(pan, w, h)
                 local niv = NA_Niveau(LocalPlayer(), tech.id)
                 local cout = NA_NIV.Cout(niv)
-                local possible = cout and NA_Points(LocalPlayer()) >= cout
+                local manque = Manque()
+                local possible = cout and not manque and NA_Points(LocalPlayer()) >= cout
                 local lum = (possible and pan:IsHovered()) and 255 or (possible and 225 or 120)
                 Image(DOSSIER .. "btn_base_long.png", 0, 0, w, h, 255, lum)
 
                 local txt, col
                 if not cout then
                     txt, col = "NIVEAU MAX", Color(60, 45, 30)
+                elseif manque then
+                    txt, col = "DÉBLOQUE D'ABORD : " .. string.upper(manque), Color(60, 45, 30)
                 elseif possible then
                     txt, col = (niv == 0 and "DÉBLOQUER : " or "AMÉLIORER : ") .. cout, Color(30, 20, 20)
                 else
@@ -556,7 +582,7 @@ local function Ouvrir()
             b.DoClick = function()
                 local niv = NA_Niveau(LocalPlayer(), tech.id)
                 local cout = NA_NIV.Cout(niv)
-                if not cout or NA_Points(LocalPlayer()) < cout then
+                if not cout or Manque() or NA_Points(LocalPlayer()) < cout then
                     surface.PlaySound("buttons/button10.wav")
                     return
                 end
@@ -597,6 +623,12 @@ local function Ouvrir()
                     surface.DrawTexturedRect(cx - ti / 2, cy - ti / 2, ti, ti)
                 else
                     draw.SimpleText(tech.court or tech.name, "NA.Bib.Petit", cx, cy, C_CREME, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                end
+
+                -- rang (C, B, A, S) en bas à droite de l'icône
+                if NA_DessinerRang then
+                    local haut = t * 0.4
+                    NA_DessinerRang(tech, cx + t / 2, t - haut, haut, 1)
                 end
 
                 -- niveau : 5 points sous l'icône

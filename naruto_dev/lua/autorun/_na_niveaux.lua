@@ -14,6 +14,7 @@
 --
 -- Sauvegarde : PData du joueur (sv.db), clés "na_niveaux" et "na_points".
 -- Ajouter des points : na_points <nombre>, na_points <joueur> <nombre>, ou !points dans le chat
+-- Remettre les techniques à zéro (points rendus) : na_reset [joueur | *], ou !reset dans le chat
 --========================================================
 
 if SERVER then AddCSLuaFile() end
@@ -40,26 +41,43 @@ NA_NIV.PAR_NIVEAU = {
 
 -- Points nécessaires pour débloquer la technique (niveau 1),
 -- puis pour passer au niveau 2, 3, 4, 5
-NA_NIV.COUT = { [0] = 1, 1, 2, 3, 4 }
+--   niveaux 1 à 3 : 1 point chacun ; niveaux 4 et 5 : 2 points chacun
+NA_NIV.COUT = { [0] = 1, 1, 1, 2, 2 }
 
 NA_NIV.POINTS_DEPART   = 5   -- points d'un nouveau joueur
 NA_NIV.POINTS_PAR_KILL = 1   -- points gagnés en tuant un autre joueur
 
--- Techniques qui ont des niveaux (identifiants NA_Cast)
-NA_NIV.IDS = {
-    "katon_boule", "katon_saut", "suiton_requin",
-    "mokuton_arche", "mokuton_fleur", "mokuton_dragon",
-    "salamandre_dome", "salamandre_poison", "salamandre_tornade", "salamandre_corps",
-    "fuma_tp", "fuma_jugement", "fuma_aura", "fuma_ciel", "fuma_invisibilite",
-    "kami_circle", "kami_shuriken", "kami_bouclier", "kami_ailes",
-    "jinton_cube", "jinton_bouclier", "jinton_laser",
-    "kaguya_armure", "kaguya_legion", "kaguya_danse",
-    "chinoike_pluie", "chinoike_vortex",
+-- Techniques qui ont des niveaux (identifiants NA_Cast), par catégorie,
+-- DANS L'ORDRE DE DÉBLOCAGE : pour débloquer une technique, il faut avoir
+-- débloqué celle d'avant dans la même ligne. La première est libre.
+-- Même ordre que l'affichage (rangs C, puis B, puis A : cl_techniques_ui.lua).
+NA_NIV.LIGNEES = {
+    { "katon_boule", "katon_saut" },
+    { "suiton_requin" },
+    { "mokuton_arche", "mokuton_fleur", "mokuton_dragon" },
+    { "salamandre_poison", "salamandre_dome", "salamandre_corps", "salamandre_tornade" },
+    { "fuma_tp", "fuma_invisibilite", "fuma_aura", "fuma_jugement", "fuma_ciel" },
+    { "kami_shuriken", "kami_ailes", "kami_circle", "kami_bouclier" },
+    { "jinton_cube", "jinton_bouclier", "jinton_laser" },
+    { "kaguya_armure", "kaguya_danse", "kaguya_legion" },
+    { "chinoike_pluie", "chinoike_vortex" },
 }
 --========================================================
 
-local valide = {}
-for _, id in ipairs(NA_NIV.IDS) do valide[id] = true end
+NA_NIV.IDS = {}
+local valide, avant = {}, {}
+for _, ligne in ipairs(NA_NIV.LIGNEES) do
+    for i, id in ipairs(ligne) do
+        NA_NIV.IDS[#NA_NIV.IDS + 1] = id
+        valide[id] = true
+        avant[id] = ligne[i - 1]   -- nil pour la première de la ligne
+    end
+end
+
+-- Technique à débloquer avant "id" (nil = aucune)
+function NA_NIV.Precedente(id)
+    return avant[id]
+end
 
 function NA_NIV.Existe(id)
     return valide[id] == true
@@ -76,6 +94,14 @@ end
 function NA_Debloquee(ply, id)
     if not NA_NIV.Existe(id) then return true end
     return NA_Niveau(ply, id) >= 1
+end
+
+-- Peut-on débloquer "id" ? Il faut que la technique d'avant soit débloquée.
+-- Renvoie true, ou false + l'id de la technique qui manque.
+function NA_NIV.DeblocagePossible(ply, id)
+    local prec = avant[id]
+    if prec and NA_Niveau(ply, prec) < 1 then return false, prec end
+    return true
 end
 
 -- Points de compétence disponibles
@@ -175,6 +201,7 @@ net.Receive("NA_Ameliorer", function(_, ply)
     local cout = NA_NIV.Cout(niveau)
     if not cout then return end                       -- déjà au maximum
     if NA_Points(ply) < cout then return end          -- pas assez de points
+    if niveau == 0 and not NA_NIV.DeblocagePossible(ply, id) then return end   -- technique d'avant pas débloquée
 
     ply:SetNW2Int("NA_Points", NA_Points(ply) - cout)
     ply:SetNW2Int("na_niv_" .. id, niveau + 1)
@@ -207,6 +234,24 @@ local function Repondre(ply, msg)
     if IsValid(ply) then ply:ChatPrint(msg) else print(msg) end
 end
 
+-- Joueurs visés : rien ou "moi" = soi-même, "*" = tout le monde, sinon un nom (même partiel).
+-- nil (avec un message) si personne ne correspond.
+local function TrouverCibles(ply, cibleTxt)
+    local cibles = {}
+    if not cibleTxt or cibleTxt == "moi" then
+        if not IsValid(ply) then Repondre(ply, "Depuis la console serveur, précise un joueur.") return nil end
+        cibles[1] = ply
+    elseif cibleTxt == "*" then
+        cibles = player.GetAll()
+    else
+        for _, p in ipairs(player.GetAll()) do
+            if string.find(string.lower(p:Nick()), string.lower(cibleTxt), 1, true) then cibles[1] = p break end
+        end
+    end
+    if #cibles == 0 then Repondre(ply, "Joueur introuvable : " .. tostring(cibleTxt)) return nil end
+    return cibles
+end
+
 local function AjouterPoints(ply, args)
     if not Autorise(ply) then
         Repondre(ply, "Tu n'as pas le droit d'ajouter des points.")
@@ -226,18 +271,8 @@ local function AjouterPoints(ply, args)
     end
     n = math.floor(n)
 
-    local cibles = {}
-    if not cibleTxt or cibleTxt == "moi" then
-        if not IsValid(ply) then Repondre(ply, "Depuis la console serveur, précise un joueur.") return end
-        cibles[1] = ply
-    elseif cibleTxt == "*" then
-        cibles = player.GetAll()
-    else
-        for _, p in ipairs(player.GetAll()) do
-            if string.find(string.lower(p:Nick()), string.lower(cibleTxt), 1, true) then cibles[1] = p break end
-        end
-    end
-    if #cibles == 0 then Repondre(ply, "Joueur introuvable : " .. tostring(cibleTxt)) return end
+    local cibles = TrouverCibles(ply, cibleTxt)
+    if not cibles then return end
 
     for _, p in ipairs(cibles) do
         NA_NIV.DonnerPoints(p, n)
@@ -256,5 +291,63 @@ hook.Add("PlayerSay", "NA_Niveaux_ChatPoints", function(ply, texte)
     if cmd ~= "!points" and cmd ~= "/points" then return end
     table.remove(args, 1)
     AjouterPoints(ply, args)
+    return ""   -- la commande n'apparaît pas dans le chat
+end)
+
+----------------------------------------------------------
+-- Remettre à zéro les techniques : toutes repassent au niveau 0 (verrouillées)
+-- et les points dépensés dedans sont rendus au joueur.
+--   Console : na_reset              -> toi
+--             na_reset <joueur>     -> un joueur (nom, même partiel)
+--             na_reset *            -> tout le monde
+--   Chat    : !reset  /  !reset <joueur>
+-- Réservé aux mêmes personnes que na_points.
+----------------------------------------------------------
+
+-- Points dépensés pour amener une technique au niveau "niveau"
+local function PointsDepenses(niveau)
+    local total = 0
+    for n = 0, niveau - 1 do total = total + (NA_NIV.Cout(n) or 0) end
+    return total
+end
+
+function NA_NIV.Reinitialiser(ply)
+    if not IsValid(ply) then return 0 end
+    local rendus = 0
+    for _, id in ipairs(NA_NIV.IDS) do
+        rendus = rendus + PointsDepenses(NA_Niveau(ply, id))
+        ply:SetNW2Int("na_niv_" .. id, 0)
+    end
+    ply:SetNW2Int("NA_Points", NA_Points(ply) + rendus)
+    Sauver(ply)
+    return rendus
+end
+
+local function Reset(ply, args)
+    if not Autorise(ply) then
+        Repondre(ply, "Tu n'as pas le droit de remettre les techniques à zéro.")
+        return
+    end
+
+    local cibles = TrouverCibles(ply, args[1])
+    if not cibles then return end
+
+    for _, p in ipairs(cibles) do
+        local rendus = NA_NIV.Reinitialiser(p)
+        Repondre(ply, p:Nick() .. " : techniques remises à zéro, " .. rendus .. " points rendus (" .. NA_Points(p) .. " au total).")
+        if p ~= ply then
+            p:ChatPrint("Tes techniques ont été remises à zéro : " .. rendus .. " points de compétence rendus (F6).")
+        end
+    end
+end
+
+concommand.Add("na_reset", function(ply, _, args) Reset(ply, args) end)
+
+hook.Add("PlayerSay", "NA_Niveaux_ChatReset", function(ply, texte)
+    local args = string.Explode(" ", string.Trim(texte))
+    local cmd = string.lower(args[1] or "")
+    if cmd ~= "!reset" and cmd ~= "/reset" then return end
+    table.remove(args, 1)
+    Reset(ply, args)
     return ""   -- la commande n'apparaît pas dans le chat
 end)
