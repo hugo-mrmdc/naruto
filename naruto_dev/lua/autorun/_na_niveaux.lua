@@ -48,7 +48,7 @@ NA_NIV.IDS = {
     "kami_circle", "kami_shuriken", "kami_bouclier", "kami_ailes",
     "jinton_cube", "jinton_bouclier", "jinton_laser",
     "kaguya_armure", "kaguya_legion", "kaguya_danse",
-    "chinoike_pluie",
+    "chinoike_pluie", "chinoike_vortex",
 }
 --========================================================
 

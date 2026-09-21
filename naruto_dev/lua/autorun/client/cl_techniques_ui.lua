@@ -117,6 +117,9 @@ local TECHNIQUES = {
     { cat = "Chinoike", name = "Pluie de sang", key = "", id = "chinoike_pluie", icone = "ui/icon/chinoike_zone_de_sang.png", court = "Pluie",
       desc = "Une pluie de sang s'abat sur l'endroit que tu vises pendant 8 secondes : tout ennemi qui reste dessous est blessé et ralenti. Coûte 35 de chakra.",
       dmg = "8 par tick (toutes les 0,5 s)" },
+    { cat = "Chinoike", name = "Vortex de sang", key = "", id = "chinoike_vortex", icone = "", court = "Vortex", cd = 20,
+      desc = "Un vortex de sang s'ouvre au sol là où tu vises (900 unités max) pendant 3,5 secondes : il aspire les ennemis vers son cœur, qui les blesse. Coûte 30 de chakra.",
+      dmg = "10 par tick (toutes les 0,5 s)" },
 
     -- ===== ARMES =====
     { cat = "Armes", name = "Zabuza", key = "Clic gauche / droit",

@@ -3,12 +3,16 @@
 
 if SERVER then
     resource.AddFile("particles/1atgyoltix.pcf")
+    resource.AddFile("particles/atg_particules2.pcf")
     resource.AddFile("materials/ui/icon/chinoike_zone_de_sang.png")
 
     AddCSLuaFile("autorun/client/chinoike/cl_chinoike_pluie.lua")
+    AddCSLuaFile("autorun/client/chinoike/cl_chinoike_vortex.lua")
     include("autorun/server/chinoike/sv_chinoike_pluie.lua")
+    include("autorun/server/chinoike/sv_chinoike_vortex.lua")
 end
 
 if CLIENT then
     include("autorun/client/chinoike/cl_chinoike_pluie.lua")
+    include("autorun/client/chinoike/cl_chinoike_vortex.lua")
 end
