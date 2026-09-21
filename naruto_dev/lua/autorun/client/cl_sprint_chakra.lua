@@ -6,7 +6,7 @@
 --========================================================
 -- RÉGLAGES
 --========================================================
-local CHAKRA_MAX  = 100    -- doit correspondre au fichier serveur
+local CHAKRA_MAX  = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local LARGEUR     = 260
 local HAUTEUR     = 14
 local MARGE_BAS   = 118    -- distance depuis le bas de l'écran (au-dessus de la barre de techniques)

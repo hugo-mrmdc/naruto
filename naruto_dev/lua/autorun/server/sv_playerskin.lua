@@ -18,7 +18,10 @@ if not SERVER then return end
 local TENUE_DEFAUT   = "models/tenue/senju/senju_a.mdl"
 local COULEUR_CORPS  = Color(255, 210, 180)     -- teinte appliquée au modèle du joueur
 
-local TETE    = { modele = "models/head_03.mdl",     couleur = Color(255, 210, 180) }
+-- Tête : PAS de teinte sur toute la tête (elle colorait aussi le blanc des yeux) ;
+-- la couleur de peau est dans le matériau du visage ($color2 de
+-- materials/models/naruto_dev/tete/visage.vmt), posé sur le matériau 0 (visage).
+local TETE    = { modele = "models/head_03.mdl",     couleur = Color(255, 255, 255), visage = "models/naruto_dev/tete/visage" }
 local CHEVEUX = { modele = "models/hairs1_head.mdl", couleur = Color(0, 0, 0) }
 
 -- Modèles qui ont DÉJÀ une tête : on n'y ajoute ni tête ni cheveux
@@ -31,6 +34,8 @@ local MODELES_AVEC_TETE = {
 -- poser leur modèle avant qu'on ajoute la tête.
 local DELAI = 0.1
 --========================================================
+
+resource.AddFile("materials/" .. TETE.visage .. ".vmt")
 
 -- tenue par défaut, partagée avec sv_armure.lua (retrait de tenue)
 NA_TENUE_DEFAUT = TENUE_DEFAUT
@@ -86,6 +91,7 @@ local function CreerPiece(ply, def)
 
     ent.__NA_NormalColor = def.couleur
     ent:SetColor(def.couleur)
+    if def.visage then ent:SetSubMaterial(0, def.visage) end   -- visage teinté couleur peau
 
     AppliquerInvisibilite(ply, ent)
     return ent
@@ -98,6 +104,9 @@ local function Publier(ply, avecTete)
     ply:SetNW2String("NA_CheveuxModele", avecTete and CHEVEUX.modele or "")
     ply:SetNW2Vector("NA_TeteCouleur", Vector(TETE.couleur.r, TETE.couleur.g, TETE.couleur.b))
     ply:SetNW2Vector("NA_CheveuxCouleur", Vector(CHEVEUX.couleur.r, CHEVEUX.couleur.g, CHEVEUX.couleur.b))
+    ply:SetNW2String("NA_TeteVisage", avecTete and TETE.visage or "")
+    -- entité de la tête : les clients la font cligner des yeux (cl_clignement.lua)
+    ply:SetNW2Entity("NA_TeteEnt", avecTete and ply.NA_Head or NULL)
 end
 
 ----------------------------------------------------------
@@ -123,6 +132,7 @@ function NA_AppliquerApparence(ply)
     ply.NA_Head = CreerPiece(ply, TETE)
     ply.NA_Hair = CreerPiece(ply, CHEVEUX)
     Publier(ply, true)
+    if NA_AppliquerYeux then NA_AppliquerYeux(ply) end   -- yeux choisis (sv_yeux.lua)
 end
 
 ----------------------------------------------------------

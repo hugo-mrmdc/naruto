@@ -254,6 +254,16 @@ local function DessinerEmplacement(x, y, taille, slot, id, alpha)
             end
         end
 
+        -- technique à bascule active (Ketsuryugan...) : anneau rouge qui pulse,
+        -- rappuyer la coupe (NA_BASCULES, _na_registre.lua)
+        if NA_TechniqueActive and NA_TechniqueActive(id) then
+            local pulse = 0.6 + 0.4 * math.sin(CurTime() * 5)
+            surface.SetDrawColor(230, 30, 40, 200 * pulse * alpha / 255)
+            for e = 0, 2 do
+                surface.DrawCircle(cx, cy, rayon + 1 + e, 230, 30, 40, 200 * pulse * alpha / 255)
+            end
+        end
+
         if enRecharge then
             -- voile qui se vide au fil de la recharge + secondes restantes
             local total = NA_DureeRecharge and NA_DureeRecharge(id) or reste

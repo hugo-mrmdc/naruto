@@ -15,6 +15,9 @@ local SPEED = 1600
 local LIFE  = 2.5
 local HIT_RADIUS = 18
 
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "katon_boule", stat, base) end
+
 local Projectiles = {}
 local projId = 0
 
@@ -30,7 +33,7 @@ local function SpawnProjectile(ply)
         owner = ply,
         dir   = dir,
         pos   = pos,
-        dieAt = CurTime() + LIFE,
+        dieAt = CurTime() + Niv(ply, "life", LIFE),
         alive = true
     }
 
@@ -61,7 +64,7 @@ hook.Add("Think", "naruto_dev_katon_projectiles_move", function()
             Projectiles[id] = nil
         else
             local from = p.pos
-            local to   = from + (p.dir * SPEED * ft)
+            local to   = from + (p.dir * Niv(p.owner, "speed", SPEED) * ft)
 
             local hb = NA_Stat(p.owner, "katon_boule", "hitbox", HIT_RADIUS)   -- hitbox par niveau
             local tr = util.TraceHull({

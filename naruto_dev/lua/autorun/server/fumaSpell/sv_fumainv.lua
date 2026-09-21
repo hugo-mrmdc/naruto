@@ -16,6 +16,9 @@ local FX_FUMEE   = "solve_smoke_ayatsuri_geams"   -- particles/solve_ayatsuri_ge
 local SON_FUMEE  = "ambient/levels/citadel/pod_open1.wav"
 --========================================================
 
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "fuma_invisibilite", stat, base) end
+
 util.AddNetworkString("Invis_F_Toggle")
 util.AddNetworkString("Invis_PAC")
 util.AddNetworkString("Invis_Reveler")
@@ -102,7 +105,7 @@ NA_FumaReapparaitre = Apparaitre   -- utilisable par d'autres scripts
 local function Disparaitre(ply)
     Fumee(ply)
     SetInvisible(ply, true)
-    timer.Create("fuma_invis_" .. ply:EntIndex(), DUREE, 1, function() Apparaitre(ply) end)
+    timer.Create("fuma_invis_" .. ply:EntIndex(), Niv(ply, "duree", DUREE), 1, function() Apparaitre(ply) end)
 end
 
 net.Receive("Invis_F_Toggle", function(_, ply)

@@ -1,0 +1,12 @@
+"VertexlitGeneric"
+{
+	// Copie de models/kaesar/solve/naruto_head/t_chr_face_bc.vmt avec la couleur de peau.
+	// La teinte est ICI (et plus sur toute la tête) pour que le blanc des yeux reste blanc.
+	// $color2 = couleur de peau / 255 : 255 210 180 -> [1 0.824 0.706]
+	"$basetexture" "models/kaesar/solve/naruto_head/T_CHR_Face_BC"
+	"$bumpmap" "models/kaesar/solve/naruto_head/normal"
+
+	"$lightwarptexture" "models/kaesar/solve/naruto_head/lightwarptexture"
+
+	"$color2" "[1 0.824 0.706]"
+}

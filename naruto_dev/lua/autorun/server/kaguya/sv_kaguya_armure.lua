@@ -30,12 +30,12 @@ local ROTATION     = Angle(-90, 90, 0)
 local ECHELLE      = 1
 
 local DUREE        = 15     -- secondes du buff
-local REDUCTION    = 0.40   -- dégâts reçus en moins (0.40 = -40 %)
+local REDUCTION    = 40    -- % de dégâts reçus en moins
 local MALUS_VITESSE = 0     -- vitesse de course en moins, en unités (0 = aucun malus)
 
 local RECHARGE     = 30     -- secondes avant de pouvoir relancer (depuis le lancement)
 local CHAKRA_COUT  = 25     -- chakra dépensé (0 = gratuit)
-local CHAKRA_MAX   = 100    -- = CHAKRA_MAX de sv_sprint_chakra.lua
+local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.5    -- incantation avant l'armure
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 
@@ -43,6 +43,9 @@ local SON_DEBUT    = "physics/body/body_medium_break3.wav"
 local SON_IMPACT   = "physics/body/body_medium_scrape_rough_loop1.wav"   -- quand l'armure encaisse
 local SON_FIN      = "physics/body/body_medium_break2.wav"
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "kaguya_armure", stat, base) end
 
 local enCours = {}
 local pret    = {}
@@ -59,7 +62,7 @@ local function Arreter(ply)
 
     if Actif(ply) then
         if ply:Alive() then ply:EmitSound(SON_FIN, 75, 100, 0.7) end
-        if MALUS_VITESSE > 0 then ply:SetRunSpeed(ply:GetRunSpeed() + MALUS_VITESSE) end
+        if Niv(ply, "malus_vitesse", MALUS_VITESSE) > 0 then ply:SetRunSpeed(ply:GetRunSpeed() + Niv(ply, "malus_vitesse", MALUS_VITESSE)) end
     end
 
     ply:SetNW2Bool("NA_ArmureOs", false)
@@ -102,12 +105,12 @@ local function Activer(ply)
 
 
     ply:SetNW2Bool("NA_ArmureOs", true)
-    ply:SetNW2Float("NA_ArmureOsFin", CurTime() + DUREE)
+    ply:SetNW2Float("NA_ArmureOsFin", CurTime() + Niv(ply, "duree", DUREE))
     ply:EmitSound(SON_DEBUT, 80, 90, 0.9)
 
-    if MALUS_VITESSE > 0 then ply:SetRunSpeed(math.max(50, ply:GetRunSpeed() - MALUS_VITESSE)) end
+    if Niv(ply, "malus_vitesse", MALUS_VITESSE) > 0 then ply:SetRunSpeed(math.max(50, ply:GetRunSpeed() - Niv(ply, "malus_vitesse", MALUS_VITESSE))) end
 
-    timer.Create("kaguya_armure_" .. ply:EntIndex(), DUREE, 1, function() Arreter(ply) end)
+    timer.Create("kaguya_armure_" .. ply:EntIndex(), Niv(ply, "duree", DUREE), 1, function() Arreter(ply) end)
 end
 
 net.Receive("kaguya_armure_cast", function(_, ply)
@@ -128,13 +131,11 @@ net.Receive("kaguya_armure_cast", function(_, ply)
     pret[ply] = CurTime() + NA_Stat(ply, "kaguya_armure", "recharge", RECHARGE)
     if NA_CD then NA_CD.Set(ply, "kaguya_armure", NA_Stat(ply, "kaguya_armure", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
-    timer.Simple(DUREE_MUDRA, function()
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         enCours[ply] = nil
         Activer(ply)
     end)
@@ -144,8 +145,8 @@ end)
 -- Résistance
 ----------------------------------------------------------
 hook.Add("EntityTakeDamage", "KaguyaArmure_Reduction", function(cible, dmg)
-    if REDUCTION <= 0 or not cible:IsPlayer() or not Actif(cible) then return end
-    dmg:ScaleDamage(1 - REDUCTION)
+    if Niv(cible, "reduction", REDUCTION) <= 0 or not cible:IsPlayer() or not Actif(cible) then return end
+    dmg:ScaleDamage(1 - Niv(cible, "reduction", REDUCTION) / 100)
     if SON_IMPACT ~= "" then cible:EmitSound(SON_IMPACT, 70, 130, 0.5) end
 end)
 

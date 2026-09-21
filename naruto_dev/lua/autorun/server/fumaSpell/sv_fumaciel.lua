@@ -24,10 +24,13 @@ local POUSSEE      = 450    -- projection des joueurs touchés
 
 local RECHARGE     = 28     -- secondes avant de pouvoir relancer (depuis le lancement)
 local CHAKRA_COUT  = 35     -- chakra dépensé (0 = gratuit)
-local CHAKRA_MAX   = 100    -- = CHAKRA_MAX de sv_sprint_chakra.lua
+local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.6    -- incantation avant l'apparition du shuriken
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "fuma_ciel", stat, base) end
 
 SetGlobal2Float("NA_FumaCielPortee", PORTEE)
 SetGlobal2Float("NA_FumaCielRayon", RAYON)
@@ -39,7 +42,7 @@ local pret    = {}
 local function PointVise(ply)
     local debut = ply:EyePos()
     local tr = util.TraceLine({
-        start = debut, endpos = debut + ply:GetAimVector() * PORTEE,
+        start = debut, endpos = debut + ply:GetAimVector() * Niv(ply, "portee", PORTEE),
         filter = ply, mask = MASK_SOLID,
     })
 
@@ -69,27 +72,25 @@ net.Receive("fuma_ciel_cast", function(_, ply)
     pret[ply] = CurTime() + NA_Stat(ply, "fuma_ciel", "recharge", RECHARGE)
     if NA_CD then NA_CD.Set(ply, "fuma_ciel", NA_Stat(ply, "fuma_ciel", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
     local cible = PointVise(ply)
 
-    timer.Simple(DUREE_MUDRA, function()
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         enCours[ply] = nil
         if not IsValid(ply) or not ply:Alive() then return end
 
         local shuriken = ents.Create("fuma_shuriken_ciel")
         if not IsValid(shuriken) then return end
-        shuriken.Vitesse = VITESSE
-        shuriken.Echelle = ECHELLE
+        shuriken.Vitesse = Niv(ply, "vitesse", VITESSE)
+        shuriken.Echelle = Niv(ply, "echelle", ECHELLE)
         shuriken.Degats  = NA_Stat(ply, "fuma_ciel", "degats", DEGATS)
-        shuriken.Rayon   = RAYON
-        shuriken.Poussee = POUSSEE
+        shuriken.Rayon   = Niv(ply, "rayon", RAYON)
+        shuriken.Poussee = Niv(ply, "poussee", POUSSEE)
         shuriken:SetOwner(ply)
-        shuriken:SetPos(cible + Vector(0, 0, HAUTEUR))
+        shuriken:SetPos(cible + Vector(0, 0, Niv(ply, "hauteur", HAUTEUR)))
         shuriken:Spawn()
     end)
 end)

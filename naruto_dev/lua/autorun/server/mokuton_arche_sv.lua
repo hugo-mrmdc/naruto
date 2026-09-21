@@ -35,6 +35,9 @@ local STUN_TIME = 4.0
 local DAMAGE_AMOUNT = 20
 local DAMAGE_RADIUS = 120
 
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "mokuton_arche", stat, base) end
+
 local DEBUG_HITBOX = false
 
 if SERVER then
@@ -82,7 +85,7 @@ local function GetLookTarget(ply)
 
     local startPos = ply:EyePos()
     local dir      = ply:EyeAngles():Forward()
-    local endPos   = startPos + dir * TRACE_RANGE
+    local endPos   = startPos + dir * Niv(ply, "trace_range", TRACE_RANGE)
     local hb       = NA_Stat(ply, "mokuton_arche", "hitbox", HULL_TAILLE)
     local hullMins, hullMaxs = Vector(-hb, -hb, -hb), Vector(hb, hb, hb)
 
@@ -334,7 +337,7 @@ local function DoImpactDamage(attacker, inflictor, pos)
     if IsValid(attacker) then dmg:SetAttacker(attacker) end
     if IsValid(inflictor) then dmg:SetInflictor(inflictor) end
 
-    for _, e in ipairs(ents.FindInSphere(pos, DAMAGE_RADIUS)) do
+    for _, e in ipairs(ents.FindInSphere(pos, Niv(attacker, "damage_radius", DAMAGE_RADIUS))) do
         if IsValid(e) and (e:IsPlayer() or e:IsNPC() or e:IsNextBot()) then
             if e ~= attacker then
                 e:TakeDamageInfo(dmg)
@@ -352,7 +355,7 @@ local function SpawnMokutonArcheOnPos(ply, index, groundPos)
     local ent = ents.Create("prop_dynamic")
     if not IsValid(ent) then return end
 
-    local startPos = groundPos + Vector(0,0,HEIGHT)
+    local startPos = groundPos + Vector(0,0,Niv(ply, "height", HEIGHT))
 
     ent:SetModel(MODEL)
     ent:SetPos(startPos)
@@ -371,7 +374,7 @@ local function SpawnMokutonArcheOnPos(ply, index, groundPos)
     timer.Create(tid, 0.01, 0, function()
         if not IsValid(ent) then timer.Remove(tid) return end
 
-        local frac = (CurTime() - t0) / DROP_TIME
+        local frac = (CurTime() - t0) / Niv(ply, "drop_time", DROP_TIME)
         if frac >= 1 then
             ent:SetPos(groundPos)
 
@@ -413,7 +416,7 @@ if SERVER then
         if not IsValid(target) then return end
 
         -- stun la cible
-        StunEntity(target, STUN_TIME)
+        StunEntity(target, Niv(ply, "stun_time", STUN_TIME))
 
         local center  = target:WorldSpaceCenter()
         local groundZ = GetWorldGroundZ(center)
@@ -421,11 +424,11 @@ if SERVER then
 
         local spawnedArches = {}
 
-        for i = 1, COUNT do
-            timer.Simple((i - 1) * DELAY, function()
+        for i = 1, Niv(ply, "count", COUNT) do
+            timer.Simple((i - 1) * Niv(ply, "delay", DELAY), function()
                 if not IsValid(ply) then return end
 
-                local offset = (i - 2) * GAP
+                local offset = (i - 2) * Niv(ply, "gap", GAP)
                 local pos = center + right * offset
                 pos = Vector(pos.x, pos.y, groundZ)
 
@@ -437,7 +440,7 @@ if SERVER then
         end
 
         -- suppression après stun
-        timer.Simple(STUN_TIME, function()
+        timer.Simple(Niv(ply, "stun_time", STUN_TIME), function()
             for _, arch in ipairs(spawnedArches) do
                 if IsValid(arch) then arch:Remove() end
             end

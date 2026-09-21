@@ -2,6 +2,8 @@
 -- Course et course de chakra (SERVEUR)
 --   Shift          -> course normale
 --   Shift x2 rapide -> course de chakra (plus rapide, consomme du chakra)
+--   R maintenu      -> recharge du chakra (sur place, animation + particules :
+--                      sh_recharge_chakra.lua, cl_recharge_chakra.lua)
 --
 -- Le serveur décide de tout : le client ne fait qu'appuyer sur ses touches.
 --========================================================
@@ -18,10 +20,13 @@ local VITESSE_CHAKRA  = 650   -- double Shift
 local SAUT_NORMAL     = 200   -- hauteur de saut normale
 local SAUT_CHAKRA     = 200   -- hauteur de saut en course de chakra
 
-local CHAKRA_MAX      = 100   -- réserve de chakra
+local CHAKRA_MAX      = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local CHAKRA_COUT     = 0    -- chakra dépensé par seconde de course de chakra
-local CHAKRA_REGEN    = 12    -- chakra récupéré par seconde
-local CHAKRA_DELAI    = 1.5   -- secondes d'attente avant que la régénération reprenne
+local CHAKRA_REGEN    = 0     -- régénération AUTOMATIQUE par seconde (0 = aucune : on recharge avec R)
+local CHAKRA_DELAI    = 1.5   -- secondes d'attente avant que la régénération automatique reprenne
+
+local CHAKRA_RECHARGE = 30    -- chakra récupéré par seconde en maintenant R
+local RECHARGE_COUPURE = 1    -- un coup reçu coupe la recharge : secondes avant de pouvoir recharger
 local CHAKRA_MINIMUM  = 10    -- chakra requis pour démarrer une course de chakra
 
 local DOUBLE_TAP      = 0.35  -- délai maxi entre les deux Shift (secondes)
@@ -114,6 +119,76 @@ end)
 ----------------------------------------------------------
 -- Consommation et régénération
 ----------------------------------------------------------
+-- Peut-on recharger maintenant ? (R maintenu, au sol ou en l'air, rien d'autre en cours, pas plein)
+local function PeutRecharger(ply, now)
+    if not ply:KeyDown(IN_RELOAD) then return false end
+    if ply:InVehicle() then return false end   -- au sol OU en saut : les deux marchent
+    if GetChakra(ply) >= CHAKRA_MAX then return false end
+    if (ply.NA_RechargeBloquee or 0) > now then return false end   -- vient de prendre un coup
+    if ply:GetNW2Bool("NA_Etourdi", false) then return false end
+    if ply:GetNW2Bool("NA_Vol", false) or ply:GetNW2Bool("NA_Wings", false) then return false end
+    if NA_EnMudra and NA_EnMudra(ply) then return false end
+    return true
+end
+
+-- un coup reçu coupe la recharge
+hook.Add("EntityTakeDamage", "NA_RechargeChakra_Coupure", function(cible, dmg)
+    if not cible:IsPlayer() or dmg:GetDamage() <= 0 then return end
+    if not cible:GetNW2Bool("NA_RechargeChakra", false) then return end
+    cible.NA_RechargeBloquee = CurTime() + RECHARGE_COUPURE
+    cible:SetNW2Bool("NA_RechargeChakra", false)
+end)
+
+-- Recharge (R), course de chakra et régénération automatique d'un joueur
+local function MettreAJour(ply, now, dt)
+    if not ply:Alive() then
+        StopChakraRun(ply)
+        if ply:GetNW2Bool("NA_RechargeChakra", false) then ply:SetNW2Bool("NA_RechargeChakra", false) end
+        return
+    end
+
+    -- recharge à la touche R : sur place, tant que la touche est maintenue
+    local recharge = not chakraRun[ply] and PeutRecharger(ply, now)
+    if ply:GetNW2Bool("NA_RechargeChakra", false) ~= recharge then
+        ply:SetNW2Bool("NA_RechargeChakra", recharge)
+    end
+    if recharge then
+        SetChakra(ply, GetChakra(ply) + CHAKRA_RECHARGE * dt)
+        return
+    end
+
+    if chakraRun[ply] then
+        -- on ne consomme que si le joueur avance vraiment VERS L'AVANT
+        -- (en arrière / sur le côté, la course de chakra est suspendue : sh_sprint_chakra.lua)
+        local versAvant = not NA_SprintChakra or NA_SprintChakra.ToucheVersLAvant(ply)
+        local moving = ply:GetVelocity():Length2D() > 40 and ply:KeyDown(IN_SPEED) and versAvant
+
+        if not moving then
+            nextRegen[ply] = now + CHAKRA_DELAI
+            return
+        end
+
+        local left = GetChakra(ply) - CHAKRA_COUT * dt
+        SetChakra(ply, left)
+
+        if left <= 0 then
+            StopChakraRun(ply)
+            ply:EmitSound("buttons/button10.wav", 60, 90, 0.4)
+        end
+        return
+    end
+
+    -- régénération automatique (CHAKRA_REGEN, 0 = désactivée ; coupée tant que
+    -- le Ketsuryugan consomme du chakra : sv_chinoike_ketsuryugan.lua)
+    if CHAKRA_REGEN <= 0 then return end
+    if (nextRegen[ply] or 0) > now then return end
+    if ply:GetNW2Bool("NA_Ketsuryugan", false) then return end
+    local cur = GetChakra(ply)
+    if cur < CHAKRA_MAX then
+        SetChakra(ply, cur + CHAKRA_REGEN * dt)
+    end
+end
+
 local nextTick = 0
 
 hook.Add("Think", "NA_Sprint_Chakra", function()
@@ -124,40 +199,10 @@ hook.Add("Think", "NA_Sprint_Chakra", function()
     local dt = 0.1
     nextTick = now + dt
 
+    -- La recharge (R) marche aussi pendant qu'un drain consomme du chakra
+    -- (Ketsuryugan...) : les deux s'additionnent.
     for _, ply in ipairs(player.GetAll()) do
-        if not ply:Alive() then
-            StopChakraRun(ply)
-            continue
-        end
-
-        if chakraRun[ply] then
-            -- on ne consomme que si le joueur avance vraiment
-            -- on ne consomme que si le joueur avance vraiment VERS L'AVANT
-            -- (en arrière / sur le côté, la course de chakra est suspendue : sh_sprint_chakra.lua)
-            local versAvant = not NA_SprintChakra or NA_SprintChakra.ToucheVersLAvant(ply)
-            local moving = ply:GetVelocity():Length2D() > 40 and ply:KeyDown(IN_SPEED) and versAvant
-
-            if not moving then
-                nextRegen[ply] = now + CHAKRA_DELAI
-                continue
-            end
-
-            local left = GetChakra(ply) - CHAKRA_COUT * dt
-            SetChakra(ply, left)
-
-            if left <= 0 then
-                StopChakraRun(ply)
-                ply:EmitSound("buttons/button10.wav", 60, 90, 0.4)
-            end
-            continue
-        end
-
-        -- régénération
-        if (nextRegen[ply] or 0) > now then continue end
-        local cur = GetChakra(ply)
-        if cur < CHAKRA_MAX then
-            SetChakra(ply, cur + CHAKRA_REGEN * dt)
-        end
+        MettreAJour(ply, now, dt)
     end
 end)
 

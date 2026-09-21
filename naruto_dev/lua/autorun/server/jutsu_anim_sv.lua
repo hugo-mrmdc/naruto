@@ -21,8 +21,5 @@ net.Receive("Jutsu_Anim_Request", function(_, ply)
     ply._jutsuAnimCD = CurTime() + 0.25
 
     -- Broadcast à tous: jouer la séquence sur CE joueur
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(seqName)
-    net.Broadcast()
+    NA_AnimJutsu(ply, seqName)   -- animation + pas de coups pendant (_na_mudra.lua)
 end)

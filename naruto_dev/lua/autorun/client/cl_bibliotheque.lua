@@ -195,10 +195,16 @@ local function StatsAffichees(tech)
         }
     end
 
-    -- stats réglées pour cette technique, dans l'ordre de NA_NIV.NOMS puis les autres
+    -- stats réglées pour cette technique, dans l'ordre de NA_NIV.NOMS puis les autres.
+    -- Le niveau 1 liste TOUS les réglages (_na_niveaux_techniques.lua) : on n'affiche
+    -- que les stats principales et celles qui changent à un niveau suivant.
+    local PRINCIPALES = { degats = true, soin = true, poison = true, chakra = true, recharge = true,
+        duree = true, bonus_degats = true, bonus_vitesse = true, reduction = true, vol_vie = true }
     local reglees = {}
-    for _, niveau in pairs(NA_NIV_TECH and NA_NIV_TECH[tech.id] or {}) do
-        for genre in pairs(niveau) do reglees[genre] = true end
+    for n, niveau in pairs(NA_NIV_TECH and NA_NIV_TECH[tech.id] or {}) do
+        for genre in pairs(niveau) do
+            if n >= 2 or PRINCIPALES[genre] then reglees[genre] = true end
+        end
     end
     for _, n in ipairs(NA_NIV.NOMS or {}) do
         if reglees[n[1]] then Ajouter(n[1], n[2], n[3]) end
@@ -226,6 +232,19 @@ end
 local function EmblemeDe(g)
     if g.embleme then return M(g.embleme) end
     return IconeDe(TechniquesDe(g.nom)[1])
+end
+
+-- Dessine une image dans le carré (x, y, cote) SANS la déformer : elle garde
+-- ses proportions et est centrée (ex. katon.png et futon.png font 512x446).
+-- $realwidth / $realheight = vraie taille d'un PNG (Width/Height peuvent être arrondis).
+local function DessinerDansCarre(mat, x, y, cote)
+    local iw, ih = mat:GetInt("$realwidth") or 0, mat:GetInt("$realheight") or 0
+    if iw <= 0 or ih <= 0 then iw, ih = mat:Width(), mat:Height() end
+    if iw <= 0 or ih <= 0 then iw, ih = 1, 1 end
+
+    local w, h = cote, cote
+    if iw > ih then h = cote * ih / iw else w = cote * iw / ih end
+    surface.DrawTexturedRect(x + (cote - w) / 2, y + (cote - h) / 2, w, h)
 end
 
 local function Arrondi(v)
@@ -355,7 +374,7 @@ local function Ouvrir()
                     surface.SetMaterial(mat)
                     local lum = actif and 255 or 80
                     surface.SetDrawColor(lum, lum, lum, 255)
-                    surface.DrawTexturedRect(m, m, w - m * 2, w - m * 2)
+                    DessinerDansCarre(mat, m, m, w - m * 2)
                 end
                 draw.SimpleTextOutlined(string.upper(g.nom), "NA.Bib.Embleme", w / 2, w + 14 * S,
                     actif and (sur and C_OR or C_CREME) or C_DOUX, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 220))

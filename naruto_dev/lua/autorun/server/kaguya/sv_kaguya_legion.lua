@@ -24,13 +24,16 @@ local INTERVALLE   = 0.5    -- secondes entre deux ticks
 
 local RECHARGE     = 25     -- secondes avant de pouvoir relancer (depuis le lancement)
 local CHAKRA_COUT  = 30     -- chakra dépensé (0 = gratuit)
-local CHAKRA_MAX   = 100    -- = CHAKRA_MAX de sv_sprint_chakra.lua
+local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.5    -- incantation avant la légion
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 
 local SON_DEBUT    = "physics/body/body_medium_break3.wav"
 local SON_TICK     = "physics/body/body_medium_impact_hard2.wav"
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "kaguya_legion", stat, base) end
 
 SetGlobal2Float("NA_LegionOsRayon", RAYON)
 
@@ -59,9 +62,9 @@ end
 local function Tick(ply)
     if not IsValid(ply) or not ply:Alive() then return end
     local base = ply:GetPos()
-    local centre = base + Vector(0, 0, HAUTEUR / 2)
+    local centre = base + Vector(0, 0, Niv(ply, "hauteur", HAUTEUR) / 2)
 
-    for _, ent in ipairs(ents.FindInSphere(centre, RAYON + 40)) do
+    for _, ent in ipairs(ents.FindInSphere(centre, Niv(ply, "rayon", RAYON) + 40)) do
         if not EstCible(ent, ply) then continue end
 
         -- cylindre : assez près à l'horizontale, et à la bonne hauteur
@@ -69,7 +72,7 @@ local function Tick(ply)
         local ecart = Vector(pos.x - base.x, pos.y - base.y, 0):Length()
         local haut = pos.z + ent:OBBMaxs().z
         local bas = pos.z + ent:OBBMins().z
-        if ecart > RAYON or haut < base.z - 20 or bas > base.z + HAUTEUR then continue end
+        if ecart > Niv(ply, "rayon", RAYON) or haut < base.z - 20 or bas > base.z + Niv(ply, "hauteur", HAUTEUR) then continue end
 
         local dmg = DamageInfo()
         dmg:SetDamage(NA_Stat(ply, "kaguya_legion", "degats", DEGATS))
@@ -82,7 +85,7 @@ local function Tick(ply)
     end
 
     if GetConVar("developer"):GetInt() > 0 then
-        debugoverlay.Sphere(centre, RAYON, INTERVALLE, Color(255, 240, 210, 20), true)
+        debugoverlay.Sphere(centre, Niv(ply, "rayon", RAYON), Niv(ply, "intervalle", INTERVALLE), Color(255, 240, 210, 20), true)
     end
 end
 
@@ -91,11 +94,11 @@ local function Activer(ply)
     Arreter(ply)
 
     ply:SetNW2Bool("NA_LegionOs", true)
-    ply:SetNW2Float("NA_LegionOsFin", CurTime() + DUREE)
+    ply:SetNW2Float("NA_LegionOsFin", CurTime() + Niv(ply, "duree", DUREE))
     ply:EmitSound(SON_DEBUT, 85, 80, 1)
 
-    local fin = CurTime() + DUREE
-    timer.Create("kaguya_legion_" .. ply:EntIndex(), INTERVALLE, 0, function()
+    local fin = CurTime() + Niv(ply, "duree", DUREE)
+    timer.Create("kaguya_legion_" .. ply:EntIndex(), Niv(ply, "intervalle", INTERVALLE), 0, function()
         if not IsValid(ply) or not ply:Alive() or CurTime() >= fin then
             Arreter(ply)
             return
@@ -122,13 +125,11 @@ net.Receive("kaguya_legion_cast", function(_, ply)
     pret[ply] = CurTime() + NA_Stat(ply, "kaguya_legion", "recharge", RECHARGE)
     if NA_CD then NA_CD.Set(ply, "kaguya_legion", NA_Stat(ply, "kaguya_legion", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
-    timer.Simple(DUREE_MUDRA, function()
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         enCours[ply] = nil
         Activer(ply)
     end)

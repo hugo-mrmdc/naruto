@@ -19,13 +19,13 @@ util.AddNetworkString("jinton_bouclier_cast")
 --========================================================
 -- RÉGLAGES -> c'est ICI qu'on change les valeurs
 --========================================================
-local POURCENT_VIE  = 0.20   -- bouclier = 20 % de la vie max
+local POURCENT_VIE  = 20    -- % de la vie max en bouclier
 local DUREE         = 10     -- secondes
 local ECHELLE       = 1.35   -- taille de la sphère (1 = 68 unités de diamètre)
 
 local RECHARGE      = 20     -- secondes avant de pouvoir relancer (depuis le lancement)
 local CHAKRA_COUT   = 25     -- chakra dépensé (0 = gratuit)
-local CHAKRA_MAX    = 100    -- = CHAKRA_MAX de sv_sprint_chakra.lua
+local CHAKRA_MAX    = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA   = 0.5    -- incantation avant l'apparition du bouclier
 local ANIM_APPEL    = "nrp_ninjutsu_defend_dragonflamebombs_start"
 
@@ -43,6 +43,9 @@ local EXPLO_HAUTEUR    = 140      -- hauteur du cylindre, depuis les pieds du la
 local EXPLO_FX         = "[7]_jinton_vortex_expl_add2"            -- particles/atg_farisv2.pcf
 local EXPLO_SON        = "jutsu/jinton/damage_cube_explosion.wav" -- son du tick du cube
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "jinton_bouclier", stat, base) end
 
 local enCours = {}
 local pret    = {}
@@ -78,12 +81,12 @@ end
 -- Explosion de fin : particule, son du tick du cube, dégâts dans un cylindre
 local function Exploser(ply)
     local base = ply:GetPos()
-    local centre = base + Vector(0, 0, EXPLO_HAUTEUR / 2)
+    local centre = base + Vector(0, 0, Niv(ply, "explo_hauteur", EXPLO_HAUTEUR) / 2)
 
     ParticleEffect(EXPLO_FX, ply:WorldSpaceCenter(), Angle(0, 0, 0))
     ply:EmitSound(EXPLO_SON, 85, 100)
 
-    local portee = math.sqrt(EXPLO_RAYON ^ 2 + (EXPLO_HAUTEUR / 2) ^ 2) + 40
+    local portee = math.sqrt(Niv(ply, "explo_rayon", EXPLO_RAYON) ^ 2 + (Niv(ply, "explo_hauteur", EXPLO_HAUTEUR) / 2) ^ 2) + 40
     for _, ent in ipairs(ents.FindInSphere(centre, portee)) do
         if not EstCible(ent, ply) then continue end
 
@@ -91,7 +94,7 @@ local function Exploser(ply)
         local pos = ent:GetPos()
         local ecart = Vector(pos.x - base.x, pos.y - base.y, 0):Length()
         local bas, hautEnt = pos.z + ent:OBBMins().z, pos.z + ent:OBBMaxs().z
-        if ecart <= EXPLO_RAYON and hautEnt >= base.z and bas <= base.z + EXPLO_HAUTEUR then
+        if ecart <= Niv(ply, "explo_rayon", EXPLO_RAYON) and hautEnt >= base.z and bas <= base.z + Niv(ply, "explo_hauteur", EXPLO_HAUTEUR) then
             local dmg = DamageInfo()
             dmg:SetDamage(NA_Stat(ply, "jinton_bouclier", "degats", EXPLO_DEGATS))
             dmg:SetAttacker(ply)
@@ -104,7 +107,7 @@ local function Exploser(ply)
     end
 
     if GetConVar("developer"):GetInt() > 0 then
-        DessinerCylindre(base, EXPLO_RAYON, EXPLO_HAUTEUR, 3, Color(255, 120, 60))
+        DessinerCylindre(base, Niv(ply, "explo_rayon", EXPLO_RAYON), Niv(ply, "explo_hauteur", EXPLO_HAUTEUR), 3, Color(255, 120, 60))
     end
 end
 
@@ -136,20 +139,20 @@ local function Activer(ply)
     if not IsValid(ply) or not ply:Alive() then return end
     NA_JintonBouclierFin(ply)
 
-    local points = math.max(1, math.floor(ply:GetMaxHealth() * POURCENT_VIE))
+    local points = math.max(1, math.floor(ply:GetMaxHealth() * Niv(ply, "pourcent_vie", POURCENT_VIE) / 100))
     ply:SetNW2Float("NA_Bouclier", points)
     ply:SetNW2Float("NA_BouclierMax", points)
 
     local sphere = ents.Create("jinton_bouclier")
     if IsValid(sphere) then
-        sphere.Echelle = ECHELLE
+        sphere.Echelle = Niv(ply, "echelle", ECHELLE)
         sphere:SetOwner(ply)
         sphere:Spawn()
         ply.NA_SphereJinton = sphere
     end
 
     ply:EmitSound(SON_DEBUT, 75, 120, 0.7)
-    timer.Create("jinton_bouclier_" .. ply:EntIndex(), DUREE, 1, function()
+    timer.Create("jinton_bouclier_" .. ply:EntIndex(), Niv(ply, "duree", DUREE), 1, function()
         NA_JintonBouclierFin(ply, false, true)   -- fin du temps : explosion
     end)
 end
@@ -174,13 +177,11 @@ net.Receive("jinton_bouclier_cast", function(_, ply)
     if NA_CD then NA_CD.Set(ply, "jinton_bouclier", NA_Stat(ply, "jinton_bouclier", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
     -- mudras (animation vue par tout le monde)
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
-    timer.Simple(DUREE_MUDRA, function()
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         enCours[ply] = nil
         Activer(ply)
     end)

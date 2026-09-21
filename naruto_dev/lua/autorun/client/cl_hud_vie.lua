@@ -26,7 +26,7 @@ local PORTRAIT_FOV      = 30
 local PORTRAIT_DISTANCE = 62   -- distance de la caméra (plus grand = plus de torse, tête plus petite)
 local PORTRAIT_HAUTEUR  = -6   -- centre du cadrage par rapport à la tête (négatif = plus de torse)
 
-local CHAKRA_MAX     = 100    -- = CHAKRA_MAX de sv_sprint_chakra.lua
+local CHAKRA_MAX     = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local AFFICHER_FAIM  = true   -- n'apparaît que si NW2Float "NA_Faim" existe (0 à 100)
 local VITESSE_BARRE  = 6      -- vitesse à laquelle les barres suivent la valeur
 local TRAINEE        = true   -- trace claire qui descend lentement après une perte de vie
@@ -81,6 +81,7 @@ local function Signature(ply)
     return table.concat({
         ply:GetModel(), ply:GetSkin(),
         ply:GetNW2String("NA_TeteModele", ""), ply:GetNW2String("NA_CheveuxModele", ""),
+        ply:GetNW2String("NA_Yeux", ""),   -- yeux changés (Ketsuryugan...) : portrait refait
     }, "|")
 end
 
@@ -179,6 +180,7 @@ local function AjouterPiece(ent, modele, couleur)
     cs:AddEffects(EF_BONEMERGE)
     cs.Couleur = couleur
     extras[#extras + 1] = cs
+    return cs
 end
 
 local function ConstruirePortrait(ply)
@@ -194,7 +196,8 @@ local function ConstruirePortrait(ply)
     local seq = ent:LookupSequence("idle_all_01")
     if seq and seq >= 0 then ent:ResetSequence(seq) end
 
-    AjouterPiece(ent, ply:GetNW2String("NA_TeteModele", ""), ply:GetNW2Vector("NA_TeteCouleur", Vector(255, 255, 255)))
+    local tete = AjouterPiece(ent, ply:GetNW2String("NA_TeteModele", ""), ply:GetNW2Vector("NA_TeteCouleur", Vector(255, 255, 255)))
+    if tete and NA_MateriauxTete then NA_MateriauxTete(tete, ply) end   -- visage teinté + yeux (cl_playerskin.lua)
     AjouterPiece(ent, ply:GetNW2String("NA_CheveuxModele", ""), ply:GetNW2Vector("NA_CheveuxCouleur", Vector(255, 255, 255)))
 
     -- autres éléments fusionnés au joueur (masque, ailes...) s'il y en a

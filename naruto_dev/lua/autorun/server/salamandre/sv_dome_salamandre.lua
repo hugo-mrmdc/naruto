@@ -20,10 +20,13 @@ local INTERVALLE   = 0.5    -- secondes entre deux ticks
 local POISON_DUREE = 3      -- poison appliqué à chaque tick (0 = pas de poison)
 local RECHARGE     = 6      -- secondes après la FIN de la zone avant de pouvoir relancer
 local CHAKRA_COUT  = 15     -- chakra au lancement (0 = gratuit)
-local CHAKRA_MAX   = 100    -- doit correspondre à sv_sprint_chakra.lua
+local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.8    -- incantation avant l'apparition de la zone
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "salamandre_dome", stat, base) end
 
 resource.AddFile("particles/godio_salamandre.pcf")
 
@@ -48,11 +51,11 @@ local function Poser(ply)
 
     zone:SetPos(pos)
     zone:SetOwner(ply)
-    zone.Duree = DUREE
-    zone.Rayon = RAYON
+    zone.Duree = Niv(ply, "duree", DUREE)
+    zone.Rayon = Niv(ply, "rayon", RAYON)
     zone.Degats = NA_Stat(ply, "salamandre_dome", "degats", DEGATS)
-    zone.Intervalle = INTERVALLE
-    zone.PoisonDuree = POISON_DUREE
+    zone.Intervalle = Niv(ply, "intervalle", INTERVALLE)
+    zone.PoisonDuree = Niv(ply, "poison_duree", POISON_DUREE)
     zone:Spawn()
 
     zones[ply] = zone
@@ -73,19 +76,17 @@ net.Receive("dome_Salamandre", function(_, ply)
     end
 
     -- la recharge démarre après la fin de la zone (avant : 2 s, on pouvait empiler les dômes)
-    local total = DUREE_MUDRA + DUREE + NA_Stat(ply, "salamandre_dome", "recharge", RECHARGE)
+    local total = Niv(ply, "duree_mudra", DUREE_MUDRA) + Niv(ply, "duree", DUREE) + NA_Stat(ply, "salamandre_dome", "recharge", RECHARGE)
     nextUse[ply] = CurTime() + total
     if NA_CD then NA_CD.Set(ply, "salamandre_dome", total) end -- recharge visible dans la barre
 
     casting[ply] = true
 
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
-    timer.Simple(DUREE_MUDRA, function()
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         if IsValid(ply) then casting[ply] = nil end
         Poser(ply)
     end)

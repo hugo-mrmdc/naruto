@@ -24,7 +24,7 @@ SWEP.Dos = nil
 -- Marche et course imposées : celles "sans arme" de Garry's Mod, pour ne jamais
 -- avoir la pose "objet en main" (notamment en ralentissant après une course).
 SWEP.Anims = {
-    idle        = "nrp_base_idle_loop",
+    idle        = "nrp2_idle02",
     marche      = "walk_all",
     course      = "run_all_01",
     seuilMarche = 10,     -- en dessous : idle
@@ -33,14 +33,15 @@ SWEP.Anims = {
 }
 
 -- Vitesse des animations de coups : 1 = normale, 1.5 = 50 % plus rapide.
+-- Chaque coup du combo a aussi sa propre vitesse ("vitesseAnim"), qui passe avant celle-ci.
 -- Si tu la changes, adapte les "duree" (temps avant le coup suivant) dans le même rapport.
 SWEP.VitesseAnim = 1.5
 
 -- Combo : trois coups de poing, le dernier repousse la cible
 SWEP.Combo = {
-    { anim = "nrp2_attacks_punch1", duree = 0.4, degats = 15 },
-    { anim = "nrp2_attacks_punch2", duree = 0.4, degats = 18 },
-    { anim = "nrp2_attacks_punch3", duree = 0.6, degats = 25, recul = 350, reculHaut = 100 },
+    { anim = "nrp2_attacks_punch1", vitesseAnim = 1.5, duree = 0.4, degats = 15 },
+    { anim = "nrp2_attacks_punch2", vitesseAnim = 1.5, duree = 0.4, degats = 18 },
+    { anim = "nrp2_attacks_punch3", vitesseAnim = 1.5, duree = 0.6, degats = 25, recul = 350, reculHaut = 100 },
 }
 SWEP.ComboReset = 1.5   -- secondes sans frapper avant de revenir au coup de poing
 

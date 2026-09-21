@@ -24,10 +24,13 @@ local RIPOSTE_DISTANCE = 150    -- qui te frappe de plus près que ça est empoi
 local IMMUNISE         = true   -- le lanceur ne peut pas être empoisonné pendant la technique
 local RECHARGE         = 15     -- secondes après la FIN avant de pouvoir relancer
 local CHAKRA_COUT      = 20     -- chakra au lancement (0 = gratuit)
-local CHAKRA_MAX       = 100    -- doit correspondre à sv_sprint_chakra.lua
+local CHAKRA_MAX       = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA      = 0.8    -- incantation avant l'aura
 local ANIM_APPEL       = "nrp_ninjutsu_defend_dragonflamebombs_start"
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "salamandre_corps", stat, base) end
 
 resource.AddFile("particles/godio_salamandre.pcf")
 
@@ -53,8 +56,8 @@ local function Empoisonner(cible, lanceur, avecDegats)
         cible:TakeDamageInfo(dmg)
     end
 
-    if POISON_DUREE > 0 and SalamandrePoison and SalamandrePoison.Apply then
-        SalamandrePoison.Apply(cible, lanceur, POISON_DUREE)
+    if Niv(lanceur, "poison_duree", POISON_DUREE) > 0 and SalamandrePoison and SalamandrePoison.Apply then
+        SalamandrePoison.Apply(cible, lanceur, Niv(lanceur, "poison_duree", POISON_DUREE))
     end
 end
 
@@ -74,7 +77,7 @@ end
 local function Demarrer(ply)
     if not IsValid(ply) or not ply:Alive() then return end
 
-    local fin = CurTime() + DUREE
+    local fin = CurTime() + Niv(ply, "duree", DUREE)
     local minuteur = "SalamandreCorps_" .. ply:EntIndex() .. "_" .. math.floor(CurTime() * 100)
     actifs[ply] = { fin = fin, minuteur = minuteur }
 
@@ -96,9 +99,9 @@ local function Demarrer(ply)
         end
 
         if CurTime() < prochainTick then return end
-        prochainTick = CurTime() + INTERVALLE
+        prochainTick = CurTime() + Niv(ply, "intervalle", INTERVALLE)
 
-        for _, ent in ipairs(ents.FindInSphere(ply:WorldSpaceCenter(), RAYON_CONTACT)) do
+        for _, ent in ipairs(ents.FindInSphere(ply:WorldSpaceCenter(), Niv(ply, "rayon_contact", RAYON_CONTACT))) do
             if EstCible(ent, ply) then Empoisonner(ent, ply, true) end
         end
     end)
@@ -108,12 +111,12 @@ end
 -- Riposte : frapper un corps de poison de près empoisonne l'attaquant
 ----------------------------------------------------------
 hook.Add("EntityTakeDamage", "SalamandreCorps_Riposte", function(cible, dmg)
-    if RIPOSTE_DISTANCE <= 0 then return end
+    if Niv(cible, "riposte_distance", RIPOSTE_DISTANCE) <= 0 then return end
     if not actifs[cible] then return end
 
     local attaquant = dmg:GetAttacker()
     if not EstCible(attaquant, cible) then return end
-    if attaquant:GetPos():DistToSqr(cible:GetPos()) > RIPOSTE_DISTANCE * RIPOSTE_DISTANCE then return end
+    if attaquant:GetPos():DistToSqr(cible:GetPos()) > Niv(cible, "riposte_distance", RIPOSTE_DISTANCE) * Niv(cible, "riposte_distance", RIPOSTE_DISTANCE) then return end
 
     -- poison seul (pas de dégâts directs : pas de réaction en chaîne)
     Empoisonner(attaquant, cible, false)
@@ -137,19 +140,17 @@ net.Receive("salamandre_corps_cast", function(_, ply)
     end
 
     -- la recharge démarre après la fin de l'aura
-    local total = DUREE_MUDRA + DUREE + NA_Stat(ply, "salamandre_corps", "recharge", RECHARGE)
+    local total = Niv(ply, "duree_mudra", DUREE_MUDRA) + Niv(ply, "duree", DUREE) + NA_Stat(ply, "salamandre_corps", "recharge", RECHARGE)
     nextUse[ply] = CurTime() + total
     if NA_CD then NA_CD.Set(ply, "salamandre_corps", total) end -- recharge visible dans la barre
 
     casting[ply] = true
 
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
-    timer.Simple(DUREE_MUDRA, function()
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         if IsValid(ply) then casting[ply] = nil end
         Demarrer(ply)
     end)

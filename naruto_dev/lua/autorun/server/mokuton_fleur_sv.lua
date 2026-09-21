@@ -6,6 +6,9 @@ local DAMAGE_RADIUS = 500
 local DAMAGE_AMOUNT = 50
 local SPAWN_DISTANCE = 20
 
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "mokuton_fleur", stat, base) end
+
 print("[MOKUTON] =================================")
 print("[MOKUTON] sv_mokuton chargé ✅")
 print("[MOKUTON] =================================")
@@ -14,7 +17,7 @@ local cooldown = 1.5
 
 -- Fonction de dégâts (définie AVANT SpawnFlowerAndDamage)
 local function ApplyFlowerDamage(flowerEnt, pos, caller)
-    local targets = ents.FindInSphere(pos, DAMAGE_RADIUS)
+    local targets = ents.FindInSphere(pos, Niv(caller, "damage_radius", DAMAGE_RADIUS))
     print("[MOKUTON] Entités dans le rayon:", #targets)
     
     local damaged = 0
@@ -46,7 +49,7 @@ local function SpawnFlowerAndDamage(caller)
     end
 
     -- Position devant le joueur (légèrement sous le sol pour l'animation de croissance)
-    local spawnPos = caller:GetPos() + caller:GetForward() * SPAWN_DISTANCE
+    local spawnPos = caller:GetPos() + caller:GetForward() * Niv(caller, "spawn_distance", SPAWN_DISTANCE)
     spawnPos.z = spawnPos.z - 200 -- Démarre sous terre
     local spawnAng = caller:GetAngles()
     

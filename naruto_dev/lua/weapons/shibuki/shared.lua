@@ -18,8 +18,8 @@ SWEP.WorldModel = "models/weapon/shibuki/shibuki.mdl"
 SWEP.MainDroite = {
     modele  = "models/weapon/shibuki/shibuki.mdl",
     echelle = 0.6,
-    pos     = Vector(3, 2, -3),
-    rot     = Angle(100, 160, 0),
+    pos     = Vector(3, 1, -4),
+    rot     = Angle(100, 170, -30),
 }
 
 -- Dans le dos quand elle est rangée
@@ -34,7 +34,7 @@ SWEP.Dos = {
 
 -- Animations de déplacement (la course de chakra garde la sienne)
 SWEP.Anims = {
-    idle        = "phalanx_h_idle",
+    idle        = "nrp_base_bigsword_idle_loop",
     marche      = "walk_all",       -- marche normale, sans pose d'arme
     course      = "run_all_01",     -- course normale, sans pose d'arme
     seuilMarche = 10,
@@ -42,9 +42,9 @@ SWEP.Anims = {
 }
 
 SWEP.Combo = {
-    { anim = "nrp_sword_slashhorizon",         duree = 1.0, degats = 40 },
-    { anim = "nrp_sword_turnslashingshoulder", duree = 1.1, degats = 40 },
-    { anim = "nrp_sword_slashing",             duree = 1.3, degats = 40 },
+    { anim = "nrp_sword_slashhorizon",         vitesseAnim = 2.0, duree = 1.0, degats = 40 },
+    { anim = "nrp_sword_turnslashingshoulder", vitesseAnim = 1.5, duree = 0.8, degats = 40 },
+    { anim = "nrp_sword_slashing",             vitesseAnim = 1.0, duree = 1.3, degats = 40 },
 }
 SWEP.ComboReset = 2.0
 
@@ -55,6 +55,7 @@ SWEP.SonSwing = Sound("fuma/swing1.wav")
 SWEP.Special = {
     nom        = "Shibuki",
     anim       = "nrp_sword_swordturnkickupperslash",
+    vitesseAnim = 1.0,    -- vitesse de l'animation (1 = normale)
     recharge   = 5,
     duree      = 1.5,
     explosions = { { delai = 0.3, distance = 80 }, { delai = 0.6, distance = 140 } },

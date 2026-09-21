@@ -91,6 +91,21 @@ function NA_DureeRecharge(id)
 end
 
 ----------------------------------------------------------
+-- Techniques à activer / désactiver (même touche)
+--   id -> NW2Bool posé par le serveur tant que la technique est active.
+-- Quand elle est active, rappuyer la COUPE toujours : ni recharge, ni mains
+-- vides, ni immobilisation ne peuvent empêcher de l'arrêter.
+----------------------------------------------------------
+NA_BASCULES = NA_BASCULES or {}
+NA_BASCULES.chinoike_ketsuryugan = "NA_Ketsuryugan"   -- sv_chinoike_ketsuryugan.lua
+
+function NA_TechniqueActive(id, ply)
+    ply = ply or LocalPlayer()
+    local nw = NA_BASCULES[id]
+    return nw ~= nil and IsValid(ply) and ply:GetNW2Bool(nw, false)
+end
+
+----------------------------------------------------------
 -- Lancement
 ----------------------------------------------------------
 -- developer 1 : raison des refus affichée dans la console
@@ -106,11 +121,30 @@ function NA_Lancer(id)
     local ply = LocalPlayer()
     if not IsValid(ply) or not ply:Alive() then return false end
 
+    -- technique active : rappuyer la coupe, sans aucune autre vérification
+    if NA_TechniqueActive(id, ply) then
+        local ok, err = pcall(fn)
+        if not ok then
+            MsgC(Color(255, 80, 80), "[Techniques] erreur en coupant " .. id .. " : " .. tostring(err) .. "\n")
+            return false
+        end
+        Diag(id, "désactivation envoyée")
+        NA_DernierLancer[id] = CurTime()
+        return true
+    end
+
     -- pas encore débloquée dans la bibliothèque (F6, _na_niveaux.lua)
     if NA_Debloquee and not NA_Debloquee(ply, id) then
         NA_DernierRefus[id] = CurTime()
         notification.AddLegacy("Technique verrouillée : débloque-la dans la bibliothèque (F6).", NOTIFY_ERROR, 3)
         Diag(id, "pas débloquée")
+        return false
+    end
+
+    -- en train de recharger son chakra (R) : pas de jutsu
+    if NA_EnRechargeChakra and NA_EnRechargeChakra(ply) then
+        NA_DernierRefus[id] = CurTime()
+        Diag(id, "recharge du chakra en cours")
         return false
     end
 

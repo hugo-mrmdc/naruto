@@ -16,6 +16,9 @@ local SWARM_LIFE   = 1
 
 local MID_RADIUS   = 40 -- distance au centre pour déclencher l'envol
 local COOLDOWN     = 5  -- anti-spam côté serveur (avant, seul le client avait un cooldown)
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "suiton_requin", stat, base) end
 local nextShark    = {}
 util.AddNetworkString("Swarm_EndFX")
 
@@ -31,12 +34,12 @@ local function SpawnSwarmOnTarget(attacker, target)
 
     local center = target:WorldSpaceCenter()
 
-    for i = 1, SWARM_COUNT do
+    for i = 1, Niv(attacker, "swarm_count", SWARM_COUNT) do
         local ent = ents.Create("prop_dynamic")
         if not IsValid(ent) then continue end
 
-        local a = (i / SWARM_COUNT) * math.pi * 2
-        local offset = Vector(math.cos(a), math.sin(a), 0) * SWARM_RADIUS
+        local a = (i / Niv(attacker, "swarm_count", SWARM_COUNT)) * math.pi * 2
+        local offset = Vector(math.cos(a), math.sin(a), 0) * Niv(attacker, "swarm_radius", SWARM_RADIUS)
         offset.z = math.random(-40, 60)
 
         ent:SetModel(MODEL)
@@ -68,7 +71,7 @@ local function SpawnSwarmOnTarget(attacker, target)
 
                 local up = Vector(0, 0, 1)
                 ent:SetAngles(up:Angle())
-                ent:SetPos(ent:GetPos() + up * (SWARM_SPEED * 0.5))
+                ent:SetPos(ent:GetPos() + up * (Niv(attacker, "swarm_speed", SWARM_SPEED) * 0.5))
                 return
             end
 
@@ -85,7 +88,7 @@ local function SpawnSwarmOnTarget(attacker, target)
             local dist = dir:Length()
 
             -- 🎯 Arrivé au milieu → envol
-            if dist <= MID_RADIUS then
+            if dist <= Niv(attacker, "mid_radius", MID_RADIUS) then
                 ent._finishing = true
                 ent._finishEnd = CurTime() + 0.9
                 return
@@ -94,7 +97,7 @@ local function SpawnSwarmOnTarget(attacker, target)
             dir:Normalize()
             ent:SetAngles(dir:Angle())
 
-            local nextPos = pos + dir * SWARM_SPEED
+            local nextPos = pos + dir * Niv(attacker, "swarm_speed", SWARM_SPEED)
 
             local tr = util.TraceHull({
                 start  = pos,
@@ -141,7 +144,7 @@ local function SpawnSwarmOnTarget(attacker, target)
         end)
 
         -- sécurité
-        timer.Simple(SWARM_LIFE, function()
+        timer.Simple(Niv(attacker, "swarm_life", SWARM_LIFE), function()
             if not IsValid(ent) then
                 timer.Remove(tname)
                 return
@@ -185,7 +188,7 @@ net.Receive(NET_SHARK, function(_, ply)
         end
 
         local startPos = proj:GetPos()
-        local nextPos  = startPos + dir * MAIN_SPEED
+        local nextPos  = startPos + dir * Niv(ply, "main_speed", MAIN_SPEED)
 
         local tr       = util.TraceHull({
             start  = startPos,

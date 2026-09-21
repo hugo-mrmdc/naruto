@@ -24,10 +24,13 @@ local INTERVALLE    = 0.25   -- secondes entre deux ticks
 
 local RECHARGE      = 30     -- secondes avant de pouvoir relancer (depuis le lancement)
 local CHAKRA_COUT   = 40     -- chakra dépensé (0 = gratuit)
-local CHAKRA_MAX    = 100    -- = CHAKRA_MAX de sv_sprint_chakra.lua
+local CHAKRA_MAX    = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA   = 0.6    -- incantation avant le laser
 local ANIM_APPEL    = "nrp_ninjutsu_defend_dragonflamebombs_start"
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "jinton_laser", stat, base) end
 
 -- valeurs lues par le client (rendu du laser et hitbox en mode développeur)
 SetGlobal2Float("NA_JintonLaserPortee", PORTEE)
@@ -58,7 +61,7 @@ local function Activer(ply)
     if not IsValid(laser) then return end
     laser.Degats     = NA_Stat(ply, "jinton_laser", "degats", DEGATS)
     laser.Hitbox     = NA_Stat(ply, "jinton_laser", "hitbox", HITBOX)   -- hitbox par niveau
-    laser.Intervalle = INTERVALLE
+    laser.Intervalle = Niv(ply, "intervalle", INTERVALLE)
     laser:SetOwner(ply)
     laser:SetPos(ply:GetPos())
     laser:Spawn()
@@ -67,7 +70,7 @@ local function Activer(ply)
     ply:SetNW2Bool("NA_Vol", true)
     ply:SetVelocity(Vector(0, 0, 250))   -- petit décollage
 
-    timer.Create("jinton_laser_" .. ply:EntIndex(), DUREE, 1, function()
+    timer.Create("jinton_laser_" .. ply:EntIndex(), Niv(ply, "duree", DUREE), 1, function()
         NA_JintonLaserFin(ply)
     end)
 end
@@ -93,13 +96,11 @@ net.Receive("jinton_laser_cast", function(_, ply)
     if NA_CD then NA_CD.Set(ply, "jinton_laser", NA_Stat(ply, "jinton_laser", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
     -- mudras (animation vue par tout le monde)
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
-    timer.Simple(DUREE_MUDRA, function()
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         enCours[ply] = nil
         Activer(ply)
     end)

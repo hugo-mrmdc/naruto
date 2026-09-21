@@ -24,10 +24,13 @@ local ECHELLE       = 1.1    -- taille du cube (1 = 72 unités de côté, la tai
 
 local RECHARGE      = 1     -- secondes avant de pouvoir relancer (depuis le lancement)
 local CHAKRA_COUT   = 30     -- chakra dépensé (0 = gratuit)
-local CHAKRA_MAX    = 100    -- = CHAKRA_MAX de sv_sprint_chakra.lua
+local CHAKRA_MAX    = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA   = 0.6    -- incantation avant l'apparition du cube
 local ANIM_APPEL    = "nrp_ninjutsu_defend_dragonflamebombs_start"
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "jinton_cube", stat, base) end
 
 local enCours = {}   -- joueur -> true pendant l'incantation
 local pret    = {}   -- joueur -> moment où la technique est de nouveau disponible
@@ -106,12 +109,12 @@ net.Receive("jinton_cube_cast", function(_, ply)
         return Diag(ply, "refusé : recharge, encore", string.format("%.1f s", pret[ply] - CurTime()))
     end
 
-    local cible = TrouverCible(ply, PORTEE)
+    local cible = TrouverCible(ply, Niv(ply, "portee", PORTEE))
     if not cible then   -- sinon silencieux
         if GetConVar("developer"):GetInt() > 0 then
             local oeil, t = ply:EyePos(), HitboxVisee(ply)
             local vus = {}
-            for _, e in ipairs(ents.FindAlongRay(oeil, oeil + ply:GetAimVector() * PORTEE, -t, t)) do
+            for _, e in ipairs(ents.FindAlongRay(oeil, oeil + ply:GetAimVector() * Niv(ply, "portee", PORTEE), -t, t)) do
                 -- on ne liste que les joueurs / PNJ (avec leur vie), pas les morceaux de décor
                 if e ~= ply and (e:IsPlayer() or e:IsNPC() or e:IsNextBot()) then
                     vus[#vus + 1] = tostring(e) .. " PV=" .. e:Health()
@@ -134,17 +137,15 @@ net.Receive("jinton_cube_cast", function(_, ply)
     if NA_CD then NA_CD.Set(ply, "jinton_cube", NA_Stat(ply, "jinton_cube", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
     -- mudras (animation vue par tout le monde)
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
-    timer.Simple(DUREE_MUDRA, function()
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         enCours[ply] = nil
         if not IsValid(ply) or not ply:Alive() then return end
         -- la cible a pu mourir ou s'éloigner pendant l'incantation
-        if not EstCible(cible, ply) or cible:GetPos():Distance(ply:GetPos()) > PORTEE * 1.2 then
+        if not EstCible(cible, ply) or cible:GetPos():Distance(ply:GetPos()) > Niv(ply, "portee", PORTEE) * 1.2 then
             return Diag(ply, "annulé : la cible est morte ou partie pendant l'incantation")
         end
 
@@ -155,10 +156,10 @@ net.Receive("jinton_cube_cast", function(_, ply)
 
         local cube = ents.Create("jinton_cube")
         if not IsValid(cube) then return end
-        cube.Duree      = DUREE
+        cube.Duree      = Niv(ply, "duree", DUREE)
         cube.Degats     = NA_Stat(ply, "jinton_cube", "degats", DEGATS)
-        cube.Intervalle = INTERVALLE
-        cube.Echelle    = ECHELLE
+        cube.Intervalle = Niv(ply, "intervalle", INTERVALLE)
+        cube.Echelle    = Niv(ply, "echelle", ECHELLE)
         cube:SetOwner(ply)
         cube:SetCible(cible)
         cube:SetPos(cible:WorldSpaceCenter())

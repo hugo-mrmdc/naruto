@@ -16,17 +16,20 @@ util.AddNetworkString("fuma_aura_cast")
 -- RÉGLAGES -> c'est ICI qu'on change les valeurs
 --========================================================
 local DUREE        = 12     -- secondes du buff
-local BONUS_DEGATS = 0.30   -- dégâts infligés en plus (0.30 = +30 %)
-local REDUCTION    = 0.25   -- dégâts reçus en moins (0.25 = -25 %)
+local BONUS_DEGATS = 30     -- % de dégâts infligés en plus
+local REDUCTION    = 25     -- % de dégâts reçus en moins
 
 local RECHARGE     = 25     -- secondes avant de pouvoir relancer (depuis le lancement)
 local CHAKRA_COUT  = 20     -- chakra dépensé (0 = gratuit)
-local CHAKRA_MAX   = 100    -- = CHAKRA_MAX de sv_sprint_chakra.lua
+local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.4    -- incantation avant l'aura
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 local SON_DEBUT    = "ambient/energy/newspark04.wav"
 local SON_FIN      = "ambient/energy/newspark02.wav"
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "fuma_aura", stat, base) end
 
 local enCours = {}
 local pret    = {}
@@ -47,10 +50,10 @@ local function Activer(ply)
     if not IsValid(ply) or not ply:Alive() then return end
 
     ply:SetNW2Bool("NA_AuraFuma", true)
-    ply:SetNW2Float("NA_AuraFumaFin", CurTime() + DUREE)
+    ply:SetNW2Float("NA_AuraFumaFin", CurTime() + Niv(ply, "duree", DUREE))
     ply:EmitSound(SON_DEBUT, 75, 110, 0.8)
 
-    timer.Create("fuma_aura_" .. ply:EntIndex(), DUREE, 1, function() Arreter(ply) end)
+    timer.Create("fuma_aura_" .. ply:EntIndex(), Niv(ply, "duree", DUREE), 1, function() Arreter(ply) end)
 end
 
 net.Receive("fuma_aura_cast", function(_, ply)
@@ -71,13 +74,11 @@ net.Receive("fuma_aura_cast", function(_, ply)
     pret[ply] = CurTime() + NA_Stat(ply, "fuma_aura", "recharge", RECHARGE)
     if NA_CD then NA_CD.Set(ply, "fuma_aura", NA_Stat(ply, "fuma_aura", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
-    timer.Simple(DUREE_MUDRA, function()
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         enCours[ply] = nil
         Activer(ply)
     end)
@@ -89,13 +90,13 @@ end)
 hook.Add("EntityTakeDamage", "FumaAura_Degats", function(cible, dmg)
     -- dégâts infligés par un porteur de l'aura
     local att = dmg:GetAttacker()
-    if BONUS_DEGATS > 0 and IsValid(att) and att:IsPlayer() and att ~= cible and Actif(att) then
-        dmg:ScaleDamage(1 + BONUS_DEGATS)
+    if Niv(att, "bonus_degats", BONUS_DEGATS) > 0 and IsValid(att) and att:IsPlayer() and att ~= cible and Actif(att) then
+        dmg:ScaleDamage(1 + Niv(att, "bonus_degats", BONUS_DEGATS) / 100)
     end
 
     -- dégâts reçus par un porteur de l'aura
-    if REDUCTION > 0 and cible:IsPlayer() and Actif(cible) then
-        dmg:ScaleDamage(1 - REDUCTION)
+    if Niv(cible, "reduction", REDUCTION) > 0 and cible:IsPlayer() and Actif(cible) then
+        dmg:ScaleDamage(1 - Niv(cible, "reduction", REDUCTION) / 100)
     end
 end)
 

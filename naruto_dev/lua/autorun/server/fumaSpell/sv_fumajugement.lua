@@ -25,11 +25,14 @@ local DEGATS        = 20     -- dégâts de CHAQUE shuriken (x4)
 local RECHARGE      = 18     -- secondes avant de pouvoir relancer (depuis le lancement)
 local RECHARGE_RATE = 6      -- recharge si le fil ne touche rien
 local CHAKRA_COUT   = 25     -- chakra dépensé (0 = gratuit)
-local CHAKRA_MAX    = 100    -- = CHAKRA_MAX de sv_sprint_chakra.lua
+local CHAKRA_MAX    = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DELAI_LANCER  = 0.3    -- délai entre l'animation et le départ du fil
 local ANIM_LANCER   = "nrp_ninjutsu_defend_d35nj2_throw"
 local SON_LANCER    = "fuma/throw_1.wav"
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "fuma_jugement", stat, base) end
 
 local enCours = {}
 local pret    = {}
@@ -41,7 +44,7 @@ end
 -- appelé par le fil (fuma_fil.lua) quand il accroche une cible
 function NA_FumaJugementTouche(ply, cible)
     if not IsValid(ply) or not IsValid(cible) then return end
-    if NA_Etourdir then NA_Etourdir(cible, ETOURDI) end
+    if NA_Etourdir then NA_Etourdir(cible, Niv(ply, "etourdi", ETOURDI)) end
 
     local lames = ents.Create("fuma_quatre_lames")
     if not IsValid(lames) then return end
@@ -74,22 +77,19 @@ net.Receive("fuma_jugement_cast", function(_, ply)
     pret[ply] = CurTime() + NA_Stat(ply, "fuma_jugement", "recharge", RECHARGE)
     if NA_CD then NA_CD.Set(ply, "fuma_jugement", NA_Stat(ply, "fuma_jugement", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_LANCER)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_LANCER)   -- animation + pas de coups pendant (_na_mudra.lua)
 
-    timer.Simple(DELAI_LANCER, function()
+    timer.Simple(Niv(ply, "delai_lancer", DELAI_LANCER), function()
         enCours[ply] = nil
         if not IsValid(ply) or not ply:Alive() then return end
 
         ply:EmitSound(SON_LANCER, 75, 110)
         local fil = ents.Create("fuma_fil")
         if not IsValid(fil) then return end
-        fil.Portee  = PORTEE
-        fil.Vitesse = VITESSE_FIL
+        fil.Portee  = Niv(ply, "portee", PORTEE)
+        fil.Vitesse = Niv(ply, "vitesse_fil", VITESSE_FIL)
         fil.Hitbox  = NA_Stat(ply, "fuma_jugement", "hitbox", HITBOX)
-        fil.Accroche = ETOURDI
+        fil.Accroche = Niv(ply, "etourdi", ETOURDI)
         fil.Direction = ply:GetAimVector()
         fil:SetOwner(ply)
         fil:SetPos(ply:GetShootPos())

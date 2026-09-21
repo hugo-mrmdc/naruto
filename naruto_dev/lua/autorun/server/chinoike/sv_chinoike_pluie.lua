@@ -28,13 +28,16 @@ local RALENTI      = 0.75   -- vitesse des ennemis sous la pluie (1 = pas de ral
 
 local RECHARGE     = 22     -- secondes avant de pouvoir relancer (depuis le lancement)
 local CHAKRA_COUT  = 35     -- chakra dépensé (0 = gratuit)
-local CHAKRA_MAX   = 100    -- = CHAKRA_MAX de sv_sprint_chakra.lua
+local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.5    -- incantation avant la pluie
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 
 local SON_DEBUT    = "ambient/water/water_splash1.wav"
 local SON_TICK     = "physics/flesh/flesh_squishy_impact_hard1.wav"
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "chinoike_pluie", stat, base) end
 
 local enCours = {}
 local pret    = {}
@@ -52,7 +55,7 @@ local function Viser(ply)
     local oeil = ply:EyePos()
     local tr = util.TraceLine({
         start = oeil,
-        endpos = oeil + ply:GetAimVector() * PORTEE,
+        endpos = oeil + ply:GetAimVector() * Niv(ply, "portee", PORTEE),
         filter = ply,
     })
 
@@ -67,14 +70,14 @@ local function Viser(ply)
 end
 
 local function Tick(ply, centre)
-    for _, ent in ipairs(ents.FindInSphere(centre + Vector(0, 0, HAUTEUR / 2), RAYON + HAUTEUR)) do
+    for _, ent in ipairs(ents.FindInSphere(centre + Vector(0, 0, Niv(ply, "hauteur", HAUTEUR) / 2), Niv(ply, "rayon", RAYON) + Niv(ply, "hauteur", HAUTEUR))) do
         if not EstCible(ent, ply) then continue end
 
         -- cylindre : assez près à l'horizontale, et sous la pluie
         local pos = ent:GetPos()
         local ecart = Vector(pos.x - centre.x, pos.y - centre.y, 0):Length()
         local haut = pos.z + ent:OBBMaxs().z
-        if ecart > RAYON or haut < centre.z - 20 or pos.z > centre.z + HAUTEUR then continue end
+        if ecart > Niv(ply, "rayon", RAYON) or haut < centre.z - 20 or pos.z > centre.z + Niv(ply, "hauteur", HAUTEUR) then continue end
 
         local dmg = DamageInfo()
         dmg:SetDamage(NA_Stat(ply, "chinoike_pluie", "degats", DEGATS))
@@ -86,13 +89,14 @@ local function Tick(ply, centre)
         ent:EmitSound(SON_TICK, 70, math.random(90, 110), 0.6)
 
         -- ralenti tant qu'ils restent dessous
-        if RALENTI < 1 and ent:IsPlayer() then
-            ent:SetNW2Float("NA_ChinoikePluieFin", CurTime() + INTERVALLE + 0.1)
+        if Niv(ply, "ralenti", RALENTI) < 1 and ent:IsPlayer() then
+            ent:SetNW2Float("NA_ChinoikePluieFin", CurTime() + Niv(ply, "intervalle", INTERVALLE) + 0.1)
+            ent:SetNW2Float("NA_ChinoikePluieRalenti", Niv(ply, "ralenti", RALENTI))   -- ralenti au niveau du LANCEUR
         end
     end
 
     if GetConVar("developer"):GetInt() > 0 then
-        debugoverlay.Sphere(centre + Vector(0, 0, HAUTEUR / 2), RAYON, INTERVALLE, Color(255, 120, 120, 20), true)
+        debugoverlay.Sphere(centre + Vector(0, 0, Niv(ply, "hauteur", HAUTEUR) / 2), Niv(ply, "rayon", RAYON), Niv(ply, "intervalle", INTERVALLE), Color(255, 120, 120, 20), true)
     end
 end
 
@@ -100,8 +104,9 @@ end
 if RALENTI < 1 then
     hook.Add("Move", "ChinoikePluie_Ralenti", function(ply, mv)
         if ply:GetNW2Float("NA_ChinoikePluieFin", 0) > CurTime() then
-            mv:SetMaxSpeed(mv:GetMaxSpeed() * RALENTI)
-            mv:SetMaxClientSpeed(mv:GetMaxClientSpeed() * RALENTI)
+            local ralenti = ply:GetNW2Float("NA_ChinoikePluieRalenti", RALENTI)   -- ply = la victime
+            mv:SetMaxSpeed(mv:GetMaxSpeed() * ralenti)
+            mv:SetMaxClientSpeed(mv:GetMaxClientSpeed() * ralenti)
         end
     end)
 end
@@ -111,14 +116,14 @@ local function Lancer(ply, centre)
 
     net.Start("chinoike_pluie_zone")
         net.WriteVector(centre)
-        net.WriteFloat(DUREE)
+        net.WriteFloat(Niv(ply, "duree", DUREE))
     net.Broadcast()
 
     sound.Play(SON_DEBUT, centre + Vector(0, 0, 60), 90, 90, 1)
 
-    local fin = CurTime() + DUREE
+    local fin = CurTime() + Niv(ply, "duree", DUREE)
     local nom = "chinoike_pluie_" .. ply:EntIndex() .. "_" .. math.floor(CurTime() * 100)
-    timer.Create(nom, INTERVALLE, 0, function()
+    timer.Create(nom, Niv(ply, "intervalle", INTERVALLE), 0, function()
         if CurTime() >= fin then
             timer.Remove(nom)
             return
@@ -145,13 +150,11 @@ net.Receive("chinoike_pluie_cast", function(_, ply)
     pret[ply] = CurTime() + NA_Stat(ply, "chinoike_pluie", "recharge", RECHARGE)
     if NA_CD then NA_CD.Set(ply, "chinoike_pluie", NA_Stat(ply, "chinoike_pluie", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
-    timer.Simple(DUREE_MUDRA, function()
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         enCours[ply] = nil
         if not IsValid(ply) or not ply:Alive() then return end
         Lancer(ply, Viser(ply))

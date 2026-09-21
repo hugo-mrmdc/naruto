@@ -35,13 +35,16 @@ local DEGATS       = 10     -- dégâts par tick et par ennemi dans le cœur
 
 local RECHARGE     = 20     -- secondes avant de pouvoir relancer (depuis le lancement)
 local CHAKRA_COUT  = 30     -- chakra dépensé (0 = gratuit)
-local CHAKRA_MAX   = 100    -- = CHAKRA_MAX de sv_sprint_chakra.lua
+local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.5    -- incantation avant le vortex
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 
 local SON_DEBUT    = "ambient/wind/wind_snippet4.wav"
 local SON_TICK     = "physics/flesh/flesh_squishy_impact_hard1.wav"
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "chinoike_vortex", stat, base) end
 
 local enCours = {}
 local pret    = {}
@@ -69,7 +72,7 @@ local function Viser(ply)
     local oeil = ply:EyePos()
     local tr = util.TraceLine({
         start = oeil,
-        endpos = oeil + ply:GetAimVector() * PORTEE,
+        endpos = oeil + ply:GetAimVector() * Niv(ply, "portee", PORTEE),
         filter = ply,
     })
 
@@ -87,7 +90,7 @@ local function Attirer(ply, centre)
     local milieu = centre + Vector(0, 0, 40)
     local rayonCoeur = NA_Stat(ply, "chinoike_vortex", "rayon", RAYON_COEUR)
 
-    for _, ent in ipairs(ents.FindInSphere(milieu, RAYON_ATTIRE)) do
+    for _, ent in ipairs(ents.FindInSphere(milieu, Niv(ply, "rayon_attire", RAYON_ATTIRE))) do
         if not EstCible(ent, ply) or not Visible(milieu, ent) then continue end
 
         local vers = centre - ent:GetPos()
@@ -103,13 +106,13 @@ local function Attirer(ply, centre)
 
         if ent:IsPlayer() then
             -- accélération ajoutée à la vitesse du joueur (SetVelocity s'additionne)
-            ent:SetVelocity((dir * NA_Stat(ply, "chinoike_vortex", "force", FORCE) * attenuation + tangente * TOURBILLON) * PAS)
+            ent:SetVelocity((dir * NA_Stat(ply, "chinoike_vortex", "force", FORCE) * attenuation + tangente * Niv(ply, "tourbillon", TOURBILLON)) * Niv(ply, "pas", PAS))
         else
             -- PNJ / nextbots : on les fait glisser à vitesse fixe, sans traverser les murs
-            local vitesse = VITESSE_PNJ * attenuation
+            local vitesse = Niv(ply, "vitesse_pnj", VITESSE_PNJ) * attenuation
             local depart = ent:GetPos()
             local tr = util.TraceHull({
-                start = depart, endpos = depart + (dir * vitesse + tangente * vitesse * 0.3) * PAS,
+                start = depart, endpos = depart + (dir * vitesse + tangente * vitesse * 0.3) * Niv(ply, "pas", PAS),
                 mins = ent:OBBMins(), maxs = ent:OBBMaxs(),
                 filter = ent, mask = MASK_NPCSOLID,
             })
@@ -136,8 +139,8 @@ local function Blesser(ply, centre)
     end
 
     if GetConVar("developer"):GetInt() > 0 then
-        debugoverlay.Sphere(milieu, rayonCoeur, INTERVALLE, Color(255, 60, 60, 20), true)
-        debugoverlay.Sphere(milieu, RAYON_ATTIRE, INTERVALLE, Color(255, 160, 160, 8), true)
+        debugoverlay.Sphere(milieu, rayonCoeur, Niv(ply, "intervalle", INTERVALLE), Color(255, 60, 60, 20), true)
+        debugoverlay.Sphere(milieu, Niv(ply, "rayon_attire", RAYON_ATTIRE), Niv(ply, "intervalle", INTERVALLE), Color(255, 160, 160, 8), true)
     end
 end
 
@@ -155,7 +158,7 @@ local function Lancer(ply, centre)
     local fin = CurTime() + duree
     local prochainDegat = CurTime()
     local nom = "chinoike_vortex_" .. ply:EntIndex() .. "_" .. math.floor(CurTime() * 100)
-    timer.Create(nom, PAS, 0, function()
+    timer.Create(nom, Niv(ply, "pas", PAS), 0, function()
         local now = CurTime()
         if now >= fin then
             timer.Remove(nom)
@@ -165,7 +168,7 @@ local function Lancer(ply, centre)
         Attirer(ply, centre)
 
         if now >= prochainDegat then
-            prochainDegat = now + INTERVALLE
+            prochainDegat = now + Niv(ply, "intervalle", INTERVALLE)
             Blesser(ply, centre)
         end
     end)
@@ -191,13 +194,11 @@ net.Receive("chinoike_vortex_cast", function(_, ply)
     pret[ply] = CurTime() + recharge
     if NA_CD then NA_CD.Set(ply, "chinoike_vortex", recharge) end   -- recharge visible dans la barre
 
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
-    timer.Simple(DUREE_MUDRA, function()
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         enCours[ply] = nil
         if not IsValid(ply) or not ply:Alive() then return end
         Lancer(ply, Viser(ply))

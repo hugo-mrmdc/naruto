@@ -42,9 +42,9 @@ SWEP.Anims = {
 }
 
 SWEP.Combo = {
-    { anim = "ryoku_r_right_t1", duree = 0.5, degats = 40 },
-    { anim = "ryoku_r_left_t2",  duree = 0.5, degats = 40 },
-    { anim = "ryoku_r_right_t2", duree = 1.3, degats = 40 },
+    { anim = "ryoku_r_right_t1", vitesseAnim = 1.0, duree = 0.5, degats = 40 },
+    { anim = "ryoku_r_left_t2",  vitesseAnim = 1.0, duree = 0.5, degats = 40 },
+    { anim = "ryoku_r_right_t2", vitesseAnim = 1.0, duree = 1.3, degats = 40 },
 }
 SWEP.ComboReset = 2.0
 
@@ -55,6 +55,7 @@ SWEP.SonSwing = Sound("fuma/swing1.wav")
 SWEP.Special = {
     nom         = "Shuriken",
     anim        = "nrp_ninjutsu_defend_d35nj2_throw",
+    vitesseAnim = 1.0,    -- vitesse de l'animation (1 = normale)
     recharge    = 1,
     duree       = 0.8,
     son         = "fuma/throw_1.wav",

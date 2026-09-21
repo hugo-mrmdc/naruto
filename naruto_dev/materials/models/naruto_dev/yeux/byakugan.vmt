@@ -1,0 +1,17 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/naruto_dev/yeux/byakugan"
+	"$bumpmap" "models/kaesar/solve/naruto_head/normal"
+
+	"$lightwarptexture" "models/kaesar/solve/naruto_head/lightwarptexture"
+
+	"$phong" "1"
+	"$phongboost"	"24"
+	"$phongalbedotint" "1"
+	"$phongexponenttexture" "models/kaesar/solve/naruto_head/phong_exp"
+	"$phongfresnelranges"	"[0 0 1]"
+
+	"$rimlight"               "1"
+	"$rimlightexponent"       "3"
+	"$rimlightboost"          "4"
+}

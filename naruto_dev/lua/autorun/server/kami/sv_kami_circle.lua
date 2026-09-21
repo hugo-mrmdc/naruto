@@ -50,6 +50,9 @@ local FOLLOW_PLAYER   = false
 -- Incantation : mudras, puis animation d'attaque, puis apparition du cercle
 local DUREE_MUDRA  = 1.1                        -- durée des mudras avant l'attaque
 local DELAI_CERCLE = 0.5                        -- délai entre l'attaque et le cercle
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "kami_circle", stat, base) end
 local ANIM_ATTAQUE = "nrp_ninjutsu_attack_d28nj3_start"   -- nom exact dans anim_extension_mod7.mdl
 
 local nextCast = {}
@@ -84,7 +87,7 @@ local function Damage(caster, center)
     local damage = cvDamage:GetFloat()
     if damage <= 0 then return end
 
-    for _, ent in ipairs(ents.FindInSphere(center, cvRadius:GetFloat())) do
+    for _, ent in ipairs(ents.FindInSphere(center, Niv(caster, "rayon", cvRadius:GetFloat()))) do
         if not IsTarget(ent, caster) then continue end
 
         local dmg = DamageInfo()
@@ -101,10 +104,7 @@ end
 -- (message réseau du système d'animation de l'addon : autorun/server/jutsu_anim_sv.lua)
 local function PlayAnim(ply, seqName)
     if not IsValid(ply) or not seqName or seqName == "" then return end
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(seqName)
-    net.Broadcast()
+    NA_AnimJutsu(ply, seqName)   -- animation + pas de coups pendant (_na_mudra.lua)
 end
 
 -- Apparition du cercle : appelée à la fin de l'animation
@@ -112,7 +112,7 @@ local function SpawnCircle(ply)
     if not IsValid(ply) or not ply:Alive() then return end
 
     local timerName = "kami_circle_" .. ply:EntIndex() .. "_" .. math.floor(CurTime() * 100)
-    local duration = cvDuration:GetFloat()
+    local duration = Niv(ply, "duree", cvDuration:GetFloat())
 
     active[ply] = timerName
     ply:SetNWBool("KamiCircle", true)
@@ -147,7 +147,7 @@ local function SpawnCircle(ply)
         end
 
         if CurTime() < nextTick then return end
-        nextTick = CurTime() + math.max(cvTick:GetFloat(), 0.05)
+        nextTick = CurTime() + math.max(Niv(ply, "intervalle", cvTick:GetFloat()), 0.05)
 
         Damage(ply, FOLLOW_PLAYER and ply:GetPos() or origin)
     end)
@@ -166,13 +166,14 @@ net.Receive("kami_circle_cast", function(_, ply)
     end
 
     casting[ply] = true
-    nextCast[ply] = CurTime() + DUREE_MUDRA + DELAI_CERCLE + cvDuration:GetFloat() + NA_Stat(ply, "kami_circle", "recharge", cvCooldown:GetFloat())
+    nextCast[ply] = CurTime() + Niv(ply, "duree_mudra", DUREE_MUDRA) + Niv(ply, "delai_cercle", DELAI_CERCLE) + Niv(ply, "duree", cvDuration:GetFloat()) + NA_Stat(ply, "kami_circle", "recharge", cvCooldown:GetFloat())
     if NA_CD then NA_CD.Set(ply, "kami_circle", nextCast[ply] - CurTime()) end -- recharge visible dans la barre
 
     ply:EmitSound("base/mudra_sound_geams.wav", 80, 100)
 
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
     -- fin des mudras : animation d'attaque
-    timer.Simple(DUREE_MUDRA, function()
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         if not IsValid(ply) or not ply:Alive() then
             if IsValid(ply) then casting[ply] = nil end
             return
@@ -181,7 +182,7 @@ net.Receive("kami_circle_cast", function(_, ply)
     end)
 
     -- puis le cercle se pose
-    timer.Simple(DUREE_MUDRA + DELAI_CERCLE, function()
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA) + Niv(ply, "delai_cercle", DELAI_CERCLE), function()
         if IsValid(ply) then casting[ply] = nil end
         SpawnCircle(ply)
     end)

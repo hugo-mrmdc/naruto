@@ -34,6 +34,7 @@ NA_NIV.MAX = 5
 NA_NIV.PAR_NIVEAU = {
     degats        = 0.10,
     soin          = 0.10,
+    poison        = 0.10,   -- dégâts par tick du poison (salamandre_poison)
     chakra        = -0.05,
     recharge      = -0.05,
     recharge_rate = -0.05,   -- recharge raccourcie quand le Jugement Fuma rate
@@ -60,7 +61,7 @@ NA_NIV.LIGNEES = {
     { "kami_shuriken", "kami_ailes", "kami_circle", "kami_bouclier" },
     { "jinton_cube", "jinton_bouclier", "jinton_laser" },
     { "kaguya_armure", "kaguya_danse", "kaguya_legion" },
-    { "chinoike_pluie", "chinoike_vortex" },
+    { "chinoike_ketsuryugan", "chinoike_genjutsu", "chinoike_pluie", "chinoike_vortex" },
 }
 --========================================================
 

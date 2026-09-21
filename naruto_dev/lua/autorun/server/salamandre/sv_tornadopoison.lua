@@ -25,10 +25,13 @@ local INTERVALLE        = 0.5    -- secondes entre deux ticks
 local POISON_DUREE      = 3      -- poison dans le cœur (0 = pas de poison)
 local RECHARGE          = 12     -- secondes après la FIN du typhon avant de relancer
 local CHAKRA_COUT       = 25     -- chakra au lancement (0 = gratuit)
-local CHAKRA_MAX        = 100    -- doit correspondre à sv_sprint_chakra.lua
+local CHAKRA_MAX        = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA       = 1.0    -- incantation avant l'apparition du typhon
 local ANIM_APPEL        = "nrp_ninjutsu_defend_dragonflamebombs_start"
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "salamandre_tornade", stat, base) end
 
 resource.AddFile("particles/godio_salamandre.pcf")
 
@@ -43,7 +46,7 @@ local function PointVise(ply)
     local debut = ply:EyePos()
     local tr = util.TraceLine({
         start = debut,
-        endpos = debut + ply:GetAimVector() * PORTEE_MAX,
+        endpos = debut + ply:GetAimVector() * Niv(ply, "portee_max", PORTEE_MAX),
         filter = ply,
         mask = MASK_SOLID,          -- s'arrête aussi sur un joueur ou un PNJ visé
     })
@@ -71,15 +74,15 @@ local function Poser(ply)
 
     typhon:SetPos(PointVise(ply))
     typhon:SetOwner(ply)
-    typhon.Duree = DUREE
-    typhon.RayonAttraction = RAYON_ATTRACTION
-    typhon.RayonCoeur = RAYON_COEUR
-    typhon.ForceAttraction = FORCE_ATTRACTION
-    typhon.Tourbillon = TOURBILLON
-    typhon.VitesseAttractionPNJ = VITESSE_PNJ
+    typhon.Duree = Niv(ply, "duree", DUREE)
+    typhon.RayonAttraction = Niv(ply, "rayon_attraction", RAYON_ATTRACTION)
+    typhon.RayonCoeur = Niv(ply, "rayon_coeur", RAYON_COEUR)
+    typhon.ForceAttraction = Niv(ply, "force_attraction", FORCE_ATTRACTION)
+    typhon.Tourbillon = Niv(ply, "tourbillon", TOURBILLON)
+    typhon.VitesseAttractionPNJ = Niv(ply, "vitesse_pnj", VITESSE_PNJ)
     typhon.Degats = NA_Stat(ply, "salamandre_tornade", "degats", DEGATS)
-    typhon.Intervalle = INTERVALLE
-    typhon.PoisonDuree = POISON_DUREE
+    typhon.Intervalle = Niv(ply, "intervalle", INTERVALLE)
+    typhon.PoisonDuree = Niv(ply, "poison_duree", POISON_DUREE)
     typhon:Spawn()
 
     typhons[ply] = typhon
@@ -100,20 +103,18 @@ concommand.Add("spawn_tornado", function(ply)
     end
 
     -- la recharge démarre après la fin du typhon
-    local total = DUREE_MUDRA + DUREE + NA_Stat(ply, "salamandre_tornade", "recharge", RECHARGE)
+    local total = Niv(ply, "duree_mudra", DUREE_MUDRA) + Niv(ply, "duree", DUREE) + NA_Stat(ply, "salamandre_tornade", "recharge", RECHARGE)
     nextUse[ply] = CurTime() + total
     if NA_CD then NA_CD.Set(ply, "salamandre_tornade", total) end -- recharge visible dans la barre
 
     casting[ply] = true
 
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
     -- le point visé est pris à la FIN de l'incantation : on peut viser pendant les mudras
-    timer.Simple(DUREE_MUDRA, function()
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         if IsValid(ply) then casting[ply] = nil end
         Poser(ply)
     end)

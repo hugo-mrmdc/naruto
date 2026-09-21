@@ -1,7 +1,8 @@
 --========================================================
 -- Téléportation Fuma (SERVEUR)
 --
---   1er appui : lance un shuriken dans la direction du regard.
+--   1er appui : mudras, animation de lancer, puis le shuriken part dans la
+--               direction du regard.
 --   2e appui  : téléporte le joueur sur le shuriken.
 --
 --   Le shuriken touche un joueur / PNJ -> il explose (dégâts de zone) et disparaît.
@@ -31,10 +32,23 @@ local DEGATS        = 60     -- dégâts de l'explosion sur un joueur / PNJ
 local RAYON_EXPLO   = 200    -- rayon de l'explosion (dégâts réduits avec la distance)
 
 local RECHARGE      = 2      -- secondes avant de relancer un shuriken (après sa disparition)
+
+local DUREE_MUDRA   = 0.4    -- mudras avant le lancer
+local ANIM_MUDRA    = "nrp_ninjutsu_defend_dragonflamebombs_start"
+local ANIM_LANCER   = "nrp_ninjutsu_defend_d35nj2_throw"   -- après les mudras
+local DELAI_LANCER  = 0.3    -- après le début de l'animation de lancer, le shuriken part
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "fuma_tp", stat, base) end
 
 local fumaActive = {}   -- joueur -> shuriken en vol
 local nextUse = {}
+local enCours = {}      -- joueur -> true pendant les mudras et le lancer
+
+local function JouerAnim(ply, seq)
+    NA_AnimJutsu(ply, seq)   -- animation + pas de coups pendant (_na_mudra.lua)
+end
 
 local function Dev()
     return GetConVar("developer"):GetInt() > 0
@@ -62,9 +76,9 @@ local function RemoveFuma(ply)
 end
 
 local function Exploser(ply, pos, inflicteur)
-    for _, ent in ipairs(ents.FindInSphere(pos, RAYON_EXPLO)) do
+    for _, ent in ipairs(ents.FindInSphere(pos, Niv(ply, "rayon_explo", RAYON_EXPLO))) do
         if EstCible(ent, ply) then
-            local scale = 1 - math.Clamp(ent:GetPos():Distance(pos) / RAYON_EXPLO, 0, 1)
+            local scale = 1 - math.Clamp(ent:GetPos():Distance(pos) / Niv(ply, "rayon_explo", RAYON_EXPLO), 0, 1)
             local dmg = DamageInfo()
             dmg:SetDamage(NA_Stat(ply, "fuma_tp", "degats", DEGATS) * scale)
             dmg:SetAttacker(ply)
@@ -74,7 +88,7 @@ local function Exploser(ply, pos, inflicteur)
             ent:TakeDamageInfo(dmg)
         end
     end
-    if Dev() then debugoverlay.Sphere(pos, RAYON_EXPLO, 1, Color(255, 0, 0, 30), true) end
+    if Dev() then debugoverlay.Sphere(pos, Niv(ply, "rayon_explo", RAYON_EXPLO), 1, Color(255, 0, 0, 30), true) end
 end
 
 -- Position libre pour la téléportation (évite de rester coincé dans un mur)
@@ -123,11 +137,11 @@ local function Lancer(ply)
     proj:SetMoveType(MOVETYPE_NONE)
     fumaActive[ply] = proj
 
-    local fin = CurTime() + DUREE_VIE
+    local fin = CurTime() + Niv(ply, "duree_vie", DUREE_VIE)
     local precedent = CurTime()
     local hb = NA_Stat(ply, "fuma_tp", "hitbox", HITBOX)   -- hitbox par niveau (pas celle des murs)
     local tH = Vector(hb, hb, hb)
-    local tM = Vector(HITBOX_MUR, HITBOX_MUR, HITBOX_MUR)
+    local tM = Vector(Niv(ply, "hitbox_mur", HITBOX_MUR), Niv(ply, "hitbox_mur", HITBOX_MUR), Niv(ply, "hitbox_mur", HITBOX_MUR))
     local nom = "fumaTpMove_" .. ply:EntIndex()
 
     timer.Create(nom, 0, 0, function()
@@ -147,7 +161,7 @@ local function Lancer(ply)
         end
 
         local depart = proj:GetPos()
-        local arrivee = depart + dir * VITESSE * dt
+        local arrivee = depart + dir * Niv(ply, "vitesse", VITESSE) * dt
 
         -- 1. un mur (ou un décor solide) sur le trajet ?
         local mur = util.TraceHull({
@@ -197,9 +211,25 @@ net.Receive(NET_FUMA, function(_, ply)
         return
     end
 
-    -- 1er appui : lancer
-    if (nextUse[ply] or 0) > CurTime() then return end
-    Lancer(ply)
+    -- 1er appui : mudras -> animation de lancer -> le shuriken part
+    if enCours[ply] or (nextUse[ply] or 0) > CurTime() then return end
+    enCours[ply] = true
+
+    local mudra = Niv(ply, "duree_mudra", DUREE_MUDRA)
+    JouerAnim(ply, ANIM_MUDRA)
+    ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
+    if NA_Mudra then NA_Mudra(ply, mudra) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+
+    timer.Simple(mudra, function()
+        if not IsValid(ply) or not ply:Alive() then enCours[ply] = nil return end
+        JouerAnim(ply, ANIM_LANCER)
+
+        timer.Simple(Niv(ply, "delai_lancer", DELAI_LANCER), function()
+            enCours[ply] = nil
+            if not IsValid(ply) or not ply:Alive() then return end
+            Lancer(ply)   -- direction = là où il regarde au moment du lancer
+        end)
+    end)
 end)
 
 hook.Add("PlayerDeath", "FumaTpMort", function(ply) RemoveFuma(ply) end)
@@ -207,4 +237,5 @@ hook.Add("PlayerDeath", "FumaTpMort", function(ply) RemoveFuma(ply) end)
 hook.Add("PlayerDisconnected", "FumaTpCleanup", function(ply)
     RemoveFuma(ply)
     nextUse[ply] = nil
+    enCours[ply] = nil
 end)

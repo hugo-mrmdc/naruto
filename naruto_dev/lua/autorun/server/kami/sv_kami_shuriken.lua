@@ -21,11 +21,14 @@ local NOMBRE       = 1      -- shurikens par lancer (plus de 1 = éventail)
 local ECART        = 6      -- écart en degrés entre les shurikens de l'éventail
 local RECHARGE     = 1.5    -- secondes entre deux lancers
 local CHAKRA_COUT  = 8      -- chakra par lancer (0 = gratuit)
-local CHAKRA_MAX   = 100    -- doit correspondre à sv_sprint_chakra.lua
+local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DELAI_LANCER = 0.25   -- délai entre le début de l'animation et le départ du shuriken
 local ANIM_LANCER  = "nrp_ninjutsu_trow_d73nj2_throw"   -- anim_extension_mod6.mdl
 
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "kami_shuriken", stat, base) end
 
 resource.AddFile("models/clan/ame/kami/foc_arme_shuriken_papier.mdl")
 resource.AddFile("models/clan/ame/kami/foc_arme_shuriken_papier.vvd")
@@ -44,9 +47,9 @@ local function Lancer(ply)
     local start = ply:GetShootPos() + ply:GetAimVector() * 20
     local aim = ply:EyeAngles()
 
-    for i = 1, NOMBRE do
+    for i = 1, Niv(ply, "nombre", NOMBRE) do
         -- en éventail autour du regard si NOMBRE > 1
-        local decal = (i - (NOMBRE + 1) / 2) * ECART
+        local decal = (i - (Niv(ply, "nombre", NOMBRE) + 1) / 2) * Niv(ply, "ecart", ECART)
         local ang = Angle(aim.p, aim.y + decal, 0)
         local dir = ang:Forward()
 
@@ -57,12 +60,12 @@ local function Lancer(ply)
         ent:SetAngles(Angle(0, ang.y, 0))
         ent:SetOwner(ply)
         ent.Direction = dir
-        ent.Vitesse = VITESSE
+        ent.Vitesse = Niv(ply, "vitesse", VITESSE)
         ent.Degats = NA_Stat(ply, "kami_shuriken", "degats", DEGATS)
-        ent.DureeVie = DUREE_VIE
-        ent.Echelle = ECHELLE
-        ent.Largeur = LARGEUR
-        ent.Hauteur = HAUTEUR
+        ent.DureeVie = Niv(ply, "duree_vie", DUREE_VIE)
+        ent.Echelle = Niv(ply, "echelle", ECHELLE)
+        ent.Largeur = Niv(ply, "largeur", LARGEUR)
+        ent.Hauteur = Niv(ply, "hauteur", HAUTEUR)
         ent:Spawn()
     end
 
@@ -86,12 +89,9 @@ net.Receive("kami_shuriken_cast", function(_, ply)
     end
 
     -- animation de lancer, vue par tout le monde
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_LANCER)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_LANCER)   -- animation + pas de coups pendant (_na_mudra.lua)
 
-    timer.Simple(DELAI_LANCER, function()
+    timer.Simple(Niv(ply, "delai_lancer", DELAI_LANCER), function()
         Lancer(ply)
     end)
 end)

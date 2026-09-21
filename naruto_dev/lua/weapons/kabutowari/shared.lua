@@ -48,9 +48,9 @@ SWEP.Anims = {
 }
 
 SWEP.Combo = {
-    { anim = "oldjimmy_tanjiro_a_p0001_v00_c00_atkskl02_2",   duree = 1.0, degats = 40 },
-    { anim = "oldjimmy_tanjiro_a_p0001_v00_c00_atkskl03a_0",  duree = 1.1, degats = 40 },
-    { anim = "oldjimmy_tengen_a_p0013_v00_c00_atkcmbw03u01",  duree = 1.3, degats = 40 },
+    { anim = "oldjimmy_tanjiro_a_p0001_v00_c00_atkskl02_2",  vitesseAnim = 1.0, duree = 1.0, degats = 40 },
+    { anim = "oldjimmy_tanjiro_a_p0001_v00_c00_atkskl03a_0", vitesseAnim = 1.0, duree = 1.1, degats = 40 },
+    { anim = "oldjimmy_tengen_a_p0013_v00_c00_atkcmbw03u01", vitesseAnim = 1.0, duree = 1.3, degats = 40 },
 }
 SWEP.ComboReset = 2.0
 
@@ -61,6 +61,7 @@ SWEP.SonSwing = Sound("fuma/swing1.wav")
 SWEP.Special = {
     nom        = "Kabutowari",
     anim       = "nrp_sword_swordturnkickupperslash",
+    vitesseAnim = 1.0,    -- vitesse de l'animation (1 = normale)
     recharge   = 5,
     duree      = 1.5,
     explosions = { { delai = 0.3, distance = 80 }, { delai = 0.6, distance = 140 } },

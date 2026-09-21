@@ -42,7 +42,7 @@ local function Possible(ply)
     if ply:GetNW2Bool("NA_Wings", false) or ply:GetNW2Bool("NA_Vol", false) then return false end   -- en vol
     if ply:GetNWBool("MokutonRide", false) then return false end
     if SEULEMENT_EN_COURSE_CHAKRA and not ply:GetNW2Bool("NA_ChakraRun", false) then return false end
-    if COUT_CHAKRA > 0 and ply:GetNW2Float("NA_Chakra", 100) < COUT_CHAKRA then return false end
+    if COUT_CHAKRA > 0 and ply:GetNW2Float("NA_Chakra", NA_CHAKRA_MAX or 100) < COUT_CHAKRA then return false end
     return true
 end
 
@@ -72,7 +72,7 @@ hook.Add("SetupMove", "NA_DoubleSaut", function(ply, mv)
 
     if SERVER and not fait then
         if COUT_CHAKRA > 0 then
-            ply:SetNW2Float("NA_Chakra", math.max(ply:GetNW2Float("NA_Chakra", 100) - COUT_CHAKRA, 0))
+            ply:SetNW2Float("NA_Chakra", math.max(ply:GetNW2Float("NA_Chakra", NA_CHAKRA_MAX or 100) - COUT_CHAKRA, 0))
         end
         NA_DoubleSaut_JouerAnim(ply)
         ply:EmitSound("player/suit_sprint.wav", 60, 110, 0.5)

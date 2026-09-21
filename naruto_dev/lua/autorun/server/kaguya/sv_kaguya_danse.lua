@@ -31,7 +31,7 @@ local SOIN         = 8      -- vie rendue au lanceur par tick
 
 local RECHARGE     = 20     -- secondes avant de pouvoir relancer (depuis le lancement)
 local CHAKRA_COUT  = 30     -- chakra dépensé (0 = gratuit)
-local CHAKRA_MAX   = 100    -- = CHAKRA_MAX de sv_sprint_chakra.lua
+local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.4    -- incantation avant l'accroche
 local ANIM_APPEL   = "nrp_ninjutsu_attack_rasenganinvisible_attack_end"
 
@@ -39,6 +39,9 @@ local SON_ACCROCHE = "physics/body/body_medium_break3.wav"
 local SON_TICK     = "physics/body/body_medium_impact_hard2.wav"
 local SON_SOIN     = "items/medshot4.wav"
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "kaguya_danse", stat, base) end
 
 local enCours = {}
 local pret    = {}
@@ -57,7 +60,7 @@ local function Chercher(ply)
     local vue  = ply:GetAimVector()
     local meilleure, meilleurEcart
 
-    for _, ent in ipairs(ents.FindInSphere(oeil, PORTEE)) do
+    for _, ent in ipairs(ents.FindInSphere(oeil, Niv(ply, "portee", PORTEE))) do
         if not EstCible(ent, ply) then continue end
 
         local vers = ent:WorldSpaceCenter() - oeil
@@ -66,7 +69,7 @@ local function Chercher(ply)
         vers:Normalize()
 
         local ecart = math.deg(math.acos(math.Clamp(vers:Dot(vue), -1, 1)))
-        if ecart > ANGLE_VISEE then continue end
+        if ecart > Niv(ply, "angle_visee", ANGLE_VISEE) then continue end
 
         if not A_TRAVERS then
             local tr = util.TraceLine({
@@ -123,11 +126,11 @@ local function Accrocher(ply, cible)
     ply:SetNW2Entity("NA_KaguyaAttireCible", cible)
     ply:EmitSound(SON_ACCROCHE, 85, 80, 1)
 
-    local fin = CurTime() + DUREE
-    timer.Create("kaguya_attire_" .. ply:EntIndex(), INTERVALLE, 0, function()
+    local fin = CurTime() + Niv(ply, "duree", DUREE)
+    timer.Create("kaguya_attire_" .. ply:EntIndex(), Niv(ply, "intervalle", INTERVALLE), 0, function()
         if not IsValid(ply) or not ply:Alive() or CurTime() >= fin
             or not EstCible(cible, ply)
-            or ply:GetPos():Distance(cible:GetPos()) > PORTEE_CASSE then
+            or ply:GetPos():Distance(cible:GetPos()) > Niv(ply, "portee_casse", PORTEE_CASSE) then
             Arreter(ply)
             return
         end
@@ -158,13 +161,11 @@ net.Receive("kaguya_danse_cast", function(_, ply)
     pret[ply] = CurTime() + NA_Stat(ply, "kaguya_danse", "recharge", RECHARGE)
     if NA_CD then NA_CD.Set(ply, "kaguya_danse", NA_Stat(ply, "kaguya_danse", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
-    timer.Simple(DUREE_MUDRA, function()
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         enCours[ply] = nil
         if not IsValid(ply) then return end
         -- la cible a pu bouger pendant l'incantation : on revise

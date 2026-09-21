@@ -17,7 +17,7 @@ local SEQUENCE = "idle"
 
 -- Vitesses de vol, inertie et rotation du corps : dans lua/kami/sh_kami_wings_move.lua
 -- (partagé serveur + client pour que le vol soit prédit et fluide).
-local CHAKRA_MAX    = 100   -- doit correspondre à sv_sprint_chakra.lua
+local CHAKRA_MAX    = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local CHAKRA_COUT   = 6     -- chakra par seconde de vol
 local CHAKRA_MINI   = 15    -- chakra requis pour décoller
 local RECHARGE      = 3     -- secondes avant de pouvoir relancer après l'atterrissage
@@ -25,6 +25,9 @@ local DUREE_MUDRA   = 0.8   -- incantation avant l'apparition des ailes
 local ANIM_APPEL    = "nrp_ninjutsu_defend_dragonflamebombs_start"
 
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "kami_ailes", stat, base) end
 
 -- Téléchargement pour les joueurs : chaque fichier du modèle doit être listé,
 -- le .mdl seul ne suffit pas (sans .vvd ni .vtx, le modèle reste une erreur).
@@ -180,7 +183,7 @@ net.Receive("kami_wings_toggle", function(_, ply)
     if casting[ply] then return end
     if (nextUse[ply] or 0) > CurTime() then return end
 
-    if GetChakra(ply) < CHAKRA_MINI then
+    if GetChakra(ply) < Niv(ply, "chakra_mini", CHAKRA_MINI) then
         ply:ChatPrint("Pas assez de chakra pour les ailes de papier.")
         return
     end
@@ -188,14 +191,12 @@ net.Receive("kami_wings_toggle", function(_, ply)
     casting[ply] = true
 
     -- mudras, puis apparition des ailes
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
 
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
-    timer.Simple(DUREE_MUDRA, function()
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         if IsValid(ply) then casting[ply] = nil end
         if not IsValid(ply) or not ply:Alive() then return end
         Decoller(ply)

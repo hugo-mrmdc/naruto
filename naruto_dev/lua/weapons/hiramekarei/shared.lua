@@ -49,9 +49,9 @@ SWEP.Anims = {
 
 -- Combo : le 1er coup touche 4 fois
 SWEP.Combo = {
-    { anim = "oldjimmy_tengen_a_p0013_v00_c00_atkcmbw03",   duree = 1.0, degats = 100, coups = 4, intervalle = 0.15, sons = 4 },
-    { anim = "oldjimmy_tengen_a_p0013_v00_c00_atkcmbw04",   duree = 0.7, degats = 100 },
-    { anim = "oldjimmy_tanjiro_a_p0001_v00_c00_atkskl02_2", duree = 1.0, degats = 100 },
+    { anim = "oldjimmy_tengen_a_p0013_v00_c00_atkcmbw03",   vitesseAnim = 1.0, duree = 1.0, degats = 100, coups = 4, intervalle = 0.15, sons = 4 },
+    { anim = "oldjimmy_tengen_a_p0013_v00_c00_atkcmbw04",   vitesseAnim = 1.0, duree = 0.7, degats = 100 },
+    { anim = "oldjimmy_tanjiro_a_p0001_v00_c00_atkskl02_2", vitesseAnim = 1.0, duree = 1.0, degats = 100 },
 }
 SWEP.ComboReset = 2.0
 
@@ -62,6 +62,7 @@ SWEP.SonSwing = Sound("fuma/swing1.wav")
 SWEP.Special = {
     nom        = "Hiramekarei",
     anim       = "nrp_sword_swordturnkickupperslash",
+    vitesseAnim = 1.0,    -- vitesse de l'animation (1 = normale)
     recharge   = 5,
     duree      = 1.5,
     explosions = { { delai = 0.3, distance = 80 }, { delai = 0.6, distance = 140 } },

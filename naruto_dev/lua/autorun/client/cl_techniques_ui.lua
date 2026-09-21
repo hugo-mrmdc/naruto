@@ -64,40 +64,40 @@ local TECHNIQUES = {
       dmg = "4 par demi-seconde au contact + poison" },
 
     -- ===== FUMA =====
-    { cat = "Fuma", name = "Téléportation", key = KEY_G, id = "fuma_tp", rang = "C", icone = "ui/icon/fuma_shuriken.png", court = "TP", cooldown = 2,
+    { cat = "Fuma", name = "Téléportation", key = "", id = "fuma_tp", rang = "C", icone = "ui/icon/fuma_shuriken.png", court = "TP", cooldown = 2,
       desc = "Lance un shuriken : rappuie pour te téléporter dessus. S'il touche un mur, tu y es téléporté automatiquement ; s'il touche un ennemi, il explose. S'il ne touche rien, il disparaît.",
       dmg = "60 (explosion sur un ennemi)" },
-    { cat = "Fuma", name = "Jugement des Quatre Lames", key = "", id = "fuma_jugement", rang = "A", icone = "ui/icon/fuma_jugement_shuriken.png", court = "Jugement", cooldown = 18,
+    { cat = "Fuma", name = "Jugement des Quatre Lames", key = "", id = "fuma_jugement", rang = "B", icone = "ui/icon/fuma_jugement_shuriken.png", court = "Jugement", cooldown = 18,
       desc = "Lance un fil d'acier là où tu vises. S'il touche un ennemi, il est étourdi 2,5 secondes : quatre shurikens apparaissent au-dessus de lui, un de chaque côté, et foncent sur lui. Coûte 25 de chakra.",
       dmg = "4 x 20" },
     { cat = "Fuma", name = "Aura Fuma", key = "", id = "fuma_aura", rang = "B", icone = "ui/icon/fuma_morsure_sanglante.png", court = "Aura", cooldown = 25,
       desc = "Une aura t'entoure pendant 12 secondes : tu infliges 30 % de dégâts en plus et tu en encaisses 25 % de moins. Coûte 20 de chakra.",
       dmg = "+30 % de dégâts, -25 % de dégâts subis" },
-    { cat = "Fuma", name = "Shuriken Céleste", key = "", id = "fuma_ciel", rang = "A", icone = "ui/icon/fuma_shuriken_acier.png", court = "Céleste", cooldown = 28,
+    { cat = "Fuma", name = "Shuriken Céleste", key = "", id = "fuma_ciel", rang = "B", icone = "ui/icon/fuma_shuriken_acier.png", court = "Céleste", cooldown = 28,
       desc = "Un shuriken géant tombe du ciel sur le point que tu vises et explose en fumée au sol : dégâts de zone et projection. Coûte 35 de chakra.",
       dmg = "70 au centre" },
-    { cat = "Fuma", name = "Invisibilité", key = KEY_F, id = "fuma_invisibilite", rang = "C", icone = "ui/icon/fuma_invisible.png", court = "Invisible", cooldown = 8,
+    { cat = "Fuma", name = "Invisibilité", key = "", id = "fuma_invisibilite", rang = "C", icone = "ui/icon/fuma_invisible.png", court = "Invisible", cooldown = 8,
       desc = "Te rend invisible 10 secondes après une seconde d'incantation, dans un nuage de fumée. Rappuie pour réapparaître plus tôt ; lancer un autre jutsu te fait aussi réapparaître." },
 
     -- ===== KAMI =====
-    { cat = "Kami", name = "Kami Circle", key = KEY_N, id = "kami_circle", rang = "B", icone = "ui/icon/kami_tornade_papier.png", court = "Cercle", cooldown = 12,
+    { cat = "Kami", name = "Kami Circle", key = "", id = "kami_circle", rang = "B", icone = "ui/icon/kami_tornade_papier.png", court = "Cercle", cooldown = 12,
       desc = "Zone de dégâts posée au sol. Touche tout le monde sauf toi. Réglable en console (kami_circle_damage, kami_circle_tick).",
       dmg = "20 par tick" },
-    { cat = "Kami", name = "Shuriken de papier", key = KEY_M, id = "kami_shuriken", rang = "C", icone = "ui/icon/kami_shuriken_papier.png", court = "Shuriken", cooldown = 1.5, cd = 25,
+    { cat = "Kami", name = "Shuriken de papier", key = "", id = "kami_shuriken", rang = "C", icone = "ui/icon/kami_shuriken_papier.png", court = "Shuriken", cooldown = 1.5, cd = 25,
       desc = "Lance un shuriken de papier tournoyant dans la direction du regard. Coûte 8 de chakra.",
       dmg = "35 (70 à la tête)" },
-    { cat = "Kami", name = "Paper Shield", key = KEY_P, id = "kami_bouclier", rang = "B", icone = "ui/icon/kami_bouclier_papier.png", court = "Bouclier", cooldown = 15,
+    { cat = "Kami", name = "Paper Shield", key = "", id = "kami_bouclier", rang = "B", icone = "ui/icon/kami_bouclier_papier.png", court = "Bouclier", cooldown = 15,
       desc = "Enveloppe ton corps de papier : tu encaisses moitié moins de dégâts. Coûte 25 de chakra.",
       dmg = "-50 % de dégâts reçus" },
-    { cat = "Kami", name = "Ailes de papier", key = KEY_H, id = "kami_ailes", rang = "C", icone = "ui/icon/kami_aile_papier.png", court = "Ailes", cooldown = 3,
+    { cat = "Kami", name = "Ailes de papier", key = "", id = "kami_ailes", rang = "A", icone = "ui/icon/kami_aile_papier.png", court = "Ailes", cooldown = 3,
       desc = "Fait apparaître des ailes dans ton dos et te permet de voler. Direction avec ZQSD, Espace pour monter, Ctrl pour descendre, rappuie pour te poser.",
       dmg = "6 chakra par seconde" },
 
     -- ===== JINTON =====
-    { cat = "Jinton", name = "Cube de confinement", key = "", id = "jinton_cube", rang = "B", icone = "ui/icon/jinton_cube_confinement.png", court = "Cube", cooldown = 1,
+    { cat = "Jinton", name = "Cube de confinement", key = "", id = "jinton_cube", rang = "C", icone = "ui/icon/jinton_cube_confinement.png", court = "Cube", cooldown = 1,
       desc = "Vise un ennemi à portée : un cube l'enferme, l'immobilise 4 secondes et le ronge à chaque tick. Coûte 30 de chakra.",
       dmg = "8 par tick (toutes les 0,5 s)" },
-    { cat = "Jinton", name = "Bouclier Jinton", key = "", id = "jinton_bouclier", rang = "B", icone = "ui/icon/jinton_bulle_poussiere.png", court = "Bouclier", cooldown = 20,
+    { cat = "Jinton", name = "Bouclier Jinton", key = "", id = "jinton_bouclier", rang = "C", icone = "ui/icon/jinton_bulle_poussiere.png", court = "Bouclier", cooldown = 20,
       desc = "Une sphère de poussière t'entoure pendant 10 secondes : un bouclier égal à 20 % de ta vie max encaisse les dégâts à ta place. Coûte 25 de chakra.",
       dmg = "Bouclier de 20 % de la vie" },
     { cat = "Jinton", name = "Rayon de dissolution", key = "", id = "jinton_laser", rang = "A", icone = "ui/icon/jinton_rayon_dissolution.png", court = "Rayon", cooldown = 30,
@@ -105,26 +105,32 @@ local TECHNIQUES = {
       dmg = "6 par tick (toutes les 0,25 s)" },
 
     -- ===== KAGUYA =====
-    { cat = "Kaguya", name = "Armure d'os", key = "", id = "kaguya_armure", rang = "B", icone = "ui/icon/kaguya_armure_os.png", court = "Armure", cooldown = 30,
+    { cat = "Kaguya", name = "Armure d'os", key = "", id = "kaguya_armure", rang = "C", icone = "ui/icon/kaguya_armure_os.png", court = "Armure", cooldown = 30,
       desc = "Une armure d'os pousse sur ton corps pendant 15 secondes : tu encaisses 40 % de dégâts en moins. Coûte 25 de chakra.",
       dmg = "-40 % de dégâts subis" },
     { cat = "Kaguya", name = "Légion d'os", key = "", id = "kaguya_legion", rang = "A", icone = "ui/icon/kaguya_legion_os.png", court = "Légion", cooldown = 25,
       desc = "Des os jaillissent autour de toi pendant 8 secondes et blessent tous les ennemis proches à chaque tick. Coûte 30 de chakra.",
       dmg = "12 par tick (toutes les 0,5 s)" },
-    { cat = "Kaguya", name = "Danse des os", key = "", id = "kaguya_danse", rang = "B", icone = "ui/icon/kaguya_danse_des_os.png", court = "Danse", cooldown = 20,
+    { cat = "Kaguya", name = "Danse des os", key = "", id = "kaguya_danse", rang = "C", icone = "ui/icon/kaguya_danse_des_os.png", court = "Danse", cooldown = 20,
       desc = "Vise un ennemi : un lien s'accroche entre ton torse et lui pendant 6 secondes. Il perd de la vie à chaque tick et tu la récupères. Coûte 30 de chakra.",
       dmg = "12 par tick, +8 de vie pour toi" },
 
     -- ===== CHINOIKE =====
-    { cat = "Chinoike", name = "Pluie de sang", key = "", id = "chinoike_pluie", rang = "A", icone = "ui/icon/chinoike_zone_de_sang.png", court = "Pluie", cooldown = 22,
+    { cat = "Chinoike", name = "Ketsuryugan", key = "", id = "chinoike_ketsuryugan", rang = "C", icone = "ui/icon/chinoike_ketsuryugan.png", court = "Ketsu", cooldown = 5,
+      desc = "Active ton Ketsuryugan (rappuie pour le couper) : tant qu'il est actif, tu infliges 20 % de dégâts en plus, tu cours 15 % plus vite et chaque coup porté te rend 20 % des dégâts infligés en vie. Consomme 5 de chakra par seconde (tu peux recharger avec R en même temps) ; il s'éteint quand le chakra est vide. Il faut 20 de chakra pour l'activer.",
+      dmg = "+20 % de dégâts, +15 % de vitesse, 20 % de vol de vie" },
+    { cat = "Chinoike", name = "Genjutsu du Ketsuryugan", key = "", id = "chinoike_genjutsu", rang = "C", icone = "ui/icon/chinoike_ketsuryugan.png", court = "Genjutsu", cooldown = 25,
+      desc = "Vise un ennemi à portée (800 unités) : ton Ketsuryugan s'allume et le piège dans un genjutsu pendant 3 secondes. Il est paralysé, le sang tourne autour de lui et il perd de la vie à chaque tick. Coûte 30 de chakra.",
+      dmg = "6 par tick (toutes les 0,5 s)" },
+    { cat = "Chinoike", name = "Pluie de sang", key = "", id = "chinoike_pluie", rang = "B", icone = "ui/icon/chinoike_zone_de_sang.png", court = "Pluie", cooldown = 22,
       desc = "Une pluie de sang s'abat sur l'endroit que tu vises pendant 8 secondes : tout ennemi qui reste dessous est blessé et ralenti. Coûte 35 de chakra.",
       dmg = "8 par tick (toutes les 0,5 s)" },
-    { cat = "Chinoike", name = "Vortex de sang", key = "", id = "chinoike_vortex", rang = "A", icone = "ui/icon/typhon_chinoike.png", court = "Vortex", cd = 20,
+    { cat = "Chinoike", name = "Vortex de sang", key = "", id = "chinoike_vortex", rang = "B", icone = "ui/icon/typhon_chinoike.png", court = "Vortex", cd = 20,
       desc = "Un vortex de sang s'ouvre au sol là où tu vises (900 unités max) pendant 3,5 secondes : il aspire les ennemis vers son cœur, qui les blesse. Coûte 30 de chakra.",
       dmg = "10 par tick (toutes les 0,5 s)" },
 
     -- ===== ARMES =====
-    { cat = "Armes", name = "Zabuza", key = "Clic gauche / droit",
+    --[[{ cat = "Armes", name = "Zabuza", key = "Clic gauche / droit",
       desc = "Kubikiribocho. Clic gauche pour trancher, clic droit pour la double explosion." },
     { cat = "Armes", name = "Shibuki", key = "Clic gauche / droit",
       desc = "Épée explosive : coups au corps à corps et déclenchement des parchemins." },
@@ -148,7 +154,7 @@ local TECHNIQUES = {
     { cat = "Divers", name = "Menu / inventaire", key = KEY_F4,
       desc = "Ouvre ton menu personnel." },
     { cat = "Divers", name = "Techniques et barre", key = KEY_F2,
-      desc = "Ouvre ce menu. Les techniques se lancent uniquement avec les touches 1 à 6 de la barre." },
+      desc = "Ouvre ce menu. Les techniques se lancent uniquement avec les touches 1 à 6 de la barre." }, ]]--
 }
 
 -- Affichage trié par rang : C, puis B, puis A, puis S (F2 et bibliothèque F6).

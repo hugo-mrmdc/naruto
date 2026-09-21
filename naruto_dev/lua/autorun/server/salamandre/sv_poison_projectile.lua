@@ -30,6 +30,7 @@ local RAYON          = 6      -- demi-largeur de la zone de touche
 -- Poison
 local POISON_DEGATS  = 10     -- dégâts par tick de poison
 local POISON_TICK    = 1      -- secondes entre deux ticks
+local FX_TICK        = "godio_impact_sala"   -- particule à chaque tick de poison (particles/godio_salamandre.pcf)
 local POISON_DUREE   = 5      -- durée du poison (un nouveau crachat la relance)
 
 -- Lancer
@@ -37,19 +38,19 @@ local DUREE_MUDRA    = 1.0    -- mudras avant l'animation de crachat
 local DELAI_LANCER   = 0.5    -- entre le début du crachat et le départ du projectile
 local RECHARGE       = 1.0    -- après le départ, avant de pouvoir relancer
 local CHAKRA_COUT    = 10     -- chakra par crachat (0 = gratuit)
-local CHAKRA_MAX     = 100    -- doit correspondre à sv_sprint_chakra.lua
+local CHAKRA_MAX     = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 
 local ANIM_MUDRA     = "nrp_ninjutsu_defend_dragonflamebombs_start"   -- anim_extension_mod6.mdl
 local ANIM_CRACHAT   = "nrp_ninjutsu_trow_fireball_lv3"               -- anim_extension_mod6.mdl
 
 --========================================================
 
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "salamandre_poison", stat, base) end
+
 local function PlayAnim(ply, seq)
     if not IsValid(ply) or not seq or seq == "" then return end
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(seq)
-    net.Broadcast()
+    NA_AnimJutsu(ply, seq)   -- animation + pas de coups pendant (_na_mudra.lua)
 end
 
 ----------------------------------------------------------
@@ -65,7 +66,7 @@ function SalamandrePoison.Apply(cible, attaquant, duree)
     -- immunité temporaire (Corps de poison, sv_corps_poison.lua)
     if (cible.NA_ImmunitePoison or 0) > CurTime() then return end
 
-    local fin = CurTime() + (duree or POISON_DUREE)
+    local fin = CurTime() + (duree or Niv(attaquant, "poison_duree", POISON_DUREE))
     local data = empoisonnes[cible]
 
     if data then
@@ -77,7 +78,7 @@ function SalamandrePoison.Apply(cible, attaquant, duree)
     empoisonnes[cible] = {
         attaquant = attaquant,
         fin = fin,
-        prochain = CurTime() + POISON_TICK,
+        prochain = CurTime() + Niv(attaquant, "poison_tick", POISON_TICK),
     }
 
     if cible:IsPlayer() then
@@ -116,16 +117,19 @@ timer.Create("SalamandrePoison_Tick", 0.1, 0, function()
         end
 
         if now >= data.prochain then
-            data.prochain = now + POISON_TICK
+            data.prochain = now + Niv(data.attaquant, "poison_tick", POISON_TICK)
 
             -- DMG_ACID et pas DMG_POISON : le code joueur de Half-Life 2 rend
             -- progressivement la vie perdue par DMG_POISON, le poison se soignait seul.
             local dmg = DamageInfo()
-            dmg:SetDamage(NA_Stat(data.attaquant, "salamandre_poison", "degats", POISON_DEGATS))
+            dmg:SetDamage(NA_Stat(data.attaquant, "salamandre_poison", "poison", POISON_DEGATS))
             dmg:SetAttacker(IsValid(data.attaquant) and data.attaquant or cible)
             dmg:SetInflictor(IsValid(data.attaquant) and data.attaquant or cible)
             dmg:SetDamageType(DMG_ACID)
             cible:TakeDamageInfo(dmg)
+
+            -- particule sur la cible à chaque tick (vue par tout le monde)
+            if FX_TICK ~= "" then ParticleEffect(FX_TICK, cible:WorldSpaceCenter(), angle_zero) end
 
             if cible:IsPlayer() then
                 cible:ScreenFade(SCREENFADE.IN, Color(0, 255, 0, 30), 0.3, 0)
@@ -153,10 +157,10 @@ local function Lancer(ply)
     ent:SetAngles(aim:Angle())
     ent:SetOwner(ply)
     ent.Direction = aim
-    ent.Vitesse = VITESSE
+    ent.Vitesse = Niv(ply, "vitesse", VITESSE)
     ent.Degats = NA_Stat(ply, "salamandre_poison", "degats", DEGATS_IMPACT)
-    ent.DureeVie = DUREE_VIE
-    ent.Gravite = GRAVITE
+    ent.DureeVie = Niv(ply, "duree_vie", DUREE_VIE)
+    ent.Gravite = Niv(ply, "gravite", GRAVITE)
     ent.Rayon = NA_Stat(ply, "salamandre_poison", "hitbox", RAYON)
     ent:Spawn()
 
@@ -178,14 +182,15 @@ net.Receive("PoisonProjectile_Fire", function(_, ply)
     end
 
     casting[ply] = true
-    if NA_CD then NA_CD.Set(ply, "salamandre_poison", DUREE_MUDRA + DELAI_LANCER + NA_Stat(ply, "salamandre_poison", "recharge", RECHARGE)) end -- recharge visible dans la barre
+    if NA_CD then NA_CD.Set(ply, "salamandre_poison", Niv(ply, "duree_mudra", DUREE_MUDRA) + Niv(ply, "delai_lancer", DELAI_LANCER) + NA_Stat(ply, "salamandre_poison", "recharge", RECHARGE)) end -- recharge visible dans la barre
 
     -- 1) mudras
     PlayAnim(ply, ANIM_MUDRA)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
     -- 2) animation de crachat
-    timer.Simple(DUREE_MUDRA, function()
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         if not IsValid(ply) or not ply:Alive() then
             if IsValid(ply) then casting[ply] = nil end
             return
@@ -194,7 +199,7 @@ net.Receive("PoisonProjectile_Fire", function(_, ply)
     end)
 
     -- 3) départ du crachat
-    timer.Simple(DUREE_MUDRA + DELAI_LANCER, function()
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA) + Niv(ply, "delai_lancer", DELAI_LANCER), function()
         if not IsValid(ply) then return end
         casting[ply] = nil
         nextUse[ply] = CurTime() + NA_Stat(ply, "salamandre_poison", "recharge", RECHARGE)

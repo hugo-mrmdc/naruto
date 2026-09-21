@@ -29,7 +29,7 @@ local GLISSE        = true    -- true = plus aucun frottement au sol pendant le 
 local SAUT          = 0       -- petit décollage du sol (0 = reste collé)
 local RECHARGE      = 0.9     -- secondes entre deux dashs
 local COUT_CHAKRA   = 8       -- chakra dépensé par dash (0 = gratuit)
-local CHAKRA_MAX    = 100     -- = CHAKRA_MAX de sv_sprint_chakra.lua
+local CHAKRA_MAX    = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 
 local AU_SOL        = false   -- true = dash uniquement au sol
 local DASH_EN_LAIR  = 1       -- nombre de dashs en l'air par saut (0 = aucun)

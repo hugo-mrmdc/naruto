@@ -22,14 +22,17 @@ resource.AddFile(PCF_PATH)
 --========================================================
 
 local DUREE        = 15     -- durée du bouclier (secondes)
-local REDUCTION    = 0.5    -- part des dégâts bloquée : 0.5 = moitié, 1 = invincible, 0 = purement visuel
+local REDUCTION    = 50    -- % de dégâts reçus en moins
 local RECHARGE     = 15     -- secondes avant de pouvoir relancer (après la fin)
 local CHAKRA_COUT  = 25     -- chakra dépensé au lancement (0 = gratuit)
-local CHAKRA_MAX   = 100    -- doit correspondre à sv_sprint_chakra.lua
+local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.6    -- incantation avant l'apparition du bouclier
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 
 --========================================================
+
+-- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
+local function Niv(ply, stat, base) return NA_Stat(ply, "kami_bouclier", stat, base) end
 
 local shielded = {}  -- joueur -> heure de fin
 local casting  = {}
@@ -56,19 +59,19 @@ end
 local function StartShield(ply)
     if not IsValid(ply) or not ply:Alive() then return end
 
-    shielded[ply] = CurTime() + DUREE
+    shielded[ply] = CurTime() + Niv(ply, "duree", DUREE)
     ply:SetNW2Bool("NA_PaperShield", true)
-    nextUse[ply] = CurTime() + DUREE + NA_Stat(ply, "kami_bouclier", "recharge", RECHARGE)
-    if NA_CD then NA_CD.Set(ply, "kami_bouclier", DUREE + NA_Stat(ply, "kami_bouclier", "recharge", RECHARGE)) end -- recharge visible dans la barre
+    nextUse[ply] = CurTime() + Niv(ply, "duree", DUREE) + NA_Stat(ply, "kami_bouclier", "recharge", RECHARGE)
+    if NA_CD then NA_CD.Set(ply, "kami_bouclier", Niv(ply, "duree", DUREE) + NA_Stat(ply, "kami_bouclier", "recharge", RECHARGE)) end -- recharge visible dans la barre
 
     net.Start("kami_shield_fx")
         net.WriteEntity(ply)
-        net.WriteFloat(DUREE)
+        net.WriteFloat(Niv(ply, "duree", DUREE))
     net.Broadcast()
 
     ply:EmitSound("ambient/wind/wind_snippet2.wav", 70, 120, 0.6)
 
-    timer.Create("kami_shield_" .. ply:EntIndex(), DUREE, 1, function()
+    timer.Create("kami_shield_" .. ply:EntIndex(), Niv(ply, "duree", DUREE), 1, function()
         StopShield(ply)
     end)
 end
@@ -97,13 +100,11 @@ net.Receive("kami_shield_cast", function(_, ply)
     casting[ply] = true
 
     -- mudras (animation vue par tout le monde)
-    net.Start("Jutsu_Anim_Play")
-        net.WriteEntity(ply)
-        net.WriteString(ANIM_APPEL)
-    net.Broadcast()
+    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
-    timer.Simple(DUREE_MUDRA, function()
+    if NA_Mudra then NA_Mudra(ply, Niv(ply, "duree_mudra", DUREE_MUDRA)) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+    timer.Simple(Niv(ply, "duree_mudra", DUREE_MUDRA), function()
         if IsValid(ply) then casting[ply] = nil end
         StartShield(ply)
     end)
@@ -123,8 +124,8 @@ hook.Add("EntityTakeDamage", "KamiShield_Reduce", function(target, dmg)
         return
     end
 
-    if REDUCTION <= 0 then return end
-    dmg:ScaleDamage(math.Clamp(1 - REDUCTION, 0, 1))
+    if Niv(target, "reduction", REDUCTION) <= 0 then return end
+    dmg:ScaleDamage(math.Clamp(1 - Niv(target, "reduction", REDUCTION) / 100, 0, 1))
     target:EmitSound("physics/cardboard/cardboard_box_impact_soft" .. math.random(1, 7) .. ".wav", 65, 110, 0.6)
 end)
 

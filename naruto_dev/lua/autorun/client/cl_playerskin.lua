@@ -8,6 +8,20 @@
 
 local surCorps = {}   -- ragdoll -> { modèles clientside }
 
+-- Matériaux d'une COPIE de la tête (corps après la mort, portrait du HUD) :
+-- visage teinté couleur peau (matériau 0) et yeux choisis (3 et 4, sv_yeux.lua).
+-- La vraie tête du joueur les reçoit déjà du serveur (sv_playerskin.lua).
+function NA_MateriauxTete(cs, ply)
+    if not IsValid(cs) or not IsValid(ply) then return end
+    local visage = ply:GetNW2String("NA_TeteVisage", "")
+    if visage ~= "" then cs:SetSubMaterial(0, visage) end
+
+    local yeux = ply:GetNW2String("NA_Yeux", "")
+    if yeux == "" then yeux = "models/naruto_dev/yeux/normal" end   -- = NA_YEUX_NORMAUX
+    cs:SetSubMaterial(3, yeux)
+    cs:SetSubMaterial(4, yeux)
+end
+
 local function Couleur(v)
     if not v then return color_white end
     return Color(v.x, v.y, v.z)
@@ -20,7 +34,7 @@ local function Habiller(ragdoll, ply)
         { ply:GetNW2String("NA_CheveuxModele", ""), ply:GetNW2Vector("NA_CheveuxCouleur") },
     }
 
-    for _, d in ipairs(defs) do
+    for n, d in ipairs(defs) do
         local modele = d[1]
         if modele ~= "" then
             local cs = ClientsideModel(modele, RENDERGROUP_OPAQUE)
@@ -29,6 +43,14 @@ local function Habiller(ragdoll, ply)
                 cs:AddEffects(EF_BONEMERGE)
                 cs:AddEffects(EF_BONEMERGE_FASTCULL)
                 cs:SetColor(Couleur(d[2]))
+
+                -- la tête garde son visage et les yeux choisis
+                if n == 1 then NA_MateriauxTete(cs, ply) end
+
+                -- corps : yeux fermés (flex de clignement, voir cl_clignement.lua)
+                local blink = n == 1 and cs:GetFlexIDByName("basic_blink")
+                if blink then cs:SetFlexWeight(blink, 1) end
+
                 pieces[#pieces + 1] = cs
             end
         end

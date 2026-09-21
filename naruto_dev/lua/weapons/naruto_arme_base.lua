@@ -63,7 +63,9 @@ SWEP.Anims = {
 --   anim, duree (s, avant le coup suivant), degats,
 --   coups (nombre de touches sur une même cible), intervalle (s entre deux touches),
 --   sons (nombre de sons de swing joués)
---   optionnels : vitesse (vitesse de l'animation, 1 = normale, 1.5 = 50 % plus rapide),
+--   vitesseAnim (vitesse de l'animation du coup : 1 = normale, 1.5 = 50 % plus rapide,
+--                0.8 = plus lente ; absente = SWEP.VitesseAnim)
+--   optionnels :
 --                portee (remplace celle de SWEP.Frappe), recul / reculHaut (projette la cible),
 --                delai / dureeFrappe (remplacent ceux de SWEP.Frappe)
 SWEP.Combo = {
@@ -72,7 +74,7 @@ SWEP.Combo = {
     { anim = "nrp_sword_slashing",             duree = 1.3, degats = 40 },
 }
 SWEP.FonduAnim  = 0.25 -- secondes de fondu à la fin d'une attaque (retour en douceur à l'animation normale)
-SWEP.VitesseAnim = 1.0  -- vitesse des animations d'attaque (si le coup n'a pas sa propre "vitesse")
+SWEP.VitesseAnim = 1.0  -- vitesse des animations d'attaque (si le coup n'a pas son propre "vitesseAnim")
 SWEP.ComboReset = 2.0   -- secondes sans frapper avant de revenir au 1er coup
 
 -- Zone de frappe devant le joueur
@@ -88,6 +90,7 @@ SWEP.SonImpact  = nil          -- son quand un coup touche (nil = aucun)
 SWEP.TypeDegats = DMG_SLASH    -- DMG_CLUB pour les coups de poing / pied
 
 -- Attaque spéciale (clic droit). nil = pas d'attaque spéciale.
+--   anim, vitesseAnim (vitesse de son animation, 1 = normale),
 --   explosions : { { delai, distance }, ... } devant le joueur
 SWEP.Special = nil
 --========================================================
@@ -164,9 +167,12 @@ end
 --========================================================
 -- Clic gauche : combo
 --========================================================
--- Pendant un vol de technique (rayon Jinton...), on ne frappe pas : l'animation
--- de la technique reste affichée
+-- Pendant un vol de technique (rayon Jinton...) ou pendant les mudras d'une
+-- technique (_na_mudra.lua), on ne frappe pas : l'animation de la technique
+-- reste affichée
 local function VolTechnique(owner)
+    if NA_EnMudra and NA_EnMudra(owner) then return true end
+    if NA_EnRechargeChakra and NA_EnRechargeChakra(owner) then return true end   -- recharge du chakra (R)
     return owner:GetNW2Bool("NA_Vol", false)
 end
 
@@ -194,7 +200,7 @@ function SWEP:PrimaryAttack()
     -- frapper coupe la course de chakra (sv_sprint_chakra.lua)
     if NA_StopChakraRun then NA_StopChakraRun(owner) end
 
-    JouerAnim(owner, coup.anim, coup.vitesse or self.VitesseAnim)
+    JouerAnim(owner, coup.anim, coup.vitesseAnim or coup.vitesse or self.VitesseAnim)   -- "vitesse" : ancien nom
 
     -- sons de swing (plusieurs pour les coups multiples)
     local sons = coup.sons or 1
@@ -339,7 +345,7 @@ function SWEP:SecondaryAttack()
 
     self.Attaque = nil
     if NA_StopChakraRun then NA_StopChakraRun(owner) end
-    JouerAnim(owner, s.anim)
+    JouerAnim(owner, s.anim, s.vitesseAnim or 1)
     self:LancerSpecial(owner, s)
 end
 
@@ -558,6 +564,7 @@ hook.Add("CalcMainActivity", "NA_Arme_Deplacement", function(ply, vel)
     if ply:InVehicle() or ply:Crouching() or not ply:OnGround() then return end
     if ply:GetNW2Bool("NA_Vol", false) or ply:GetNW2Bool("NA_Wings", false) then return end   -- en vol
     if ply:GetNW2Bool("NA_Etourdi", false) then return end   -- étourdi : son animation passe avant
+    if ply:GetNW2Bool("NA_RechargeChakra", false) then return end   -- recharge du chakra : idem
     if ply:GetMoveType() ~= MOVETYPE_WALK then return end
 
     local a = wep.Anims

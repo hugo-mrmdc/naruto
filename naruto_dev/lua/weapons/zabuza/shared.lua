@@ -42,9 +42,9 @@ SWEP.Anims = {
 }
 
 SWEP.Combo = {
-    { anim = "nrp_sword_slashhorizon",         duree = 1.0, degats = 40 },
-    { anim = "nrp_sword_turnslashingshoulder", duree = 1.1, degats = 40 },
-    { anim = "nrp_sword_slashing",             duree = 1.3, degats = 40 },
+    { anim = "nrp_sword_slashhorizon",         vitesseAnim = 1.0, duree = 1.0, degats = 40 },
+    { anim = "nrp_sword_turnslashingshoulder", vitesseAnim = 1.0, duree = 1.1, degats = 40 },
+    { anim = "nrp_sword_slashing",             vitesseAnim = 1.0, duree = 1.3, degats = 40 },
 }
 SWEP.ComboReset = 2.0
 
@@ -55,6 +55,7 @@ SWEP.SonSwing = Sound("fuma/swing1.wav")
 SWEP.Special = {
     nom        = "Kubikiribocho",
     anim       = "nrp_sword_swordturnkickupperslash",
+    vitesseAnim = 1.0,    -- vitesse de l'animation (1 = normale)
     recharge   = 5,
     duree      = 1.5,
     explosions = { { delai = 0.3, distance = 80 }, { delai = 0.6, distance = 140 } },
