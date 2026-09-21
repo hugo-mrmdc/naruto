@@ -14,6 +14,23 @@ end
 
 NA_Cast = NA_Cast or {}
 
+----------------------------------------------------------
+-- Menus (F2 techniques, F4 inventaire, F6 bibliothèque) : un seul ouvert à la fois.
+-- Chaque menu s'inscrit avec sa fonction de fermeture, et ferme les autres
+-- quand il s'ouvre.
+----------------------------------------------------------
+NA_Menus = NA_Menus or {}
+
+function NA_EnregistrerMenu(nom, fermer)
+    NA_Menus[nom] = fermer
+end
+
+function NA_FermerAutresMenus(nom)
+    for autre, fermer in pairs(NA_Menus) do
+        if autre ~= nom then fermer() end
+    end
+end
+
 -- Touches historiques des techniques (N, Y, H, B, T, I...).
 -- false = les techniques ne se lancent QUE depuis la barre (touches 1 à 6).
 -- true  = les anciennes touches marchent aussi.

@@ -190,8 +190,10 @@ local ZONE_GAUCHE = { 81, 153, 198, 764 }
 local ZONE_CENTRE = { 276, 172, 1230, 746 }
 local ZONE_DROITE = { 1310, 152, 1589, 765 }
 
--- Plaques des onglets (en pixels de fond.png) : elles débordent du panneau gauche
-local PLAQUE_X, PLAQUE_W = 8, 236
+-- Plaques des onglets (en pixels de fond.png) : grandes, elles débordent à gauche
+-- du fond, dans une marge ajoutée au menu (MARGE_G)
+local PLAQUE_W = 280
+local MARGE_G  = 120
 
 local C_OR         = Color(232, 196, 120)
 local C_CREME      = Color(240, 226, 196)
@@ -215,7 +217,7 @@ local function CreerPolices(f)
     end
     P("NA.Jutsu.Titre",     50, 700)
     P("NA.Jutsu.SousTitre", 18, 700)
-    P("NA.Jutsu.Onglet",    17, 800)
+    P("NA.Jutsu.Onglet",    17, 900)
     P("NA.Jutsu.Section",   26, 800)
     P("NA.Jutsu.Nom",       22, 800)
     P("NA.Jutsu.Texte",     17, 600)
@@ -347,37 +349,46 @@ local selection        -- technique choisie (table de TECHNIQUES)
 local ongletActif = 5  -- "Arts Ninja" à la première ouverture
 local filtreEquipables = false
 
+if NA_EnregistrerMenu then
+    NA_EnregistrerMenu("techniques", function() if IsValid(frame) then frame:Remove() end end)
+end
+
 local function Open()
     if IsValid(frame) then
         frame:Remove()
         return
     end
+    if NA_FermerAutresMenus then NA_FermerAutresMenus("techniques") end   -- un seul menu à la fois
 
     selection = nil
     local survol -- technique sous la souris
 
-    -- Taille : le fond garde ses proportions
-    local W = math.min(ScrW() * 0.9, ScrH() * 0.92 * FOND_W / FOND_H)
-    local H = W * FOND_H / FOND_W
-    local S = W / FOND_W
+    -- Taille : fond + marge des plaques à gauche, proportions gardées
+    local totalW = FOND_W + MARGE_G
+    local W = math.min(ScrW() * 0.92, ScrH() * 0.92 * totalW / FOND_H)
+    local S = W / totalW
+    local H = FOND_H * S
+    local fX = MARGE_G * S   -- bord gauche du fond dans le menu
     CreerPolices(H / FOND_H)
 
     local function Zone(z)
-        return z[1] * S, z[2] * S, (z[3] - z[1]) * S, (z[4] - z[2]) * S
+        return fX + z[1] * S, z[2] * S, (z[3] - z[1]) * S, (z[4] - z[2]) * S
     end
 
     frame = vgui.Create("DPanel")
     frame:SetSize(W, H)
     frame:Center()
     frame:MakePopup()
-    frame:SetKeyboardInputEnabled(true)
+    -- le clavier reste au jeu : on peut bouger (ZQSD, saut...) avec le menu ouvert
+    frame:SetKeyboardInputEnabled(false)
     frame.Paint = function(pan, w, h)
-        Image(FOND, 0, 0, w, h)
+        Image(FOND, fX, 0, FOND_W * S, h)
     end
-    frame.OnKeyCodePressed = function(pan, key)
-        if key == KEY_ESCAPE then
+    -- Échap ferme le menu (sans ouvrir le menu du jeu)
+    frame.Think = function(pan)
+        if input.IsKeyDown(KEY_ESCAPE) then
             pan:Remove()
-            return true
+            gui.HideGameUI()
         end
     end
 
@@ -389,28 +400,49 @@ local function Open()
     local gX, gY, gW, gH = Zone(ZONE_GAUCHE)
     local bW = PLAQUE_W * S
     local bH = bW * 76 / 258
-    local pas = (gH - bH) / (#ONGLETS - 1)
+    local marge = 14 * S                        -- place pour l'ombre et le décalage au survol
+    local haut, bas = gY - 30 * S, gY + gH + 30 * S
+    local pas = (bas - haut - bH) / (#ONGLETS - 1)
+    local decalageX = 40 * S                   -- plaques un peu vers la droite
 
     for i, o in ipairs(ONGLETS) do
         local actif = o.cats ~= nil
         local b = vgui.Create("DButton", frame)
         b:SetText("")
-        b:SetPos(PLAQUE_X * S, gY + (i - 1) * pas)
-        b:SetSize(bW, bH)
+        b:SetPos(decalageX, haut + (i - 1) * pas - marge / 2)
+        b:SetSize(bW + marge * 2, bH + marge)
+        b.Decalage = 0
 
         b.Paint = function(pan, w, h)
             local choisi = ongletActif == i
-            local lum = actif and 255 or 150
-            local plaque = (choisi or (actif and pan:IsHovered())) and "btn_base_refont_hover.png" or "btn_base_refont.png"
-            Image(DOSSIER .. plaque, 0, 0, w, h, 255, lum)
+            local sur = actif and pan:IsHovered()
+            local lum = actif and 255 or 140
+
+            -- l'onglet choisi ou survolé glisse un peu vers la droite
+            local cible = (choisi and marge or 0) + (sur and marge * 0.5 or 0)
+            pan.Decalage = Lerp(FrameTime() * 12, pan.Decalage, cible)
+            local x, y = 4 * S + pan.Decalage, marge / 2
+
+            -- ombre portée : détache la plaque du cadre sombre
+            Image(DOSSIER .. "btn_base_refont.png", x + 4 * S, y + 5 * S, bW, bH, 170, 0)
+
+            local plaque = (choisi or sur) and "btn_base_refont_hover.png" or "btn_base_refont.png"
+            Image(DOSSIER .. plaque, x, y, bW, bH, 255, lum)
 
             -- pastille sur le rond de la plaque (un peu plus grande que lui)
-            local t = h * 1.08
-            Image(DOSSIER .. o.icone, h / 2 - t / 2, h / 2 - t / 2, t, t, 255, lum)
+            local t = bH * 1.12
+            Image(DOSSIER .. o.icone, x + bH / 2 - t / 2, y + bH / 2 - t / 2, t, t, 255, lum)
 
-            -- texte au centre du corps de la plaque (entre le rond et la corde)
-            local col = choisi and Color(80, 40, 20) or Color(C_CREME.r, C_CREME.g, C_CREME.b, actif and 255 or 150)
-            draw.SimpleText(string.upper(o.nom), "NA.Jutsu.Onglet", w * 0.54, h / 2, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            -- texte : gros, contouré pour rester lisible sur la plaque
+            local tx = x + bH + (bW * 0.8 - bH) / 2
+            if choisi then
+                draw.SimpleTextOutlined(string.upper(o.nom), "NA.Jutsu.Onglet", tx, y + bH / 2,
+                    Color(70, 30, 15), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(255, 235, 170, 120))
+            else
+                local col = actif and (sur and C_OR or Color(255, 245, 225)) or Color(190, 175, 155)
+                draw.SimpleTextOutlined(string.upper(o.nom), "NA.Jutsu.Onglet", tx, y + bH / 2,
+                    col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color(20, 10, 5, 230))
+            end
         end
 
         if actif then

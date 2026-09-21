@@ -200,8 +200,13 @@ local ongletActif = 1
 local groupeActif      -- groupe ouvert (nil = grille des emblèmes)
 local choisie          -- technique dont la fiche est ouverte
 
+if NA_EnregistrerMenu then
+    NA_EnregistrerMenu("bibliotheque", function() if IsValid(frame) then frame:Remove() end end)
+end
+
 local function Ouvrir()
     if IsValid(frame) then frame:Remove() return end
+    if NA_FermerAutresMenus then NA_FermerAutresMenus("bibliotheque") end   -- un seul menu à la fois
 
     groupeActif, choisie = nil, nil
 
@@ -220,12 +225,18 @@ local function Ouvrir()
     frame:SetSize(W, H)
     frame:Center()
     frame:MakePopup()
-    frame:SetKeyboardInputEnabled(true)
+    -- le clavier reste au jeu (pour que F2 / F4 changent de menu), mais le joueur
+    -- est immobilisé tant que la bibliothèque est ouverte (hook CreateMove plus bas)
+    frame:SetKeyboardInputEnabled(false)
     frame.Paint = function(pan, w, h)
         Image(FOND, fX, 0, FOND_W * S, h)
     end
-    frame.OnKeyCodePressed = function(pan, key)
-        if key == KEY_ESCAPE then pan:Remove() return true end
+    -- Échap ferme le menu (sans ouvrir le menu du jeu)
+    frame.Think = function(pan)
+        if input.IsKeyDown(KEY_ESCAPE) then
+            pan:Remove()
+            gui.HideGameUI()
+        end
     end
 
     -- croix de fermeture, coin haut droit de la scène
@@ -652,6 +663,13 @@ hook.Add("InitPostEntity", "NA_Bibliotheque_Precharger", function()
         i = i + 1
         M(liste[i])
     end)
+end)
+
+-- Bibliothèque ouverte : le joueur ne bouge pas (ni déplacement, ni saut, ni attaque)
+hook.Add("CreateMove", "NA_Bibliotheque_Immobile", function(cmd)
+    if not IsValid(frame) then return end
+    cmd:ClearMovement()
+    cmd:ClearButtons()
 end)
 
 concommand.Add("bibliotheque", Ouvrir)

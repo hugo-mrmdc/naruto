@@ -621,6 +621,9 @@ local function FermerMenu()
     frame = nil
 end
 
+-- un seul menu ouvert à la fois (F2, F4, F6) : voir _na_registre.lua
+if NA_EnregistrerMenu then NA_EnregistrerMenu("inventaire", FermerMenu) end
+
 ----------------------------------------------------------
 -- Éditeur de placement d'un accessoire / masque équipé, ou de l'épée
 -- équipée quand elle est rangée dans le dos
@@ -868,6 +871,8 @@ concommand.Add("ajuster_accessoire", function(_, _, args)
 end)
 
 local function OuvrirMenu()
+    if NA_FermerAutresMenus then NA_FermerAutresMenus("inventaire") end   -- un seul menu à la fois
+
     -- Taille : presque toute la largeur de l'écran. L'image de fond (1578 x 573)
     -- est très allongée : on l'étire un peu en hauteur (ETIREMENT_MAX) pour que
     -- le menu ne soit pas un simple bandeau, sans dépasser HAUTEUR_MAX de l'écran.
@@ -891,7 +896,9 @@ local function OuvrirMenu()
     frame:SetSize(W, H)
     frame:Center()
     frame:MakePopup()
-    frame:SetKeyboardInputEnabled(true)
+    -- le clavier reste au jeu : on peut bouger (ZQSD, saut...) avec le menu ouvert.
+    -- Il n'est repris que pendant qu'on écrit dans la recherche.
+    frame:SetKeyboardInputEnabled(false)
 
     frame.Paint = function(pan, w, h)
         surface.SetMaterial(M(FOND))
@@ -899,12 +906,12 @@ local function OuvrirMenu()
         surface.DrawTexturedRect(0, 0, w, h)
     end
 
-    -- Échap ferme ; F4 est déjà géré par le Think en bas du fichier
-    -- (le gérer ici aussi fermait puis rouvrait le menu dans la même image)
-    frame.OnKeyCodePressed = function(pan, key)
-        if key == KEY_ESCAPE then
+    -- Échap ferme (sans ouvrir le menu du jeu) ; F4 est déjà géré par le Think
+    -- en bas du fichier (le gérer ici aussi fermait puis rouvrait le menu)
+    frame.Think = function()
+        if input.IsKeyDown(KEY_ESCAPE) then
             FermerMenu()
-            return true
+            gui.HideGameUI()
         end
     end
 
@@ -1009,6 +1016,18 @@ local function OuvrirMenu()
         end
     end
     champ:SetTextInset(12, 0)
+
+    -- clavier pris seulement pendant la saisie, rendu au jeu ensuite (Entrée ou clic ailleurs)
+    champ.OnGetFocus = function(pan)
+        if IsValid(frame) then frame:SetKeyboardInputEnabled(true) end
+        hook.Run("OnTextEntryGetFocus", pan)
+    end
+    champ.OnLoseFocus = function(pan)
+        if IsValid(frame) then frame:SetKeyboardInputEnabled(false) end
+        hook.Run("OnTextEntryLoseFocus", pan)
+        pan:UpdateConvarValue()
+    end
+    champ.OnEnter = function(pan) pan:KillFocus() end
 
     local defil = vgui.Create("DScrollPanel", centre)
     local haut = pad * 0.8 + barre:GetTall() + pad * 0.6
