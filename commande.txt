@@ -1,0 +1,2 @@
+fakeplayers_spawn 
+na_point
