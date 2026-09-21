@@ -129,11 +129,12 @@ hook.Add("Think", "naruto_dev_uchih1_projectiles_move", function()
             local from = p.pos
             local to   = from + (p.dir * SPEED * ft)
 
+            local hb = NA_Stat(p.owner, "katon_saut", "hitbox", HIT_RADIUS)   -- hitbox par niveau
             local tr   = util.TraceHull({
                 start  = from,
                 endpos = to,
-                mins   = Vector(-HIT_RADIUS, -HIT_RADIUS, -HIT_RADIUS),
-                maxs   = Vector(HIT_RADIUS, HIT_RADIUS, HIT_RADIUS),
+                mins   = Vector(-hb, -hb, -hb),
+                maxs   = Vector(hb, hb, hb),
                 filter = p.owner,
                 mask   = MASK_SHOT
             })

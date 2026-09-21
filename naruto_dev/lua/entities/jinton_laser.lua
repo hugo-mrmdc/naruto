@@ -100,7 +100,7 @@ if SERVER then
             self.ProchainTick = now + self.Intervalle
 
             local depart, fin = Extremites(owner)
-            local e = GetGlobal2Float("NA_JintonLaserHitbox", 45)   -- zone qui touche (≠ épaisseur affichée)
+            local e = self.Hitbox or GetGlobal2Float("NA_JintonLaserHitbox", 45)   -- zone qui touche (par niveau) (≠ épaisseur affichée)
             local t = Vector(e, e, e)
 
             for _, ent in ipairs(ents.FindAlongRay(depart, fin, -t, t)) do

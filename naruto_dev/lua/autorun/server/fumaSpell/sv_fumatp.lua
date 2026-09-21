@@ -125,7 +125,8 @@ local function Lancer(ply)
 
     local fin = CurTime() + DUREE_VIE
     local precedent = CurTime()
-    local tH = Vector(HITBOX, HITBOX, HITBOX)
+    local hb = NA_Stat(ply, "fuma_tp", "hitbox", HITBOX)   -- hitbox par niveau (pas celle des murs)
+    local tH = Vector(hb, hb, hb)
     local tM = Vector(HITBOX_MUR, HITBOX_MUR, HITBOX_MUR)
     local nom = "fumaTpMove_" .. ply:EntIndex()
 

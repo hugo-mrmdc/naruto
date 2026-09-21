@@ -177,6 +177,47 @@ local function Chakra(t)
     return tonumber(string.match(t.desc or "", "Coûte (%d+) de chakra")) or 0
 end
 
+-- Lignes de stats de la fiche : { genre, nom, suffixe, base, couleur, pourcent }
+--   * les stats réglées niveau par niveau (_na_niveaux_techniques.lua) ;
+--   * chakra / recharge / dégâts non réglés : pourcentage général (PAR_NIVEAU).
+local function StatsAffichees(tech)
+    local couleurs = { degats = C_DEGATS, chakra = C_CHAKRA, recharge = C_RECHARGE }
+    local cooldown = NA_CooldownBase and NA_CooldownBase(tech) or tech.cd
+    local bases = { chakra = Chakra(tech), recharge = cooldown or 0 }
+    local liste, vues = {}, {}
+
+    local function Ajouter(genre, nom, suffixe, pourcent)
+        if vues[genre] then return end
+        vues[genre] = true
+        liste[#liste + 1] = {
+            genre = genre, nom = nom, suffixe = suffixe or "", pourcent = pourcent,
+            base = bases[genre] or 0, couleur = couleurs[genre] or C_CREME,
+        }
+    end
+
+    -- stats réglées pour cette technique, dans l'ordre de NA_NIV.NOMS puis les autres
+    local reglees = {}
+    for _, niveau in pairs(NA_NIV_TECH and NA_NIV_TECH[tech.id] or {}) do
+        for genre in pairs(niveau) do reglees[genre] = true end
+    end
+    for _, n in ipairs(NA_NIV.NOMS or {}) do
+        if reglees[n[1]] then Ajouter(n[1], n[2], n[3]) end
+    end
+    local autres = {}
+    for genre in pairs(reglees) do
+        if not vues[genre] then autres[#autres + 1] = genre end
+    end
+    table.sort(autres)
+    for _, genre in ipairs(autres) do Ajouter(genre, string.upper(genre), "") end
+
+    -- valeurs générales pour ce qui n'est pas réglé
+    if bases.chakra > 0 then Ajouter("chakra", "CHAKRA", "") end
+    if cooldown then Ajouter("recharge", "COOLDOWN", " S") end
+    Ajouter("degats", "DÉGÂTS", "", true)
+
+    return liste
+end
+
 local function IconeDe(t)
     return t and t.id and NA_SkillBar and NA_SkillBar.Icone(t.id)
 end
@@ -407,7 +448,11 @@ local function Ouvrir()
             local tech = techs[i]
             choisie = tech
 
-            local fw, fh = 340 * S, 440 * S
+            local stats = StatsAffichees(tech)
+            -- la fiche s'allonge quand la technique a plus de 3 stats
+            surface.SetFont("NA.Bib.Texte")
+            local _, hLigne = surface.GetTextSize("A")
+            local fw, fh = 340 * S, 440 * S + math.max(0, #stats - 3) * (hLigne + 2)
             local fx = pos[i].x + t * 0.7
             if fx + fw > sW - 10 then fx = pos[i].x - t * 0.7 - fw end
             local fy = math.Clamp(pos[i].y - fh / 2, sH * 0.26, sH - fh - 10)
@@ -418,7 +463,6 @@ local function Ouvrir()
 
             local pad = 16 * S
             local descLignes = Couper(string.upper(tech.desc or ""), "NA.Bib.Texte", fw - pad * 2)
-            local chakraBase = Chakra(tech)
 
             fiche.Paint = function(pan, w, h)
                 draw.RoundedBox(8, 0, 0, w, h, Color(14, 10, 12, 235))
@@ -452,24 +496,24 @@ local function Ouvrir()
                 y = y + 20 * S
 
                 -- valeur actuelle -> valeur au niveau suivant
-                local function Ligne(nom, genre, base, suffixe, couleur)
-                    local a = base * NA_NIV.Multiplicateur(genre, niv)
-                    local txt = nom .. " : " .. Arrondi(a) .. suffixe
-                    if not sansSuite then
-                        txt = txt .. "  ->  " .. Arrondi(base * NA_NIV.Multiplicateur(genre, suivant)) .. suffixe
+                for _, s in ipairs(stats) do
+                    local txt
+                    if s.pourcent then
+                        -- dégâts sans réglage par niveau : en pourcentage (base dans la description)
+                        local function P(n) return math.Round((NA_NIV.Multiplicateur(s.genre, n) - 1) * 100) end
+                        txt = s.nom .. " : +" .. P(niv) .. " %"
+                        if not sansSuite then txt = txt .. "  ->  +" .. P(suivant) .. " %" end
+                    else
+                        local a = NA_NIV.Valeur(tech.id, s.genre, niv, s.base)
+                        txt = s.nom .. " : " .. Arrondi(a) .. s.suffixe
+                        if not sansSuite then
+                            local b = NA_NIV.Valeur(tech.id, s.genre, suivant, s.base)
+                            txt = txt .. "  ->  " .. Arrondi(b) .. s.suffixe
+                        end
                     end
-                    draw.SimpleText(txt, "NA.Bib.Texte", pad, y, couleur)
+                    draw.SimpleText(txt, "NA.Bib.Texte", pad, y, s.couleur)
                     y = y + hl + 2
                 end
-                if chakraBase > 0 then Ligne("CHAKRA", "chakra", chakraBase, "", C_CHAKRA) end
-                if tech.cd then Ligne("RECHARGE", "recharge", tech.cd, " S", C_RECHARGE) end
-                -- dégâts : en pourcentage (les dégâts de base sont dans la description)
-                local d1 = math.Round((NA_NIV.Multiplicateur("degats", niv) - 1) * 100)
-                local txt = "DÉGÂTS : +" .. d1 .. " %"
-                if not sansSuite then
-                    txt = txt .. "  ->  +" .. math.Round((NA_NIV.Multiplicateur("degats", suivant) - 1) * 100) .. " %"
-                end
-                draw.SimpleText(txt, "NA.Bib.Texte", pad, y, C_DEGATS)
 
                 -- niveaux 1 à 5
                 local c = 26 * S

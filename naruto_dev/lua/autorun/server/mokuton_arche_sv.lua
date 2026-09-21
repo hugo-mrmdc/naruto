@@ -22,8 +22,7 @@ local GAP       = 4
 
 -- visée
 local TRACE_RANGE = 1000
-local HULL_MINS   = Vector(-40, -40, -40)
-local HULL_MAXS   = Vector( 40,  40,  40)
+local HULL_TAILLE = 40   -- demi-taille de la hitbox de visée (par niveau : "hitbox" dans _na_niveaux_techniques.lua)
 
 -- scale
 local baseScale = 8
@@ -84,6 +83,8 @@ local function GetLookTarget(ply)
     local startPos = ply:EyePos()
     local dir      = ply:EyeAngles():Forward()
     local endPos   = startPos + dir * TRACE_RANGE
+    local hb       = NA_Stat(ply, "mokuton_arche", "hitbox", HULL_TAILLE)
+    local hullMins, hullMaxs = Vector(-hb, -hb, -hb), Vector(hb, hb, hb)
 
     local trLine = util.TraceLine({
         start  = startPos,
@@ -109,14 +110,14 @@ local function GetLookTarget(ply)
     local trHull = util.TraceHull({
         start  = startPos,
         endpos = endPos,
-        mins   = HULL_MINS,
-        maxs   = HULL_MAXS,
+        mins   = hullMins,
+        maxs   = hullMaxs,
         filter = ply,
         mask   = MASK_SHOT_HULL
     })
 
     if DEBUG_HITBOX then
-        debugoverlay.SweptBox(startPos, trHull.HitPos, HULL_MINS, HULL_MAXS, angle_zero, 0.1, Color(255,255,0,120))
+        debugoverlay.SweptBox(startPos, trHull.HitPos, hullMins, hullMaxs, angle_zero, 0.1, Color(255,255,0,120))
         debugoverlay.Cross(trHull.HitPos, 4, 0.1, Color(255,255,0,120), true)
     end
 

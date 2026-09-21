@@ -5,9 +5,12 @@
 -- ni la lancer ni l'équiper. On la débloque (niveau 1) puis on l'améliore dans
 -- la bibliothèque (F6, cl_bibliotheque.lua) avec des points de compétence.
 --
--- Chaque niveau au-dessus du 1 modifie les valeurs de la technique
--- (voir PAR_NIVEAU). Les fichiers serveur des techniques passent leurs
--- valeurs par NA_Stat(ply, id, "degats" | "chakra" | "recharge", valeur).
+-- Valeurs par niveau :
+--   * réglage PAR TECHNIQUE dans _na_niveaux_techniques.lua : pour chaque
+--     niveau, on change n'importe quelle stat (dégâts, durée, rayon...) ;
+--   * sinon, réglage général PAR_NIVEAU ci-dessous (en pourcentage).
+-- Les fichiers serveur des techniques lisent leurs valeurs avec
+-- NA_Stat(ply, id, "nom_de_la_stat", valeur_de_base).
 --
 -- Sauvegarde : PData du joueur (sv.db), clés "na_niveaux" et "na_points".
 -- Ajouter des points : na_points <nombre>, na_points <joueur> <nombre>, ou !points dans le chat
@@ -26,10 +29,13 @@ NA_NIV.MAX = 5
 --   degats   : +10 % par niveau  -> +40 % au niveau 5
 --   chakra   : -5 % par niveau   -> -20 % au niveau 5
 --   recharge : -5 % par niveau   -> -20 % au niveau 5
+-- (sert seulement aux stats qu'une technique ne règle PAS dans _na_niveaux_techniques.lua)
 NA_NIV.PAR_NIVEAU = {
-    degats   = 0.10,
-    chakra   = -0.05,
-    recharge = -0.05,
+    degats        = 0.10,
+    soin          = 0.10,
+    chakra        = -0.05,
+    recharge      = -0.05,
+    recharge_rate = -0.05,   -- recharge raccourcie quand le Jugement Fuma rate
 }
 
 -- Points nécessaires pour débloquer la technique (niveau 1),
@@ -89,12 +95,35 @@ function NA_NIV.Multiplicateur(genre, niveau)
     return math.max(0, 1 + pas * (math.max(niveau or 1, 1) - 1))   -- verrouillée = valeurs du niveau 1
 end
 
+-- Stats réglées niveau par niveau (remplies par _na_niveaux_techniques.lua)
+NA_NIV_TECH = NA_NIV_TECH or {}
+
+-- Valeur réglée pour "genre" au niveau donné. Un niveau qui ne précise pas
+-- une stat garde celle du niveau d'avant (niveau 3 sans "degats" = dégâts du 2).
+-- nil si la technique ne règle pas cette stat.
+function NA_NIV.Reglee(id, genre, niveau)
+    local t = NA_NIV_TECH[id]
+    if not t then return nil end
+    for n = math.Clamp(niveau or 1, 1, NA_NIV.MAX), 1, -1 do
+        local v = t[n] and t[n][genre]
+        if v ~= nil then return v end
+    end
+    return nil
+end
+
+-- Valeur d'une stat à un niveau (sans joueur : sert aussi à l'affichage F6)
+function NA_NIV.Valeur(id, genre, niveau, base)
+    local v = NA_NIV.Reglee(id, genre, niveau)
+    if v ~= nil then return v end
+    return (tonumber(base) or 0) * NA_NIV.Multiplicateur(genre, niveau)
+end
+
 -- Valeur d'une technique au niveau du joueur.
--- Le lanceur peut être autre chose qu'un joueur (PNJ, monde) : valeur de base.
+-- Le lanceur peut être autre chose qu'un joueur (PNJ, monde) : valeurs du niveau 1.
 function NA_Stat(ply, id, genre, base)
-    base = tonumber(base) or 0
-    if not IsValid(ply) or not ply:IsPlayer() then return base end
-    return base * NA_NIV.Multiplicateur(genre, NA_Niveau(ply, id))
+    local niveau = 1
+    if IsValid(ply) and ply:IsPlayer() then niveau = NA_Niveau(ply, id) end
+    return NA_NIV.Valeur(id, genre, niveau, base)
 end
 
 if CLIENT then return end

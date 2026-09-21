@@ -157,7 +157,7 @@ local function Lancer(ply)
     ent.Degats = NA_Stat(ply, "salamandre_poison", "degats", DEGATS_IMPACT)
     ent.DureeVie = DUREE_VIE
     ent.Gravite = GRAVITE
-    ent.Rayon = RAYON
+    ent.Rayon = NA_Stat(ply, "salamandre_poison", "hitbox", RAYON)
     ent:Spawn()
 
     ply:EmitSound("npc/headcrab_poison/ph_poisonbite" .. math.random(1, 3) .. ".wav", 75, 110)

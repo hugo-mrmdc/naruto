@@ -55,8 +55,8 @@ end
 -- appelé par le fil quand il ne touche rien
 function NA_FumaJugementRate(ply)
     if not IsValid(ply) then return end
-    pret[ply] = CurTime() + NA_Stat(ply, "fuma_jugement", "recharge", RECHARGE_RATE)
-    if NA_CD then NA_CD.Set(ply, "fuma_jugement", NA_Stat(ply, "fuma_jugement", "recharge", RECHARGE_RATE)) end
+    pret[ply] = CurTime() + NA_Stat(ply, "fuma_jugement", "recharge_rate", RECHARGE_RATE)
+    if NA_CD then NA_CD.Set(ply, "fuma_jugement", NA_Stat(ply, "fuma_jugement", "recharge_rate", RECHARGE_RATE)) end
 end
 
 net.Receive("fuma_jugement_cast", function(_, ply)
@@ -88,7 +88,7 @@ net.Receive("fuma_jugement_cast", function(_, ply)
         if not IsValid(fil) then return end
         fil.Portee  = PORTEE
         fil.Vitesse = VITESSE_FIL
-        fil.Hitbox  = HITBOX
+        fil.Hitbox  = NA_Stat(ply, "fuma_jugement", "hitbox", HITBOX)
         fil.Accroche = ETOURDI
         fil.Direction = ply:GetAimVector()
         fil:SetOwner(ply)

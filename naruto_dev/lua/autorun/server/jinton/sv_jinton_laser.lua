@@ -57,6 +57,7 @@ local function Activer(ply)
     local laser = ents.Create("jinton_laser")
     if not IsValid(laser) then return end
     laser.Degats     = NA_Stat(ply, "jinton_laser", "degats", DEGATS)
+    laser.Hitbox     = NA_Stat(ply, "jinton_laser", "hitbox", HITBOX)   -- hitbox par niveau
     laser.Intervalle = INTERVALLE
     laser:SetOwner(ply)
     laser:SetPos(ply:GetPos())

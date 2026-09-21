@@ -16,6 +16,8 @@ util.AddNetworkString("chinoike_vortex_zone")
 
 --========================================================
 -- RÉGLAGES -> c'est ICI qu'on change les valeurs
+-- (dégâts, chakra, recharge, durée, rayon du cœur et force : valeurs du niveau 1,
+--  remplacées par celles de _na_niveaux_techniques.lua si elles y sont réglées)
 --========================================================
 local DUREE        = 3.5    -- secondes de vortex (= durée de la particule)
 local INTERVALLE   = 0.5    -- secondes entre deux ticks de dégâts
@@ -83,6 +85,7 @@ end
 
 local function Attirer(ply, centre)
     local milieu = centre + Vector(0, 0, 40)
+    local rayonCoeur = NA_Stat(ply, "chinoike_vortex", "rayon", RAYON_COEUR)
 
     for _, ent in ipairs(ents.FindInSphere(milieu, RAYON_ATTIRE)) do
         if not EstCible(ent, ply) or not Visible(milieu, ent) then continue end
@@ -96,11 +99,11 @@ local function Attirer(ply, centre)
         local tangente = Vector(-dir.y, dir.x, 0)
 
         -- l'aspiration faiblit près du centre, sinon on le dépasse et on fait des allers-retours
-        local attenuation = math.Clamp(dist / RAYON_COEUR, 0.25, 1)
+        local attenuation = math.Clamp(dist / rayonCoeur, 0.25, 1)
 
         if ent:IsPlayer() then
             -- accélération ajoutée à la vitesse du joueur (SetVelocity s'additionne)
-            ent:SetVelocity((dir * FORCE * attenuation + tangente * TOURBILLON) * PAS)
+            ent:SetVelocity((dir * NA_Stat(ply, "chinoike_vortex", "force", FORCE) * attenuation + tangente * TOURBILLON) * PAS)
         else
             -- PNJ / nextbots : on les fait glisser à vitesse fixe, sans traverser les murs
             local vitesse = VITESSE_PNJ * attenuation
@@ -117,8 +120,9 @@ end
 
 local function Blesser(ply, centre)
     local milieu = centre + Vector(0, 0, 40)
+    local rayonCoeur = NA_Stat(ply, "chinoike_vortex", "rayon", RAYON_COEUR)
 
-    for _, ent in ipairs(ents.FindInSphere(milieu, RAYON_COEUR)) do
+    for _, ent in ipairs(ents.FindInSphere(milieu, rayonCoeur)) do
         if not EstCible(ent, ply) then continue end
 
         local dmg = DamageInfo()
@@ -132,22 +136,23 @@ local function Blesser(ply, centre)
     end
 
     if GetConVar("developer"):GetInt() > 0 then
-        debugoverlay.Sphere(milieu, RAYON_COEUR, INTERVALLE, Color(255, 60, 60, 20), true)
+        debugoverlay.Sphere(milieu, rayonCoeur, INTERVALLE, Color(255, 60, 60, 20), true)
         debugoverlay.Sphere(milieu, RAYON_ATTIRE, INTERVALLE, Color(255, 160, 160, 8), true)
     end
 end
 
 local function Lancer(ply, centre)
     if not IsValid(ply) then return end
+    local duree = NA_Stat(ply, "chinoike_vortex", "duree", DUREE)
 
     net.Start("chinoike_vortex_zone")
         net.WriteVector(centre)
-        net.WriteFloat(DUREE)
+        net.WriteFloat(duree)
     net.Broadcast()
 
     sound.Play(SON_DEBUT, centre + Vector(0, 0, 60), 85, 70, 1)
 
-    local fin = CurTime() + DUREE
+    local fin = CurTime() + duree
     local prochainDegat = CurTime()
     local nom = "chinoike_vortex_" .. ply:EntIndex() .. "_" .. math.floor(CurTime() * 100)
     timer.Create(nom, PAS, 0, function()

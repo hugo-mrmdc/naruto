@@ -111,7 +111,7 @@ local function Tick(ply, cible)
     cible:TakeDamageInfo(dmg)
     cible:EmitSound(SON_TICK, 70, math.random(95, 110), 0.7)
 
-    if Soigner(ply, NA_Stat(ply, "kaguya_danse", "degats", SOIN)) > 0 then
+    if Soigner(ply, NA_Stat(ply, "kaguya_danse", "soin", SOIN)) > 0 then
         ply:EmitSound(SON_SOIN, 60, math.random(95, 105), 0.35)
     end
 end

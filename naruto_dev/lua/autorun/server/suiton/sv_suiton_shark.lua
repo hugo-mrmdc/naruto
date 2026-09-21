@@ -48,6 +48,7 @@ local function SpawnSwarmOnTarget(attacker, target)
         ent._finishing  = false
         ent._finishEnd  = 0
         ent._alreadyHit = {} -- 👈 UNE FOIS PAR ENTITÉ
+        ent._hitbox = NA_Stat(attacker, "suiton_requin", "hitbox", SWARM_HITBOX)   -- hitbox par niveau
 
         local tname     = "SharkSwarmMove_" .. ent:EntIndex()
 
@@ -98,8 +99,8 @@ local function SpawnSwarmOnTarget(attacker, target)
             local tr = util.TraceHull({
                 start  = pos,
                 endpos = nextPos,
-                mins   = Vector(-SWARM_HITBOX, -SWARM_HITBOX, -SWARM_HITBOX),
-                maxs   = Vector(SWARM_HITBOX, SWARM_HITBOX, SWARM_HITBOX),
+                mins   = Vector(-ent._hitbox, -ent._hitbox, -ent._hitbox),
+                maxs   = Vector(ent._hitbox, ent._hitbox, ent._hitbox),
                 mask   = MASK_SHOT_HULL,
                 filter = function(e)
                     -- les requins ne se bloquent plus entre eux
@@ -112,7 +113,7 @@ local function SpawnSwarmOnTarget(attacker, target)
 
                 -- ❌ jamais toucher le lanceur
                 if IsValid(hitEnt) and hitEnt == attacker then
-                    ent:SetPos(tr.HitPos + dir * (SWARM_HITBOX + 2))
+                    ent:SetPos(tr.HitPos + dir * (ent._hitbox + 2))
                     return
                 end
 
@@ -132,7 +133,7 @@ local function SpawnSwarmOnTarget(attacker, target)
                 end
 
                 -- traverse tout
-                ent:SetPos(tr.HitPos + dir * (SWARM_HITBOX + 2))
+                ent:SetPos(tr.HitPos + dir * (ent._hitbox + 2))
                 return
             end
 

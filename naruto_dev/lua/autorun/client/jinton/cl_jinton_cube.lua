@@ -27,7 +27,7 @@ hook.Add("PostDrawTranslucentRenderables", "JintonCube_HitboxVisee", function(de
     if not IsValid(ply) or not ply:Alive() then return end
 
     local portee = GetGlobal2Float("NA_JintonCubePortee", 900)
-    local taille = GetGlobal2Float("NA_JintonCubeVisee", 20)
+    local taille = NA_Stat(ply, "jinton_cube", "hitbox", GetGlobal2Float("NA_JintonCubeVisee", 20))   -- hitbox par niveau
     local t = Vector(taille, taille, taille)
 
     -- même calcul que le serveur : boîte jusqu'au premier mur, cible valable la plus proche

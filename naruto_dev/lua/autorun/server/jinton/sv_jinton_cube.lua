@@ -48,9 +48,15 @@ SetGlobal2Float("NA_JintonCubeVisee", TAILLE_VISEE)
 -- regard, jusqu'au premier mur (ou PORTEE). Parmi TOUT ce qu'elle traverse, on
 -- prend la cible valable la plus proche : un objet quelconque devant la cible
 -- (prop, entité invisible...) ne la cache plus.
+-- hitbox de visée au niveau du joueur (_na_niveaux_techniques.lua)
+local function HitboxVisee(ply)
+    local t = NA_Stat(ply, "jinton_cube", "hitbox", TAILLE_VISEE)
+    return Vector(t, t, t)
+end
+
 local function TrouverCible(ply, portee)
     local oeil = ply:EyePos()
-    local t = Vector(TAILLE_VISEE, TAILLE_VISEE, TAILLE_VISEE)
+    local t = HitboxVisee(ply)
 
     -- la boîte s'arrête au premier mur
     local mur = util.TraceHull({
@@ -103,7 +109,7 @@ net.Receive("jinton_cube_cast", function(_, ply)
     local cible = TrouverCible(ply, PORTEE)
     if not cible then   -- sinon silencieux
         if GetConVar("developer"):GetInt() > 0 then
-            local oeil, t = ply:EyePos(), Vector(TAILLE_VISEE, TAILLE_VISEE, TAILLE_VISEE)
+            local oeil, t = ply:EyePos(), HitboxVisee(ply)
             local vus = {}
             for _, e in ipairs(ents.FindAlongRay(oeil, oeil + ply:GetAimVector() * PORTEE, -t, t)) do
                 -- on ne liste que les joueurs / PNJ (avec leur vie), pas les morceaux de décor
