@@ -56,7 +56,7 @@ local function Activer(ply)
 
     local laser = ents.Create("jinton_laser")
     if not IsValid(laser) then return end
-    laser.Degats     = DEGATS
+    laser.Degats     = NA_Stat(ply, "jinton_laser", "degats", DEGATS)
     laser.Intervalle = INTERVALLE
     laser:SetOwner(ply)
     laser:SetPos(ply:GetPos())
@@ -76,19 +76,20 @@ local function Refus(ply, message)
 end
 
 net.Receive("jinton_laser_cast", function(_, ply)
+    if not NA_Debloquee(ply, "jinton_laser") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() or enCours[ply] then return end
     if (pret[ply] or 0) > CurTime() then return end
     if IsValid(ply.NA_LaserJinton) then return end
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
-    if CHAKRA_COUT > 0 then
-        if chakra < CHAKRA_COUT then return Refus(ply, "Pas assez de chakra") end
-        ply:SetNW2Float("NA_Chakra", chakra - CHAKRA_COUT)
+    if NA_Stat(ply, "jinton_laser", "chakra", CHAKRA_COUT) > 0 then
+        if chakra < NA_Stat(ply, "jinton_laser", "chakra", CHAKRA_COUT) then return Refus(ply, "Pas assez de chakra") end
+        ply:SetNW2Float("NA_Chakra", chakra - NA_Stat(ply, "jinton_laser", "chakra", CHAKRA_COUT))
     end
 
     enCours[ply] = true
-    pret[ply] = CurTime() + RECHARGE
-    if NA_CD then NA_CD.Set(ply, "jinton_laser", RECHARGE) end   -- recharge visible dans la barre
+    pret[ply] = CurTime() + NA_Stat(ply, "jinton_laser", "recharge", RECHARGE)
+    if NA_CD then NA_CD.Set(ply, "jinton_laser", NA_Stat(ply, "jinton_laser", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
     -- mudras (animation vue par tout le monde)
     net.Start("Jutsu_Anim_Play")

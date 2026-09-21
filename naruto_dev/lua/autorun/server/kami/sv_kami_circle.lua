@@ -88,7 +88,7 @@ local function Damage(caster, center)
         if not IsTarget(ent, caster) then continue end
 
         local dmg = DamageInfo()
-        dmg:SetDamage(damage)
+        dmg:SetDamage(NA_Stat(caster, "kami_circle", "degats", damage))
         dmg:SetAttacker(caster)
         dmg:SetInflictor(caster)
         dmg:SetDamageType(DMG_SHOCK)
@@ -157,6 +157,7 @@ end
 -- Lancement : mudras -> animation d'attaque -> cercle
 ----------------------------------------------------------
 net.Receive("kami_circle_cast", function(_, ply)
+    if not NA_Debloquee(ply, "kami_circle") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() then return end
     if active[ply] or casting[ply] then return end
     if (nextCast[ply] or 0) > CurTime() then
@@ -165,7 +166,7 @@ net.Receive("kami_circle_cast", function(_, ply)
     end
 
     casting[ply] = true
-    nextCast[ply] = CurTime() + DUREE_MUDRA + DELAI_CERCLE + cvDuration:GetFloat() + cvCooldown:GetFloat()
+    nextCast[ply] = CurTime() + DUREE_MUDRA + DELAI_CERCLE + cvDuration:GetFloat() + NA_Stat(ply, "kami_circle", "recharge", cvCooldown:GetFloat())
     if NA_CD then NA_CD.Set(ply, "kami_circle", nextCast[ply] - CurTime()) end -- recharge visible dans la barre
 
     ply:EmitSound("base/mudra_sound_geams.wav", 80, 100)

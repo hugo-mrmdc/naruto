@@ -45,7 +45,7 @@ end
 local function Empoisonner(cible, lanceur, avecDegats)
     if avecDegats and DEGATS_CONTACT > 0 then
         local dmg = DamageInfo()
-        dmg:SetDamage(DEGATS_CONTACT)
+        dmg:SetDamage(NA_Stat(lanceur, "salamandre_corps", "degats", DEGATS_CONTACT))
         dmg:SetAttacker(lanceur)
         dmg:SetInflictor(lanceur)
         dmg:SetDamageType(DMG_ACID)
@@ -123,20 +123,21 @@ end)
 -- Lancement
 ----------------------------------------------------------
 net.Receive("salamandre_corps_cast", function(_, ply)
+    if not NA_Debloquee(ply, "salamandre_corps") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() then return end
     if casting[ply] or actifs[ply] then return end
     if (nextUse[ply] or 0) > CurTime() then return end
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
-    if CHAKRA_COUT > 0 then
-        if chakra < CHAKRA_COUT then
+    if NA_Stat(ply, "salamandre_corps", "chakra", CHAKRA_COUT) > 0 then
+        if chakra < NA_Stat(ply, "salamandre_corps", "chakra", CHAKRA_COUT) then
             return
         end
-        ply:SetNW2Float("NA_Chakra", math.max(0, chakra - CHAKRA_COUT))
+        ply:SetNW2Float("NA_Chakra", math.max(0, chakra - NA_Stat(ply, "salamandre_corps", "chakra", CHAKRA_COUT)))
     end
 
     -- la recharge démarre après la fin de l'aura
-    local total = DUREE_MUDRA + DUREE + RECHARGE
+    local total = DUREE_MUDRA + DUREE + NA_Stat(ply, "salamandre_corps", "recharge", RECHARGE)
     nextUse[ply] = CurTime() + total
     if NA_CD then NA_CD.Set(ply, "salamandre_corps", total) end -- recharge visible dans la barre
 

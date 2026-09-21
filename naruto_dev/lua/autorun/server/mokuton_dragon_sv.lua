@@ -447,6 +447,7 @@ end)
 -- Net
 ----------------------------------------------------------
 net.Receive("mokuton_dragon_spawn", function(_, ply)
+    if not NA_Debloquee(ply, "mokuton_dragon") then return end   -- technique pas encore débloquée (F6)
     StartRide(ply)
 end)
 

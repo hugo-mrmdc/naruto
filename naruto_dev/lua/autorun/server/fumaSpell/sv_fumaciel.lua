@@ -52,21 +52,22 @@ local function PointVise(ply)
 end
 
 net.Receive("fuma_ciel_cast", function(_, ply)
+    if not NA_Debloquee(ply, "fuma_ciel") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() or enCours[ply] then return end
     if (pret[ply] or 0) > CurTime() then return end
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
-    if CHAKRA_COUT > 0 then
-        if chakra < CHAKRA_COUT then
+    if NA_Stat(ply, "fuma_ciel", "chakra", CHAKRA_COUT) > 0 then
+        if chakra < NA_Stat(ply, "fuma_ciel", "chakra", CHAKRA_COUT) then
             ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
             return
         end
-        ply:SetNW2Float("NA_Chakra", chakra - CHAKRA_COUT)
+        ply:SetNW2Float("NA_Chakra", chakra - NA_Stat(ply, "fuma_ciel", "chakra", CHAKRA_COUT))
     end
 
     enCours[ply] = true
-    pret[ply] = CurTime() + RECHARGE
-    if NA_CD then NA_CD.Set(ply, "fuma_ciel", RECHARGE) end   -- recharge visible dans la barre
+    pret[ply] = CurTime() + NA_Stat(ply, "fuma_ciel", "recharge", RECHARGE)
+    if NA_CD then NA_CD.Set(ply, "fuma_ciel", NA_Stat(ply, "fuma_ciel", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
     net.Start("Jutsu_Anim_Play")
         net.WriteEntity(ply)
@@ -84,7 +85,7 @@ net.Receive("fuma_ciel_cast", function(_, ply)
         if not IsValid(shuriken) then return end
         shuriken.Vitesse = VITESSE
         shuriken.Echelle = ECHELLE
-        shuriken.Degats  = DEGATS
+        shuriken.Degats  = NA_Stat(ply, "fuma_ciel", "degats", DEGATS)
         shuriken.Rayon   = RAYON
         shuriken.Poussee = POUSSEE
         shuriken:SetOwner(ply)

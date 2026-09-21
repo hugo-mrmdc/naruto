@@ -36,7 +36,10 @@ NA_DernierRefus = NA_DernierRefus or {}
 
 local function CdListe(id)
     local info = NA_TechniqueParId and NA_TechniqueParId(id)
-    return info and info.cd or 0
+    local cd = info and info.cd or 0
+    -- la recharge baisse avec le niveau de la technique (_na_niveaux.lua)
+    if cd > 0 and NA_Stat then cd = NA_Stat(LocalPlayer(), id, "recharge", cd) end
+    return cd
 end
 
 -- Secondes restantes avant de pouvoir relancer "id"
@@ -85,6 +88,14 @@ function NA_Lancer(id)
 
     local ply = LocalPlayer()
     if not IsValid(ply) or not ply:Alive() then return false end
+
+    -- pas encore débloquée dans la bibliothèque (F6, _na_niveaux.lua)
+    if NA_Debloquee and not NA_Debloquee(ply, id) then
+        NA_DernierRefus[id] = CurTime()
+        notification.AddLegacy("Technique verrouillée : débloque-la dans la bibliothèque (F6).", NOTIFY_ERROR, 3)
+        Diag(id, "pas débloquée")
+        return false
+    end
 
     -- immobilisé (cube Jinton...) : pas de jutsu
     if ply:GetNW2Bool("NA_Etourdi", false) then

@@ -91,6 +91,7 @@ local function Refus(ply, message)
 end
 
 net.Receive("jinton_cube_cast", function(_, ply)
+    if not NA_Debloquee(ply, "jinton_cube") then return end   -- technique pas encore débloquée (F6)
 
     if not IsValid(ply) then return end
     if not ply:Alive() then return Diag(ply, "refusé : lanceur mort") end
@@ -117,14 +118,14 @@ net.Receive("jinton_cube_cast", function(_, ply)
     Diag(ply, "cible :", tostring(cible))
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
-    if CHAKRA_COUT > 0 then
-        if chakra < CHAKRA_COUT then return Refus(ply, "Pas assez de chakra") end
-        ply:SetNW2Float("NA_Chakra", chakra - CHAKRA_COUT)
+    if NA_Stat(ply, "jinton_cube", "chakra", CHAKRA_COUT) > 0 then
+        if chakra < NA_Stat(ply, "jinton_cube", "chakra", CHAKRA_COUT) then return Refus(ply, "Pas assez de chakra") end
+        ply:SetNW2Float("NA_Chakra", chakra - NA_Stat(ply, "jinton_cube", "chakra", CHAKRA_COUT))
     end
 
     enCours[ply] = true
-    pret[ply] = CurTime() + RECHARGE
-    if NA_CD then NA_CD.Set(ply, "jinton_cube", RECHARGE) end   -- recharge visible dans la barre
+    pret[ply] = CurTime() + NA_Stat(ply, "jinton_cube", "recharge", RECHARGE)
+    if NA_CD then NA_CD.Set(ply, "jinton_cube", NA_Stat(ply, "jinton_cube", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
     -- mudras (animation vue par tout le monde)
     net.Start("Jutsu_Anim_Play")
@@ -149,7 +150,7 @@ net.Receive("jinton_cube_cast", function(_, ply)
         local cube = ents.Create("jinton_cube")
         if not IsValid(cube) then return end
         cube.Duree      = DUREE
-        cube.Degats     = DEGATS
+        cube.Degats     = NA_Stat(ply, "jinton_cube", "degats", DEGATS)
         cube.Intervalle = INTERVALLE
         cube.Echelle    = ECHELLE
         cube:SetOwner(ply)

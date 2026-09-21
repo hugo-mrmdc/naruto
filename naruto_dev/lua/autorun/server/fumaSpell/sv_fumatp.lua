@@ -56,8 +56,8 @@ local function RemoveFuma(ply)
     timer.Remove("fumaTpMove_" .. (IsValid(ply) and ply:EntIndex() or 0))
 
     if IsValid(ply) then
-        nextUse[ply] = CurTime() + RECHARGE
-        if NA_CD then NA_CD.Set(ply, "fuma_tp", RECHARGE) end   -- recharge visible dans la barre
+        nextUse[ply] = CurTime() + NA_Stat(ply, "fuma_tp", "recharge", RECHARGE)
+        if NA_CD then NA_CD.Set(ply, "fuma_tp", NA_Stat(ply, "fuma_tp", "recharge", RECHARGE)) end   -- recharge visible dans la barre
     end
 end
 
@@ -66,7 +66,7 @@ local function Exploser(ply, pos, inflicteur)
         if EstCible(ent, ply) then
             local scale = 1 - math.Clamp(ent:GetPos():Distance(pos) / RAYON_EXPLO, 0, 1)
             local dmg = DamageInfo()
-            dmg:SetDamage(DEGATS * scale)
+            dmg:SetDamage(NA_Stat(ply, "fuma_tp", "degats", DEGATS) * scale)
             dmg:SetAttacker(ply)
             dmg:SetInflictor(IsValid(inflicteur) and inflicteur or ply)
             dmg:SetDamageType(DMG_BLAST)
@@ -184,6 +184,7 @@ local function Lancer(ply)
 end
 
 net.Receive(NET_FUMA, function(_, ply)
+    if not NA_Debloquee(ply, "fuma_tp") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() then return end
 
     -- 2e appui : téléportation sur le shuriken

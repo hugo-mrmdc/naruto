@@ -45,7 +45,7 @@ function NA_FumaJugementTouche(ply, cible)
 
     local lames = ents.Create("fuma_quatre_lames")
     if not IsValid(lames) then return end
-    lames.Degats = DEGATS
+    lames.Degats = NA_Stat(ply, "fuma_jugement", "degats", DEGATS)
     lames:SetOwner(ply)
     lames:SetCible(cible)
     lames:SetPos(cible:GetPos())
@@ -55,23 +55,24 @@ end
 -- appelé par le fil quand il ne touche rien
 function NA_FumaJugementRate(ply)
     if not IsValid(ply) then return end
-    pret[ply] = CurTime() + RECHARGE_RATE
-    if NA_CD then NA_CD.Set(ply, "fuma_jugement", RECHARGE_RATE) end
+    pret[ply] = CurTime() + NA_Stat(ply, "fuma_jugement", "recharge", RECHARGE_RATE)
+    if NA_CD then NA_CD.Set(ply, "fuma_jugement", NA_Stat(ply, "fuma_jugement", "recharge", RECHARGE_RATE)) end
 end
 
 net.Receive("fuma_jugement_cast", function(_, ply)
+    if not NA_Debloquee(ply, "fuma_jugement") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() or enCours[ply] then return end
     if (pret[ply] or 0) > CurTime() then return end
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
-    if CHAKRA_COUT > 0 then
-        if chakra < CHAKRA_COUT then return Refus(ply, "Pas assez de chakra") end
-        ply:SetNW2Float("NA_Chakra", chakra - CHAKRA_COUT)
+    if NA_Stat(ply, "fuma_jugement", "chakra", CHAKRA_COUT) > 0 then
+        if chakra < NA_Stat(ply, "fuma_jugement", "chakra", CHAKRA_COUT) then return Refus(ply, "Pas assez de chakra") end
+        ply:SetNW2Float("NA_Chakra", chakra - NA_Stat(ply, "fuma_jugement", "chakra", CHAKRA_COUT))
     end
 
     enCours[ply] = true
-    pret[ply] = CurTime() + RECHARGE
-    if NA_CD then NA_CD.Set(ply, "fuma_jugement", RECHARGE) end   -- recharge visible dans la barre
+    pret[ply] = CurTime() + NA_Stat(ply, "fuma_jugement", "recharge", RECHARGE)
+    if NA_CD then NA_CD.Set(ply, "fuma_jugement", NA_Stat(ply, "fuma_jugement", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
     net.Start("Jutsu_Anim_Play")
         net.WriteEntity(ply)

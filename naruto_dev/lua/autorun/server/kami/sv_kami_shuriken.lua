@@ -58,7 +58,7 @@ local function Lancer(ply)
         ent:SetOwner(ply)
         ent.Direction = dir
         ent.Vitesse = VITESSE
-        ent.Degats = DEGATS
+        ent.Degats = NA_Stat(ply, "kami_shuriken", "degats", DEGATS)
         ent.DureeVie = DUREE_VIE
         ent.Echelle = ECHELLE
         ent.Largeur = LARGEUR
@@ -70,18 +70,19 @@ local function Lancer(ply)
 end
 
 net.Receive("kami_shuriken_cast", function(_, ply)
+    if not NA_Debloquee(ply, "kami_shuriken") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() then return end
     if (nextUse[ply] or 0) > CurTime() then return end
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
-    if CHAKRA_COUT > 0 and chakra < CHAKRA_COUT then
+    if NA_Stat(ply, "kami_shuriken", "chakra", CHAKRA_COUT) > 0 and chakra < NA_Stat(ply, "kami_shuriken", "chakra", CHAKRA_COUT) then
         return
     end
 
-    nextUse[ply] = CurTime() + RECHARGE
-    if NA_CD then NA_CD.Set(ply, "kami_shuriken", RECHARGE) end -- recharge visible dans la barre
-    if CHAKRA_COUT > 0 then
-        ply:SetNW2Float("NA_Chakra", math.max(0, chakra - CHAKRA_COUT))
+    nextUse[ply] = CurTime() + NA_Stat(ply, "kami_shuriken", "recharge", RECHARGE)
+    if NA_CD then NA_CD.Set(ply, "kami_shuriken", NA_Stat(ply, "kami_shuriken", "recharge", RECHARGE)) end -- recharge visible dans la barre
+    if NA_Stat(ply, "kami_shuriken", "chakra", CHAKRA_COUT) > 0 then
+        ply:SetNW2Float("NA_Chakra", math.max(0, chakra - NA_Stat(ply, "kami_shuriken", "chakra", CHAKRA_COUT)))
     end
 
     -- animation de lancer, vue par tout le monde

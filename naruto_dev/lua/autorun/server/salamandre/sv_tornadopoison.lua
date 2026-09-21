@@ -77,7 +77,7 @@ local function Poser(ply)
     typhon.ForceAttraction = FORCE_ATTRACTION
     typhon.Tourbillon = TOURBILLON
     typhon.VitesseAttractionPNJ = VITESSE_PNJ
-    typhon.Degats = DEGATS
+    typhon.Degats = NA_Stat(ply, "salamandre_tornade", "degats", DEGATS)
     typhon.Intervalle = INTERVALLE
     typhon.PoisonDuree = POISON_DUREE
     typhon:Spawn()
@@ -86,20 +86,21 @@ local function Poser(ply)
 end
 
 concommand.Add("spawn_tornado", function(ply)
+    if not NA_Debloquee(ply, "salamandre_tornade") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() then return end
     if casting[ply] or IsValid(typhons[ply]) then return end
     if (nextUse[ply] or 0) > CurTime() then return end
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
-    if CHAKRA_COUT > 0 then
-        if chakra < CHAKRA_COUT then
+    if NA_Stat(ply, "salamandre_tornade", "chakra", CHAKRA_COUT) > 0 then
+        if chakra < NA_Stat(ply, "salamandre_tornade", "chakra", CHAKRA_COUT) then
             return
         end
-        ply:SetNW2Float("NA_Chakra", math.max(0, chakra - CHAKRA_COUT))
+        ply:SetNW2Float("NA_Chakra", math.max(0, chakra - NA_Stat(ply, "salamandre_tornade", "chakra", CHAKRA_COUT)))
     end
 
     -- la recharge démarre après la fin du typhon
-    local total = DUREE_MUDRA + DUREE + RECHARGE
+    local total = DUREE_MUDRA + DUREE + NA_Stat(ply, "salamandre_tornade", "recharge", RECHARGE)
     nextUse[ply] = CurTime() + total
     if NA_CD then NA_CD.Set(ply, "salamandre_tornade", total) end -- recharge visible dans la barre
 

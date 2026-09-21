@@ -103,7 +103,7 @@ end
 
 local function Tick(ply, cible)
     local dmg = DamageInfo()
-    dmg:SetDamage(DEGATS)
+    dmg:SetDamage(NA_Stat(ply, "kaguya_danse", "degats", DEGATS))
     dmg:SetAttacker(ply)
     dmg:SetInflictor(ply)
     dmg:SetDamageType(DMG_SLASH)
@@ -111,7 +111,7 @@ local function Tick(ply, cible)
     cible:TakeDamageInfo(dmg)
     cible:EmitSound(SON_TICK, 70, math.random(95, 110), 0.7)
 
-    if Soigner(ply, SOIN) > 0 then
+    if Soigner(ply, NA_Stat(ply, "kaguya_danse", "degats", SOIN)) > 0 then
         ply:EmitSound(SON_SOIN, 60, math.random(95, 105), 0.35)
     end
 end
@@ -136,6 +136,7 @@ local function Accrocher(ply, cible)
 end
 
 net.Receive("kaguya_danse_cast", function(_, ply)
+    if not NA_Debloquee(ply, "kaguya_danse") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() or enCours[ply] then return end
     if (pret[ply] or 0) > CurTime() then return end
     if IsValid(ply:GetNW2Entity("NA_KaguyaAttireCible")) then return end
@@ -145,17 +146,17 @@ net.Receive("kaguya_danse_cast", function(_, ply)
     if not IsValid(cible) then return end
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
-    if CHAKRA_COUT > 0 then
-        if chakra < CHAKRA_COUT then
+    if NA_Stat(ply, "kaguya_danse", "chakra", CHAKRA_COUT) > 0 then
+        if chakra < NA_Stat(ply, "kaguya_danse", "chakra", CHAKRA_COUT) then
             ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
             return
         end
-        ply:SetNW2Float("NA_Chakra", chakra - CHAKRA_COUT)
+        ply:SetNW2Float("NA_Chakra", chakra - NA_Stat(ply, "kaguya_danse", "chakra", CHAKRA_COUT))
     end
 
     enCours[ply] = true
-    pret[ply] = CurTime() + RECHARGE
-    if NA_CD then NA_CD.Set(ply, "kaguya_danse", RECHARGE) end   -- recharge visible dans la barre
+    pret[ply] = CurTime() + NA_Stat(ply, "kaguya_danse", "recharge", RECHARGE)
+    if NA_CD then NA_CD.Set(ply, "kaguya_danse", NA_Stat(ply, "kaguya_danse", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
     net.Start("Jutsu_Anim_Play")
         net.WriteEntity(ply)

@@ -140,8 +140,8 @@ local function Atterrir(ply, silencieux)
     end
 
     etatAvant[ply] = nil
-    nextUse[ply] = CurTime() + RECHARGE
-    if NA_CD then NA_CD.Set(ply, "kami_ailes", RECHARGE) end -- recharge visible dans la barre
+    nextUse[ply] = CurTime() + NA_Stat(ply, "kami_ailes", "recharge", RECHARGE)
+    if NA_CD then NA_CD.Set(ply, "kami_ailes", NA_Stat(ply, "kami_ailes", "recharge", RECHARGE)) end -- recharge visible dans la barre
 end
 
 local function Decoller(ply)
@@ -168,6 +168,7 @@ end
 -- Touche
 ----------------------------------------------------------
 net.Receive("kami_wings_toggle", function(_, ply)
+    if not NA_Debloquee(ply, "kami_ailes") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() then return end
 
     -- en vol : on replie les ailes
@@ -230,7 +231,7 @@ hook.Add("Think", "NA_Wings_Chakra", function()
             continue
         end
 
-        local reste = GetChakra(ply) - CHAKRA_COUT * dt
+        local reste = GetChakra(ply) - NA_Stat(ply, "kami_ailes", "chakra", CHAKRA_COUT) * dt
         SetChakra(ply, reste)
 
         if reste <= 0 then

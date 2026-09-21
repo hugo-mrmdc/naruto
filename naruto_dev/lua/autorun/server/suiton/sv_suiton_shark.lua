@@ -159,10 +159,11 @@ end
 
 
 net.Receive(NET_SHARK, function(_, ply)
+    if not NA_Debloquee(ply, "suiton_requin") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() then return end
     if (nextShark[ply] or 0) > CurTime() then return end
-    nextShark[ply] = CurTime() + COOLDOWN
-    if NA_CD then NA_CD.Set(ply, "suiton_requin", COOLDOWN) end -- recharge visible dans la barre
+    nextShark[ply] = CurTime() + NA_Stat(ply, "suiton_requin", "recharge", COOLDOWN)
+    if NA_CD then NA_CD.Set(ply, "suiton_requin", NA_Stat(ply, "suiton_requin", "recharge", COOLDOWN)) end -- recharge visible dans la barre
 
     local proj = ents.Create("prop_dynamic")
     if not IsValid(proj) then return end

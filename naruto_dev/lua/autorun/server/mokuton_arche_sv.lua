@@ -326,7 +326,7 @@ local function DoImpactDamage(attacker, inflictor, pos)
     if not SERVER then return end
 
     local dmg = DamageInfo()
-    dmg:SetDamage(DAMAGE_AMOUNT)
+    dmg:SetDamage(NA_Stat(attacker, "mokuton_arche", "degats", DAMAGE_AMOUNT))
     dmg:SetDamageType(DMG_CLUB)
     dmg:SetDamagePosition(pos)
 
@@ -400,12 +400,13 @@ end
 -- =========================================
 if SERVER then
     net.Receive("KSpawn_Request", function(_, ply)
+        if not NA_Debloquee(ply, "mokuton_arche") then return end   -- technique pas encore débloquée (F6)
         if not IsValid(ply) or not ply:Alive() then return end
 
         ply._kspawn_next = ply._kspawn_next or 0
         if ply._kspawn_next > CurTime() then return end
-        ply._kspawn_next = CurTime() + COOLDOWN
-        if NA_CD then NA_CD.Set(ply, "mokuton_arche", COOLDOWN) end -- recharge visible dans la barre
+        ply._kspawn_next = CurTime() + NA_Stat(ply, "mokuton_arche", "recharge", COOLDOWN)
+        if NA_CD then NA_CD.Set(ply, "mokuton_arche", NA_Stat(ply, "mokuton_arche", "recharge", COOLDOWN)) end -- recharge visible dans la barre
 
         local target = GetLookTarget(ply)
         if not IsValid(target) then return end

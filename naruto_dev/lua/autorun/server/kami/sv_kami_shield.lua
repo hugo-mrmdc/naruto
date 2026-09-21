@@ -58,8 +58,8 @@ local function StartShield(ply)
 
     shielded[ply] = CurTime() + DUREE
     ply:SetNW2Bool("NA_PaperShield", true)
-    nextUse[ply] = CurTime() + DUREE + RECHARGE
-    if NA_CD then NA_CD.Set(ply, "kami_bouclier", DUREE + RECHARGE) end -- recharge visible dans la barre
+    nextUse[ply] = CurTime() + DUREE + NA_Stat(ply, "kami_bouclier", "recharge", RECHARGE)
+    if NA_CD then NA_CD.Set(ply, "kami_bouclier", DUREE + NA_Stat(ply, "kami_bouclier", "recharge", RECHARGE)) end -- recharge visible dans la barre
 
     net.Start("kami_shield_fx")
         net.WriteEntity(ply)
@@ -77,6 +77,7 @@ end
 -- Lancement
 ----------------------------------------------------------
 net.Receive("kami_shield_cast", function(_, ply)
+    if not NA_Debloquee(ply, "kami_bouclier") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() then return end
     if shielded[ply] or casting[ply] then return end
 
@@ -85,12 +86,12 @@ net.Receive("kami_shield_cast", function(_, ply)
         return
     end
 
-    if CHAKRA_COUT > 0 then
-        if GetChakra(ply) < CHAKRA_COUT then
+    if NA_Stat(ply, "kami_bouclier", "chakra", CHAKRA_COUT) > 0 then
+        if GetChakra(ply) < NA_Stat(ply, "kami_bouclier", "chakra", CHAKRA_COUT) then
             ply:ChatPrint("Pas assez de chakra pour le Paper Shield.")
             return
         end
-        ply:SetNW2Float("NA_Chakra", math.max(0, GetChakra(ply) - CHAKRA_COUT))
+        ply:SetNW2Float("NA_Chakra", math.max(0, GetChakra(ply) - NA_Stat(ply, "kami_bouclier", "chakra", CHAKRA_COUT)))
     end
 
     casting[ply] = true

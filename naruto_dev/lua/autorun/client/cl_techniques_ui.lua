@@ -204,8 +204,12 @@ local C_DEGATS     = Color(255, 130, 100)
 local C_OK         = Color(120, 200, 110)
 
 -- Polices recréées à l'ouverture, à la taille du menu (f = 1 pour un fond de 941 px de haut)
+-- recréées seulement si la taille du menu change (CreateFont coûte cher)
+local taillePolices
 local function CreerPolices(f)
     f = math.max(f, 0.6)
+    if taillePolices and math.abs(taillePolices - f) < 0.01 then return end
+    taillePolices = f
     local function P(nom, taille, poids)
         surface.CreateFont(nom, { font = "Roboto", size = math.Round(taille * f), weight = poids, extended = true })
     end
@@ -244,6 +248,12 @@ end
 
 local function Equipable(tech)
     return tech.id ~= nil and NA_Cast ~= nil and NA_Cast[tech.id] ~= nil
+        and (not NA_Debloquee or NA_Debloquee(LocalPlayer(), tech.id))
+end
+
+-- Technique à débloquer dans la bibliothèque (F6)
+local function Verrouillee(tech)
+    return tech.id ~= nil and NA_Debloquee ~= nil and not NA_Debloquee(LocalPlayer(), tech.id)
 end
 
 -- Coût en chakra, lu dans la description ("Coûte 25 de chakra")
@@ -526,7 +536,10 @@ local function Open()
                 Disque(w / 2, h / 2, w / 2)
             end
             local m = choisie and 3 or 0
-            DessinerCaseTechnique(tech, m, m, w - m * 2, (sur or choisie) and 255 or 215)
+            DessinerCaseTechnique(tech, m, m, w - m * 2, Verrouillee(tech) and 90 or ((sur or choisie) and 255 or 215))
+            if Verrouillee(tech) then
+                draw.SimpleTextOutlined("F6", "NA.Jutsu.Petit", w / 2, h / 2, C_OR, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            end
         end
 
         b.PaintOver = function(pan, w, h)
@@ -729,7 +742,9 @@ local function Open()
         end
         Ligne("CHAKRA : " .. Chakra(t), C_CHAKRA)
         Ligne("COOLDOWN : " .. (t.cd and (t.cd .. " S") or "-"), C_RECHARGE)
-        if Equipable(t) then
+        if Verrouillee(t) then
+            Ligne("VERROUILLÉE : DÉBLOQUE-LA (F6)", C_DEGATS)
+        elseif Equipable(t) then
             local n = EmplacementDe(t.id)
             Ligne(n and ("ÉQUIPÉE : TOUCHE " .. n) or "NON ÉQUIPÉE", n and C_OK or C_DOUX)
         elseif t.key and t.key ~= "" then
@@ -739,6 +754,28 @@ local function Open()
 
     Rafraichir()
 end
+
+----------------------------------------------------------
+-- Préchargement : les images (grandes) sont chargées une par une (une tous les quarts de seconde) après
+-- l'arrivée en jeu, pour que la première ouverture du menu ne fige pas le jeu.
+----------------------------------------------------------
+hook.Add("InitPostEntity", "NA_TechniquesUI_Precharger", function()
+    local liste = {
+        FOND, DOSSIER .. "btn_base_refont.png", DOSSIER .. "btn_base_refont_hover.png",
+        DOSSIER .. "btn_base_close.png", DOSSIER .. "checkbox_on.png", DOSSIER .. "checkbox_off.png",
+        DOSSIER .. "jutsu/case_jutsu.png", DOSSIER .. "jutsu/title_vector.png", DOSSIER .. "jutsu/right_vector.png",
+    }
+    for _, o in ipairs(ONGLETS) do liste[#liste + 1] = DOSSIER .. o.icone end
+    local ids = {}
+    for _, t in ipairs(TECHNIQUES) do if t.id then ids[#ids + 1] = t.id end end
+
+    local i = 0
+    timer.Create("NA_TechniquesUI_Precharger", 0.25, #liste + #ids, function()
+        i = i + 1
+        if liste[i] then M(liste[i])
+        elseif NA_SkillBar then NA_SkillBar.Icone(ids[i - #liste]) end
+    end)
+end)
 
 concommand.Add("attaques", Open)
 concommand.Add("techniques", Open)

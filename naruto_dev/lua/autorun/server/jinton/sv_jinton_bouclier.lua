@@ -93,7 +93,7 @@ local function Exploser(ply)
         local bas, hautEnt = pos.z + ent:OBBMins().z, pos.z + ent:OBBMaxs().z
         if ecart <= EXPLO_RAYON and hautEnt >= base.z and bas <= base.z + EXPLO_HAUTEUR then
             local dmg = DamageInfo()
-            dmg:SetDamage(EXPLO_DEGATS)
+            dmg:SetDamage(NA_Stat(ply, "jinton_bouclier", "degats", EXPLO_DEGATS))
             dmg:SetAttacker(ply)
             dmg:SetInflictor(ply)
             dmg:SetDamageType(DMG_BLAST)
@@ -159,18 +159,19 @@ local function Refus(ply, message)
 end
 
 net.Receive("jinton_bouclier_cast", function(_, ply)
+    if not NA_Debloquee(ply, "jinton_bouclier") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() or enCours[ply] then return end
     if (pret[ply] or 0) > CurTime() then return end
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
-    if CHAKRA_COUT > 0 then
-        if chakra < CHAKRA_COUT then return Refus(ply, "Pas assez de chakra") end
-        ply:SetNW2Float("NA_Chakra", chakra - CHAKRA_COUT)
+    if NA_Stat(ply, "jinton_bouclier", "chakra", CHAKRA_COUT) > 0 then
+        if chakra < NA_Stat(ply, "jinton_bouclier", "chakra", CHAKRA_COUT) then return Refus(ply, "Pas assez de chakra") end
+        ply:SetNW2Float("NA_Chakra", chakra - NA_Stat(ply, "jinton_bouclier", "chakra", CHAKRA_COUT))
     end
 
     enCours[ply] = true
-    pret[ply] = CurTime() + RECHARGE
-    if NA_CD then NA_CD.Set(ply, "jinton_bouclier", RECHARGE) end   -- recharge visible dans la barre
+    pret[ply] = CurTime() + NA_Stat(ply, "jinton_bouclier", "recharge", RECHARGE)
+    if NA_CD then NA_CD.Set(ply, "jinton_bouclier", NA_Stat(ply, "jinton_bouclier", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
     -- mudras (animation vue par tout le monde)
     net.Start("Jutsu_Anim_Play")

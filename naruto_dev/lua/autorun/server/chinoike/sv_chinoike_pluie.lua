@@ -77,7 +77,7 @@ local function Tick(ply, centre)
         if ecart > RAYON or haut < centre.z - 20 or pos.z > centre.z + HAUTEUR then continue end
 
         local dmg = DamageInfo()
-        dmg:SetDamage(DEGATS)
+        dmg:SetDamage(NA_Stat(ply, "chinoike_pluie", "degats", DEGATS))
         dmg:SetAttacker(IsValid(ply) and ply or game.GetWorld())
         dmg:SetInflictor(IsValid(ply) and ply or game.GetWorld())
         dmg:SetDamageType(DMG_SLASH)
@@ -128,21 +128,22 @@ local function Lancer(ply, centre)
 end
 
 net.Receive("chinoike_pluie_cast", function(_, ply)
+    if not NA_Debloquee(ply, "chinoike_pluie") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() or enCours[ply] then return end
     if (pret[ply] or 0) > CurTime() then return end
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
-    if CHAKRA_COUT > 0 then
-        if chakra < CHAKRA_COUT then
+    if NA_Stat(ply, "chinoike_pluie", "chakra", CHAKRA_COUT) > 0 then
+        if chakra < NA_Stat(ply, "chinoike_pluie", "chakra", CHAKRA_COUT) then
             ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
             return
         end
-        ply:SetNW2Float("NA_Chakra", chakra - CHAKRA_COUT)
+        ply:SetNW2Float("NA_Chakra", chakra - NA_Stat(ply, "chinoike_pluie", "chakra", CHAKRA_COUT))
     end
 
     enCours[ply] = true
-    pret[ply] = CurTime() + RECHARGE
-    if NA_CD then NA_CD.Set(ply, "chinoike_pluie", RECHARGE) end   -- recharge visible dans la barre
+    pret[ply] = CurTime() + NA_Stat(ply, "chinoike_pluie", "recharge", RECHARGE)
+    if NA_CD then NA_CD.Set(ply, "chinoike_pluie", NA_Stat(ply, "chinoike_pluie", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
     net.Start("Jutsu_Anim_Play")
         net.WriteEntity(ply)

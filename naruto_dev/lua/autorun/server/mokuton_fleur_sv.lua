@@ -23,7 +23,7 @@ local function ApplyFlowerDamage(flowerEnt, pos, caller)
         
         if (target:IsPlayer() or target:IsNPC()) and target ~= caller then
             local dmg = DamageInfo()
-            dmg:SetDamage(DAMAGE_AMOUNT)
+            dmg:SetDamage(NA_Stat(caller, "mokuton_fleur", "degats", DAMAGE_AMOUNT))
             dmg:SetAttacker(caller)
             dmg:SetInflictor(flowerEnt)
             dmg:SetDamageType(DMG_BLAST)
@@ -138,6 +138,7 @@ local function SpawnFlowerAndDamage(caller)
 end
 
 net.Receive("MokutonSpawn_fleur", function(_, caller)
+    if not NA_Debloquee(caller, "mokuton_fleur") then return end   -- technique pas encore débloquée (F6)
     print("[MOKUTON] ========================================")
     print("[MOKUTON] 📨 SIGNAL REÇU!")
     print("[MOKUTON] ========================================")
@@ -155,8 +156,8 @@ net.Receive("MokutonSpawn_fleur", function(_, caller)
         print("[MOKUTON] ⏱️ Cooldown actif")
         return 
     end
-    caller.__mokutonNext = CurTime() + cooldown
-    if NA_CD then NA_CD.Set(caller, "mokuton_fleur", cooldown) end -- recharge visible dans la barre
+    caller.__mokutonNext = CurTime() + NA_Stat(caller, "mokuton_fleur", "recharge", cooldown)
+    if NA_CD then NA_CD.Set(caller, "mokuton_fleur", NA_Stat(caller, "mokuton_fleur", "recharge", cooldown)) end -- recharge visible dans la barre
 
     SpawnFlowerAndDamage(caller)
 end)

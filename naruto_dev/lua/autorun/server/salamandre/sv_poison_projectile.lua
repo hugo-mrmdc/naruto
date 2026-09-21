@@ -121,7 +121,7 @@ timer.Create("SalamandrePoison_Tick", 0.1, 0, function()
             -- DMG_ACID et pas DMG_POISON : le code joueur de Half-Life 2 rend
             -- progressivement la vie perdue par DMG_POISON, le poison se soignait seul.
             local dmg = DamageInfo()
-            dmg:SetDamage(POISON_DEGATS)
+            dmg:SetDamage(NA_Stat(data.attaquant, "salamandre_poison", "degats", POISON_DEGATS))
             dmg:SetAttacker(IsValid(data.attaquant) and data.attaquant or cible)
             dmg:SetInflictor(IsValid(data.attaquant) and data.attaquant or cible)
             dmg:SetDamageType(DMG_ACID)
@@ -154,7 +154,7 @@ local function Lancer(ply)
     ent:SetOwner(ply)
     ent.Direction = aim
     ent.Vitesse = VITESSE
-    ent.Degats = DEGATS_IMPACT
+    ent.Degats = NA_Stat(ply, "salamandre_poison", "degats", DEGATS_IMPACT)
     ent.DureeVie = DUREE_VIE
     ent.Gravite = GRAVITE
     ent.Rayon = RAYON
@@ -164,20 +164,21 @@ local function Lancer(ply)
 end
 
 net.Receive("PoisonProjectile_Fire", function(_, ply)
+    if not NA_Debloquee(ply, "salamandre_poison") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() then return end
     if casting[ply] then return end
     if (nextUse[ply] or 0) > CurTime() then return end
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
-    if CHAKRA_COUT > 0 then
-        if chakra < CHAKRA_COUT then
+    if NA_Stat(ply, "salamandre_poison", "chakra", CHAKRA_COUT) > 0 then
+        if chakra < NA_Stat(ply, "salamandre_poison", "chakra", CHAKRA_COUT) then
             return
         end
-        ply:SetNW2Float("NA_Chakra", math.max(0, chakra - CHAKRA_COUT))
+        ply:SetNW2Float("NA_Chakra", math.max(0, chakra - NA_Stat(ply, "salamandre_poison", "chakra", CHAKRA_COUT)))
     end
 
     casting[ply] = true
-    if NA_CD then NA_CD.Set(ply, "salamandre_poison", DUREE_MUDRA + DELAI_LANCER + RECHARGE) end -- recharge visible dans la barre
+    if NA_CD then NA_CD.Set(ply, "salamandre_poison", DUREE_MUDRA + DELAI_LANCER + NA_Stat(ply, "salamandre_poison", "recharge", RECHARGE)) end -- recharge visible dans la barre
 
     -- 1) mudras
     PlayAnim(ply, ANIM_MUDRA)
@@ -196,7 +197,7 @@ net.Receive("PoisonProjectile_Fire", function(_, ply)
     timer.Simple(DUREE_MUDRA + DELAI_LANCER, function()
         if not IsValid(ply) then return end
         casting[ply] = nil
-        nextUse[ply] = CurTime() + RECHARGE
+        nextUse[ply] = CurTime() + NA_Stat(ply, "salamandre_poison", "recharge", RECHARGE)
         Lancer(ply)
     end)
 end)

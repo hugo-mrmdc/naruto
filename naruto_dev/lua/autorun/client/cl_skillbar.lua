@@ -125,6 +125,11 @@ end
 function Bar.Equiper(slot, id)
     if slot < 1 or slot > NB_EMPLACEMENTS then return end
     if id and not NA_Cast[id] then return end
+    if id and NA_Debloquee and not NA_Debloquee(LocalPlayer(), id) then
+        notification.AddLegacy("Technique verrouillée : débloque-la dans la bibliothèque (F6).", NOTIFY_ERROR, 3)
+        surface.PlaySound("buttons/button10.wav")
+        return
+    end
 
     -- une technique n'occupe qu'un seul emplacement : on la retire de l'ancien
     if id then
@@ -209,6 +214,9 @@ local function DessinerEmplacement(x, y, taille, slot, id, alpha)
     local reste = (id and NA_ResteRecharge) and NA_ResteRecharge(id) or 0
     local enRecharge = reste > 0
 
+    -- technique pas encore débloquée (équipée par défaut) : grisée comme en recharge
+    local verrouillee = id and NA_Debloquee and not NA_Debloquee(LocalPlayer(), id)
+
     local icone = id and Bar.Icone(id)
 
     -- rayon utile à l'intérieur de l'anneau doré : le flash et le voile de recharge
@@ -234,7 +242,7 @@ local function DessinerEmplacement(x, y, taille, slot, id, alpha)
             -- l'icône est déjà ronde : on la pose dans l'anneau doré du cadre.
             -- En recharge, elle est grisée : elle n'est pas utilisable.
             local t = taille * ICONE_RATIO
-            local lum = enRecharge and 110 or 255
+            local lum = (enRecharge or verrouillee) and 110 or 255
             surface.SetMaterial(icone)
             surface.SetDrawColor(lum, lum, lum, alpha)
             surface.DrawTexturedRect(cx - t / 2, cy - t / 2, t, t)

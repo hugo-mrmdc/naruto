@@ -111,21 +111,22 @@ local function Activer(ply)
 end
 
 net.Receive("kaguya_armure_cast", function(_, ply)
+    if not NA_Debloquee(ply, "kaguya_armure") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() or enCours[ply] then return end
     if (pret[ply] or 0) > CurTime() or Actif(ply) then return end
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
-    if CHAKRA_COUT > 0 then
-        if chakra < CHAKRA_COUT then
+    if NA_Stat(ply, "kaguya_armure", "chakra", CHAKRA_COUT) > 0 then
+        if chakra < NA_Stat(ply, "kaguya_armure", "chakra", CHAKRA_COUT) then
             ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
             return
         end
-        ply:SetNW2Float("NA_Chakra", chakra - CHAKRA_COUT)
+        ply:SetNW2Float("NA_Chakra", chakra - NA_Stat(ply, "kaguya_armure", "chakra", CHAKRA_COUT))
     end
 
     enCours[ply] = true
-    pret[ply] = CurTime() + RECHARGE
-    if NA_CD then NA_CD.Set(ply, "kaguya_armure", RECHARGE) end   -- recharge visible dans la barre
+    pret[ply] = CurTime() + NA_Stat(ply, "kaguya_armure", "recharge", RECHARGE)
+    if NA_CD then NA_CD.Set(ply, "kaguya_armure", NA_Stat(ply, "kaguya_armure", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
     net.Start("Jutsu_Anim_Play")
         net.WriteEntity(ply)

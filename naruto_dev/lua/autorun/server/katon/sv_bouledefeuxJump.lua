@@ -155,7 +155,7 @@ hook.Add("Think", "naruto_dev_uchih1_projectiles_move", function()
                 local hit = tr.Entity
                 if IsValid(hit) then
                     local dmg = DamageInfo()
-                    dmg:SetDamage(35)
+                    dmg:SetDamage(NA_Stat(p.owner, "katon_saut", "degats", 35))
                     dmg:SetDamageType(DMG_BURN)
                     dmg:SetAttacker(IsValid(p.owner) and p.owner or game.GetWorld())
                     dmg:SetInflictor(game.GetWorld())
@@ -169,13 +169,14 @@ hook.Add("Think", "naruto_dev_uchih1_projectiles_move", function()
 end)
 
 net.Receive(NET_FIRE, function(_, ply)
+    if not NA_Debloquee(ply, "katon_saut") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:IsPlayer() or not ply:Alive() then return end
 
     local t = CurTime()
     nextUse[ply] = nextUse[ply] or 0
     if t < nextUse[ply] then return end
-    nextUse[ply] = t + COOLDOWN
-    if NA_CD then NA_CD.Set(ply, "katon_saut", COOLDOWN) end -- recharge visible dans la barre
+    nextUse[ply] = t + NA_Stat(ply, "katon_saut", "recharge", COOLDOWN)
+    if NA_CD then NA_CD.Set(ply, "katon_saut", NA_Stat(ply, "katon_saut", "recharge", COOLDOWN)) end -- recharge visible dans la barre
     DoJumpBoost(ply)
     timer.Simple(1, function()
         if IsValid(ply) and ply:Alive() then

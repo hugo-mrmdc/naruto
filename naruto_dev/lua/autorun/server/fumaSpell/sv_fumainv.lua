@@ -94,8 +94,8 @@ local function Apparaitre(ply)
     Fumee(ply)
 
     -- recharge après la réapparition (visible dans la barre)
-    ply.NA_NextInvisToggle = CurTime() + RECHARGE
-    if NA_CD then NA_CD.Set(ply, "fuma_invisibilite", RECHARGE) end
+    ply.NA_NextInvisToggle = CurTime() + NA_Stat(ply, "fuma_invisibilite", "recharge", RECHARGE)
+    if NA_CD then NA_CD.Set(ply, "fuma_invisibilite", NA_Stat(ply, "fuma_invisibilite", "recharge", RECHARGE)) end
 end
 NA_FumaReapparaitre = Apparaitre   -- utilisable par d'autres scripts
 
@@ -106,6 +106,7 @@ local function Disparaitre(ply)
 end
 
 net.Receive("Invis_F_Toggle", function(_, ply)
+    if not NA_Debloquee(ply, "fuma_invisibilite") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() then return end
     if ADMIN_ONLY and not ply:IsAdmin() then return end
 
