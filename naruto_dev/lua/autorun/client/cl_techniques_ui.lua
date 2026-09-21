@@ -2,8 +2,13 @@
 -- Liste des attaques + équipement de la barre (CLIENT)
 -- Ouvre avec F2, ou la commande console : attaques
 --
+-- Fond : materials/ui/main_menu/fond.png. Onglets à gauche (ONGLETS plus bas),
+-- techniques au centre, barre en bas, détail de la technique à droite.
+--
 -- Équiper une technique dans la barre (touches 1 à 6) :
---   - clique sur une technique, puis sur un emplacement en haut ;
+--   - glisse la technique sur un emplacement de la barre ;
+--   - ou clique sur la technique, puis sur un emplacement ;
+--   - ou double-clic (premier emplacement libre) ;
 --   - ou clic droit sur la technique -> "Équiper dans l'emplacement N".
 --   Clic droit sur un emplacement pour le vider.
 --
@@ -153,22 +158,83 @@ function NA_TechniqueParId(id)
 end
 
 ----------------------------------------------------------
+-- Onglets du menu (panneau gauche)
+--   icone = pastille ronde posée sur la plaque (dossier ui/main_menu/)
+--   cats  = catégories de TECHNIQUES affichées dans l'onglet, une section chacune.
+--   Un onglet sans cats est grisé ("Bientôt disponible").
+----------------------------------------------------------
+local DOSSIER = "ui/main_menu/"
+
+local ONGLETS = {
+    { nom = "Stats",         icone = "btn/stats_icon.png" },
+    { nom = "Jutsus",        icone = "btn/jutsu_icon.png",       cats = { "Katon", "Suiton" },
+      desc = "Cette catégorie répertorie les techniques des natures du chakra" },
+    { nom = "Kekkei Genkai", icone = "btn/keikei_icon.png",      cats = { "Mokuton", "Jinton" },
+      desc = "Cette catégorie répertorie les techniques héritées par le sang" },
+    { nom = "Clan",          icone = "icon_clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike" },
+      desc = "Cette catégorie répertorie les techniques secrètes des clans" },
+    { nom = "Arts Ninja",    icone = "btn/icon_taijutsu.png",    cats = { "Armes", "Déplacement", "Divers" },
+      desc = "Cette catégorie répertorie toutes les techniques des arts ninja" },
+    { nom = "Sub Jutsu",     icone = "btn/icon_sub_jutsu.png" },
+    { nom = "Jutsu Class",   icone = "btn/icon_jutsu_classe.png" },
+}
+
+----------------------------------------------------------
 -- Apparence
 ----------------------------------------------------------
-local COL_BG      = Color(18, 18, 22, 250)
-local COL_PANEL   = Color(30, 30, 36)
-local COL_PANEL_2 = Color(40, 40, 48)
-local COL_SELECT  = Color(60, 52, 40)
-local COL_ACCENT  = Color(255, 128, 32)
-local COL_TEXT    = Color(235, 235, 235)
-local COL_DIM     = Color(150, 150, 160)
-local COL_OK      = Color(120, 220, 120)
+local FOND = DOSSIER .. "fond.png"
+local FOND_W, FOND_H = 1733, 908
 
-surface.CreateFont("NA.Tech.Title", { font = "Roboto", size = 28, weight = 700 })
-surface.CreateFont("NA.Tech.Cat", { font = "Roboto", size = 19, weight = 600 })
-surface.CreateFont("NA.Tech.Name", { font = "Roboto", size = 21, weight = 600 })
-surface.CreateFont("NA.Tech.Desc", { font = "Roboto", size = 17, weight = 400 })
-surface.CreateFont("NA.Tech.Key", { font = "Roboto", size = 17, weight = 700 })
+-- Zones intérieures des panneaux, mesurées dans fond.png (x1, y1, x2, y2)
+local ZONE_GAUCHE = { 94, 124, 241, 759 }
+local ZONE_CENTRE = { 327, 135, 1407, 757 }
+local ZONE_DROITE = { 1493, 123, 1639, 759 }
+
+-- Plaques des onglets (en pixels de fond.png) : elles débordent du panneau gauche
+local PLAQUE_X, PLAQUE_W = 16, 266
+
+local C_OR         = Color(232, 196, 120)
+local C_CREME      = Color(240, 226, 196)
+local C_DOUX       = Color(175, 155, 125)
+local C_TEXTE      = Color(74, 52, 40)      -- sur le parchemin
+local C_TEXTE_DOUX = Color(125, 100, 80)
+local C_CHAKRA     = Color(90, 170, 255)
+local C_RECHARGE   = Color(185, 110, 255)
+local C_DEGATS     = Color(255, 130, 100)
+local C_OK         = Color(120, 200, 110)
+
+-- Polices recréées à l'ouverture, à la taille du menu (f = 1 pour un fond de 908 px de haut)
+local function CreerPolices(f)
+    f = math.max(f, 0.6)
+    local function P(nom, taille, poids)
+        surface.CreateFont(nom, { font = "Roboto", size = math.Round(taille * f), weight = poids, extended = true })
+    end
+    P("NA.Jutsu.Titre",     50, 700)
+    P("NA.Jutsu.SousTitre", 18, 700)
+    P("NA.Jutsu.Onglet",    17, 800)
+    P("NA.Jutsu.Section",   26, 800)
+    P("NA.Jutsu.Nom",       19, 800)
+    P("NA.Jutsu.Texte",     15, 600)
+    P("NA.Jutsu.Petit",     15, 700)
+    P("NA.Jutsu.Court",     13, 700)
+end
+
+local mats = {}
+local function M(chemin)
+    local m = mats[chemin]
+    if not m then
+        m = Material(chemin, "smooth mips")
+        mats[chemin] = m
+    end
+    return m
+end
+
+local function Image(chemin, x, y, w, h, a, lum)
+    lum = lum or 255
+    surface.SetMaterial(M(chemin))
+    surface.SetDrawColor(lum, lum, lum, a or 255)
+    surface.DrawTexturedRect(x, y, w, h)
+end
 
 local function KeyLabel(key)
     if isstring(key) then return key end
@@ -176,15 +242,13 @@ local function KeyLabel(key)
     return name and string.upper(name) or "?"
 end
 
-local function Categories()
-    local order, seen = {}, {}
-    for _, t in ipairs(TECHNIQUES) do
-        if not seen[t.cat] then
-            seen[t.cat] = true
-            order[#order + 1] = t.cat
-        end
-    end
-    return order
+local function Equipable(tech)
+    return tech.id ~= nil and NA_Cast ~= nil and NA_Cast[tech.id] ~= nil
+end
+
+-- Coût en chakra, lu dans la description ("Coûte 25 de chakra")
+local function Chakra(tech)
+    return tonumber(string.match(tech.desc or "", "Coûte (%d+) de chakra")) or 0
 end
 
 -- Emplacement de la barre où se trouve une technique (ou nil)
@@ -195,11 +259,83 @@ local function EmplacementDe(id)
     end
 end
 
+local function EmplacementLibre()
+    if not NA_SkillBar then return nil end
+    for i = 1, NA_SkillBar.NB do
+        if not NA_SkillBar.Get(i) then return i end
+    end
+end
+
+-- Cercle plein
+local function Disque(cx, cy, r)
+    local pts = {}
+    for i = 0, 31 do
+        local a = math.rad(i / 32 * 360)
+        pts[#pts + 1] = { x = cx + math.cos(a) * r, y = cy + math.sin(a) * r }
+    end
+    draw.NoTexture()
+    surface.DrawPoly(pts)
+end
+
+-- Découpe un texte en lignes qui tiennent dans une largeur
+local function Couper(texte, police, largeur)
+    surface.SetFont(police)
+    local lignes, ligne = {}, ""
+    for mot in string.gmatch(texte or "", "%S+") do
+        local essai = ligne == "" and mot or (ligne .. " " .. mot)
+        if ligne ~= "" and surface.GetTextSize(essai) > largeur then
+            lignes[#lignes + 1] = ligne
+            ligne = mot
+        else
+            ligne = essai
+        end
+    end
+    if ligne ~= "" then lignes[#lignes + 1] = ligne end
+    return lignes
+end
+
+-- Icône ronde d'une technique (ou son nom court) dans une case
+local function DessinerCaseTechnique(tech, x, y, t, lum)
+    Image(DOSSIER .. "jutsu/case_jutsu.png", x, y, t, t)
+    if not tech then return end
+    local icone = tech.id and NA_SkillBar and NA_SkillBar.Icone(tech.id)
+    local ti = t * 0.84
+    if icone then
+        surface.SetMaterial(icone)
+        surface.SetDrawColor(lum or 255, lum or 255, lum or 255, 255)
+        surface.DrawTexturedRect(x + t / 2 - ti / 2, y + t / 2 - ti / 2, ti, ti)
+    else
+        surface.SetDrawColor(60, 40, 30, 40)
+        Disque(x + t / 2, y + t / 2, ti / 2)
+        draw.SimpleText(tech.court or tech.name, "NA.Jutsu.Court", x + t / 2, y + t / 2, C_TEXTE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+end
+
+-- Cadre sombre semi-transparent à liseré doré (liste des techniques, barre)
+local function CadreSombre(w, h)
+    surface.SetDrawColor(10, 6, 6, 190)
+    surface.DrawRect(0, 0, w, h)
+    surface.SetDrawColor(C_OR.r, C_OR.g, C_OR.b, 150)
+    surface.DrawOutlinedRect(0, 0, w, h, 2)
+    surface.SetDrawColor(C_OR.r, C_OR.g, C_OR.b, 40)
+    surface.DrawOutlinedRect(4, 4, w - 8, h - 8, 1)
+end
+
+-- Petite pastille numérotée en bas à droite d'une case
+local function Pastille(n, w, h)
+    local r = w * 0.16
+    surface.SetDrawColor(90, 40, 25, 255)
+    Disque(w - r, h - r, r)
+    draw.SimpleText(n, "NA.Jutsu.Court", w - r, h - r, C_OR, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+end
+
 ----------------------------------------------------------
 -- Fenêtre
 ----------------------------------------------------------
 local frame
-local selection -- id de la technique choisie pour être équipée
+local selection        -- technique choisie (table de TECHNIQUES)
+local ongletActif = 5  -- "Arts Ninja" à la première ouverture
+local filtreEquipables = false
 
 local function Open()
     if IsValid(frame) then
@@ -208,332 +344,401 @@ local function Open()
     end
 
     selection = nil
+    local survol -- technique sous la souris
 
-    local w = math.min(ScrW() * 0.75, 960)
-    local h = math.min(ScrH() * 0.85, 740)
+    -- Taille : le fond garde ses proportions
+    local W = math.min(ScrW() * 0.9, ScrH() * 0.92 * FOND_W / FOND_H)
+    local H = W * FOND_H / FOND_W
+    local S = W / FOND_W
+    CreerPolices(H / FOND_H)
 
-    frame = vgui.Create("DFrame")
-    frame:SetSize(w, h)
+    local function Zone(z)
+        return z[1] * S, z[2] * S, (z[3] - z[1]) * S, (z[4] - z[2]) * S
+    end
+
+    frame = vgui.Create("DPanel")
+    frame:SetSize(W, H)
     frame:Center()
-    frame:SetTitle("")
-    frame:ShowCloseButton(false)
     frame:MakePopup()
-    frame.Paint = function(pan, pw, ph)
-        draw.RoundedBox(8, 0, 0, pw, ph, COL_BG)
-        draw.RoundedBox(0, 0, 46, pw, 2, COL_ACCENT)
-        draw.SimpleText("ATTAQUES ET TECHNIQUES", "NA.Tech.Title", 20, 23, COL_TEXT, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    frame:SetKeyboardInputEnabled(true)
+    frame.Paint = function(pan, w, h)
+        Image(FOND, 0, 0, w, h)
+    end
+    frame.OnKeyCodePressed = function(pan, key)
+        if key == KEY_ESCAPE then
+            pan:Remove()
+            return true
+        end
     end
 
-    local close = vgui.Create("DButton", frame)
-    close:SetText("")
-    close:SetSize(32, 32)
-    close:SetPos(w - 42, 8)
-    close.Paint = function(pan, pw, ph)
-        draw.SimpleText("X", "NA.Tech.Name", pw / 2, ph / 2,
-            pan:IsHovered() and COL_ACCENT or COL_DIM, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
-    close.DoClick = function() frame:Remove() end
-
-    -- Colonne des catégories
-    local side = vgui.Create("DPanel", frame)
-    side:Dock(LEFT)
-    side:DockMargin(14, 58, 10, 14)
-    side:SetWide(160)
-    side.Paint = function(pan, pw, ph)
-        draw.RoundedBox(6, 0, 0, pw, ph, COL_PANEL)
-    end
+    local Rafraichir -- reconstruit le contenu de l'onglet
 
     ------------------------------------------------------
-    -- Zone d'équipement : les 6 emplacements de la barre
+    -- Gauche : plaques des onglets, pastille ronde à gauche
     ------------------------------------------------------
-    local equip = vgui.Create("DPanel", frame)
-    equip:Dock(TOP)
-    equip:DockMargin(0, 58, 14, 10)
-    equip:SetTall(122)
-    equip.Paint = function(pan, pw, ph)
-        draw.RoundedBox(6, 0, 0, pw, ph, COL_PANEL)
-        local txt = selection
-            and ("Choisis un emplacement pour : " .. (parId[selection] and parId[selection].name or selection))
-            or "BARRE DE TECHNIQUES  —  clique sur une technique puis sur un emplacement  •  clic droit : vider"
-        draw.SimpleText(txt, "NA.Tech.Desc", 12, 14, selection and COL_ACCENT or COL_DIM, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-    end
+    local gX, gY, gW, gH = Zone(ZONE_GAUCHE)
+    local bW = PLAQUE_W * S
+    local bH = bW * 76 / 258
+    local pas = (gH - bH) / (#ONGLETS - 1)
 
-    local rangee = vgui.Create("DPanel", equip)
-    rangee:Dock(FILL)
-    rangee:DockMargin(10, 28, 10, 8)
-    rangee.Paint = function() end
+    for i, o in ipairs(ONGLETS) do
+        local actif = o.cats ~= nil
+        local b = vgui.Create("DButton", frame)
+        b:SetText("")
+        b:SetPos(PLAQUE_X * S, gY + (i - 1) * pas)
+        b:SetSize(bW, bH)
 
-    local TAILLE_SLOT = 80
-    for i = 1, (NA_SkillBar and NA_SkillBar.NB or 6) do
-        local slot = vgui.Create("DButton", rangee)
-        slot:SetText("")
-        slot:SetSize(TAILLE_SLOT, TAILLE_SLOT)
-        slot:Dock(LEFT)
-        slot:DockMargin(0, 0, 12, 0)
-        slot:SetWide(TAILLE_SLOT)
+        b.Paint = function(pan, w, h)
+            local choisi = ongletActif == i
+            local lum = actif and 255 or 150
+            local plaque = (choisi or (actif and pan:IsHovered())) and "btn_base_refont_hover.png" or "btn_base_refont.png"
+            Image(DOSSIER .. plaque, 0, 0, w, h, 255, lum)
 
-        slot.Paint = function(pan, pw, ph)
-            if not NA_SkillBar then return end
-            local survol = pan:IsHovered()
-            local alpha = (selection and not survol) and 200 or 255
-            NA_SkillBar.DessinerEmplacement(0, 0, math.min(pw, ph), i, NA_SkillBar.Get(i), alpha)
-            if survol and selection then
-                surface.SetDrawColor(COL_ACCENT)
-                surface.DrawOutlinedRect(0, 0, pw, ph, 2)
-            end
+            -- pastille sur le rond de la plaque (un peu plus grande que lui)
+            local t = h * 1.08
+            Image(DOSSIER .. o.icone, h / 2 - t / 2, h / 2 - t / 2, t, t, 255, lum)
+
+            -- texte au centre du corps de la plaque (entre le rond et la corde)
+            local col = choisi and Color(80, 40, 20) or Color(C_CREME.r, C_CREME.g, C_CREME.b, actif and 255 or 150)
+            draw.SimpleText(string.upper(o.nom), "NA.Jutsu.Onglet", w * 0.54, h / 2, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
 
-        slot.DoClick = function()
-            if not NA_SkillBar then return end
-            if selection then
-                NA_SkillBar.Equiper(i, selection)
+        if actif then
+            b.DoClick = function()
+                if ongletActif == i then return end
+                ongletActif = i
                 selection = nil
-                if IsValid(frame) and frame.Rafraichir then frame.Rafraichir() end
+                surface.PlaySound("ui/buttonclick.wav")
+                Rafraichir()
             end
+        else
+            b:SetTooltip("Bientôt disponible")
+            b.DoClick = function() surface.PlaySound("buttons/button10.wav") end
         end
-
-        slot.DoRightClick = function()
-            if not NA_SkillBar or not NA_SkillBar.Get(i) then return end
-            NA_SkillBar.Vider(i)
-            if IsValid(frame) and frame.Rafraichir then frame.Rafraichir() end
-        end
-
-        slot:SetTooltip("Emplacement " .. i .. " (touche " .. i .. ")")
     end
 
     ------------------------------------------------------
-    -- Liste des techniques
+    -- Centre : titre, cadre des techniques, barre
     ------------------------------------------------------
-    local content = vgui.Create("DScrollPanel", frame)
-    content:Dock(FILL)
-    content:DockMargin(0, 0, 14, 14)
+    local cX, cY, cW, cH = Zone(ZONE_CENTRE)
+    local px = cW * 0.05
 
-    local bar = content:GetVBar()
-    bar:SetWide(6)
-    bar.Paint = function() end
-    bar.btnUp.Paint = function() end
-    bar.btnDown.Paint = function() end
-    bar.btnGrip.Paint = function(pan, pw, ph)
-        draw.RoundedBox(3, 0, 0, pw, ph, COL_ACCENT)
+    local centre = vgui.Create("DPanel", frame)
+    centre:SetPos(cX, cY)
+    centre:SetSize(cW, cH)
+    centre.Paint = function(pan, w, h)
+        local o = ONGLETS[ongletActif]
+        draw.SimpleText(o.nom, "NA.Jutsu.Titre", px, h * 0.075, C_OR, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText(string.upper(o.desc or ""), "NA.Jutsu.SousTitre", px, h * 0.155, C_CREME, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        Image(DOSSIER .. "jutsu/title_vector.png", px, h * 0.19, w - px * 2, 2)
     end
 
-    local current = "Tout"
-    local search = ""
-    local Refresh
+    -- croix de fermeture, sur le coin haut droit du menu
+    local fermer = vgui.Create("DButton", frame)
+    fermer:SetText("")
+    fermer:SetSize(62 * S, 62 * S)
+    fermer:SetPos(W - 76 * S, 42 * S)
+    fermer.Paint = function(pan, w, h)
+        local m = pan:IsHovered() and 0 or 3 * S   -- grossit un peu au survol
+        Image(DOSSIER .. "btn_base_close.png", m, m, w - m * 2, h - m * 2)
+    end
+    fermer.DoClick = function()
+        surface.PlaySound("ui/buttonclick.wav")
+        frame:Remove()
+    end
+
+    -- case à cocher "Jutsu équipables", à droite sous le titre
+    local coche = vgui.Create("DButton", centre)
+    coche:SetText("")
+    surface.SetFont("NA.Jutsu.SousTitre")
+    local libelle = "JUTSU ÉQUIPABLES"
+    local lw, lh = surface.GetTextSize(libelle)
+    local tc = lh * 1.1
+    coche:SetSize(tc + 8 + lw, tc)
+    coche:SetPos(cW - px - coche:GetWide(), cH * 0.155 - tc / 2)
+    coche.Paint = function(pan, w, h)
+        Image(DOSSIER .. (filtreEquipables and "checkbox_on.png" or "checkbox_off.png"), 0, 0, h, h)
+        draw.SimpleText(libelle, "NA.Jutsu.SousTitre", h + 8, h / 2,
+            (filtreEquipables or pan:IsHovered()) and C_OR or C_DOUX, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    end
+    coche.DoClick = function()
+        filtreEquipables = not filtreEquipables
+        surface.PlaySound("ui/buttonclick.wav")
+        Rafraichir()
+    end
+
+    -- cadre des techniques
+    local cadreY, cadreH = cH * 0.215, cH * 0.565
+    local cadre = vgui.Create("DPanel", centre)
+    cadre:SetPos(px, cadreY)
+    cadre:SetSize(cW - px * 2, cadreH)
+    cadre.Paint = function(pan, w, h)
+        CadreSombre(w, h)
+    end
+
+    local defil = vgui.Create("DScrollPanel", cadre)
+    defil:Dock(FILL)
+    defil:DockMargin(cW * 0.012, cH * 0.015, cW * 0.008, cH * 0.015)
+
+    local vbar = defil:GetVBar()
+    vbar:SetWide(6)
+    vbar.Paint = function() end
+    vbar.btnUp.Paint = function() end
+    vbar.btnDown.Paint = function() end
+    vbar.btnGrip.Paint = function(pan, w, h) draw.RoundedBox(3, 0, 0, w, h, Color(232, 196, 120, 120)) end
+
+    local tailleCase = math.floor(cW * 0.062)
+    local ecart = math.floor(cW * 0.014)
 
     local function MenuEquiper(tech)
         local m = DermaMenu()
         for i = 1, NA_SkillBar.NB do
             local occupe = NA_SkillBar.Get(i)
             local label = "Équiper dans l'emplacement " .. i
-            if occupe and parId[occupe] then label = label .. "  (remplace " .. parId[occupe].name .. ")" end
-            m:AddOption(label, function()
-                NA_SkillBar.Equiper(i, tech.id)
-                Refresh()
-            end)
+            local info = occupe and NA_TechniqueParId(occupe)
+            if info then label = label .. "  (remplace " .. info.name .. ")" end
+            m:AddOption(label, function() NA_SkillBar.Equiper(i, tech.id) end)
         end
         local deja = EmplacementDe(tech.id)
         if deja then
             m:AddSpacer()
-            m:AddOption("Retirer de la barre", function()
-                NA_SkillBar.Vider(deja)
-                Refresh()
-            end)
+            m:AddOption("Retirer de la barre", function() NA_SkillBar.Vider(deja) end)
         end
         m:Open()
     end
 
-    local function BuildCard(parent, tech)
-        local equipable = tech.id ~= nil and NA_Cast and NA_Cast[tech.id] ~= nil
+    -- Une technique dans la grille
+    local function CaseTechnique(parent, tech)
+        local equipable = Equipable(tech) and NA_SkillBar ~= nil
 
-        local card = vgui.Create("DPanel", parent)
-        card:Dock(TOP)
-        card:DockMargin(0, 0, 0, 8)
-        card:DockPadding(14, 10, 14, 10)
-        if equipable then card:SetCursor("hand") end
+        local b = parent:Add("DButton")
+        b:SetText("")
+        b:SetSize(tailleCase, tailleCase)
+        b.Tech = tech
+        if equipable then b:Droppable("NA_Jutsu") end
 
-        card.Paint = function(pan, w2, h2)
-            local choisie = equipable and selection == tech.id
-            draw.RoundedBox(6, 0, 0, w2, h2, choisie and COL_SELECT or COL_PANEL_2)
-            surface.SetDrawColor(choisie and COL_TEXT or COL_ACCENT)
-            surface.DrawRect(0, 0, 3, h2)
-            if equipable and pan:IsHovered() and not choisie then
-                surface.SetDrawColor(255, 128, 32, 60)
-                surface.DrawOutlinedRect(0, 0, w2, h2, 1)
+        b.Paint = function(pan, w, h)
+            local choisie = selection == tech
+            local sur = pan:IsHovered()
+            if choisie then
+                local p = 0.5 + 0.5 * math.sin(CurTime() * 5)
+                surface.SetDrawColor(255, 190, 80, 110 + p * 100)
+                Disque(w / 2, h / 2, w / 2)
             end
+            local m = choisie and 3 or 0
+            DessinerCaseTechnique(tech, m, m, w - m * 2, (sur or choisie) and 255 or 215)
         end
 
+        b.PaintOver = function(pan, w, h)
+            local n = tech.id and EmplacementDe(tech.id)
+            if n then Pastille(n, w, h) end
+        end
+
+        b.OnCursorEntered = function() survol = tech end
+        b.OnCursorExited = function() if survol == tech then survol = nil end end
+
+        b.DoClick = function()
+            selection = (selection == tech) and nil or tech
+            surface.PlaySound("ui/buttonclick.wav")
+        end
+        b.DoDoubleClick = function()
+            if not equipable or EmplacementDe(tech.id) then return end
+            local libre = EmplacementLibre()
+            if libre then
+                NA_SkillBar.Equiper(libre, tech.id)
+                selection = nil
+            end
+        end
         if equipable then
-            card.OnMousePressed = function(pan, code)
-                if code == MOUSE_LEFT then
-                    selection = (selection == tech.id) and nil or tech.id
-                    surface.PlaySound("ui/buttonclick.wav")
-                elseif code == MOUSE_RIGHT then
-                    MenuEquiper(tech)
-                end
-            end
+            b.DoRightClick = function() MenuEquiper(tech) end
         end
-
-        -- icône de la technique, à gauche de la carte
-        local icone = tech.id and NA_SkillBar and NA_SkillBar.Icone(tech.id)
-        if icone then
-            local img = vgui.Create("DPanel", card)
-            img:Dock(LEFT)
-            img:DockMargin(0, 0, 12, 0)
-            img:SetWide(56)
-            img:SetMouseInputEnabled(false)
-            img.Paint = function(pan, pw, ph)
-                surface.SetMaterial(icone)
-                surface.SetDrawColor(255, 255, 255, 255)
-                surface.DrawTexturedRect(0, 0, 56, 56)
-            end
-        end
-
-        local header = vgui.Create("DPanel", card)
-        header:Dock(TOP)
-        header:SetTall(26)
-        header:SetMouseInputEnabled(false)
-        header.Paint = function() end
-
-        local name = vgui.Create("DLabel", header)
-        name:Dock(LEFT)
-        name:SetFont("NA.Tech.Name")
-        name:SetTextColor(COL_TEXT)
-        name:SetText(tech.name)
-        name:SizeToContents()
-
-        -- pastille de touche, alignée à droite (masquée si la technique ne se lance que par la barre)
-        if not equipable or NA_TouchesDirectes() then
-            local keyText = KeyLabel(tech.key)
-            surface.SetFont("NA.Tech.Key")
-            local kw = surface.GetTextSize(keyText) + 20
-
-            local keyTag = vgui.Create("DPanel", header)
-            keyTag:Dock(RIGHT)
-            keyTag:SetWide(kw)
-            keyTag.Paint = function(pan, w2, h2)
-                draw.RoundedBox(4, 0, 3, w2, h2 - 6, COL_ACCENT)
-                draw.SimpleText(keyText, "NA.Tech.Key", w2 / 2, h2 / 2, Color(20, 20, 20), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            end
-        end
-
-        -- état dans la barre
-        if equipable then
-            local slotNum = EmplacementDe(tech.id)
-            local etat = vgui.Create("DLabel", header)
-            etat:Dock(RIGHT)
-            etat:DockMargin(0, 0, 10, 0)
-            etat:SetFont("NA.Tech.Desc")
-            etat:SetTextColor(slotNum and COL_OK or COL_DIM)
-            etat:SetText(slotNum and ("Équipée : touche " .. slotNum) or "Équipable")
-            etat:SizeToContents()
-        end
-
-        local desc = vgui.Create("DLabel", card)
-        desc:Dock(TOP)
-        desc:DockMargin(0, 4, 0, 0)
-        desc:SetFont("NA.Tech.Desc")
-        desc:SetTextColor(COL_DIM)
-        desc:SetWrap(true)
-        desc:SetAutoStretchVertical(true)
-        desc:SetText(tech.desc or "")
-
-        local extra = {}
-        if tech.dmg then extra[#extra + 1] = "Dégâts : " .. tech.dmg end
-        if tech.cd then extra[#extra + 1] = "Recharge : " .. tech.cd .. " s" end
-
-        local infoTall = 0
-        if #extra > 0 then
-            local info = vgui.Create("DLabel", card)
-            info:Dock(TOP)
-            info:DockMargin(0, 4, 0, 0)
-            info:SetFont("NA.Tech.Desc")
-            info:SetTextColor(COL_ACCENT)
-            info:SetText(table.concat(extra, "   •   "))
-            info:SetTall(20)
-            infoTall = 24
-        end
-
-        -- hauteur : le libellé s'étire tout seul, on l'attend une frame
-        card:SetTall(80 + infoTall)
-        card.Think = function(pan)
-            local want = 26 + 4 + desc:GetTall() + infoTall + 20
-            if math.abs(pan:GetTall() - want) > 1 then
-                pan:SetTall(want)
-            end
-        end
-
-        return card
     end
 
-    Refresh = function()
-        local scroll = content:GetVBar():GetScroll()
-        content:Clear()
-        local shown = 0
-        for _, tech in ipairs(TECHNIQUES) do
-            local okCat = (current == "Tout") or (tech.cat == current)
-            local text = string.lower(tech.name .. " " .. (tech.desc or "") .. " " .. tech.cat)
-            local okSearch = search == "" or string.find(text, search, 1, true) ~= nil
-            if okCat and okSearch then
-                BuildCard(content, tech)
-                shown = shown + 1
+    -- Une section : titre souligné + rangée d'icônes
+    local function Section(cat)
+        local liste = {}
+        for _, t in ipairs(TECHNIQUES) do
+            if t.cat == cat and (not filtreEquipables or Equipable(t)) then liste[#liste + 1] = t end
+        end
+        if #liste == 0 then return end
+
+        local titreH = cH * 0.08
+        local espace = cH * 0.03
+
+        local sec = defil:Add("DPanel")
+        sec:Dock(TOP)
+        sec:DockMargin(0, 0, 0, cH * 0.035)
+        sec.Paint = function(pan, w, h)
+            draw.SimpleText(string.upper(cat), "NA.Jutsu.Section", 6, titreH / 2, C_OR, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            Image(DOSSIER .. "jutsu/title_vector.png", 0, titreH, w * 0.4, 2)
+        end
+
+        local grille = vgui.Create("DIconLayout", sec)
+        grille:Dock(TOP)
+        grille:DockMargin(6, titreH + espace, 0, 0)
+        grille:SetSpaceX(ecart)
+        grille:SetSpaceY(ecart)
+        for _, t in ipairs(liste) do CaseTechnique(grille, t) end
+
+        -- la hauteur suit le nombre de lignes de la grille
+        sec.PerformLayout = function(pan, w, h)
+            local parLigne = math.max(1, math.floor((w - 6 + ecart) / (tailleCase + ecart)))
+            local lignes = math.ceil(#liste / parLigne)
+            local voulu = titreH + espace + lignes * tailleCase + (lignes - 1) * ecart + 4
+            if math.abs(h - voulu) > 1 then pan:SetTall(voulu) end
+        end
+    end
+
+    Rafraichir = function()
+        survol = nil
+        defil:Clear()
+        for _, cat in ipairs(ONGLETS[ongletActif].cats or {}) do
+            Section(cat)
+        end
+        defil:GetVBar():SetScroll(0)
+    end
+
+    -- barre de techniques (cercles clairs, centrés)
+    local barreY = cadreY + cadreH + cH * 0.03
+    local barre = vgui.Create("DPanel", centre)
+    barre:SetPos(px, barreY)
+    barre:SetSize(cW - px * 2, cH - barreY - cH * 0.025)
+    barre.Paint = function(pan, w, h)
+        CadreSombre(w, h)
+    end
+
+    local nb = NA_SkillBar and NA_SkillBar.NB or 6
+    local tSlot = barre:GetTall() * 0.72
+    local eSlot = tSlot * 0.55
+    local debut = barre:GetWide() / 2 - (nb * tSlot + (nb - 1) * eSlot) / 2
+    for i = 1, nb do
+        local slot = vgui.Create("DButton", barre)
+        slot:SetText("")
+        slot:SetSize(tSlot, tSlot)
+        slot:SetPos(debut + (i - 1) * (tSlot + eSlot), barre:GetTall() / 2 - tSlot / 2)
+        slot:SetTooltip("Emplacement " .. i .. " (touche " .. i .. ")  •  clic droit : vider")
+
+        slot.Paint = function(pan, w, h)
+            local id = NA_SkillBar and NA_SkillBar.Get(i)
+            local tech = id and NA_TechniqueParId(id)
+            if selection and Equipable(selection) and pan:IsHovered() then
+                surface.SetDrawColor(255, 190, 80, 170)
+                Disque(w / 2, h / 2, w / 2)
+            end
+            local recharge = id and NA_ResteRecharge and NA_ResteRecharge(id) or 0
+            DessinerCaseTechnique(tech, 0, 0, w, recharge > 0 and 110 or 255)
+            if recharge > 0 then
+                draw.SimpleText(string.format(recharge >= 1 and "%d" or "%.1f", recharge), "NA.Jutsu.Nom",
+                    w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
         end
+        slot.PaintOver = function(pan, w, h) Pastille(i, w, h) end
 
-        if shown == 0 then
-            local empty = vgui.Create("DLabel", content)
-            empty:Dock(TOP)
-            empty:SetFont("NA.Tech.Desc")
-            empty:SetTextColor(COL_DIM)
-            empty:SetText("Aucune technique ne correspond.")
+        slot.OnCursorEntered = function()
+            local id = NA_SkillBar and NA_SkillBar.Get(i)
+            survol = id and NA_TechniqueParId(id) or nil
+        end
+        slot.OnCursorExited = function() survol = nil end
+
+        slot.DoClick = function()
+            if NA_SkillBar and selection and Equipable(selection) then
+                NA_SkillBar.Equiper(i, selection.id)
+                selection = nil
+            end
+        end
+        slot.DoRightClick = function()
+            if NA_SkillBar and NA_SkillBar.Get(i) then NA_SkillBar.Vider(i) end
         end
 
-        -- garde la position de défilement après une modification
-        timer.Simple(0, function()
-            if IsValid(content) then content:GetVBar():SetScroll(scroll) end
+        slot:Receiver("NA_Jutsu", function(pan, panneaux, lache)
+            if not lache or not NA_SkillBar then return end
+            local t = panneaux[1] and panneaux[1].Tech
+            if t and Equipable(t) then NA_SkillBar.Equiper(i, t.id) end
         end)
     end
-    frame.Rafraichir = Refresh
 
-    -- Barre de recherche
-    local entry = vgui.Create("DTextEntry", frame)
-    entry:SetPos(w - 254, 12)
-    entry:SetSize(200, 26)
-    entry:SetPlaceholderText("Rechercher...")
-    entry:SetUpdateOnType(true)
-    entry.OnValueChange = function(pan, val)
-        search = string.lower(val or "")
-        Refresh()
-    end
+    ------------------------------------------------------
+    -- Droite : détail de la technique survolée ou choisie
+    ------------------------------------------------------
+    local dX, dY, dW, dH = Zone(ZONE_DROITE)
+    local droite = vgui.Create("DPanel", frame)
+    droite:SetPos(dX, dY)
+    droite:SetSize(dW, dH)
 
-    local function AddCatButton(label)
-        local btn = vgui.Create("DButton", side)
-        btn:Dock(TOP)
-        btn:DockMargin(8, 8, 8, 0)
-        btn:SetTall(30)
-        btn:SetText("")
-        btn.Paint = function(pan, pw, ph)
-            local active = (current == label)
-            draw.RoundedBox(4, 0, 0, pw, ph, active and COL_ACCENT or COL_PANEL_2)
-            draw.SimpleText(label, "NA.Tech.Cat", 10, ph / 2,
-                active and Color(20, 20, 20) or COL_TEXT, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    local cache = {}
+    droite.Paint = function(pan, w, h)
+        local t = survol or selection
+        if not t then
+            draw.SimpleText("Survole une", "NA.Jutsu.Texte", w / 2, h * 0.45, C_DOUX, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText("technique", "NA.Jutsu.Texte", w / 2, h * 0.485, C_DOUX, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            return
         end
-        btn.DoClick = function()
-            current = label
-            Refresh()
+
+        -- découpage des textes gardé en mémoire pour chaque technique
+        local c = cache[t]
+        if not c then
+            c = {
+                nom  = Couper(string.upper(t.name), "NA.Jutsu.Nom", w * 0.92),
+                desc = Couper(string.upper(t.desc or ""), "NA.Jutsu.Texte", w * 0.84),
+            }
+            cache[t] = c
+        end
+
+        -- icône ronde en haut
+        local ti = w * 0.7
+        local y = h * 0.035
+        local icone = t.id and NA_SkillBar and NA_SkillBar.Icone(t.id)
+        if icone then
+            surface.SetMaterial(icone)
+            surface.SetDrawColor(255, 255, 255, 255)
+            surface.DrawTexturedRect(w / 2 - ti / 2, y, ti, ti)
+        else
+            DessinerCaseTechnique(t, w / 2 - ti / 2, y, ti)
+        end
+        y = y + ti + h * 0.03
+
+        -- nom
+        surface.SetFont("NA.Jutsu.Nom")
+        local _, hn = surface.GetTextSize("A")
+        for _, l in ipairs(c.nom) do
+            draw.SimpleText(l, "NA.Jutsu.Nom", w / 2, y, C_OR, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+            y = y + hn
+        end
+        y = y + h * 0.012
+        Image(DOSSIER .. "jutsu/right_vector.png", w * 0.1, y, w * 0.8, 3)
+        y = y + h * 0.035
+
+        -- description, centrée
+        surface.SetFont("NA.Jutsu.Texte")
+        local _, hd = surface.GetTextSize("A")
+        for _, l in ipairs(c.desc) do
+            draw.SimpleText(l, "NA.Jutsu.Texte", w / 2, y, C_CREME, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+            y = y + hd + 2
+        end
+        y = y + h * 0.04
+
+        -- caractéristiques
+        local x = w * 0.08
+        local function Ligne(texte, col)
+            draw.SimpleText(texte, "NA.Jutsu.Petit", x, y, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            y = y + hd + 4
+        end
+        Ligne("CHAKRA : " .. Chakra(t), C_CHAKRA)
+        Ligne("COOLDOWN : " .. (t.cd and (t.cd .. " S") or "-"), C_RECHARGE)
+        if Equipable(t) then
+            local n = EmplacementDe(t.id)
+            Ligne(n and ("ÉQUIPÉE : TOUCHE " .. n) or "NON ÉQUIPÉE", n and C_OK or C_DOUX)
+        elseif t.key and t.key ~= "" then
+            Ligne("TOUCHE : " .. string.upper(KeyLabel(t.key)), C_OR)
         end
     end
 
-    AddCatButton("Tout")
-    for _, cat in ipairs(Categories()) do
-        AddCatButton(cat)
-    end
-
-    Refresh()
+    Rafraichir()
 end
 
 concommand.Add("attaques", Open)
 concommand.Add("techniques", Open)
+
 
 ----------------------------------------------------------
 -- Touche d'ouverture
