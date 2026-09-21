@@ -21,7 +21,7 @@ if SERVER then AddCSLuaFile() end
 local ACTIF         = true
 local TOUCHE        = KEY_Q   -- touche du dash (KEY_Q, KEY_C, KEY_ALT...)
 
-local FORCE         = 1000    -- vitesse de la poussée
+local FORCE         = 800    -- vitesse de la poussée
 local DUREE         = 0.25    -- secondes pendant lesquelles la vitesse est tenue
                               -- (sans ça, le frottement du sol mange le dash et
                               --  il est bien plus court qu'en l'air)

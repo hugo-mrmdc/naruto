@@ -183,15 +183,15 @@ local ONGLETS = {
 -- Apparence
 ----------------------------------------------------------
 local FOND = DOSSIER .. "fond.png"
-local FOND_W, FOND_H = 1733, 908
+local FOND_W, FOND_H = 1672, 941
 
 -- Zones intérieures des panneaux, mesurées dans fond.png (x1, y1, x2, y2)
-local ZONE_GAUCHE = { 94, 124, 241, 759 }
-local ZONE_CENTRE = { 327, 135, 1407, 757 }
-local ZONE_DROITE = { 1493, 123, 1639, 759 }
+local ZONE_GAUCHE = { 81, 153, 198, 764 }
+local ZONE_CENTRE = { 276, 172, 1230, 746 }
+local ZONE_DROITE = { 1310, 152, 1589, 765 }
 
 -- Plaques des onglets (en pixels de fond.png) : elles débordent du panneau gauche
-local PLAQUE_X, PLAQUE_W = 16, 266
+local PLAQUE_X, PLAQUE_W = 8, 236
 
 local C_OR         = Color(232, 196, 120)
 local C_CREME      = Color(240, 226, 196)
@@ -203,7 +203,7 @@ local C_RECHARGE   = Color(185, 110, 255)
 local C_DEGATS     = Color(255, 130, 100)
 local C_OK         = Color(120, 200, 110)
 
--- Polices recréées à l'ouverture, à la taille du menu (f = 1 pour un fond de 908 px de haut)
+-- Polices recréées à l'ouverture, à la taille du menu (f = 1 pour un fond de 941 px de haut)
 local function CreerPolices(f)
     f = math.max(f, 0.6)
     local function P(nom, taille, poids)
@@ -213,9 +213,9 @@ local function CreerPolices(f)
     P("NA.Jutsu.SousTitre", 18, 700)
     P("NA.Jutsu.Onglet",    17, 800)
     P("NA.Jutsu.Section",   26, 800)
-    P("NA.Jutsu.Nom",       19, 800)
-    P("NA.Jutsu.Texte",     15, 600)
-    P("NA.Jutsu.Petit",     15, 700)
+    P("NA.Jutsu.Nom",       22, 800)
+    P("NA.Jutsu.Texte",     17, 600)
+    P("NA.Jutsu.Petit",     17, 700)
     P("NA.Jutsu.Court",     13, 700)
 end
 
@@ -436,8 +436,8 @@ local function Open()
     -- croix de fermeture, sur le coin haut droit du menu
     local fermer = vgui.Create("DButton", frame)
     fermer:SetText("")
-    fermer:SetSize(62 * S, 62 * S)
-    fermer:SetPos(W - 76 * S, 42 * S)
+    fermer:SetSize(56 * S, 56 * S)
+    fermer:SetPos(W - 62 * S, 46 * S)
     fermer.Paint = function(pan, w, h)
         local m = pan:IsHovered() and 0 or 3 * S   -- grossit un peu au survol
         Image(DOSSIER .. "btn_base_close.png", m, m, w - m * 2, h - m * 2)
@@ -447,7 +447,7 @@ local function Open()
         frame:Remove()
     end
 
-    -- case à cocher "Jutsu équipables", à droite sous le titre
+    -- case à cocher "Jutsu équipables", à droite du titre
     local coche = vgui.Create("DButton", centre)
     coche:SetText("")
     surface.SetFont("NA.Jutsu.SousTitre")
@@ -455,7 +455,7 @@ local function Open()
     local lw, lh = surface.GetTextSize(libelle)
     local tc = lh * 1.1
     coche:SetSize(tc + 8 + lw, tc)
-    coche:SetPos(cW - px - coche:GetWide(), cH * 0.155 - tc / 2)
+    coche:SetPos(cW - px - coche:GetWide(), cH * 0.075 - tc / 2)
     coche.Paint = function(pan, w, h)
         Image(DOSSIER .. (filtreEquipables and "checkbox_on.png" or "checkbox_off.png"), 0, 0, h, h)
         draw.SimpleText(libelle, "NA.Jutsu.SousTitre", h + 8, h / 2,
@@ -685,7 +685,7 @@ local function Open()
         end
 
         -- icône ronde en haut
-        local ti = w * 0.7
+        local ti = math.min(w * 0.5, h * 0.2)
         local y = h * 0.035
         local icone = t.id and NA_SkillBar and NA_SkillBar.Icone(t.id)
         if icone then
@@ -697,9 +697,16 @@ local function Open()
         end
         y = y + ti + h * 0.03
 
-        -- nom
         surface.SetFont("NA.Jutsu.Nom")
         local _, hn = surface.GetTextSize("A")
+        surface.SetFont("NA.Jutsu.Texte")
+        local _, hd = surface.GetTextSize("A")
+
+        -- voile sombre derrière le texte, pour le lire par-dessus le décor du fond
+        local hauteur = #c.nom * hn + h * 0.047 + #c.desc * (hd + 2) + h * 0.04 + 3 * (hd + 4)
+        draw.RoundedBox(6, w * 0.04, y - h * 0.015, w * 0.92, hauteur + h * 0.03, Color(8, 5, 5, 175))
+
+        -- nom
         for _, l in ipairs(c.nom) do
             draw.SimpleText(l, "NA.Jutsu.Nom", w / 2, y, C_OR, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
             y = y + hn
@@ -709,18 +716,15 @@ local function Open()
         y = y + h * 0.035
 
         -- description, centrée
-        surface.SetFont("NA.Jutsu.Texte")
-        local _, hd = surface.GetTextSize("A")
         for _, l in ipairs(c.desc) do
             draw.SimpleText(l, "NA.Jutsu.Texte", w / 2, y, C_CREME, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
             y = y + hd + 2
         end
         y = y + h * 0.04
 
-        -- caractéristiques
-        local x = w * 0.08
+        -- caractéristiques, centrées
         local function Ligne(texte, col)
-            draw.SimpleText(texte, "NA.Jutsu.Petit", x, y, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            draw.SimpleText(texte, "NA.Jutsu.Petit", w / 2, y, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
             y = y + hd + 4
         end
         Ligne("CHAKRA : " .. Chakra(t), C_CHAKRA)
