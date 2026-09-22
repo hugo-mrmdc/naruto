@@ -1,0 +1,6 @@
+
+# Fichiers de map trop lourds pour GitHub (>100 Mo)
+*.bsp
+*.bsp.bak
+*.vmf
+*.vmx
