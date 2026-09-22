@@ -1,0 +1,22 @@
+"VertexLitGeneric"
+{
+   "$basetexture"         "models/mark2580/gtav/AfterHoursClub/office/prop_chrome_clean"
+   "$bumpmap"             "dev/bump_normal"
+
+   "$phongexponenttexture" "models/mark2580/gtav/AfterHoursClub/shared/green" 
+	
+	$phong "1"
+	$phongboost "5"
+	$phongfresnelranges "[0.3 0.75 1.00]"
+	$phongalbedotint "1"
+	$phongexponent       50
+	
+	$lightwarptexture "mark2580/gtav/AfterHoursClub/shared/lightwarp_metallic"
+	
+	$nocull 1
+	
+	$envmap "env_cubemap"
+	$envmaptint "[0.5 0.5 0.5]"
+	$normalmapalphaenvmapmask 1
+	$envmapfresnel 1
+}

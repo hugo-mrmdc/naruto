@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/fallenlogic_environment/rocks/slantedrocks_02"
+	"$bumpmap" "models/fallenlogic_environment/rocks/slantedrocks_02_normal"
+	"$surfaceprop" "Rock"
+}

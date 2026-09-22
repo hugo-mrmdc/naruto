@@ -1,0 +1,14 @@
+
+lightmappedgeneric
+{
+	$basetexture "echoes/env/b_012_ClinicDoor_01a/b_012_ClinicDoor_01a_BC.vtf"
+	$bumpmap "echoes/env/b_012_ClinicDoor_01a/b_012_ClinicDoor_01a_NAO.vtf"
+
+	$surfaceprop Wood
+
+
+
+	
+
+	
+}

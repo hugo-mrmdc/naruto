@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "yanderecollege/yc_window01"
+	"$surfaceprop" "Glass"
+	"$surfaceprop2" "Glass"
+	"$translucent" 1
+	"%keywords" "yandere"
+}

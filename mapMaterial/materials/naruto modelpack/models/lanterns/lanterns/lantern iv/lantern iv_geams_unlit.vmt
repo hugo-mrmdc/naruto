@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture" "naruto modelpack/models/lanterns/lanterns/lantern iv/Lantern IV_02"
+	"$alphatest" 1
+	"$translucent" 1
+}

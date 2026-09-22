@@ -1,0 +1,14 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "geams/naruto_geams/nr_cliff_neutre_blend_r"
+	"$basetexture2" "geams/naruto_geams/nr_grass_neutre_02"
+	"%tooltexture" "Nature/blendgroundtograss001_tooltexture"
+
+	"$bumpmap" "Nature/rockwall009_height-ssbump"
+	// "$ssbump" "1" // doublon conserve en commentaire
+	"$blendmodulatetexture" "Nature/grass_blendmask"
+
+	"%keywords" "tf"
+	"$ssbump" "1"
+	"$surfaceprop" "dirt"
+}

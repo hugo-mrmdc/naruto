@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve_building_suna_geams/5_plant01_1_0_0"
+	"$nocull" 1
+}

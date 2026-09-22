@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "MM_Remesh_textures/MM_Remesh_Tree_01_Texture/tree01"
+	///"$bumpmap" "MM_Remesh_textures/MM_Remesh_Tree_01_Texture/tree01_normal"
+	"$model" 1
+}

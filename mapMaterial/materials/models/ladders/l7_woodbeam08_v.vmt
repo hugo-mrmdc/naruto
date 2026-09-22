@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$baseTexture"	"models\ladders/l7_woodbeam08_v"
+	"$surfaceprop" "wood"
+}

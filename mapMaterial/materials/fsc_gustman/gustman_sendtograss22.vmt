@@ -1,0 +1,19 @@
+WorldVertexTransition
+{
+	$basetexture "naruto_nass/nass_ground_rip"
+	$surfaceprop Sand
+
+	$basetexture2 "fsc_gustman/gustman_grass"
+	$surfaceprop2 Dirt
+
+	$detail "forest/dirtfar"
+	$detailscale 0.075
+	$detailscale2 0.075
+
+	$blendmodulatetexture "nature/grass_blendmask"
+
+	%tooltexture "nature/blendgroundtograss001_tooltexture"
+	%keywords "tf"
+
+	$ssbump2 2
+}

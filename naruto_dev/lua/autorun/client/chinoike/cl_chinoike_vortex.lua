@@ -25,6 +25,17 @@ net.Receive("chinoike_vortex_zone", function()
     local pos = net.ReadVector()
     local duree = net.ReadFloat()
 
+    -- aspiration prédite côté client (sh_chinoike_vortex.lua)
+    NA_VortexSang.Ajouter({
+        centre       = pos,
+        fin          = CurTime() + duree,
+        lanceur      = net.ReadEntity(),
+        rayon_attire = net.ReadFloat(),
+        rayon_coeur  = net.ReadFloat(),
+        force        = net.ReadFloat(),
+        tourbillon   = net.ReadFloat(),
+    })
+
     -- ancre invisible : le vortex reste posé à plat sur la zone
     local ancre = ClientsideModel("models/props_junk/PopCan01a.mdl")
     if not IsValid(ancre) then return end

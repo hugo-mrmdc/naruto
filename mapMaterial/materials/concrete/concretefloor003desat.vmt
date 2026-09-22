@@ -1,0 +1,6 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"concrete/concretefloor003desat"
+	"$surfaceprop"	"concrete"
+	"%keywords" "tf"
+}

@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "demonslayerkido5/T_b_012_HospitalDoor_01a_BC"
+	"$nocull" 1
+}

@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "ryukai/typ_wano/typ_props/typ_misc1"
+	"$surfaceprop" "Wood_Box"
+}

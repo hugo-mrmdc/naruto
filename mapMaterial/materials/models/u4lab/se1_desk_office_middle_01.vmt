@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/U4Lab/SE1_desk_office_middle_01"
+	"$surfaceprop" "rubber"
+	"$model" 1
+} 

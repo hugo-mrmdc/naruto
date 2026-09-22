@@ -1,0 +1,9 @@
+"VertexlitGeneric"
+{
+"$basetexture" "models/gta4/props/roadside/lamppost/ny_lamp_simple/cj_pole1"
+
+"$envmap" "env_cubemap"
+"$envmaptint" "[.5 .5 .5]"
+
+"$halflambert" 1
+}

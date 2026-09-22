@@ -1,0 +1,61 @@
+"Water"
+{
+
+	<dx90
+	{
+		 	//"$fallbackmaterial" "water/water_2fort_dx80"
+			"$fallbackmaterial" "water_/earthwater_dx7"
+	}
+
+	
+	"%tooltexture" "liquidpack/water/water_raining"
+	"%compilewater" 1
+	"$abovewater" 1
+	"$envmap" "env_cubemap"	
+	
+	"$refracttexture" "_rt_WaterRefraction"
+	"$refractamount" ".12"
+	"$refracttint" "{255 255 255}"
+
+	"$reflecttexture" "_rt_WaterReflection"
+	"$reflectamount" "0.2"
+	"$reflecttint" "{255 255 255}"
+
+	"$scale" "[1 1]"
+
+	"$normalmap" "liquidpack/water/water_raining"
+
+	"$surfaceprop" "water"
+	//"$bottommaterial" "liquidpack/water/clear/water_raining_clear_beneath.vmt"
+	"$bottommaterial" "nature/water_canals_waterbeneath2"
+	"$bumpframe" "0"
+
+	"$fogenable" 1
+	"$fogcolor" "{44 54 58}"
+	"$fogstart" "0"
+	"$fogend" "300"
+
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$normalmap"
+			"animatedtextureframenumvar" "$bumpframe"
+			"animatedtextureframerate" 30.00
+		}
+
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$bumptransform"
+			"texturescrollrate" 0.05
+			"texturescrollangle" 35
+		}
+
+		"WaterLOD"
+		{
+			// va chier! :D  j'ai clairement pas le time de le faire.
+			"dummy" 0
+		}
+	}
+}

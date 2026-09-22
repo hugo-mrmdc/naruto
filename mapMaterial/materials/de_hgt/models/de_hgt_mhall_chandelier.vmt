@@ -1,0 +1,5 @@
+VertexLitGeneric
+{
+	// r.man MMXIII
+	$basetexture "de_hgt/models/de_hgt_mhall_chandelier"
+}

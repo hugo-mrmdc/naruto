@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"models/props_maritime/maritime_bench_01"
+	"$surfaceprop"   "wood"
+}

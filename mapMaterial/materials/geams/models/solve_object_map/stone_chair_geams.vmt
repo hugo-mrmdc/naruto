@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "geams/models/solve_object_map/stone_chair_geams"
+	"$nocull" 1
+}

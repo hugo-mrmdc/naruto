@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/thecrystal/kaizeir_models_op2_1"
+	"$nocull" 1
+	"$nodecal" 1
+}

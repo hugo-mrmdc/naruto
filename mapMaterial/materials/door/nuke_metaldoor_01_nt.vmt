@@ -1,0 +1,9 @@
+LightmappedGeneric
+{
+	"$basetexture"	"door\nuke_metaldoor_01_nt"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "door\nuke_metaldoor_01_ref_nt"
+	"$surfaceprop" "metal"
+	"%keywords" "neotokyo"
+
+}

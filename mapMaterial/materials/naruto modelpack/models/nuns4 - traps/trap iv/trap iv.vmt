@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "naruto modelpack/models/nuns4 - traps/trap iv/Trap IV"
+	"$alphatest" 1
+	"$nocull" 1
+	"$translucent" 1
+}

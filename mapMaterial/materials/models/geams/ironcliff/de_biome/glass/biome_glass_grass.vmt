@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$basetexture"		"de_biome/glass/hr_glass_grassy"
+	"$translucent"		"1"
+	"$alpha"		"0.850000"
+	"$envmaplightscale"		"1"
+	"$envmaplightscaleminmax"		"[0 300]"
+	"$envmap"		"environment maps/metal_generic_006"
+	"$fresnelreflection"		"0.300000"
+	"$model"		"1"
+}

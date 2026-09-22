@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "demonslayerkido5/T_cmn_obj_Bucket_03a_BC"
+	"$nocull" 1
+}

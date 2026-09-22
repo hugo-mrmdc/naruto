@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "naruto modelpack/models/table set ii/tabouret/Tabouret"
+	"$alphatest" 1
+	"$nocull" 1
+	"$translucent" 1
+}

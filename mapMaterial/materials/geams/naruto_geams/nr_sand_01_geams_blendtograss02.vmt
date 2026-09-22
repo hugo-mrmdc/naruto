@@ -1,0 +1,28 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "naruto_ground"
+	"$bumpmap" "Nature/dirtground001_height-ssbump"
+
+
+
+	"$basetexture2" "geams/naruto_geams/nr_grass_02_geams"
+	"%tooltexture" "Nature/blendgroundtograss001_tooltexture"
+
+	"$surfaceprop" "sand"
+	"$surfaceprop2" "grass"
+	"$blendmodulatetexture" "Nature/grass_blendmask"
+	"$ssbump" "1"
+
+
+
+	$detail "forest/dirtfar"
+	$detailscale 0.05
+
+
+
+
+
+
+}
+
+

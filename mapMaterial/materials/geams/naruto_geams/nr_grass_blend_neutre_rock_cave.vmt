@@ -1,0 +1,26 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "geams/naruto_geams/nr_cliff_neutre_cave_geams"
+	"$basetexture2" "Nature/dirtground009"
+	"$bumpmap2" "Nature/dirtground001_height-ssbump"
+	"$ssbump2" "1"
+	// "$surfaceprop" "dirt" // ancienne valeur, la valeur effective reste sand
+	// "$surfaceprop2" "grass" // doublon conserve en commentaire
+	"$blendmodulatetexture" "nature/grass_blendmask"
+
+	"%tooltexture" "Nature/blendgroundtograss001_tooltexture"
+
+
+	"$surfaceprop" "sand"
+	$detail "forest/dirtfar"
+	$detailscale 0.05
+
+	"$surfaceprop2" "grass"
+
+
+}
+
+
+
+
+

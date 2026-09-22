@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/okium_props_map/1"
+	"$surfaceprop" "Wood_Furniture"
+}

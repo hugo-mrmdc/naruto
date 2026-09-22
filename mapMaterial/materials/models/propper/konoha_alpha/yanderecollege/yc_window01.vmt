@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture"		"yanderecollege/yc_window01"
+	"$surfaceprop2"		"Glass"
+	"$translucent"		"1"
+	"%keywords"		"yandere"
+	"$model"		"1"
+}

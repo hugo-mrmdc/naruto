@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "narutorazzer/ame/background"
+	"%keywords" "naruto"
+	"$nocull" 1
+	"$alphatest" 1
+}

@@ -1,0 +1,9 @@
+VertexLitGeneric
+{
+
+$baseTexture "models\props\de_inferno\hr_i\lily_pad\geams/lily_flower.vtf"
+
+$blendtintbybasealpha "1"
+$nocull 1
+
+}

@@ -1,0 +1,40 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "esther/misc/candle_001"
+//	"$additive"	"1"
+//	"$SRGBTINT"	"[10 10 1]"
+	
+	"$offset"	"0.0"
+	"$val1"		"0.0"
+	"$value2"	"0.0"
+	"$value3"	"0.0"
+	"$vertexfog" "1"
+	"Proxies"
+	{
+
+       		"Sine"
+        	{
+            		"sineperiod"	".63"	       
+			"sinemin"	"1"
+			"sinemax"	"1.05"
+            		"resultVar" 	"$val1"
+        	}
+
+       		"Sine"
+        	{
+            		"sineperiod"	".81"	       
+			"sinemin"	"1"
+			"sinemax"	"1.07"
+            		"resultVar" 	"$value2"
+        	}
+
+		"Multiply"
+		{
+			"srcVar1"	"$val1"
+			"srcVar2"	"$value2"
+			"resultVar"	"$color"
+
+		}
+
+	}	
+}

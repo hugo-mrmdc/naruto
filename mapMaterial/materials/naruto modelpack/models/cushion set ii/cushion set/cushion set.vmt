@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "naruto modelpack/models/cushion set ii/cushion set/Cushion Set"
+	"$alphatest" 1
+	"$translucent" 1
+}

@@ -1,0 +1,6 @@
+VertexLitGeneric
+{
+	$basetexture "models/props_lab/server_wires"
+	$nocull 1
+	$alphatest 1
+}

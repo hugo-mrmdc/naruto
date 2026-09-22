@@ -1,0 +1,33 @@
+"UnlitTwoTexture"
+
+{
+	"$basetexture"		"esther/fx/candle_flame_001"
+	"$texture2"		"esther/fx/candle_flame_mask_001"
+	//"$texture3"		"esther/fx/candle_flame_mask_001"
+	"$additive"		"1"
+//	"$nofog"		"1"
+//	"$ignorez"		"1"
+	"$textureblendmode"	"3" 
+	"$nocull"		"1"
+	"$vertexfog" 		"1"
+	"Proxies"
+	{
+
+
+		"TextureScroll"
+		{
+			"texturescrollvar" 	"$texture2transform"
+			"texturescrollrate" 	"0.47"
+			"texturescrollangle" 	90
+			"texturescale" 		1
+		}
+		"TextureScroll"
+		{
+			"texturescrollvar" 	"$texture3transform"
+			"texturescrollrate" 	"0.27"
+			"texturescrollangle" 	90
+			"texturescale" 		1
+		}
+
+	}
+}

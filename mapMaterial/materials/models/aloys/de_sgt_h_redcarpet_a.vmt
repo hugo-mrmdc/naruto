@@ -1,0 +1,6 @@
+vertexlitgeneric
+{
+	// rman.mmxiii
+	$basetexture "de_sgt/hotel/de_sgt_h_redcarpet_a"
+	$surfaceprop carpet
+}

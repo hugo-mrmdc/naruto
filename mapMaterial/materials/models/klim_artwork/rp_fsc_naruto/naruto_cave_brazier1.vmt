@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$baseTexture" "models/klim_artwork/rp_fsc_naruto/naruto_cave_brazier1"
+	$model 1
+
+	$alphatest 1
+
+}

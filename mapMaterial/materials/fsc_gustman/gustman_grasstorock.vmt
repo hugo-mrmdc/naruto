@@ -1,0 +1,19 @@
+WorldVertexTransition
+{
+	$basetexture "fsc_gustman/gustman_grass"
+	$surfaceprop Dirt
+
+	$basetexture2 "egypt/osiris/osiris_rockwall_01b"
+	$surfaceprop2 Rock
+
+	$detail "forest/dirtfar"
+	$detailscale 0.075
+	$detailscale2 0.075
+
+	$blendmodulatetexture "nature/grass_blendmask"
+
+	%tooltexture "nature/blendgroundtograss001_tooltexture"
+	%keywords "tf"
+
+	$ssbump2 2
+}

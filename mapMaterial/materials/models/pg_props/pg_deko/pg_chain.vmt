@@ -1,0 +1,13 @@
+"vertexlitgeneric"
+{
+	"$baseTexture" "models\PG_props\pg_deko/pg_chain"
+	"$bumpmap" "models\PG_props\pg_deko/pg_chain_bump"
+	"$model" 1
+	"$normalmapalphaenvmapmask" "1"
+	
+	"$phong" "1"
+	"$phongexponent" "10"
+	"$phongboost"	"7"
+	"$phongfresnelranges"	"[0.05 0.5 1]"
+
+}

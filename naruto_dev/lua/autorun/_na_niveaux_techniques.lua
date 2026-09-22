@@ -511,3 +511,17 @@ NA_NIV_TECH.chinoike_vortex = {
     [4] = { degats = 16, recharge = 18 },
     [5] = { degats = 20, duree = 5,   rayon = 260, force = 3600 },
 }
+
+--========================================================
+-- KIMINARI
+--========================================================
+-- Frappe noire (sv_kiminari_frappe.lua) : duree = étourdissement
+NA_NIV_TECH.kiminari_frappe = {
+    [1] = {
+        degats = 15, chakra = 25, recharge = 18, duree = 2, rayon = 250, portee = 500, duree_mudra = 0, anim_coupe = 0.4,
+    },
+    [2] = { degats = 17 },
+    [3] = { degats = 19, duree = 2.3, recharge = 16.5 },
+    [4] = { degats = 21, rayon = 280 },
+    [5] = { degats = 24, duree = 2.7, chakra = 20, recharge = 15 },
+}

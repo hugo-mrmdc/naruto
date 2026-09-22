@@ -1,0 +1,15 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "tenyar_typstudio/suna_utilitaire/typ_props/2_1_anims"
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedTextureFrameRate" "20"
+			
+		}
+
+	}
+}

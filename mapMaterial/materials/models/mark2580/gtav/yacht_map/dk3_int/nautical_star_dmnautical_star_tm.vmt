@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+   "$basetexture"         "models/mark2580/gtav/yacht_map/dk3_int/nautical_star_dmnautical_star_tm"
+   $translucent 1
+}

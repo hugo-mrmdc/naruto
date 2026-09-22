@@ -1,2 +1,3 @@
 fakeplayers_spawn 
 na_point
+python extract_gma.py fichier.gma

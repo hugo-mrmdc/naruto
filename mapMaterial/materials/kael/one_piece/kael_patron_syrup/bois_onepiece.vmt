@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "kael\one_piece\kael_patron_syrup\bois_onepiece"
+	"$nocull" 1
+}

@@ -1,0 +1,10 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/sevenlife/furniture/got/tharlton/tharlton_diff"
+	  $bumpmap "models/sevenlife/furniture/got/tharlton/tharlton_nrm"
+
+	  $alphatest 1
+	  $model 1
+	  $nocull 1
+	  $nodecal 1
+}

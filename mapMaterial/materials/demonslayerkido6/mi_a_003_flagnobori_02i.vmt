@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "demonslayerkido6/MI_a_003_FlagNobori_02i"
+	$nocull 1
+}

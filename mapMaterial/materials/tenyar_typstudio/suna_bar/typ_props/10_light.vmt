@@ -1,0 +1,15 @@
+UnlitGeneric
+{
+	$basetexture "tenyar_typstudio/suna_bar/typ_props/10_light"
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedTextureFrameRate" "12"
+			
+		}
+
+	}
+}

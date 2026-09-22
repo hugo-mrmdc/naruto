@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/foc/warwax/houses/Ground"
+	"$surfaceprop" "Dirt"
+	"$nocull" 1
+}

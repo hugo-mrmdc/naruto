@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/c24_v3_infected/Grass2"
+	"$alphatest" 1
+}

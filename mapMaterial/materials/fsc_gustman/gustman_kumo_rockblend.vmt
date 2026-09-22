@@ -1,0 +1,11 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "geams/naruto_geams/nr_cliff_grass_blend_iron_cave02"	
+	"$basetexture2" "fsc_gustman/gustman_grass"
+	"$blendmodulatetexture" "nature/grass_blendmask"
+	"$bumpmap" "geams/naruto_geams/nr_cliff_grass_blend_iron_cave_nrm"
+	%tooltexture "nature/blendgroundtograss001_tooltexture"
+	"%keywords" "tf"
+
+	"$surfaceprop" "dirt"
+}

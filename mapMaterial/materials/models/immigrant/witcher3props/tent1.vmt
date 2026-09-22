@@ -1,0 +1,14 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/immigrant/witcher3props/tent_cantine_01"
+	"$bumpmap" "models/immigrant/witcher3props/tent_escortserv_01_n"
+	"$phong"				"1"
+	"$phongboost"			"0.05"
+	"$phongexponent"		"50"
+	"$phongtint"			"[.85 .85 1]"
+	"$phongfresnelranges"	"[.5 .85 30]"
+
+	$rimlight               1
+	$rimlightexponent       2
+	$rimlightboost          .2
+}

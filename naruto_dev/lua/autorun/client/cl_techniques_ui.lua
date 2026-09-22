@@ -129,6 +129,11 @@ local TECHNIQUES = {
       desc = "Un vortex de sang s'ouvre au sol là où tu vises (900 unités max) pendant 3,5 secondes : il aspire les ennemis vers son cœur, qui les blesse. Coûte 30 de chakra.",
       dmg = "10 par tick (toutes les 0,5 s)" },
 
+    -- ===== KIMINARI =====
+    { cat = "Kiminari", name = "Frappe noire", key = "", id = "kiminari_frappe", rang = "C", icone = "ui/icon/kiminari_frappe_noir.png", court = "Frappe", cooldown = 18,
+      desc = "Une frappe électrique tombe instantanément là où tu regardes (500 unités max) : tous les ennemis dans la zone (250 unités) sont blessés et étourdis 2 secondes. Coûte 25 de chakra.",
+      dmg = "15 + étourdissement 2 s" },
+
     -- ===== ARMES =====
     --[[{ cat = "Armes", name = "Zabuza", key = "Clic gauche / droit",
       desc = "Kubikiribocho. Clic gauche pour trancher, clic droit pour la double explosion." },
@@ -229,17 +234,17 @@ end
 local DOSSIER = "ui/main_menu/"
 
 local ONGLETS = {
-    { nom = "Stats",         icone = "btn/stats_icon.png" },
-    { nom = "Jutsus",        icone = "btn/jutsu_icon.png",       cats = { "Katon", "Suiton" },
+    { nom = "Stats",         icone = "stat.png" },
+    { nom = "Jutsus",        icone = "jutsu.png",       cats = { "Katon", "Suiton" },
       desc = "Cette catégorie répertorie les techniques des natures du chakra" },
-    { nom = "Kekkei Genkai", icone = "btn/keikei_icon.png",      cats = { "Mokuton", "Jinton" },
+    { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari" },
       desc = "Cette catégorie répertorie les techniques héritées par le sang" },
-    { nom = "Clan",          icone = "icon_clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike" },
+    { nom = "Clan",          icone = "clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike" },
       desc = "Cette catégorie répertorie les techniques secrètes des clans" },
-    { nom = "Arts Ninja",    icone = "btn/icon_taijutsu.png",    cats = { "Armes", "Déplacement", "Divers" },
+    { nom = "Arts Ninja",    icone = "kentai.png",    cats = { "Armes", "Déplacement", "Divers" },
       desc = "Cette catégorie répertorie toutes les techniques des arts ninja" },
-    { nom = "Sub Jutsu",     icone = "btn/icon_sub_jutsu.png" },
-    { nom = "Jutsu Class",   icone = "btn/icon_jutsu_classe.png" },
+    { nom = "Sub Jutsu",     icone = "sub.png" },
+    { nom = "Jutsu Class",   icone = "classe.png" },
 }
 
 ----------------------------------------------------------

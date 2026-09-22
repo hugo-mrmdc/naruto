@@ -1,0 +1,11 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "geams/naruto_geams/floor_dango_geams_02"
+	"$normalmap" "AmongUsMap/AU_SecFloor_Norm"
+
+	"$envmap"			"env_cubemap"			// (Texture) Determines the texture the envmap uses for reflections. Env_cubemap means it uses the maps cubemaps for accurate reflections of the surroundings.
+	"$envmaptint"			"[.1 .1 .1]"			// (RGB Matrix) Determines the intensity of each corresponding color channel for the reflections. Higher in slot 1 means more red reflections, 2 in green, 3 in blue. Equal values in all changes overall reflectivity.
+	"$normalmapalphaenvmapmask"	"0"				// (Boolean) Uses the normal maps alpha channel to determine reflectivity.
+}
+
+

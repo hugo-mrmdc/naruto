@@ -1,0 +1,5 @@
+"LightmappedGeneric"
+{
+    "$basetexture" "MM_textures/MM_Arene_Texture/lightON"
+    "$selfillum" "1"                            
+}

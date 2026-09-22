@@ -1,0 +1,10 @@
+"VertexlitGeneric"
+{
+"$basetexture" "models/gta4/props/roadside/sign/ec_mailboxs/ec_mailbox"
+
+"$envmap" "env_cubemap"
+"$envmapmask" "models/gta4/props/roadside/sign/ec_mailboxs/ec_mailbox_o"
+"$envmaptint" "[.5 .5 .5]"
+
+"$halflambert" 1
+}

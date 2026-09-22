@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "unioncity/doors/hideout_door1"
+	$surfaceprop metal
+
+}

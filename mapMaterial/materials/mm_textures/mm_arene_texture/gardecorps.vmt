@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "MM_textures/MM_Arene_Texture/gardecorps"
+	"$alphatest" 1
+}

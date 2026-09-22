@@ -1,0 +1,6 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "zoo/wood/wall_wood02"
+	"$bumpmap" "zoo/wood/wall_wood02_n"
+	"$surfaceprop" "wood_panel"
+}

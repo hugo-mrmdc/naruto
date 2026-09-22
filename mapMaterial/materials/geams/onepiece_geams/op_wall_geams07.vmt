@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "geams/onepiece_geams/op_wall_geams07"
+	$detail "forest/dirtfar"
+	$detailscale 0.005
+}

@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "geams/naruto_geams/wall_white_concrete_konoha_geams"
+	$detail "forest/dirtfar"
+	$detailscale 0.005
+}

@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$basetexture"		"autumnal/woods/maplewood002d"
+	"$envmap"		"env_cubemap"
+	"$envmaptint"		"[0.10 0.10 0.10]"
+	"$envmapsaturation"		"0.100000"
+	"%keywords"		"tf, autumnal"
+	"$model"		"1"
+}

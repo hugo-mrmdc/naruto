@@ -1,0 +1,6 @@
+"lightmappedGeneric"
+{
+	"$baseTexture" "surgeon/woodgrid01a"
+	"$surfaceprop" "wood"
+	"$alphatest" 1
+}

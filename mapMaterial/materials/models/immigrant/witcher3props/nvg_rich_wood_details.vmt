@@ -1,0 +1,10 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/immigrant/witcher3props/nvg_rich_wood_details"
+	"$bumpmap" "models/immigrant/witcher3props/nvg_rich_wood_details_n"
+	"$phong"				"1"
+	"$phongboost"			"0.05"
+	"$phongexponent"		"50"
+	"$phongtint"			"[.85 .85 1]"
+	"$phongfresnelranges"	"[.5 .85 30]"
+}

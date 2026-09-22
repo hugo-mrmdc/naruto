@@ -3,7 +3,7 @@
 -- Touche de lancement + affichage de la particule autour du joueur.
 --========================================================
 
-local KEY      = KEY_N
+local KEY      = KEY_X
 local PCF_PATH = "particles/atg_faris.pcf"
 -- Nom exact tel qu'il est écrit dans le .pcf (vérifié dans le fichier)
 local FX_NAME  = "[2]_paper_tornado"

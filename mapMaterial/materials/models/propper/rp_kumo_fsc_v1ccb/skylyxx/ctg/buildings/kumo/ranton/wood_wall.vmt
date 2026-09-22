@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture"		"models/skylyxx/ctg/buildings/kumo/ranton/wood_wall"
+	"$nocull"		"1"
+	"$model"		"1"
+}

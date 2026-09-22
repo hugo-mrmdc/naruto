@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/thecrystal/bust_op_nass"
+	"$nocull" 1
+	"$nodecal" 1
+}

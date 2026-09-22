@@ -1,0 +1,12 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "models/solve_building_konoha_geams/instance/floor"
+	"$surfaceprop" "wood"
+
+
+	$envmap                    "env_cubemap"
+
+
+	$envmaptint                "[ .01 .01 .01 ]"
+
+}

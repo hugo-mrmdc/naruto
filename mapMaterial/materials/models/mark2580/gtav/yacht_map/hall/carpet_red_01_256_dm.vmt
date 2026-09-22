@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+   "$basetexture"         "models/mark2580/gtav/yacht_map/hall/carpet_red_01_256_dm"
+   "$bumpmap"             "models/mark2580/gtav/yacht_map/hall/ap_carpet_01_n"
+   $nocull 1
+   
+   		"$detail"                   "models/mark2580/gtav/yacht_map/shared/Detail_Cloth8"
+	    "$detailblendfactor"        "1.5"
+	    "$detailscale"              "1.5"
+		"$detailblendmode"          "0"
+}

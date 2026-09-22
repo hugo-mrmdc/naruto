@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "egypt/gold_wall"
+	"%keywords" "tf"
+	"$envmap" "env_cubemap"
+	"$envmapsaturation" 1
+	"$envmaptint" "{222 142 44}"
+}

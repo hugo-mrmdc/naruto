@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture"		"geams/wood_floor_cartoon_geams"
+	"$envmap"		"env_cubemap"
+	"$normalmapalphaenvmapmask"		"1"
+	"$envmaptint"		"[ .05 .05 .05 ]"
+	"$model"		"1"
+}

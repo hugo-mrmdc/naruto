@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/jungle/bushes01"
+	"$nocull" 1
+	"$alphatest" 1
+}

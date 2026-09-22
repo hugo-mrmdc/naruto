@@ -1,6 +1,10 @@
 -- Chargeur des techniques Chinoike.
 -- GMod ne lit PAS les sous-dossiers de lua/autorun : sans ce fichier, rien ne se charge.
 
+-- partagé : aspiration des joueurs par le vortex de sang (SetupMove prédit)
+if SERVER then AddCSLuaFile("autorun/chinoike/sh_chinoike_vortex.lua") end
+include("autorun/chinoike/sh_chinoike_vortex.lua")
+
 if SERVER then
     resource.AddFile("particles/1atgyoltix.pcf")
     resource.AddFile("particles/atg_particules2.pcf")

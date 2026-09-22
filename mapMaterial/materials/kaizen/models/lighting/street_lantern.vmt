@@ -1,0 +1,12 @@
+VertexLitGeneric
+{
+	$basetexture "kaizen/models/lighting/street_lantern"
+
+	$selfillum 1
+	//$selfillumtint "[1 0.75 0.49]"
+
+	//$envmap "environment maps/metal_generic_004"
+	//$envmaptint "[.1 .1 .1]"
+
+	//$blendtintbybasealpha 1
+}

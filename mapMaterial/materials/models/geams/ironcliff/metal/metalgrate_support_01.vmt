@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$basetexture"		"Metal/metalgrate_support_01"
+	"%compilepassbullets"		"1"
+	"%keywords"		"tf"
+	"$alphatest"		"1"
+	"$nodecal"		"1"
+	"$model"		"1"
+}

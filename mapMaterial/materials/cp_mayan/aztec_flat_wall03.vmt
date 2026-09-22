@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	"$basetexture"	"cp_mayan\aztec_flat_wall03"
+	"$bumpmap"	"cp_mayan\flat_wall_normal"
+	"$surfaceprop" "rock"
+	"%keywords" "tf,mayan,yucatan,olmec,earkham"
+
+}

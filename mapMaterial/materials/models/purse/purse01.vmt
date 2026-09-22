@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	
+	"$baseTexture"	"models/purse/purse01"
+	"$surfaceprop" "chainlink"
+	"$bumpmap" "models/purse/purse01_normal"
+
+}

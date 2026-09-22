@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "unioncity2/miscellaneous/chainfence"
+	$alphatest 1
+	$alphatestreference .15
+	%compilepassbullets 1
+	$color "[.5 .5 .5]"
+	$surfaceprop "chainlink"
+}

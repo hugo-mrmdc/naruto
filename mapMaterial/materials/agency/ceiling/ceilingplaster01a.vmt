@@ -1,0 +1,13 @@
+LightmappedGeneric
+{
+$basetexture "agency\ceiling\ceilingplaster01a"
+$bumpmap "agency\ceiling\ceilingplaster01_n"
+//$normalmapalphaenvmapmask "1"
+$envmap env_cubemap
+$envmapsaturation ".5"
+$envmapcontrast ".8"
+$envmaptint "[0.23 0.2 0.2]"
+$surfaceprop concrete
+
+"%keywords" agency
+}

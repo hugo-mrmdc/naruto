@@ -1,0 +1,29 @@
+"UnlitGeneric"
+{
+	"$basetexture"    	"klim_artwork/rp_fsc_naruto/naruto_sprites"
+
+	"$AlphaTest"    	"1"
+	"$alphatestreference" ".75"
+  	"$allowalphatocoverage" "1"
+
+	"$nocull"		"0"
+	"$VertexColor"    "1"
+	"$vertexfog"    "1"
+	"$detailsprite" 1
+	
+	$treeSway			"0"	// height at which the effect is on fully (in world units)
+	$treeSwayHeight			"50"	// radius at which the effect is on fully (in world units)
+	$treeSwayStartHeight		"0.5"	// portion of height at which the effect starts to fade in (0-1)
+	$treeSwayRadius			"0.5"	// radius at which the effect is on fully (in world units)
+	$treeSwayStartRadius		"0.25"	// portion of radius at which the effect starts to fade in (0-1)
+	$treeSwaySpeed			"0.0115"	// how quickly the tree sways (as a multiplier of time)
+	$treeSwayStrength		"0.0215"	// how much the tree sways (as a multiplier of position)
+	$treeSwayScrumbleSpeed		"5"	// how quickly the leaves move (as a multiplier of time)
+	$treeSwayScrumbleStrength	"0.0025"// how much the leaves move( as a multiplier of position)
+	$treeSwayScrumbleFrequency	"20"	// spatial frequency of sine wave applied to leaves.  Typically high-ish (10-25)
+	$treeSwayFalloffExp		"5"	// falloff parameter for wave motion on branches/trunk, higher means core of tree is more stable
+	$treeSwayScrumbleFalloffExp	"7"	// falloff parameter for scrumble motion on leaves, higher means the core of the tree is more stable
+	$treeSwaySpeedHighWindMultiplier "120"  // multiplier of movement speed at higher wind
+	$treeSwaySpeedLerpStart 	"2.0"	// wind speed at which high wind multiplier begins to have effect
+	$treeSwaySpeedLerpEnd 		"6.0"	// wind speed at which high wind multiplier is fully on
+}

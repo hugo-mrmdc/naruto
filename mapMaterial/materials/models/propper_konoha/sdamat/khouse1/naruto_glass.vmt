@@ -1,0 +1,8 @@
+"unlitgeneric"
+{
+	"$basetexture"		"naruto_glass"
+	"%keywords"		"naruto_glass"
+	"$envmap"		"env_cubemap"
+	"$envmaptint"		"[ .05 .05 .05 ]"
+	"$model"		"1"
+}

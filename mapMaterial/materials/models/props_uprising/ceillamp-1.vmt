@@ -1,0 +1,7 @@
+vertexlitgeneric
+{
+ $baseTexture "models/props_uprising/ceillamp-1"
+ $surfaceprop rock
+ $selfillum 1
+
+}

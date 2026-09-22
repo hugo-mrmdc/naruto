@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "MM_textures/MM_Palais_Hokage_(EO)_Texture/feu"
+
+    "$selfillum" "1"
+    "$selfillumtint" "[0.15 0.15 0.15]"  
+    
+}

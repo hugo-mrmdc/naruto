@@ -1,0 +1,7 @@
+VertexLitGeneric
+{
+$baseTexture "models\agency\electrical\messageboard"
+$model 1
+
+//"%keywords" agency
+}

@@ -1,0 +1,21 @@
+"VertexLitGeneric"
+{
+    "$basetexture" "niksacokica/corpses/corpse_burned_d"
+    "$bumpmap" "niksacokica/corpses/corpse_burned_n"
+
+    "$phongexponenttexture" "niksacokica/corpses/corpse_burned_s"
+
+    "$color2" "[0.6 0.6 0.6]"
+    "$blendTintByBaseAlpha"    "1"
+
+    "$phong" "0"
+    "$phongboost" "0"
+
+    "$phongfresnelranges" "[0.05 0.115 0.945]"
+
+    
+    "$normalmapalphaenvmapmask" "1"
+    "$envmapfresnel" "1"
+
+    "$envmaptint" "[.5 .5 .5]"
+}

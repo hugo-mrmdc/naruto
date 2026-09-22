@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "unioncity/club/clubcarpet02"
+	
+	$surfaceprop dirt
+}

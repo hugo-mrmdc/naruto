@@ -1,0 +1,8 @@
+"patch"
+{
+	"include"		"materials/CONCRETE/OUT_WALL7_A.vmt"
+	"replace"
+	{
+		"$envmap"		"maps/fsc_naruto_iwa/c7216_12428_624"
+	}
+}

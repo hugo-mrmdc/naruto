@@ -1,0 +1,30 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models\mark2580\doa6\doors\darkwood_01"
+//  	"$bumpmap"     "models\mark2580\gtav\doors\gz_dlc_apt_newwood_n"
+
+//    $phongexponenttexture "models\mark2580\gtav\shared\green"	
+	
+//	$phong 1
+//	$phongfresnelranges "[0.8 0.55 0.25]"
+//	$phongexponent "50"	
+//	$phongalbedotint 1
+//	$phongboost 1	
+	
+		"$detail"                   "models\mark2580\doa6\shared\Detail_wood4"
+	    "$detailblendfactor"        "1.0"
+	    "$detailscale"              "2"
+		"$detailblendmode"          "0"	
+	
+//	$rimlight               1
+//	$rimlightexponent       1
+//	$rimlightboost          1		
+} 
+
+
+
+
+
+
+
+

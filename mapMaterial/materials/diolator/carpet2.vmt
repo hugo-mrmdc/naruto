@@ -1,0 +1,11 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "diolator/carpet2"
+	"$alphatest" 0
+	$translucent 1
+	$decal 1
+
+	$detail "detail/fabric/carpet_01"
+	$detailscale "[ 7 3.5 ]"
+	$detailblendfactor "0.9"
+}

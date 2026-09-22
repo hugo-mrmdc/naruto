@@ -1,0 +1,9 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "klim_artwork/rp_fsc_naruto/naruto_ground1_path2"
+//	"$bumpmap" "klim_artwork/rp_fsc_naruto/naruto_ground1_path2_normal"
+//	"$surfaceprop" "rock"
+
+//	"$detail" "models/klim_artwork/rp_fsc_naruto/ir_generic_01"
+	"$detailscale" "[10 10]"
+}

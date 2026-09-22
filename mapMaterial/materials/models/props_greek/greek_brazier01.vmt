@@ -1,0 +1,10 @@
+"VertexlitGeneric"
+{
+	"$baseTexture" "models\props_greek\greek_brazier01"
+	$model 1
+	
+	$envmap env_cubemap
+	$envmapmask "models\props_greek\greek_brazier01_envmapmask"
+	
+	$envmaptint "[0.7 0.5 0.2]"
+}

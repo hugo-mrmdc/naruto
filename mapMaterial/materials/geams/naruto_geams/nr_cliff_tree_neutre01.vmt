@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "geams/naruto_geams/nr_cliff_tree_neutre01"
+	"$alphatest" 1
+	"$nocull" 1
+}
+

@@ -1,0 +1,7 @@
+LightmappedGeneric
+{
+$baseTexture "concrete/concrete_ext_07"
+$surfaceprop concrete
+$color "{80 80 80}"
+"%keywords" l4d2
+}

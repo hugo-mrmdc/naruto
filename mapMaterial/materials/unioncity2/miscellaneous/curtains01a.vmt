@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "unioncity2/miscellaneous/curtains01a"
+	
+	$alphatest 1
+	$alphatestreference .6
+	
+	$surfaceprop plastic
+}

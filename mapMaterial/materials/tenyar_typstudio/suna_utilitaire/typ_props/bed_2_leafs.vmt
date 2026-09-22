@@ -1,0 +1,10 @@
+VertexLitGeneric
+{
+	$basetexture "tenyar_typstudio/suna_utilitaire/typ_props/bed_2"
+	"$treesway" "1"
+	"$treeswayheight" "-100"
+	"$treeSwayStrength" "1"
+	"$treeSwayScrumbleStrength" "0.4"
+	"$alphatest" 1
+	"$nocull" "1"
+}

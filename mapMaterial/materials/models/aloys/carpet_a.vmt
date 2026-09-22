@@ -1,0 +1,7 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "ares/carpet_a"
+	"$surfaceprop" "default"
+	"$bumpmap" "ares/carpet_a_normal.vtf"
+}
+

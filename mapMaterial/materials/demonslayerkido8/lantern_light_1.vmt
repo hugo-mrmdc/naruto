@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "demonslayerkido8/lantern_light_1"
+	"$selfillum" 1
+	"$selfillumtint" "[100 100 100.3]"
+	
+	
+}

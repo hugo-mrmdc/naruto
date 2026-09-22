@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture"		"gormur/fence04"
+	"$alphatest"		"1"
+	"$model"		"1"
+}

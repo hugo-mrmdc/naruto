@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "eldritch/brick_random_large"
+    "$ssbump" "1"
+
+    "$bumpmap"  "eldritch/brick_random_large_ssbump"
+
+	"%keywords" "tf, zeus"
+	"$surfaceprop" "concrete"
+}

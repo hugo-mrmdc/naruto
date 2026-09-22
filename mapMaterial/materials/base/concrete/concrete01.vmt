@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "base\concrete\concrete01"
+	"$surfaceprop" "concrete"
+	"$bumpmap" "base\concrete\concrete01_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"%keywords" "neotokyo"
+}

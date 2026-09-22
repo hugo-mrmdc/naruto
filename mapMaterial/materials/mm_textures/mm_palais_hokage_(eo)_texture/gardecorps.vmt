@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "MM_textures/MM_Palais_Hokage_(EO)_Texture/gardecorps"
+	"$alphatest" 1
+}

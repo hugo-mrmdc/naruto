@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	"$basetexture" "models/narutomap/sa00ztext57_geams"
+	"$translucent" 1
+    	"$envmapcontrast" 1
+    	"$envmapsaturation" 1
+    	"$nocull" 1
+}

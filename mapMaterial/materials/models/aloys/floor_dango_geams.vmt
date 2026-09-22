@@ -1,0 +1,10 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "geams/naruto_geams/floor_dango_geams"
+	"$normalmap" "amongusmap/au_secfloor_norm"
+
+	"$envmap"			"env_cubemap"			// (texture) determines the texture the envmap uses for reflections. env_cubemap means it uses the maps cubemaps for accurate reflections of the surroundings.
+	"$envmaptint"			"[.1 .1 .1]"			// (rgb matrix) determines the intensity of each corresponding color channel for the reflections. higher in slot 1 means more red reflections, 2 in green, 3 in blue. equal values in all changes overall reflectivity.
+	"$normalmapalphaenvmapmask"	"0"				// (boolean) uses the normal maps alpha channel to determine reflectivity.
+}
+

@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "ceiling\tar"
+	"$surfaceprop" "rubber"
+	"$bumpmap" "ceiling\tar_normal"
+	"%keywords" "neotokyo"
+}

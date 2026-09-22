@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$baseTexture"		"Concrete/fortwall005"
+	"$ssbump"		"1"
+	"%keywords"		"tf, frontline"
+	"$detail"		"overlays/detail001"
+	"$detailscale"		"1.900000"
+	"$detailblendmode"		"0"
+	"$detailblendfactor"		"1"
+	"$model"		"1"
+}

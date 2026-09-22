@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "geams/wood_floor_geams_shadow"
+	"$surfaceprop" "Wood_Plank"
+	"$bumpmap" "CheeseGoat/moderne_woodsimless_nm"
+
+	"$envmap"			"env_cubemap"
+	"$envmaptint"			"[0.1 0.1 0.1]"
+	
+}

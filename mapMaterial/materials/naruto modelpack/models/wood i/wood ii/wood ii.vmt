@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "naruto modelpack/models/wood i/wood ii/Wood II"
+	"$alphatest" 1
+	"$nocull" 1
+	"$translucent" 1
+}

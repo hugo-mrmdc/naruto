@@ -1,0 +1,14 @@
+"LightMappedGeneric"
+{
+      "$basetexture" "contagion/plaster/plasterwall002"
+
+      // SPECULAR MAP
+      "$envmap" "env_cubemap"
+      "$envmapmask" "contagion/plaster/plasterwall002_spec"
+      "$envmaptint" "[.02 .02 .02]"
+      "$envmapcontrast" "0.4"
+
+      // EXTRA PARAMETERS
+      "$surfaceprop" "plaster"
+      "%keywords" "cont, policestation, plaster"
+}

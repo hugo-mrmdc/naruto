@@ -1,0 +1,6 @@
+"lightmappedgeneric"
+{
+	"$basetexture" "models/props/genshinMats/Indoor_MdBuild_AngelShare_Wall01_Diffuse"
+	"$bumpmap" "models/props/genshinMats/Indoor_MdBuild_AngelShare_Wall01_Normal"
+
+}

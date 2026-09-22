@@ -1,0 +1,14 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/immigrant/witcher3props/dark_metal"
+	"$bumpmap" "models/immigrant/witcher3props/dark_metal_n"
+	"$phong"				"1"
+	"$phongboost"			"0.5"
+	"$phongexponent"		"50"
+	"$phongtint"			"[.85 .85 1]"
+	"$phongfresnelranges"	"[.5 .85 30]"
+
+	$rimlight               1
+	$rimlightexponent       2
+	$rimlightboost          .2
+}

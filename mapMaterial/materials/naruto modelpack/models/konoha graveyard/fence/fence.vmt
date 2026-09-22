@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "naruto modelpack/models/konoha graveyard/fence/fence"
+	"$alphatest" 1
+	"$nocull" 1
+	"$translucent" 1
+}

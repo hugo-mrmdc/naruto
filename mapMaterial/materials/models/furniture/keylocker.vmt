@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/Furniture/keylocker"
+}
+#base "materials/models/burned_object_default.vmt"

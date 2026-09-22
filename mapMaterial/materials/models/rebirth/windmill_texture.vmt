@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	$basetexture "models\rebirth\windmill_texture"
+	
+	%keywords tf
+}

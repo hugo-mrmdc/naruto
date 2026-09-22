@@ -1,0 +1,5 @@
+"LightmappedGeneric"
+{
+    "$basetexture" "narutorazzer/ground_tiles2"
+    "$surfaceprop" "default"
+}

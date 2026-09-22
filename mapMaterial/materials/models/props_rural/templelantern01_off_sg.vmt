@@ -1,0 +1,5 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_rural\TempleLantern01_off_sg"
+	"$surfaceprop" "concrete"
+}

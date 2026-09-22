@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"models/pickitup_ctf/industrial_pipe02"
+	//"$basemapalphaphongmask" "1"
+	//"$phong" "1"
+	
+	//"$phongexponent" "15"
+	//"$phongboost" ".0625"	
+	//"$phongfresnelranges"	"[0 15 10]"
+	//"$phongfresnelranges"	"[0 10 10]"
+	
+	//"$color2" "[0.25 0.25 0.25]"
+}

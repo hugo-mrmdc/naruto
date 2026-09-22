@@ -1,0 +1,13 @@
+LightmappedGeneric
+{
+	$basetexture "greek/greek_brown_wood01"
+	$surfaceprop Wood
+	$bumpmap "greek/shiny_wood_floor_normal01"
+
+	$envmap "env_cubemap"
+	$envmaptint "[0.19 0.11 0.04]"
+	$envmapcontrast 0.27
+	$envmapsaturation 0.53
+
+	%keywords "tf, greek, greece, hades"
+}

@@ -1,0 +1,12 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/narutoObje/Glass2"
+	"$alphatest" 1
+    	"$envmapcontrast" 1
+   	"$envmapsaturation" 1
+    	"$nocull" 1
+	"$lightwarptexture" "models/krypto/kakashi/toon"
+    	"$nodecal" 1
+    	"$nolod" 1
+    	"$vertexcolor" 1
+}

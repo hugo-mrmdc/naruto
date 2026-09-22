@@ -1,0 +1,9 @@
+VertexLitGeneric
+{
+	$basetexture "models/props_park/rock01"
+	$bumpmap "models/props_park/rock01n"
+
+	$detail "models/props_park/rockdetail"
+	$detailscale 8
+	$detailblendfactor 0.3
+}

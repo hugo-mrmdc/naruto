@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture"		"london/tile/london_tileroof_001b"
+	"%keywords"		"tf,london"
+	"$surfacetexture"		"tile"
+	"$model"		"1"
+}

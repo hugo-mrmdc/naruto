@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/klim_artwork/rp_fsc_naruto/naruto_rocks"
+
+//	"$detail" "models/klim_artwork/rp_fsc_naruto/ir_generic_01"
+	"$detailscale" "16"
+}

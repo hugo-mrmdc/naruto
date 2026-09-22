@@ -91,6 +91,8 @@ local function Attirer(ply, centre)
     local rayonCoeur = NA_Stat(ply, "chinoike_vortex", "rayon", RAYON_COEUR)
 
     for _, ent in ipairs(ents.FindInSphere(milieu, Niv(ply, "rayon_attire", RAYON_ATTIRE))) do
+        -- joueurs : aspirés dans SetupMove (sh_chinoike_vortex.lua), prédit par leur client
+        if ent:IsPlayer() then continue end
         if not EstCible(ent, ply) or not Visible(milieu, ent) then continue end
 
         local vers = centre - ent:GetPos()
@@ -104,20 +106,15 @@ local function Attirer(ply, centre)
         -- l'aspiration faiblit près du centre, sinon on le dépasse et on fait des allers-retours
         local attenuation = math.Clamp(dist / rayonCoeur, 0.25, 1)
 
-        if ent:IsPlayer() then
-            -- accélération ajoutée à la vitesse du joueur (SetVelocity s'additionne)
-            ent:SetVelocity((dir * NA_Stat(ply, "chinoike_vortex", "force", FORCE) * attenuation + tangente * Niv(ply, "tourbillon", TOURBILLON)) * Niv(ply, "pas", PAS))
-        else
-            -- PNJ / nextbots : on les fait glisser à vitesse fixe, sans traverser les murs
-            local vitesse = Niv(ply, "vitesse_pnj", VITESSE_PNJ) * attenuation
-            local depart = ent:GetPos()
-            local tr = util.TraceHull({
-                start = depart, endpos = depart + (dir * vitesse + tangente * vitesse * 0.3) * Niv(ply, "pas", PAS),
-                mins = ent:OBBMins(), maxs = ent:OBBMaxs(),
-                filter = ent, mask = MASK_NPCSOLID,
-            })
-            if not tr.StartSolid then ent:SetPos(tr.HitPos) end
-        end
+        -- PNJ / nextbots : on les fait glisser à vitesse fixe, sans traverser les murs
+        local vitesse = Niv(ply, "vitesse_pnj", VITESSE_PNJ) * attenuation
+        local depart = ent:GetPos()
+        local tr = util.TraceHull({
+            start = depart, endpos = depart + (dir * vitesse + tangente * vitesse * 0.3) * Niv(ply, "pas", PAS),
+            mins = ent:OBBMins(), maxs = ent:OBBMaxs(),
+            filter = ent, mask = MASK_NPCSOLID,
+        })
+        if not tr.StartSolid then ent:SetPos(tr.HitPos) end
     end
 end
 
@@ -148,9 +145,26 @@ local function Lancer(ply, centre)
     if not IsValid(ply) then return end
     local duree = NA_Stat(ply, "chinoike_vortex", "duree", DUREE)
 
+    -- aspiration des joueurs (sh_chinoike_vortex.lua) : mêmes valeurs sur le serveur et chez les clients
+    local v = {
+        centre       = centre,
+        fin          = CurTime() + duree,
+        lanceur      = ply,
+        rayon_attire = Niv(ply, "rayon_attire", RAYON_ATTIRE),
+        rayon_coeur  = NA_Stat(ply, "chinoike_vortex", "rayon", RAYON_COEUR),
+        force        = NA_Stat(ply, "chinoike_vortex", "force", FORCE),
+        tourbillon   = Niv(ply, "tourbillon", TOURBILLON),
+    }
+    NA_VortexSang.Ajouter(v)
+
     net.Start("chinoike_vortex_zone")
         net.WriteVector(centre)
         net.WriteFloat(duree)
+        net.WriteEntity(ply)
+        net.WriteFloat(v.rayon_attire)
+        net.WriteFloat(v.rayon_coeur)
+        net.WriteFloat(v.force)
+        net.WriteFloat(v.tourbillon)
     net.Broadcast()
 
     sound.Play(SON_DEBUT, centre + Vector(0, 0, 60), 85, 70, 1)

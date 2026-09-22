@@ -1,0 +1,13 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "MM_textures/MM_Arene_Texture/details2"
+    "$selfillum" "1"
+    "$selfillumtint" "[0.4 0.4 0.4]"  
+    
+    "$ambientocclusion" "1"
+    "$ambientreflection" "0.3"
+    
+    "$contrast" "1.2"
+    "$color" "[1.1 1.1 1.1]"  
+    
+}

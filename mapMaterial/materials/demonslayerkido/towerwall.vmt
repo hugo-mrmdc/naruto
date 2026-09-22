@@ -1,0 +1,5 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "demonslayerkido/towerwall"
+	"$nocull" 1
+}

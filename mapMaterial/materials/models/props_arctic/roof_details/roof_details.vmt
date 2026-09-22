@@ -1,0 +1,14 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "models/props_arctic/roof_details/roof_details"
+
+	"$phong" "1"
+	"$phongexponent" "50"
+	"$phongboost" "0.4"	
+	"$phongfresnelranges"	"[.25 .5 1]"
+	"$basemapalphaphongmask" "1"
+
+	"$rimlight" "1"
+	"$rimlightexponent" "0.1"	
+	"$rimlightboost" "0.1"
+}

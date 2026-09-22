@@ -1,0 +1,6 @@
+VertexLitGeneric
+{
+	$basetexture "tenyar_typstudio/suna_utilitaire/typ_props/5_3"
+	"$selfillum"		"1"
+	"$selfillummask"	"tenyar_typstudio/suna_utilitaire/typ_props/5_3_ms"
+}

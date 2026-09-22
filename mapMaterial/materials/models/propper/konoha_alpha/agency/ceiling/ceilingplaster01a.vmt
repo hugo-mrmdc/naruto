@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$basetexture"		"agency\ceiling\ceilingplaster01a"
+	"$envmap"		"env_cubemap"
+	"$envmapsaturation"		"0.500000"
+	"$envmapcontrast"		"0.800000"
+	"$envmaptint"		"[0.23 0.2 0.2]"
+	"%keywords"		"agency"
+	"$model"		"1"
+}

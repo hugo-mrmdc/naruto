@@ -1,0 +1,19 @@
+"WorldVertexTransition"
+{
+    "$basetexture" "fortnite/ground/ground1"
+    "$surfaceprop" "dirt"
+
+    "$basetexture2" "fortnite/grass_tah_fortinite/herba"
+    "$surfaceprop2" "grass"
+
+    "$detail" "forest/dirtfar"
+    "$detailscale" "0.075"
+    "$detailscale2" "0.075"
+
+    "$blendmodulatetexture" "nature/grass_blendmask"
+
+    "%tooltexture" "nature/blendgroundtograss001_tooltexture"
+    "%keywords" "tf"
+
+    "$ssbump2" "2"
+}

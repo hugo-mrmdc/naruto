@@ -1,0 +1,5 @@
+VertexLitGeneric
+{
+	// r.man MMXV
+	$basetexture "de_sgt/models/de_sgt_btherm_lockers"
+}

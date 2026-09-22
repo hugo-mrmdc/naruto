@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+   "$basetexture"         "models/mark2580/gtav/yacht_map/dk3_int/carpet_swatch_dmgrey_050_dm"
+   $translucent 1
+}

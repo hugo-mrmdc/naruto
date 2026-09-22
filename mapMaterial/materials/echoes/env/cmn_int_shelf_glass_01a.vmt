@@ -1,0 +1,20 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "echoes/env/B_SM_T_Glass/glass2"
+	"$bumpmap" "echoes/env/B_SM_T_Glass/grey_glass2"
+	"$detail" "echoes/env/B_SM_T_Glass/dark_glass2"
+	"$envmap" "env_cubemap"
+	"$normalmap" "echoes/env/B_SM_T_Glass/yelow_glass2"
+	"$translucent" "1"
+	"$hdrcompressedTexture" "echoes/env/B_SM_T_Glass/hdr2"
+	"$surfaceprop" "glass"
+	"$fresnelreflection" "0.5"
+	"$refractamount" "0.025"
+
+
+	"$nofog" "1"
+	"$color" "[ .30 .38 .43 ]"
+
+
+"srgb?$alpha" "0.5"
+}

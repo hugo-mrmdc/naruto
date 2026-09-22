@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "demonslayerkido5/T_b_010_AlphaStraw_01a_BC"
+	"$alphatest" 1
+	"$nocull" 1
+	"$translucent" 1
+}

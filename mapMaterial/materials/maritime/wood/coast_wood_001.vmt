@@ -1,0 +1,13 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "maritime/wood/coast_wood_001"
+	"$surfaceprop" "wood"
+	"%keywords" "tf, bulletcrops"
+	"$detail" "overlays/detail006"
+	"$detailscale" "1"
+	"$detailblendmode" "0"
+	"$detailblendfactor" "1"
+}
+
+// BulletCrops Project
+// http://www.minerality.fr/bulletcropsproject/

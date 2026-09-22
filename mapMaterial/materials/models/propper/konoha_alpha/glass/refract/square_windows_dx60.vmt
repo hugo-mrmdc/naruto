@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture"		"glass/refract/square_windows_dx60"
+	"$model"		"1"
+	"$nocull"		"1"
+	"%keywords"		"AoC, Glass"
+}

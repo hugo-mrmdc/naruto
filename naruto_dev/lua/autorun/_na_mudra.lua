@@ -40,16 +40,21 @@ local ANIM_DUREE_MAX    = 3     -- une animation en boucle ne bloque pas plus lo
 
 util.AddNetworkString("Jutsu_Anim_Play")
 
-function NA_AnimJutsu(ply, seq)
+-- coupe (optionnelle) : secondes après lesquelles l'animation est coupée
+-- (nil ou 0 = animation entière). Le blocage des coups s'arrête en même temps.
+function NA_AnimJutsu(ply, seq, coupe)
     if not IsValid(ply) or not seq or seq == "" then return end
+    coupe = tonumber(coupe) or 0
 
     net.Start("Jutsu_Anim_Play")
         net.WriteEntity(ply)
         net.WriteString(seq)
+        net.WriteFloat(coupe)
     net.Broadcast()
 
     local id = ply:LookupSequence(seq)
     local duree = (id and id >= 0) and ply:SequenceDuration(id) or ANIM_DUREE_DEFAUT
+    if coupe > 0 then duree = math.min(duree, coupe) end
     NA_Mudra(ply, math.Clamp(duree, 0, ANIM_DUREE_MAX))
 end
 

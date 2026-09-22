@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "demonslayerkido5/T_cmn_obj_CleaningTools_01a_BC"
+	"$nocull" 1
+}

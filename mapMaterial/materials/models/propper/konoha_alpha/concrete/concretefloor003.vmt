@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$baseTexture"		"Concrete/concretefloor003"
+	"%keywords"		"tf"
+	"$detail"		"overlays/detail001"
+	"$detailscale"		"1.900000"
+	"$detailblendmode"		"0"
+	"$detailblendfactor"		"1"
+	"$model"		"1"
+}

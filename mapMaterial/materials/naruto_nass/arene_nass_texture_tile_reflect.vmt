@@ -1,0 +1,16 @@
+LightmappedGeneric
+{
+	$basetexture "egypt/nass_arene004"
+	$bumpmap "egypt/egypt_spytech_tile001a_ssbump"
+	$surfaceprop Tile
+	$ssbump 1
+
+	$detail "overlays/detail004"
+
+	$envmap "env_cubemap"
+	$normalmapalphaenvmapmask 1
+	$envmapcontrast 0.24
+	$fresnelreflection 0.9
+
+	%keywords "tf, egypt"
+}

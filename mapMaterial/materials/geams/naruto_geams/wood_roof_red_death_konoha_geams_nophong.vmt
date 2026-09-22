@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "geams/naruto_geams/wood_roof_red_death_konoha_geams"
+	"$bumpmap" "geams/naruto_geams/wood_roof_konoha_geams_nrm"
+	$detail "forest/dirtfar"
+	$detailscale 0.01
+
+
+}

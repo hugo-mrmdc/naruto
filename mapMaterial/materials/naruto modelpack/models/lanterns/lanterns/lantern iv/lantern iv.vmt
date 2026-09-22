@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "naruto modelpack/models/lanterns/lanterns/lantern iv/Lantern IV"
+	"$alphatest" 1
+	"$translucent" 1
+}

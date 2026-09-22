@@ -103,7 +103,7 @@ hook.Add("InitPostEntity", "Jutsu_Anim_AutoDiag", function()
     timer.Simple(10, function() writeDiag("auto") end)
 end)
 
-local function playSequenceOn(ply, seqName)
+local function playSequenceOn(ply, seqName, coupe)
     if not IsValid(ply) then return false end
     if type(seqName) ~= "string" or seqName == "" then return false end
 
@@ -114,14 +114,27 @@ local function playSequenceOn(ply, seqName)
     end
 
     ply:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, seq, 0, true)
+
+    -- coupe l'animation après "coupe" secondes (sauf si une autre a été lancée entre-temps)
+    local jeton = (ply.NA_AnimJeton or 0) + 1
+    ply.NA_AnimJeton = jeton
+    if coupe and coupe > 0 then
+        timer.Simple(coupe, function()
+            if IsValid(ply) and ply.NA_AnimJeton == jeton then
+                ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
+            end
+        end)
+    end
     return true
 end
 
 -- Reçoit du serveur: tout le monde joue l'anim sur le joueur
+-- (coupe envoyée seulement par NA_AnimJutsu, _na_mudra.lua ; les autres envois n'en ont pas)
 net.Receive("Jutsu_Anim_Play", function()
     local ply = net.ReadEntity()
     local seqName = net.ReadString()
-    playSequenceOn(ply, seqName)
+    local coupe = (net.BytesLeft() or 0) >= 4 and net.ReadFloat() or 0
+    playSequenceOn(ply, seqName, coupe)
 end)
 
 -- ✅ API propre: Jutsu.Play("nom_sequence")

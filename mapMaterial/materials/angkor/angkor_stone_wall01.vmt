@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "angkor/angkor_stone_wall01"
+	"$bumpmap" "angkor/angkor_stone_wall01-ssbump"
+	"$ssbump" "1"
+	"$reflectivity" "[.5 .5 .5]"
+	"$surfaceprop" "Rock"
+	"%keywords" "tf,angkor"
+}

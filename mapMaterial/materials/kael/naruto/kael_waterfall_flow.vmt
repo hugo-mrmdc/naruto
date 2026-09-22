@@ -1,0 +1,41 @@
+VertexLitGeneric
+{
+	$baseTexture 		kael/naruto/water_flow
+	
+	$translucent 		1
+	$color2 			"[.7 .9 1]"
+	
+	$detail 			kael/naruto/waterfall_set02_mask
+	$detailScale 		1
+	$detailBlendFactor 	1.25
+	$detailBlendMode 	8
+	
+	"$nocull"				"1"
+	
+	$envMap 			env_cubemap
+	$envMapTint 		"[0.6 1 1]"
+	
+	$center 			"[0.5 0.5]"
+	$scale 				"[8 4]"
+	$angle 				0
+	$translate 			"[0 0]"
+	
+	"$model" 1
+	
+	Proxies
+	{
+		LinearRamp
+		{
+			rate -0.24
+			resultVar "$translate[1]"
+		}
+		TextureTransform
+		{
+			centerVar $center
+			scaleVar $scale
+			rotateVar $angle
+			translateVar $translate
+			resultVar $baseTextureTransform
+		}
+	}
+}

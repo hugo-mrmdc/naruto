@@ -1,0 +1,18 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "ryukai/typ_wano/typ_props/typ_misc5"
+	"$surfaceprop" "Wood_Box"
+	"$selfillum"	"1"
+	"$selfillummask"	"ryukai/typ_wano/typ_props/typ_misc5_ilum"
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedTextureFrameRate" "14"
+			
+		}
+
+	}
+}

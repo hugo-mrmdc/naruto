@@ -1,0 +1,10 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "ryukai/typ_lobby/typ_props/lobby4/geams/typ_3_leafs"
+	"$treesway" "1.25"
+	"$treeswayheight" "-10000.5"
+	"$treeSwayStrength" "1.25"
+	"$treeSwayScrumbleStrength" "1.5"
+	"$alphatest" 1
+	"$nocull" 1
+}

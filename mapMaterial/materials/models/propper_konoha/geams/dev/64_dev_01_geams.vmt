@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture"		"geams/dev/64_dev_01_geams"
+	"%compilenodraw"		"1"
+	"$model"		"1"
+}

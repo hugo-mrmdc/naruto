@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "sto/og/glass_konoha_originalsmen_a21"
+	"$surfaceprop" "glass"
+               	"$envmap" "env_cubemap"
+	"%keywords" "glass_konoha_originalsmen_a21"
+}

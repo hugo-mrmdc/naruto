@@ -1,0 +1,10 @@
+"WorldVertexTransition"
+{
+    "$basetexture" "fortnite/rockwall_marron/marron_1"
+    "$bumpmap" "fortnite/rockwall_marron/marron_1_n"
+
+    "$basetexture2" "fortnite/grass_tah_fortinite/herba"
+    "$bumpmap2" "fortnite/grass_tah_fortinite/herba_n"
+
+    "$surfaceprop" "dirt"
+}

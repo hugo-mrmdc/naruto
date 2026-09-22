@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "naruto modelpack/models/hokage office/hokage staff 3/Hokage staff 3 3"
+	"$alphatest" 1
+	"$nocull" 1
+	"$translucent" 1
+}

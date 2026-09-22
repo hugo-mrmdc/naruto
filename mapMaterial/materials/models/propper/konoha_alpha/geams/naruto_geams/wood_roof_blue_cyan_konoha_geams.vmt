@@ -1,0 +1,12 @@
+"VertexLitGeneric"
+{
+	"$basetexture"		"geams/naruto_geams/wood_roof_blue_cyan_konoha_geams"
+	"$detail"		"forest/dirtfar"
+	"$detailscale"		"0.010000"
+	"$phongexponent"		"5"
+	"$envmap"		"env_cubemap"
+	"$normalmapalphaenvmapmask"		"1"
+	"$envmaptint"		"[ .05 .05 .05 ]"
+	"$envmapcontrast"		"1"
+	"$model"		"1"
+}

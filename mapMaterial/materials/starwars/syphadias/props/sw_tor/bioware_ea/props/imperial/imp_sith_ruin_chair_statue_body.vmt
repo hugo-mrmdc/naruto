@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "starwars/syphadias/props/sw_tor/bioware_ea/props/imperial/imp_sith_ruin_chair_statue_body"
+	"$nocull" 1
+}

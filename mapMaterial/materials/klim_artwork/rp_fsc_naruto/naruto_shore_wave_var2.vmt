@@ -1,0 +1,23 @@
+"UnlitTwoTexture"
+{
+	"$basetexture" "klim_artwork/rp_fsc_naruto/shore_wave_001"
+	"$texture2"    "klim_artwork/rp_fsc_naruto/shore_wave_mask_001"
+	"$additive" 1
+	"$decal" 1
+
+
+
+
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" ".06"
+			"texturescrollangle" -90
+		}
+		
+
+	}
+
+}

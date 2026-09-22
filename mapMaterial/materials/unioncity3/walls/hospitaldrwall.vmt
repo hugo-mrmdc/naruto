@@ -1,0 +1,7 @@
+LightMappedGeneric
+{
+	$basetexture "unioncity3/walls/hospitaldrwall"
+	
+	
+	$surfaceprop concrete
+}

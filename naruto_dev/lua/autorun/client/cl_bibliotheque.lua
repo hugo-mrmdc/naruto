@@ -33,6 +33,7 @@ local ONGLETS = {
     { nom = "Kekkei Genkai", icone = "kekei.png", groupes = {
         { nom = "Mokuton",  embleme = LIB .. "mokuton.png" },
         { nom = "Jinton",   embleme = LIB .. "jinton.png" },
+        { nom = "Kiminari", embleme = LIB .. "kiminari.png" },
         { nom = "Bakuton",  embleme = LIB .. "bakuton.png" },
         { nom = "Hyoton",   embleme = LIB .. "hyoton.png" },
         { nom = "Yoton",    embleme = LIB .. "yoton.png" },

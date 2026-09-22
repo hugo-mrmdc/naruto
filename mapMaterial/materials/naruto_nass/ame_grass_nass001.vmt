@@ -1,0 +1,18 @@
+WorldVertexTransition
+{
+	$basetexture "Swamp/nature/swampgrass002"
+	$surfaceprop Grass
+
+	$basetexture2 "nature/dirtground010"
+	$surfaceprop2 Dirt
+
+	$detail "forest/dirtfar"
+	$detailscale 0.075
+	$detailscale2 0.075
+
+	$blendmodulatetexture "nature/grass_blendmask"
+
+	$basetexture1 "swamp/nature/swampgrass002"
+	$surfaceprop1 grass
+	%detailtype urban_grass_overgrown
+}

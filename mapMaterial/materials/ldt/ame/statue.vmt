@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+    "$basetexture" "ldt/ame/statue"
+    "$bumpmap" "ldt/ame/statue_normal"
+    "$surfaceprop" "rock"
+    "$phong" "1"
+    "$phongexponent" "12"
+    "$phongboost" "0.12"
+    "$phongfresnelranges" "[0.05 0.15 0.30]"
+    "$rimlight" "1"
+    "$rimlightexponent" "6"
+    "$rimlightboost" "0.08"
+}

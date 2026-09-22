@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "geams/naruto_geams/nr_wood_ambu_geams"
+	"$surfaceprop" "wood"
+	"%keywords" "tf, autumnal"
+	"$detail" "overlays/detail006"
+	"$detailscale" "1"
+	"$detailblendmode" "0"
+	"$detailblendfactor" "1"
+}

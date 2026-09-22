@@ -1,0 +1,8 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "fyu_3/ord_6"
+	"$basetexture2" "fyu_3/ord_7"
+	"$surfaceprop" "grass"
+	"$surfaceprop2" "rock"
+	"$blendmodulatetexture" "nature/blendtexture01"
+}

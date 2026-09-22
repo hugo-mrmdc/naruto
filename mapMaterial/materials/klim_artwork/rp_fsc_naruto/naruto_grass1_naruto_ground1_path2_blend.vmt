@@ -1,0 +1,18 @@
+WorldVertexTransition
+{
+	$basetexture2 "fsc_gustman/gustman_grass"
+	$bumpmap2 "fsc_gustman/gustman_grass_normal"
+	$surfaceprop2 grass
+
+        $basetexture "klim_artwork/rp_fsc_naruto/naruto_ground1_path2"
+	$bumpmap "klim_artwork/rp_fsc_naruto/naruto_ground1_path2_normal"
+	$surfaceprop ground
+	
+	"%detailtype" "naruto_grass"
+	
+        $maskedblending ".5"
+	$blendmodulatetexture "klim_artwork/rp_fsc_naruto/naruto_ground1_modulate"
+
+
+
+}

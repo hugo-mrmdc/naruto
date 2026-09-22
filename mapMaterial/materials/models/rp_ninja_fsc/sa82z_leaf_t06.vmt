@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/rp_ninja_fsc/sa82z_leaf_t06"
+	"$alphatest" 1
+	"$nocull" 1
+}

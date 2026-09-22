@@ -1,0 +1,9 @@
+"unlitgeneric"
+{
+	"$basetexture" "gmod_tower/common/aquarium_glass_geams"
+	"$envmap" "env_cubemap"
+	"$surfaceprop" "glass"
+	"$translucent" 1
+
+	"$nocull" 1
+}

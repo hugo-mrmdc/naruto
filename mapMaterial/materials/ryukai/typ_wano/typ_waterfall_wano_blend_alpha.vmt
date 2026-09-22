@@ -1,0 +1,17 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "ryukai/typ_wano/typ_waterfall_wano"
+	"$basetexture2" "ryukai/typ_wano/typ_transparent"
+	"$translucent" 1
+	"$additive" 1
+	"$nocull" "1"
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" 0.5
+			"texturescrollangle" 0
+		} 
+	}
+}

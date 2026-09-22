@@ -1,0 +1,6 @@
+VertexLitGeneric
+{
+	$basetexture "models/props_lighting/semi_flush_001"
+
+	$selfillum 1
+}

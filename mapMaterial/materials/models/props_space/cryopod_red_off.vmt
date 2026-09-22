@@ -1,0 +1,17 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/props_space/cryopod_red.vtf"
+	"$basemapalphaphongmask" "1"
+	"$phong" "1"
+	"$phongexponent" "5"
+	"$phongboost" "2.5"	
+	"$phongfresnelranges"	"[.5 10 15]"
+	"$rimlight"		"1"
+	"$rimlightexponent"		"2.0"
+	"$rimlightboost"		"1.0"
+	//"$selfillum" "1"
+    //"$selfillummask" "models/props_space/cryopod_illum.vtf"
+	"$surfaceprop" "metal"
+	"$model" 1
+	"%keywords" "tf"
+}

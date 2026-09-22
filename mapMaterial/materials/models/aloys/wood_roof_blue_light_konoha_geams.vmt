@@ -1,0 +1,8 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "geams/naruto_geams/wood_roof_blue_light_konoha_geams"
+	"$bumpmap" "geams/naruto_geams/wood_roof_konoha_geams_nrm"
+	$detail "forest/dirtfar"
+	$detailscale 0.01
+
+}

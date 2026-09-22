@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "gluk/incubatortextures/incubator"
+                "$lightwarptexture" "gluk/incubatortextures/lightwarpshader"
+}
+
+

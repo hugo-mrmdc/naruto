@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "naruto modelpack/models/paper box/Paper Box"
+	"$alphatest" 1
+	"$nocull" 1
+	"$translucent" 1
+}

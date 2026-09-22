@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "gluk/flagsenjutextures/flag"
+                "$lightwarptexture" "gluk/flagsenjutextures/lightwarpshader"
+}
+
+

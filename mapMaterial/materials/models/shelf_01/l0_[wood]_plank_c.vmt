@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	
+	"$baseTexture"	"models/Shelf_01/L0_[WOOD]_Plank_C"
+	"$surfaceprop" "wood"
+
+	//"$basealphaenvmapmask" 1
+	//"$envmapcontrast" 1
+	//"$envmapsaturation" .1
+}

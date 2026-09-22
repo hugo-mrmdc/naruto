@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "naruto modelpack/models/vase with flowers/Vase with flowers"
+	"$alphatest" 1
+	"$nocull" 1
+	"$translucent" 1
+}

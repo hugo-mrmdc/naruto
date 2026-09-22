@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+   "$basetexture" "nightfire\japanese\in_door"
+   "$detail" "detail/detail_noise1"
+   "$detailscale" 10.0
+$surfaceprop "wood"
+}

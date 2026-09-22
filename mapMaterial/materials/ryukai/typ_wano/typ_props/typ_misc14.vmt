@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "ryukai/typ_wano/typ_props/typ_misc14"
+	"$surfaceprop" "Wood_Plank"
+	"$alphatest" 1
+	"$nocull" 1
+}

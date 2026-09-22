@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_altomare/restaurant_chairs_metal"
+	"$surfaceprop" "metal"
+	"$phong" "1"
+	"$phongexponent" "50"
+	"$phongboost" "3"
+	"$phongfresnelranges" "[1 1 1]"
+}
+

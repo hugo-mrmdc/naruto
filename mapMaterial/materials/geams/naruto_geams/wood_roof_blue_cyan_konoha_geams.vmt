@@ -1,0 +1,19 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "geams/naruto_geams/wood_roof_blue_cyan_konoha_geams"
+	"$bumpmap" "geams/naruto_geams/wood_roof_konoha_geams_nrm"
+	$detail "forest/dirtfar"
+	$detailscale 0.01
+
+
+
+	$phong 1
+	$phongexponent 5
+
+	$envmap                    "env_cubemap"
+	$normalmapalphaenvmapmask  1
+
+	$envmaptint                "[ .05 .05 .05 ]"
+	$envmapcontrast            1
+
+}

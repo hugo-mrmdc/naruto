@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture"		"facepunch/tdocter/RD_Window_03"
+	"$normalmap"		"facepunch/tdocter/RD_Window_03_Normal"
+	"$model"		"1"
+}

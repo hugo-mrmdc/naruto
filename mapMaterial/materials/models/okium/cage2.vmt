@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/okium/cage2"
+	"$nocull" 1
+	"$nodecal" 1
+	"$lightwarptexture" "models/okium/toon"
+
+}
