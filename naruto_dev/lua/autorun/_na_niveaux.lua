@@ -60,7 +60,7 @@ NA_NIV.LIGNEES = {
     { "fuma_tp", "fuma_invisibilite", "fuma_aura", "fuma_jugement", "fuma_ciel" },
     { "kami_shuriken", "kami_ailes", "kami_circle", "kami_bouclier" },
     { "jinton_cube", "jinton_bouclier", "jinton_laser" },
-    { "kiminari_frappe", "kiminari_prison" },
+    { "kiminari_frappe", "kiminari_prison", "kiminari_laser" },
     { "kaguya_armure", "kaguya_danse", "kaguya_legion" },
     { "chinoike_ketsuryugan", "chinoike_genjutsu", "chinoike_pluie", "chinoike_vortex" },
 }

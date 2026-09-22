@@ -136,6 +136,9 @@ local TECHNIQUES = {
     { cat = "Kiminari", name = "Prison noire", key = "", id = "kiminari_prison", rang = "B", icone = "ui/icon/kiminari_prison_noir.png", court = "Prison", cooldown = 24,
       desc = "Une tornade électrique se pose autour de toi pendant 8 secondes (la zone reste où tu l'as lancée) : tout ennemi qui entre dans la zone (250 unités) OU qui en sort est blessé et étourdi 1,5 seconde. Coûte 35 de chakra.",
       dmg = "12 + étourdissement 1,5 s à chaque passage du bord" },
+    { cat = "Kiminari", name = "Laser Circus", key = "", id = "kiminari_laser", rang = "A", icone = "ui/icon/kiminari_cercle_noir.png", court = "Laser", cooldown = 26,
+      desc = "Tire 3 salves de lasers électriques depuis ta main : chaque salve touche jusqu'à 5 ennemis visibles devant toi (1200 unités max). Coûte 40 de chakra.",
+      dmg = "14 par laser (3 salves)" },
 
     -- ===== ARMES =====
     --[[{ cat = "Armes", name = "Zabuza", key = "Clic gauche / droit",
