@@ -1,6 +1,3 @@
 
-# Fichiers de map trop lourds pour GitHub (>100 Mo)
-*.bsp
+# Sauvegardes de map (inutiles dans le repo)
 *.bsp.bak
-*.vmf
-*.vmx
