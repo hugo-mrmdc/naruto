@@ -400,6 +400,37 @@ local function DessinerCaseTechnique(tech, x, y, t, lum)
     end
 end
 
+-- Recharge restante d'une technique (vraie valeur du serveur, _na_registre.lua)
+local function Recharge(id)
+    return (id and NA_ResteRecharge) and NA_ResteRecharge(id) or 0
+end
+
+local function TexteRecharge(reste)
+    return string.format(reste >= 1 and "%d" or "%.1f", reste)
+end
+
+-- Voile de recharge sur une case : secteur sombre qui se vide + secondes restantes
+local function DessinerRecharge(id, x, y, t, police)
+    local reste = Recharge(id)
+    if reste <= 0 then return end
+    local total = NA_DureeRecharge and NA_DureeRecharge(id) or reste
+    if total <= 0 then total = reste end
+
+    local cx, cy, r = x + t / 2, y + t / 2, t * 0.84 / 2
+    local frac = math.Clamp(reste / total, 0, 1)
+    local pts = { { x = cx, y = cy } }
+    for i = 0, 32 do
+        local a = math.rad(-90 + frac * 360 * (i / 32))
+        pts[#pts + 1] = { x = cx + math.cos(a) * r, y = cy + math.sin(a) * r }
+    end
+    draw.NoTexture()
+    surface.SetDrawColor(0, 0, 0, 170)
+    surface.DrawPoly(pts)
+
+    draw.SimpleTextOutlined(TexteRecharge(reste), police, cx, cy, color_white,
+        TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 200))
+end
+
 -- Cadre sombre semi-transparent à liseré doré (liste des techniques, barre)
 local function CadreSombre(w, h)
     surface.SetDrawColor(10, 6, 6, 190)
@@ -646,8 +677,10 @@ local function Open()
                 Disque(w / 2, h / 2, w / 2)
             end
             local m = choisie and 3 or 0
-            -- technique verrouillée : case grisée
-            DessinerCaseTechnique(tech, m, m, w - m * 2, Verrouillee(tech) and 90 or ((sur or choisie) and 255 or 215))
+            -- technique verrouillée : case grisée ; en recharge : assombrie
+            local lum = Verrouillee(tech) and 90 or (Recharge(tech.id) > 0 and 110) or ((sur or choisie) and 255 or 215)
+            DessinerCaseTechnique(tech, m, m, w - m * 2, lum)
+            DessinerRecharge(tech.id, m, m, w - m * 2, "NA.Jutsu.Nom")
         end
 
         b.PaintOver = function(pan, w, h)
@@ -750,12 +783,8 @@ local function Open()
                 surface.SetDrawColor(255, 190, 80, 170)
                 Disque(w / 2, h / 2, w / 2)
             end
-            local recharge = id and NA_ResteRecharge and NA_ResteRecharge(id) or 0
-            DessinerCaseTechnique(tech, 0, 0, w, recharge > 0 and 110 or 255)
-            if recharge > 0 then
-                draw.SimpleText(string.format(recharge >= 1 and "%d" or "%.1f", recharge), "NA.Jutsu.Nom",
-                    w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            end
+            DessinerCaseTechnique(tech, 0, 0, w, Recharge(id) > 0 and 110 or 255)
+            DessinerRecharge(id, 0, 0, w, "NA.Jutsu.Nom")
         end
         slot.PaintOver = function(pan, w, h) Pastille(i, w, h) end
 
@@ -830,7 +859,8 @@ local function Open()
         local _, hd = surface.GetTextSize("A")
 
         -- voile sombre derrière le texte, pour le lire par-dessus le décor du fond
-        local hauteur = #c.nom * hn + h * 0.047 + #c.desc * (hd + 2) + h * 0.04 + 3 * (hd + 4)
+        local nbLignes = Recharge(t.id) > 0 and 4 or 3
+        local hauteur = #c.nom * hn + h * 0.047 + #c.desc * (hd + 2) + h * 0.04 + nbLignes * (hd + 4)
         draw.RoundedBox(6, w * 0.04, y - h * 0.015, w * 0.92, hauteur + h * 0.03, Color(8, 5, 5, 175))
 
         -- nom
@@ -858,6 +888,10 @@ local function Open()
         -- affiché même si la technique est verrouillée (valeur du niveau 1)
         local cd = NA_CooldownAuNiveau(t, t.id and NA_Niveau and NA_Niveau(LocalPlayer(), t.id) or 1)
         Ligne("COOLDOWN : " .. (cd and (string.format(cd == math.floor(cd) and "%d" or "%.1f", cd) .. " S") or "-"), C_RECHARGE)
+        local reste = Recharge(t.id)
+        if reste > 0 then
+            Ligne("EN RECHARGE : " .. TexteRecharge(reste) .. " S", Color(255, 110, 90))
+        end
         if Verrouillee(t) then
             -- rien : la case grisée suffit
         elseif Equipable(t) then
