@@ -52,49 +52,23 @@ local function DespawnSalamandre(ply)
     return false
 end
 
--- Hook sur la touche E pour spawn/despawn
-hook.Add("KeyPress", "SalamandreKeyPress", function(ply, key)
-    if key ~= IN_USE then return end
-    
-    -- Trace pour voir ce que le joueur regarde
-    local tr = util.TraceLine({
-        start = ply:EyePos(),
-        endpos = ply:EyePos() + ply:GetAimVector() * 150,
-        filter = ply
-    })
-    
-    local ent = tr.Entity
-    
-    -- Si on regarde une entité (salamandre, porte, PNJ, objet...), elle gère elle-même E.
-    -- Avant : E sur une porte ou un PNJ faisait aussi apparaître / disparaître la salamandre.
-    if IsValid(ent) then
-        return
-    end
+-- Touche U pour spawn/despawn (E sert au bouclier Jinton ; E sur la salamandre = monter/descendre)
+hook.Add("PlayerButtonDown", "SalamandreKeyPress", function(ply, button)
+    if button ~= KEY_U then return end
     if not ply:Alive() then return end
-    -- sur le dragon Mokuton, E sert à attraper une cible
+    -- sur le dragon Mokuton ou sur une monture (salamandre...) : pas d'invocation
     if ply:GetNWBool("MokutonRide", false) then return end
+    if IsValid(ply:GetParent()) then return end
     if (ply.NA_NextSalamandre or 0) > CurTime() then return end
     ply.NA_NextSalamandre = CurTime() + 1
-    
-    -- Si on est monté, laisser l'entité gérer le dismount
-    local maSalamandre = PlayerSalamandres[ply]
-    if IsValid(maSalamandre) then
-        local rider = maSalamandre:GetNWEntity("Rider")
-        if IsValid(rider) and rider == ply then
-            return
-        end
-    end
-    
-    -- On regarde dans le vide = spawn/despawn
-    if not IsValid(ent) or ent:GetClass() ~= "npc_salamandre_ride" then
-        if IsValid(PlayerSalamandres[ply]) then
-            DespawnSalamandre(ply)
-            ply:ChatPrint("Salamandre renvoyée!")
-        else
-            local sala = SpawnSalamandre(ply)
-            if sala then
-                ply:ChatPrint("Salamandre invoquée! Regardez-la et appuyez sur E pour monter.")
-            end
+
+    if IsValid(PlayerSalamandres[ply]) then
+        DespawnSalamandre(ply)
+        ply:ChatPrint("Salamandre renvoyée!")
+    else
+        local sala = SpawnSalamandre(ply)
+        if sala then
+            ply:ChatPrint("Salamandre invoquée! Regardez-la et appuyez sur E pour monter.")
         end
     end
 end)
@@ -107,4 +81,4 @@ hook.Add("PlayerDisconnected", "SalamandreCleanup", function(ply)
     end
 end)
 
-print("[Salamandre] Script chargé! E dans le vide = spawn/despawn, E sur salamandre = monter/descendre")
+print("[Salamandre] Script chargé! U = spawn/despawn, E sur salamandre = monter/descendre")

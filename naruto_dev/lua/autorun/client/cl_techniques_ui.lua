@@ -48,8 +48,8 @@ local TECHNIQUES = {
       desc = "En vol, attrape la cible devant toi dans la gueule. Rappuie pour la lâcher." },
 
     -- ===== SALAMANDRE =====
-    { cat = "Salamandre", name = "Invocation", key = KEY_E,
-      desc = "En regardant le vide, fait apparaître la salamandre. E sur elle pour la monter." },
+    { cat = "Salamandre", name = "Invocation", key = KEY_U,
+      desc = "Fait apparaître la salamandre, ou la renvoie. E sur elle pour la monter." },
     { cat = "Salamandre", name = "Dôme de brume", key = KEY_T, id = "salamandre_dome", rang = "B", icone = "ui/icon/salamandre_nuage_poison.png", court = "Dôme", cooldown = 6,
       desc = "Pose au sol un dôme de brume toxique pendant 5 secondes : il blesse et empoisonne tous ceux qui sont dedans, sauf toi. Coûte 15 de chakra.",
       dmg = "5 par demi-seconde + poison" },
@@ -98,7 +98,7 @@ local TECHNIQUES = {
       desc = "Vise un ennemi à portée : un cube l'enferme, l'immobilise 4 secondes et le ronge à chaque tick. Coûte 30 de chakra.",
       dmg = "8 par tick (toutes les 0,5 s)" },
     { cat = "Jinton", name = "Bouclier Jinton", key = "", id = "jinton_bouclier", rang = "C", icone = "ui/icon/jinton_bulle_poussiere.png", court = "Bouclier", cooldown = 20,
-      desc = "Une sphère de poussière t'entoure pendant 10 secondes : un bouclier égal à 20 % de ta vie max encaisse les dégâts à ta place. Coûte 25 de chakra.",
+      desc = "Une sphère de poussière t'entoure pendant 10 secondes : un bouclier égal à 20 % de ta vie max encaisse les dégâts à ta place. Appuie sur E pour le faire exploser avant la fin. Coûte 25 de chakra.",
       dmg = "Bouclier de 20 % de la vie" },
     { cat = "Jinton", name = "Rayon de dissolution", key = "", id = "jinton_laser", rang = "A", icone = "ui/icon/jinton_rayon_dissolution.png", court = "Rayon", cooldown = 30,
       desc = "Pendant 15 secondes, tu t'envoles et un laser part de ta main vers là où tu vises. Il traverse tout jusqu'au premier mur et ronge ce qu'il touche. Vol : ZQSD, Espace pour monter, Ctrl pour descendre. Coûte 40 de chakra.",

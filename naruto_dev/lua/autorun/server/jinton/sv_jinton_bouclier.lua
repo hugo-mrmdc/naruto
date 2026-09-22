@@ -211,6 +211,25 @@ hook.Add("EntityTakeDamage", "JintonBouclier_Absorbe", function(cible, dmg)
 end)
 
 ----------------------------------------------------------
+-- E pendant le bouclier : explosion anticipée
+-- (sauf en regardant une entité proche - porte, salamandre... - ou sur une monture)
+----------------------------------------------------------
+hook.Add("KeyPress", "JintonBouclier_ExploserE", function(ply, key)
+    if key ~= IN_USE or not IsFirstTimePredicted() then return end
+    if not ply:Alive() or ply:GetNW2Float("NA_BouclierMax", 0) <= 0 then return end
+    if ply:GetNWBool("MokutonRide", false) or IsValid(ply:GetParent()) then return end
+
+    local tr = util.TraceLine({
+        start = ply:EyePos(),
+        endpos = ply:EyePos() + ply:GetAimVector() * 150,
+        filter = ply
+    })
+    if IsValid(tr.Entity) then return end
+
+    NA_JintonBouclierFin(ply, false, true)
+end)
+
+----------------------------------------------------------
 -- Nettoyage
 ----------------------------------------------------------
 hook.Add("PlayerDeath", "JintonBouclier_Mort", function(ply)
