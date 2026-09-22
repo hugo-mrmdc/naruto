@@ -1,0 +1,25 @@
+screenspace_general
+{
+    $pixshader "toonized_orugi_motionblur_ps20"
+
+    $basetexture "_rt_FullFrameFB"
+
+    $ignorez 1
+    $fix_fb  32768
+
+    $c0_x 0.45  // BlurStrength
+    $c0_y 6.0   // BlurSamples (max 7)
+    $c0_z 1.2   // SaturationBoost
+    $c0_w 1.1   // ContrastBoost
+
+    $c1_x 1.05  // BrightnessBoost
+
+    Proxies
+    {
+        Equals
+        {
+            srcVar1   $fix_fb
+            resultVar $flags2
+        }
+    }
+}

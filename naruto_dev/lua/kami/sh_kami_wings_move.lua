@@ -22,7 +22,7 @@ KamiWings.INERTIE          = 8     -- plus grand = arrêt plus sec, plus petit =
 
 -- Le corps pivote en douceur vers la direction de la caméra (degrés par seconde
 -- environ multipliés par cette valeur). Plus grand = il suit plus vite.
-KamiWings.ROTATION_CORPS   = 8
+KamiWings.ROTATION_CORPS   = 20
 
 --========================================================
 
@@ -117,5 +117,6 @@ if CLIENT then
         ply.KamiWingsYaw = actuel
 
         ply:SetRenderAngles(Angle(0, actuel, 0))
+        ply:InvalidateBoneCache()   -- sinon les ailes (bonemerge) gardent l'ancienne orientation
     end)
 end

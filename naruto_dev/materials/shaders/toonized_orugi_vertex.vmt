@@ -1,0 +1,18 @@
+"VertexLitGeneric"
+{
+    "$basetexture" "dev/dev_blendmeasure"
+    "$bumpmap" "dev/dev_blendmeasure_normal"
+    "$surfaceprop" "default"
+
+    "$vertexshader" "toonized_orugi_vertex_vs2x"
+
+    // Activer la coloration par sommet pour profiter du shading personnalisé
+    "$vertexcolor" "1"
+    "$vertexalpha" "1"
+    "$model" "1"
+    "$selfillum" "1"
+
+    // Paramètres optionnels : utilisez des proxies MaterialModify pour
+    // pousser des valeurs personnalisées dans c0/c1 si besoin.
+    // Les valeurs par défaut intégrées produisent déjà un look toon lumineux.
+}

@@ -1,0 +1,21 @@
+screenspace_general 
+{
+	$pixshader "toonized_orugi_ps20"
+	$vertexshader "toonized_orugi_vertex_vs20"
+	$basetexture "_rt_FullFrameFB"
+	$cull 1
+	$model 1
+	$vertexnormal 1
+	
+    	// Constants0 (c0)
+    	$c0_x     5.0   // ToonLevels
+    	$c0_y     0.0 // ShadowStrength
+   	$c0_z     1.0 // EdgeThreshold
+    	$c0_w     2.0   // EdgeWidth
+
+    	// Constants1 (c1)
+    	$c1_x     1.3  // SaturationBoost
+   	$c1_y     1.5   // BrightnessBoost
+    	$c1_z     1.0  // ContrastBoost
+    	$c1_w    3.5   // RimStrength
+}

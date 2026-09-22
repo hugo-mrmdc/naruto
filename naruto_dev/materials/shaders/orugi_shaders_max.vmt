@@ -1,0 +1,32 @@
+screenspace_general 
+{
+	$pixshader "orugi_shaders_max_ps20"
+	$basetexture "_rt_FullFrameFB"
+	$vertexshader "toon_test_vertex_vs20"
+	$basetexture "_rt_FullFrameFB"
+	$cull 1
+	$model 1
+	$vertexnormal 1
+	
+    	$x360appchooser 1
+    	$ignorez        1
+    	$fix_fb         32768
+    	"<dx90"
+    	{
+        		$no_draw 1
+    	}
+
+   	 $c0_x     0.0   // SupersampleFactor (2.0 = 2x, 4.0 = 4x)
+   	 $c0_y     1.0   // Sharpness (0.0 = pas de netteté, 1.0 = netteté max)
+    	 $c0_z     1.0   // AntiAliasing (0.0 = pas d'AA, 1.0 = AA max)
+   	 $c0_w     0.0   // reserved
+    
+   	 Proxies
+   	 {
+        	Equals
+       	{
+           	 srcVar1         $fix_fb
+           	 resultVar       $flags2
+       	 }
+          }
+}

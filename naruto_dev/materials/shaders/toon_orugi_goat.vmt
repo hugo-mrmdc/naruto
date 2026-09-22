@@ -1,0 +1,22 @@
+screenspace_general 
+{
+	$pixshader "toon_test_ps20b"
+	$vertexshader "toon_test_vertex_vs20"
+	$basetexture "_rt_FullFrameFB"
+	$cull 1
+	$model 1
+	$vertexnormal 1
+	
+	// Paramètres optimisés pour le style Naruto
+	// Constants0 (c0) - Paramètres principaux
+	$c0_x     3.0   // ToonLevels - Plus de niveaux pour des transitions plus douces
+	$c0_y     2.0  // EdgeThreshold - Seuil plus bas pour des contours plus fins
+	$c0_z     2.0  // EdgeWidth - Largeur de contour optimisée
+	$c0_w    1.2   // Saturation - Saturation renforcée pour des couleurs vives
+	
+	// Constants1 (c1) - Paramètres avancés
+	$c1_x     1.1   // Brightness - Luminosité légèrement augmentée
+	$c1_y     1.0   // Contrast - Contraste renforcé pour plus de punch
+	$c1_z     1.1   // RimPower - Puissance du rim lighting pour l'effet anime
+	$c1_w     16384.0  // SpecularPower - Brillance spéculaire pour les reflets
+}

@@ -1,0 +1,18 @@
+screenspace_general
+{
+    $pixshader    "toonized_orugi_motionblur_ps20"
+    $vertexshader "toonized_orugi_motionblur_vs20"
+
+    $basetexture "_rt_FullFrameFB"
+
+    $cull 1
+    $model 1
+    $vertexnormal 1
+
+    $c0_x 6.0  // BlurStrength
+    $c0_y 1.0   // BlurSamples
+    $c0_z 1.0  // SaturationBoost
+    $c0_w 1.0   // ContrastBoost
+
+    $c1_x 1.05  // BrightnessBoost
+}
