@@ -117,6 +117,16 @@ NA_NIV.NOMS = {
     { "ecart",            "ÉCART",                 "" },
     { "echelle",          "TAILLE",                "" },
     { "largeur",          "LARGEUR",               "" },
+    { "duree_stun",       "ÉTOURDISSEMENT",        " S" },
+    { "immunite",         "IMMUNITÉ",              " S" },
+    { "vagues",           "SALVES",                "" },
+    { "cibles",           "CIBLES MAX",            "" },
+    { "angle",            "ANGLE",                 "°" },
+    { "boules",           "BOULES",                "" },
+    { "delai",            "DÉLAI AVANT TIR",       " S" },
+    { "montee",           "HAUTEUR DU BOND",       "" },
+    { "fin_vol",          "FIN DU VOL",            " S" },
+    { "anim_coupe",       "DURÉE DE L'ANIMATION",  " S" },
 }
 
 --========================================================
@@ -541,11 +551,23 @@ NA_NIV_TECH.kiminari_prison = {
 -- Laser Circus (sv_kiminari_laser.lua) : degats = par laser
 NA_NIV_TECH.kiminari_laser = {
     [1] = {
-        degats = 14, chakra = 40, recharge = 26, vagues = 3, intervalle = 0.35, cibles = 5,
+        degats = 14, chakra = 40, recharge = 5, vagues = 3, intervalle = 0.35, cibles = 5,
         portee = 1200, angle = 45, duree_mudra = 0.5,
     },
     [2] = { degats = 16 },
-    [3] = { degats = 18, vagues = 4, recharge = 24 },
+    [3] = { degats = 18, vagues = 4, recharge = 5 },
     [4] = { degats = 20, cibles = 6, portee = 1400 },
-    [5] = { degats = 23, vagues = 5, chakra = 35, recharge = 22 },
+    [5] = { degats = 40, vagues = 5, chakra = 35, recharge = 5 },
+}
+
+-- Boulets noirs (sv_kiminari_boulets.lua) : degats = par boule
+NA_NIV_TECH.kiminari_boulets = {
+    [1] = {
+        degats = 8, chakra = 30, recharge = 22, boules = 10, delai = 0.6, intervalle = 0.25, vitesse = 2200,
+        rayon = 90, portee = 1500, montee = 1000, fin_vol = 0.5, duree_mudra = 0.3, anim_coupe = 0.4,
+    },
+    [2] = { degats = 9 },
+    [3] = { degats = 10, boules = 12, recharge = 20 },
+    [4] = { degats = 11, rayon = 110 },
+    [5] = { degats = 13, boules = 3, chakra = 25, recharge = 18 },
 }

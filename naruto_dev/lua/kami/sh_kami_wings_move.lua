@@ -30,6 +30,7 @@ KamiWings.ROTATION_CORPS   = 8
 -- (ex. rayon de dissolution Jinton)
 local function EnVol(ply)
     return IsValid(ply) and ply:Alive() and (ply:GetNW2Bool("NA_Wings", false) or ply:GetNW2Bool("NA_Vol", false))
+        and not ply:GetNW2Bool("NA_Flotte", false)   -- Boulets noirs Kiminari : flotte sur place (kiminari_init.lua)
 end
 KamiWings.EnVol = EnVol
 

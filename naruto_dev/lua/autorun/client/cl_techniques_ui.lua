@@ -139,6 +139,9 @@ local TECHNIQUES = {
     { cat = "Kiminari", name = "Laser Circus", key = "", id = "kiminari_laser", rang = "A", icone = "ui/icon/kiminari_cercle_noir.png", court = "Laser", cooldown = 26,
       desc = "Tire 3 salves de lasers électriques depuis ta main : chaque salve touche jusqu'à 5 ennemis visibles devant toi (1200 unités max). Coûte 40 de chakra.",
       dmg = "14 par laser (3 salves)" },
+    { cat = "Kiminari", name = "Boulets noirs", key = "", id = "kiminari_boulets", rang = "A", icone = "ui/icon/kiminari_boulet_noir.png", court = "Boulets", cooldown = 22,
+      desc = "Tu bondis et flottes sur place : dix boules noires apparaissent dans ton dos, puis partent une par une vers là où tu vises (1500 unités max). Chacune explose à l'impact et blesse les ennemis autour. Coûte 30 de chakra.",
+      dmg = "8 par boule (10 boules)" },
 
     -- ===== ARMES =====
     --[[{ cat = "Armes", name = "Zabuza", key = "Clic gauche / droit",
