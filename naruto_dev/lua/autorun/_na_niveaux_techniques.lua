@@ -525,3 +525,15 @@ NA_NIV_TECH.kiminari_frappe = {
     [4] = { degats = 21, rayon = 280 },
     [5] = { degats = 24, duree = 2.7, chakra = 20, recharge = 15 },
 }
+
+-- Prison noire (sv_kiminari_prison.lua) : étourdit qui entre OU sort de la zone
+NA_NIV_TECH.kiminari_prison = {
+    [1] = {
+        degats = 12, chakra = 35, recharge = 24, duree = 8, rayon = 250, hauteur = 250,
+        duree_stun = 1.5, immunite = 1, intervalle = 0.1, duree_mudra = 0.5,
+    },
+    [2] = { degats = 14 },
+    [3] = { degats = 16, duree_stun = 1.8, recharge = 22 },
+    [4] = { degats = 18, rayon = 280, duree = 9 },
+    [5] = { degats = 21, duree_stun = 2.2, chakra = 30, recharge = 20 },
+}

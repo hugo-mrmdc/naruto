@@ -133,6 +133,9 @@ local TECHNIQUES = {
     { cat = "Kiminari", name = "Frappe noire", key = "", id = "kiminari_frappe", rang = "C", icone = "ui/icon/kiminari_frappe_noir.png", court = "Frappe", cooldown = 18,
       desc = "Une frappe électrique tombe instantanément là où tu regardes (500 unités max) : tous les ennemis dans la zone (250 unités) sont blessés et étourdis 2 secondes. Coûte 25 de chakra.",
       dmg = "15 + étourdissement 2 s" },
+    { cat = "Kiminari", name = "Prison noire", key = "", id = "kiminari_prison", rang = "B", icone = "ui/icon/kiminari_prison_noir.png", court = "Prison", cooldown = 24,
+      desc = "Une tornade électrique se pose autour de toi pendant 8 secondes (la zone reste où tu l'as lancée) : tout ennemi qui entre dans la zone (250 unités) OU qui en sort est blessé et étourdi 1,5 seconde. Coûte 35 de chakra.",
+      dmg = "12 + étourdissement 1,5 s à chaque passage du bord" },
 
     -- ===== ARMES =====
     --[[{ cat = "Armes", name = "Zabuza", key = "Clic gauche / droit",
