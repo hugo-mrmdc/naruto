@@ -1,0 +1,9 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/props_forest/rock005_snow"
+	"$surfaceprop" "dirt"
+	"$detail" "overlays/detail004"
+	"$detailscale" "3.2"
+	"$detailblendmode" "0"
+	"$detailblendfactor" "0.8"
+}

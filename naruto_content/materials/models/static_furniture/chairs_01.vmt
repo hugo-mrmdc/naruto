@@ -1,0 +1,13 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/static_furniture/chairs_01"
+	"$bumpmap" 		  "models\vehicles\uh_60_wreck_normal"
+	"$halflambert"				"0"
+	
+	"$BasemapLuminancePhongMask" 	"1"
+	"$phong" 						"1"
+	"$phongexponent"				"40"
+	"$phongboost" 					"4"	
+	"$phongfresnelranges"			"[.75 .25 .5]"
+	"$phongtint"					"[1 .8 .5]"
+}

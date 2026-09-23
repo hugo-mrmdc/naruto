@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+"$basetexture"   "models/props_oceanic/oceanic_container_001"
+	"$surfaceprop"   "metal"
+	"$model" 1 
+	"$envmapmask" "models/props_oceanic/oceanic_container_001_specular"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ 0.5 0.5 0.5]"
+	"$selfillum" 1
+	"$nocull" 1
+	}

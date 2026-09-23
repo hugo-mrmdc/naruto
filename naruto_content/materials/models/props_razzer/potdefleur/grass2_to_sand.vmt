@@ -1,0 +1,12 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "nature/blendgroundtograss001_tooltexture"
+	"%tooltexture" "nature/rockground007"
+
+	"$bumpmap" "nature/dirtground001_height-ssbump"
+	"%detailtype" "coastline_grass01"
+	"%keywords" "tf"
+	"$surfaceprop" "dirt"
+
+
+}

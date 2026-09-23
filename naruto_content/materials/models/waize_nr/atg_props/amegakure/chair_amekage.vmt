@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/waize_nr/atg_props/amegakure/Chair_Amekage"
+	"$alphatest" 1
+	"$nocull" 1
+	"$lightwarptexture" "models/waize_nr/lightwarpshader"
+}

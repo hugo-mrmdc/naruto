@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "demonslayerkido6/MI_cmn_build_GenWindowSet_01"
+	"$nocull" 1
+}

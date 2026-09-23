@@ -1,0 +1,11 @@
+"vertexlitGeneric"
+{
+	"$baseTexture" "models\props_office\samurai_shinguarda"
+	"$surfaceprop" "carpet"
+	"$bumpmap" "models\props_office\samurai_shinguarda_normal" 
+	"$phong" "1"
+	"$phongexponent" "20"
+	"$phongboost" "2"	
+	"$phongfresnelranges"	"[1 2 6]"
+	"$phongexponenttexture" "models\props_office\samurai_general_exp"
+}

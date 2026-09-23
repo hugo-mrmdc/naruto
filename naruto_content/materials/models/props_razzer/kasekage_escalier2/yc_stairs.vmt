@@ -1,0 +1,7 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "yanderecollege/yc_stairs"
+	"$bumpmap" "yanderecollege/yc_stairs_normal"
+	"$surfaceprop" "wood_solid"
+	"%keywords" "yandere"
+}

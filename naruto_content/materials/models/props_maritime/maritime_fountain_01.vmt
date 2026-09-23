@@ -1,0 +1,5 @@
+"vertexlitgeneric"
+{
+"$basetexture" "models/props_maritime/maritime_fountain_01"
+"$surfaceprop" "concrete"
+}

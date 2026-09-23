@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/scp/map/mechanical_lever"
+	"$surfaceprop" "Metal"
+	$selfillum	"1"
+	$selfillummask "models/scp/map/minlight"
+}

@@ -1,0 +1,12 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "xq/poker/lightwood"
+	"$bumpmap" "wood/woodfloor005a_normal"
+	"$normalmapalphaenvmapmask" 1
+	"$envmap" "env_cubemap"
+	"$surfaceprop" "wood"
+	"$envmapsaturation" 1
+	"$envmapcontrast" 1
+	"$envmaptint" "[ .25 .25 .30 ]"
+	"%keywords" "poker"
+}

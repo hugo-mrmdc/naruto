@@ -1,0 +1,7 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "unioncity/lights/festivelights"
+	"$selfillum" 1
+	$selfillumtint "[3 2 1]"
+	"$surfaceprop" "glass"
+}

@@ -1,0 +1,14 @@
+"vertexlitgeneric"
+{
+	"$baseTexture" "models\PG_props\pg_japan/pg_shoji_2"
+	"$bumpmap" "models\PG_props\pg_japan/pg_shoji_2_bump"
+        "$surfaceprop" "wood"
+	"$normalmapalphaenvmapmask" "1"
+	"$model" "1"
+
+	"$phong" "1"
+	"$phongexponent" "15"
+	"$phongboost"	"2"
+	"$phongfresnelranges"	"[0.05 0.5 1]"
+
+}

@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/forci_custom/perso/SceneTexture_building_BFGJD2_QM_03"
+	"$nocull" 1
+}

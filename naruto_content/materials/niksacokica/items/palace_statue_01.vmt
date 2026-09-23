@@ -1,0 +1,21 @@
+"VertexLitGeneric"
+{
+    "$basetexture" "niksacokica/items/palace_statue_01_d"
+    "$bumpmap" "niksacokica/items/palace_statue_01_n"
+
+    "$phongexponenttexture" "niksacokica/items/palace_statue_01_s"
+
+    "$color2" "[0.6 0.6 0.6]"
+    "$blendTintByBaseAlpha"    "1"
+
+    "$phong" "1"
+    "$phongboost" "0"
+
+    "$phongfresnelranges" "[0.05 0.115 0.945]"
+
+    
+    "$normalmapalphaenvmapmask" "1"
+    "$envmapfresnel" "1"
+
+    "$envmaptint" "[.5 .5 .5]"
+}

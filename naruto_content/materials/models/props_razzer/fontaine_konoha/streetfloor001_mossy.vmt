@@ -1,0 +1,7 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "soho/streetfloor001_mossy"
+	"$bumpmap"	"soho/streetfloor001_normal"
+	"%keywords" "tf"
+
+}

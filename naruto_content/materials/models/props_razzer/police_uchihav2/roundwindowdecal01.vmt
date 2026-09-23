@@ -1,0 +1,7 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "overlays/roundwindowdecal01"
+	"$translucent" "1"
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+}

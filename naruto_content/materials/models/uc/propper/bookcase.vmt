@@ -1,0 +1,5 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "unioncity/misc/bookcase"
+	$surfaceprop wood
+}

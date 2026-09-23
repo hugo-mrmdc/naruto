@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/uc2/props_unioncity/medical_ecgmachine"
+	$selfillum 1
+	$selfillummask "models/uc2/props_unioncity/medical_ecgmachine_lum"
+	$selfillumtint "[2.5 2.5 2.4]"
+}

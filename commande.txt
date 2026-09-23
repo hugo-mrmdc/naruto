@@ -1,3 +1,7 @@
 fakeplayers_spawn 
 na_point
-python extract_gma.py fichier.gma
+python extract_gma.py gmpublisher.gma
+
+
+give gmod_tool; use gmod_tool; gmod_toolmode permaprops
+give gmod_tool; use gmod_tool; gmod_toolmode precision

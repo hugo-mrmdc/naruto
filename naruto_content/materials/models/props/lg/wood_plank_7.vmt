@@ -1,0 +1,7 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "de_aztec/wood_plank_7"
+	"$surfaceprop" "wood"
+	"%keywords" "cstrike" 
+//	"$bumpmap" "de_aztec/wood_plank_7_normal"
+}

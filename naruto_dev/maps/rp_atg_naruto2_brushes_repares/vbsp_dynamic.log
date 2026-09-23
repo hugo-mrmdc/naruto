@@ -1,0 +1,317 @@
+Adding filesystem addon 'c:\program files (x86)\steam\steamapps\common\garrysmod\garrysmod\addons\.git'
+Adding filesystem addon 'c:\program files (x86)\steam\steamapps\common\garrysmod\garrysmod\addons\mapmaterial'
+Adding filesystem addon 'c:\program files (x86)\steam\steamapps\common\garrysmod\garrysmod\addons\mapmodels'
+Adding filesystem addon 'c:\program files (x86)\steam\steamapps\common\garrysmod\garrysmod\addons\naruto_content'
+Adding filesystem addon 'c:\program files (x86)\steam\steamapps\common\garrysmod\garrysmod\addons\naruto_dev'
+8 threads
+materialPath: C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\materials
+Loading C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\addons\naruto_dev\maps\rp_atg_naruto2_brushes_repares\rp_atg_naruto2_d_dynamic.vmf
+material "naruto_nass/nass_sand_to_grass_test002" not found.
+material "naruto_nass/blendrocktograss001_nass" not found.
+material "cp_sunshine/nature/blendrocktograss001_ame" not found.
+material "nature/rockwall005" not found.
+material "geams/naruto_geams/waterfall_konoha_geams" not found.
+material "cp_sunshine/nature/blendrocktograss001" not found.
+material "nature/junglecavewall001_blend" not found.
+material "harvest/razzer_grass3_to_sand" not found.
+material "naruto/casekage_2" not found.
+material "swamp/nature/blenddirtswampgrass001" not found.
+material "winter/rockwall014" not found.
+material "cp_antiquity/ruins/blendcourtyardtoground009" not found.
+"cp_antiquity/ruins/blendground009toground010" - "materials/cp_antiquity/ruins/blendground009toground010_tool.vtf": cached version doesn't exist
+material "construction/wood/constructwood001" not found.
+material "cp_sunshine/nature/blendrocktograss001_iwa" not found.
+material "narutorazzer/cerisier/herberose" not found.
+material "swamp/nature/rockwall006" not found.
+material "coalmines/rockwall012" not found.
+material "narutorazzer/trim7" not found.
+material "narutorazzer/wall23" not found.
+material "yanderecollege/yc_carpet2" not found.
+material "narutorazzer/ame/roof2" not found.
+material "/casekage_8" not found.
+material "narutorazzer/wood13" not found.
+material "onsen/brown_wood01" not found.
+material "narutorazzer/wall18" not found.
+material "narutorazzer/curtain5" not found.
+material "japan/wood_red_beam01" not found.
+material "tile/roof_tile_001" not found.
+material "concrete/concretewall012z" not found.
+material "narutorazzer/nara" not found.
+material "narutorazzer/wall17" not found.
+material "onsen/bamboo_wall01" not found.
+material "narutorazzer/wall14" not found.
+material "carpet/grey02" not found.
+material "narutorazzer/ame/roof" not found.
+material "woods/nature/forest_rock_01" not found.
+Can't find surfaceprop naruto for material NARUTO/ACADEMY_6, using default
+material "wood/western_woodwall002" not found.
+material "cp_manor/wood_baseboard01" not found.
+material "narutorazzer/wall37a" not found.
+material "/naruto_floor" not found.
+material "/naruto_roof_2282" not found.
+material "narutorazzer/trim11" not found.
+material "realworldtextures/newer/1/roof_1_09" not found.
+material "concrete/floor_carpet002" not found.
+material "cp_antiquity/ruins/ruins_wall001-ssbump" not found.
+material "narutorazzer/wall19" not found.
+material "wood/wall020" not found.
+material "narutorazzer/trim5" not found.
+material "/cartenaruto" not found.
+material "narutorazzer/ame/door1" not found.
+material "concrete/computerwall006b" not found.
+material "medieval/wood_shingles03" not found.
+material "/naruto_roof3" not found.
+material "tools/toolstrigger_soundscape" not found.
+material "narutorazzer/ame/salamandre" not found.
+material "cp_antiquity/ruins/courtyard_floor" not found.
+material "/casekage" not found.
+material "wall/woodhouse01_ivy" not found.
+material "narutorazzer/cliff6" not found.
+material "narutorazzer/mur_pierre_3" not found.
+material "/academy_door_1" not found.
+material "/academy_3" not found.
+material "narutorazzer/wall27" not found.
+material "greek/greek_floor02" not found.
+material "naruto_nass/floor_obito_nass" not found.
+Can't find surfaceprop naruto for material NARUTO/CASEKAGE_10, using default
+material "/casekage_9" not found.
+material "japanese/roof_ceramic_grey" not found.
+material "medieval/cobblestone001" not found.
+material "medieval/stonewall001a" not found.
+material "narutorazzer/brick4" not found.
+material "swamp/wood/swampwall015" not found.
+material "narutorazzer/ame/chinoike" not found.
+material "razzer_cour/bibliotheque" not found.
+material "narutorazzer/mur_fenetre_1" not found.
+material "narutorazzer/logo uchiha" not found.
+material "razzer_cochlea/mur3" not found.
+material "wood/ceiling03a" not found.
+material "wood/wood_floor002_bump" not found.
+material "bleachrazzer/roof2" not found.
+material "narutorazzer/wall22" not found.
+material "narutorazzer/wall20" not found.
+material "narutorazzer/wall_exgr1" not found.
+material "/casekage_6" not found.
+material "narutorazzer/sign/konoha/interdit_au_public" not found.
+material "narutorazzer/ame/pillar" not found.
+material "cp_antiquity/ruins/ruins_wall002-ssbump" not found.
+material "japanese/woods_plank_005" not found.
+material "narutorazzer/mur_fenetre_2" not found.
+material "floor/concdebris_sg" not found.
+material "narutorazzer/fuma" not found.
+material "vtmb/carpet/libcarpeta" not found.
+material "/naruto_roof" not found.
+material "egypt/egypt_spytech_tile001" not found.
+material "narutorazzer/tile1" not found.
+material "fin/hki/glassdoor" not found.
+material "medieval/pasterwall002b" not found.
+material "sgtsicktextures/windowframe1" not found.
+material "narutorazzer/mur_pierre_9" not found.
+material "/academy_7" not found.
+material "cp_antiquity/ruins/ruins_wall_skinny01b" not found.
+material "metal/wall019d" not found.
+material "slyzz/naruto/section/kakudai" not found.
+material "/blood_water" not found.
+material "narutorazzer/ame/ame12" not found.
+material "narutorazzer/trim10" not found.
+material "narutorazzer/ground_tile" not found.
+material "narutorazzer/sign/konoha/militaire" not found.
+material "brick/shalewall_og002a" not found.
+material "narutorazzer/sign/konoha/caserne" not found.
+material "narutorazzer/sign/ame/bureau_kage" not found.
+material "neonoid/kadetka/kamen_roof2" not found.
+material "maritime/roof/roof_old001" not found.
+material "naruto/academy_4" not found.
+material "/academy_2" not found.
+material "soho/streetfloor004" not found.
+material "slyzz/naruto/hyugalogo" not found.
+material "narutorazzer/wall12" not found.
+material "narutorazzer/tile2" not found.
+material "japanese/tree_people_painting" not found.
+material "hl2_leak/metal/metaltruss027a" not found.
+material "narutorazzer/sign/ame/entrainement" not found.
+material "narutorazzer/sign/konoha/entrainement" not found.
+material "unioncity2/miscellaneous/button" not found.
+material "onsen/tatami_mat01" not found.
+material "razzer_cochlea/sol8" not found.
+material "slyzz/naruto/section/igaku" not found.
+material "soho/gate001a" not found.
+material "realworldtextures/newer/1/roof_1_14" not found.
+material "medieval/cobblestone002" not found.
+Can't find surfaceprop naruto for material NARUTO/ACADEMY_5, using default
+material "agency/ceiling/ceilingplaster01" not found.
+material "slyzz/naruto/section/keisatsu" not found.
+material "slyzz/naruto/pierre_uzu" not found.
+material "geams/roof02_demon_geams" not found.
+material "slyzz/naruto/naralogo" not found.
+material "/naruto_wood_fence" not found.
+material "narutorazzer/ame/ame10" not found.
+material "narutorazzer/sign/ame/caserne" not found.
+material "slyzz/naruto/section/tetsugaku" not found.
+material "pl_barnblitz/woodwall_grayworn001b" not found.
+material "japan/tatami_01" not found.
+material "wood/grain_elevator_facade_14c" not found.
+material "narutorazzer/wall13" not found.
+material "naruto/casekage" not found.
+material "narutorazzer/senju" not found.
+material "unioncity2/miscellaneous/curtains_red" not found.
+material "narutorazzer/sign/konoha/logistique" not found.
+material "door/temple_doorea_sg" not found.
+material "door/temple_doore_sg" not found.
+material "wood/wood_wall006b" not found.
+material "japanese/{lattice_dark" not found.
+material "slyzz/naruto/uchihalogo" not found.
+material "slyzz/naruto/konoha" not found.
+material "narutorazzer/ex_arenawall4" not found.
+material "narutorazzer/sign/ame/conseil" not found.
+material "narutorazzer/sign/konoha/taverne" not found.
+material "narutorazzer/ame/ame11" not found.
+material "narutorazzer/ame/ame14" not found.
+material "narutorazzer/wall7b" not found.
+material "yanderecollege/yc_stairs" not found.
+material "narutorazzer/sign/konoha/reunion" not found.
+material "narutorazzer/ame/kami" not found.
+material "water/water_2fort" not found.
+material "narutorazzer/mur_pierre_1" not found.
+material "narutorazzer/sign/kusa/taverne" not found.
+material "narutorazzer/sign/kusa/interdit_au_public" not found.
+material "narutorazzer/sign/konoha/conseil" not found.
+material "japanese/in_door" not found.
+material "narutorazzer/logo hyuga" not found.
+material "colimasonnass/navajored" not found.
+material "glass/glasswindow006a" not found.
+material "narutorazzer/ame/trim1" not found.
+material "wood/woodplanks_011b" not found.
+material "narutorazzer/kaguya" not found.
+material "/casekage_4" not found.
+material "shiki/uchihamur" not found.
+material "metal/wall027" not found.
+material "medieval/pasterwall004d" not found.
+material "env/brush/ceilings/cream_ceiling" not found.
+material "slyzz/naruto/lee" not found.
+material "realworldtextures/new/woodfloor_a01" not found.
+material "narutorazzer/sign/konoha/police" not found.
+material "narutorazzer/ame/trim2" not found.
+material "japanese/islands_mural" not found.
+material "slyzz/naruto/white" not found.
+material "slyzz/naruto/section/kanri" not found.
+material "narutorazzer/sign/konoha/bureau_kage" not found.
+material "custom/officeflagwood_01" not found.
+material "narutorazzer/sign/ame/reunion" not found.
+material "narutorazzer/sign/konoha/tribunal" not found.
+material "slyzz/naruto/uzumaki" not found.
+material "slyzz/naruto/senjulogo" not found.
+material "rp_ninja_fsc_v_1_1/rp_ninja_fsc/estates/p_stone_1" not found.
+Patching WVT material: maps/rp_atg_naruto2_d_dynamic/cp_antiquity/ruins/blendground009toground010_wvt_patch
+fixing up env_cubemap materials on brush sides...
+ProcessBlock_Thread: 0...1...2...3...4...5...6...7...8...9...10 (0)
+**** leaked ****
+Entity prop_dynamic (1675.49 -3679.24 -11800.00) leaked!
+
+FindPortalSide: Couldn't find a good match for which brush to assign to a portal near (15872.0 16384.0 984.0)
+Leaf 0 contents: 
+Leaf 1 contents: CONTENTS_SOLID 
+viscontents (node 0 contents ^ node 1 contents): CONTENTS_SOLID 
+This means that none of the brushes in leaf 0 or 1 that touches the portal has CONTENTS_SOLID 
+Check for a huge brush enclosing the coordinates above that has contents CONTENTS_SOLID 
+Candidate brush IDs: 
+
+
+FindPortalSide: Couldn't find a good match for which brush to assign to a portal near (16384.0 15872.0 984.0)
+Leaf 0 contents: 
+Leaf 1 contents: CONTENTS_SOLID 
+viscontents (node 0 contents ^ node 1 contents): CONTENTS_SOLID 
+This means that none of the brushes in leaf 0 or 1 that touches the portal has CONTENTS_SOLID 
+Check for a huge brush enclosing the coordinates above that has contents CONTENTS_SOLID 
+Candidate brush IDs: 
+
+
+FindPortalSide: Couldn't find a good match for which brush to assign to a portal near (14848.0 16384.0 984.0)
+Leaf 0 contents: 
+Leaf 1 contents: CONTENTS_SOLID 
+viscontents (node 0 contents ^ node 1 contents): CONTENTS_SOLID 
+This means that none of the brushes in leaf 0 or 1 that touches the portal has CONTENTS_SOLID 
+Check for a huge brush enclosing the coordinates above that has contents CONTENTS_SOLID 
+Candidate brush IDs: 
+
+
+FindPortalSide: Couldn't find a good match for which brush to assign to a portal near (13824.0 16384.0 984.0)
+Leaf 0 contents: 
+Leaf 1 contents: CONTENTS_SOLID 
+viscontents (node 0 contents ^ node 1 contents): CONTENTS_SOLID 
+This means that none of the brushes in leaf 0 or 1 that touches the portal has CONTENTS_SOLID 
+Check for a huge brush enclosing the coordinates above that has contents CONTENTS_SOLID 
+Candidate brush IDs: 
+
+
+FindPortalSide: Couldn't find a good match for which brush to assign to a portal near (16384.0 14848.0 984.0)
+Leaf 0 contents: 
+Leaf 1 contents: CONTENTS_SOLID 
+viscontents (node 0 contents ^ node 1 contents): CONTENTS_SOLID 
+This means that none of the brushes in leaf 0 or 1 that touches the portal has CONTENTS_SOLID 
+Check for a huge brush enclosing the coordinates above that has contents CONTENTS_SOLID 
+Candidate brush IDs: 
+
+
+FindPortalSide: Couldn't find a good match for which brush to assign to a portal near (16384.0 13824.0 984.0)
+Leaf 0 contents: 
+Leaf 1 contents: CONTENTS_SOLID 
+viscontents (node 0 contents ^ node 1 contents): CONTENTS_SOLID 
+This means that none of the brushes in leaf 0 or 1 that touches the portal has CONTENTS_SOLID 
+Check for a huge brush enclosing the coordinates above that has contents CONTENTS_SOLID 
+Candidate brush IDs: 
+
+
+FindPortalSide: Couldn't find a good match for which brush to assign to a portal near (12800.0 16384.0 984.0)
+Leaf 0 contents: 
+Leaf 1 contents: CONTENTS_SOLID 
+viscontents (node 0 contents ^ node 1 contents): CONTENTS_SOLID 
+This means that none of the brushes in leaf 0 or 1 that touches the portal has CONTENTS_SOLID 
+Check for a huge brush enclosing the coordinates above that has contents CONTENTS_SOLID 
+Candidate brush IDs: 
+
+
+FindPortalSide: Couldn't find a good match for which brush to assign to a portal near (11776.0 16384.0 984.0)
+Leaf 0 contents: 
+Leaf 1 contents: CONTENTS_SOLID 
+viscontents (node 0 contents ^ node 1 contents): CONTENTS_SOLID 
+This means that none of the brushes in leaf 0 or 1 that touches the portal has CONTENTS_SOLID 
+Check for a huge brush enclosing the coordinates above that has contents CONTENTS_SOLID 
+Candidate brush IDs: 
+
+*** Suppressing further FindPortalSide errors.... ***
+Processing areas...done (0)
+Building Faces...done (0)
+Chop Details...done (1)
+Find Visible Detail Sides...
+Merged 3314 detail faces...done (2)
+Merging details...done (0)
+FixTjuncs...
+PruneNodes...
+WriteBSP...
+done (0)
+material "skybox/sky_hydro_01rt" not found.
+Can't load skybox file skybox/sky_hydro_01 to build the default cubemap!
+Can't load skybox file skybox/sky_hydro_01 to build the default cubemap!
+Finding displacement neighbors...
+Found a displacement edge abutting multiple other edges.
+Finding lightmap sample positions...
+Displacement Alpha : 0...1...2...3...4...5...6...7...8...9...10
+material "decals/naruto/logouchiha" not found.
+material "yanderecollege/yc_carpet_circle" not found.
+material "decals/deco/picture9" not found.
+material "decals/deco/picture7" not found.
+material "animeurfim/hospitalgraff3" not found.
+material "materials/diolator/carpet2" not found.
+material "slyzz/naruto/uzulogo" not found.
+Building Physics collision data...
+done (1) (7391 bytes)
+Placing detail props : 0...1...2...3...4...5...6...7...8...9...10
+Water found with no water_lod_control entity, creating a default one.
+Compacting texture/material tables...
+Reduced 7849 texinfos to 824
+Reduced 353 texdatas to 67 (9848 bytes to 2000)
+Writing C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\addons\naruto_dev\maps\rp_atg_naruto2_brushes_repares\rp_atg_naruto2_d_dynamic.bsp
+Wrote ZIP buffer, estimated size 13076, actual size 9914
+22 seconds elapsed
+Valve Software - vbsp.exe (Sep 15 2026) - Garry's Mod Edition (64-bit)

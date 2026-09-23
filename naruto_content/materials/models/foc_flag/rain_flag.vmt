@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/foc_flag/rain_flag"
+	"$bumpmap" "models/foc_flag/rain_flag_n"
+
+	"$nocull" 1 
+}

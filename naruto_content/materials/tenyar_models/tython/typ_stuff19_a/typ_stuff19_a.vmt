@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "tenyar_models/tython/typ_stuff19_a/typ_stuff19_a"
+	"$surfaceprop" "Grass"
+	"$alphatest" 1
+	"$nocull" 1
+}

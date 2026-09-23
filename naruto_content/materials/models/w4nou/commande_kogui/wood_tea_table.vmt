@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/w4nou/commande_kogui/wood_tea_table"
+	"$bumpmap" "models/w4nou/commande_kogui/wood_tea_table_nml"
+}

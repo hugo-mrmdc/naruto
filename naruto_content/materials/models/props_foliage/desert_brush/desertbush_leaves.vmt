@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+
+	$basetexture "models/props_foliage/desert_brush/desert_bush_leaves"
+
+
+
+	 $nocull "1"
+}

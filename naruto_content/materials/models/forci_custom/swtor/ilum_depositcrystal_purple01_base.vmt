@@ -1,0 +1,5 @@
+"UnlitGeneric"
+{
+	"$basetexture" "models/forci_custom/swtor/ilum_depositcrystal_purple01_base"
+	"$bumpmap"	"models/forci_custom/swtor/ilum_depositcrystal_purple01_normal"
+}

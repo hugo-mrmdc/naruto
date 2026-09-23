@@ -1,0 +1,13 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "maritime/wood/coast_wood_001c"
+	"$surfaceprop" "wood"
+	"%keywords" "tf, bulletcrops"
+	"$detail" "overlays/detail006"
+	"$detailscale" "1"
+	"$detailblendmode" "0"
+	"$detailblendfactor" "1"
+}
+
+// bulletcrops project
+// http://www.minerality.fr/bulletcropsproject/

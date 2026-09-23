@@ -1,0 +1,9 @@
+"VertexlitGeneric"
+{
+	"$basetexture" 		"models/props_clutter/partition_001"
+
+	"$detail" 		"detail/detail_noise_002"
+	"$detailscale" 		"12"
+	"$detailblendfactor" 	"0.9"
+	"$detailblendmode" "0"
+}

@@ -1,0 +1,10 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "myproject\props/Whiteboard_office_2"
+
+	$phong  		"1"
+	$phongexponent  	"35"
+	$phongboost  "0.25"
+	$phongexponenttexture "myproject\props/Whiteboard_blank_phong"
+	$phongfresnelranges  "[1 3 6]"
+}
