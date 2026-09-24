@@ -1,0 +1,4 @@
+"UnlitGeneric"
+{
+	"$basetexture" "cruel_effects_cartoon/Common/T_EFF_Ring_07"
+	"$vertexcolor" "1"	"$vertexalpha" "1"	"$translucent" "1"		"$additive" 1	}

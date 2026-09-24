@@ -1,0 +1,9 @@
+"SpriteCard"
+{
+	$basetexture "cruel/custom/skull_anim"
+	$translucent "1"
+	$blendframes "0"
+	$vertexcolor "1"
+	$vertexalpha "1"
+	$additive "1"
+}

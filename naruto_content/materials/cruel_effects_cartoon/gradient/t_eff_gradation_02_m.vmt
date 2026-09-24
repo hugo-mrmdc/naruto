@@ -1,0 +1,4 @@
+"UnlitGeneric"
+{
+	"$basetexture" "cruel_effects_cartoon/Gradient/T_EFF_Gradation_02_M"
+	"$vertexcolor" "1"	"$vertexalpha" "1"	"$translucent" "1"		"$additive" 1	}

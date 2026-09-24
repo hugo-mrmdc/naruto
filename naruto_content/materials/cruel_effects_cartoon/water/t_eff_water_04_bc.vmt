@@ -1,0 +1,4 @@
+"UnlitGeneric"
+{
+	"$basetexture" "cruel_effects_cartoon/Water/T_EFF_Water_04_BC"
+	"$vertexcolor" "1"	"$vertexalpha" "1"	"$translucent" "1"		"$additive" 1	}

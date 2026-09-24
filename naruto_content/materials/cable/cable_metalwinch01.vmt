@@ -1,0 +1,9 @@
+"Cable"
+{
+	"$basetexture"		"models/props_mining/winch_cable01"
+	"$bumpmap"			"cable/cablenormalmap"
+	"$MinLight"			0.3
+	"$MaxLight"			0.8
+
+	"$surfaceprop"	"metal"
+}

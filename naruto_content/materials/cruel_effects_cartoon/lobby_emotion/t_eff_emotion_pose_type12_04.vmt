@@ -1,0 +1,4 @@
+"UnlitGeneric"
+{
+	"$basetexture" "cruel_effects_cartoon/Lobby_Emotion/T_EFF_Emotion_Pose_Type12_04"
+	"$vertexcolor" "1"	"$vertexalpha" "1"	"$translucent" "1"		"$additive" 1	}

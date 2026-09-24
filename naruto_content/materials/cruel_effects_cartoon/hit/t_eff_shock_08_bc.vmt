@@ -1,0 +1,4 @@
+"UnlitGeneric"
+{
+	"$basetexture" "cruel_effects_cartoon/Hit/T_EFF_Shock_08_BC"
+	"$vertexcolor" "1"	"$vertexalpha" "1"	"$translucent" "1"		"$additive" 1	}

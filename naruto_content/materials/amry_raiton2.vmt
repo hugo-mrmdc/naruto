@@ -1,0 +1,13 @@
+"SpriteCard"
+{
+	$basetexture 	"amry_raiton2"
+	$splinetype 	1
+	$vertexcolor 1
+    $vertexalpha 1
+	$depthblend 	1
+    $translucent 1
+	$depthblendscale 	1
+	$additive 		1
+	$overbrightfactor 	16
+//76561199235045344
+}

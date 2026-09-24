@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+    "$basetexture" "cruel\ytr\10365548630"
+    "$translucent" 1
+    "$vertexalpha" 1
+    "$vertexcolor" 1
+    "$nocull" 1
+}

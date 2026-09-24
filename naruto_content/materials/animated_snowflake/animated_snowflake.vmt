@@ -1,0 +1,9 @@
+"Spritecard"
+{
+	//"srgb?$overbrightfactor" "1.5"
+	"$baseTexture" "Effects/workshop\animated_snowflake/animated_snowflake"
+	$translucent 1
+	"$addself" "0"
+	$DEPTHBLEND 0
+}
+

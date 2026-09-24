@@ -1,0 +1,5 @@
+"UnlitGeneric"
+{
+	"$basetexture" "cruel_effects_cartoon/Lightning/T_EFF_Lightning_08_BC"
+	"$translucent" 1
+	"$vertexcolor" "1"	"$vertexalpha" "1"	"$translucent" "1"		"$additive" 1	}

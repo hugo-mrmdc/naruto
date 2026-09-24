@@ -1,0 +1,8 @@
+DecalModulate
+{
+    $envmap              "engine\eye-reflection-cubemap-"
+    $envmaptint          "[.043 0.01 0.01]"
+    $decalscale          "0.3"
+    $decal               "1"
+    $envmapmask          "contagion\decals\hit\blood_splatter\blood_splatter_envmask"
+}

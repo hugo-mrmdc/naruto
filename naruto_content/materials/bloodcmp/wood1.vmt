@@ -1,0 +1,11 @@
+LightMappedGeneric
+{
+	$BaseTexture BloodCmp/wood1
+	$SurfaceProp "wood"
+
+	$Phong 1
+	$BaseMapLuminancePhongMask 1
+	$PhongBoost 10
+	$PhongExponent 10
+	$PhongFresnelRanges "[0 0.5 1]"	
+}
