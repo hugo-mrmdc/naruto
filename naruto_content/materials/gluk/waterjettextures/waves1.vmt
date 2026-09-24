@@ -1,0 +1,69 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "gluk/waterjettextures/waves1"
+                "$lightwarptexture" "gluk/waterjettextures/lightwarpshader"
+	"$nocull" 1
+	"$translucent" 1
+                "$additive" 0
+	"$nodecal" 1
+
+	"$detail" "gluk/waterjettextures/waves1"	
+	"$detailscale" 1
+	"$detailblendfactor" 1
+	"$detailblendmode" 4
+//	"$color2" "[1 1 1]"
+
+	"$selfillum" "0"
+	"$selfillumtint" "[255 255 255]"
+	"$selfillumFresnel" 0
+	"$selfillumFresnelMinMaxExp" "[0 0 0]"
+                "$selfillummask" "gluk/waterjettextures/waves1"
+
+	"$phong" "0"
+	"$phongexponent" 1
+	"$phongboost" 1
+	"$phongfresnelranges"	"[0 0 0]"
+	"$basealphaenvmapmask" 0
+ 
+	"$basemapalphaphongmask" 1
+
+	"$rimlight" 0												
+	"$rimlightexponent" 1
+	"$rimlightboost" "-50"	
+
+"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$detail"
+			"animatedtextureframenumvar" "$detailframe"
+			"animatedtextureframerate" 24
+		}
+		"Sine"
+		{
+			"sinemin" ".2"
+			"sinemax" ".6"
+			"sineperiod" "1"
+			"resultVar" "$selfillumtint[1]"
+		}
+		"Sine"
+		{
+			"sinemin" ".5"
+			"sinemax" ".2"
+			"sineperiod" "1.1"
+			"resultVar" "$selfillumtint[0]"
+		}
+		"TextureScroll"
+		{
+			"texturescrollvar" "$detailtexturetransform"
+			"texturescrollrate" 0.6
+			"texturescrollangle" -90
+		}
+	
+
+
+	}
+
+}
+
+

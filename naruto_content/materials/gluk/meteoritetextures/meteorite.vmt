@@ -1,0 +1,10 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "gluk/meteoritetextures/meteorite"
+                "$lightwarptexture" "gluk/meteoritetextures/lightwarpshader"
+	"$nocull" 1
+	"$translucent" 0
+                "$additive" 0
+	"$nodecal" 1
+                "$alphatest" 0
+}

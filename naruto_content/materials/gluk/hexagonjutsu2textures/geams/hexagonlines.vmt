@@ -1,0 +1,68 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "gluk/hexagonjutsu2textures/hexagonlines" 
+                "$lightwarptexture" "gluk/hexagonjutsu2textures/lightwarpshader"
+	"$nocull" 1
+	"$translucent" 0
+                "$additive" 1
+	"$nodecal" 1
+
+	"$detail" "gluk/hexagonjutsu2textures/hexagonlines"	
+	"$detailscale" 5
+	"$detailblendfactor" 1
+	"$detailblendmode" 0
+//	"$color2" "[1 1 1]"
+
+	"$selfillum" "0"
+	"$selfillumtint" "[255 255 255]"
+	"$selfillumFresnel" 0
+	"$selfillumFresnelMinMaxExp" "[0 0 0]"
+
+	"$phong" "0"
+	"$phongexponent" 0
+	"$phongboost" 1
+	"$phongfresnelranges"	"[0 0 0]"
+	"$basealphaenvmapmask" 0
+ 
+	"$basemapalphaphongmask" 0
+
+	"$rimlight" 0												
+	"$rimlightexponent" 1
+	"$rimlightboost" "-100"	
+
+"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$detail"
+			"animatedtextureframenumvar" "$detailframe"
+			"animatedtextureframerate" 24
+		}
+		"Sine"
+		{
+			"sinemin" ".2"
+			"sinemax" ".6"
+			"sineperiod" "1"
+			"resultVar" "$selfillumtint[1]"
+		}
+		"Sine"
+		{
+			"sinemin" ".5"
+			"sinemax" ".2"
+			"sineperiod" "1.1"
+			"resultVar" "$selfillumtint[0]"
+		}
+		"TextureScroll"
+		{
+			"texturescrollvar" "$detailtexturetransform"
+			"texturescrollrate" 0.01
+			"texturescrollangle" 0
+		}
+	
+
+
+	}
+}
+
+
+

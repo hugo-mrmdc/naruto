@@ -1,0 +1,11 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "gluk/squarejutsutextures/square3"
+                "$lightwarptexture" "gluk/squarejutsutextures/lightwarpshader"
+	"$nocull" 1
+	"$translucent" 1
+                "$additive" 1
+	"$nodecal" 1
+}
+
+

@@ -1,0 +1,13 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "gluk/gyukitailsredtextures/gyukitailsred"
+                "$lightwarptexture" "gluk/gyukitailstextures/lightwarpshader"
+	"$nocull" 1
+	"$translucent" 1
+
+	"$phong" 1
+
+	"$nodecal" "1"
+}
+
+

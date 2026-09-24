@@ -1,0 +1,25 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "gluk/waterwavetextures/watereffects1"
+                "$lightwarptexture" "gluk/waterwavetextures/lightwarpshader"
+	"$nocull" 1
+	"$translucent" 1
+                "$additive" 0
+	"$nodecal" 1
+                "$alphatest" 0
+
+"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedtextureframerate" 15
+		}
+	
+
+
+	}
+
+}
+

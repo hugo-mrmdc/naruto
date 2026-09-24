@@ -1,0 +1,13 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "gluk/pyramidjutsutextures/pyramid1"
+                "$lightwarptexture" "gluk/pyramidjutsutextures/lightwarpshader"
+	"$nocull" 1
+	"$translucent" 1
+                "$additive" 1
+	"$phong" 1
+
+	"$nodecal" "1"
+}
+
+

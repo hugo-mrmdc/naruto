@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "gluk/hexagonjutsu2textures/greenstick"
+                "$lightwarptexture" "gluk/hexagonjutsu2textures/lightwarpshader"
+	
+}
+
+

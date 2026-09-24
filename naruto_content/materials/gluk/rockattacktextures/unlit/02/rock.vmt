@@ -1,0 +1,8 @@
+"Unlitgeneric"
+{
+	"$basetexture" "gluk/rockattacktextures/unlit/02/rock"
+                "$lightwarptexture" "gluk/rockattacktextures/lightwarpshader"
+	"$nocull" 1
+}
+
+

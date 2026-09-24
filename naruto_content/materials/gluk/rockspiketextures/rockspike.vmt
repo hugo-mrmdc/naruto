@@ -1,0 +1,10 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "gluk/rockspiketextures/rockspike"
+                "$lightwarptexture" "gluk/rockspiketextures/lightwarpshader"
+	"$nocull" 1
+	"$translucent" 0
+                "$additive" 0
+	"$nodecal" 1
+                "$alphatest" 0
+}
