@@ -1,0 +1,8 @@
+"SpriteCard" {
+    "$basetexture" "effects/hit_impact3"
+    "$blendframes" "0"
+    "$orientation" "0"
+    "$translucent" "1"
+    "$additive" "1"
+    "$vertexalpha" "1"
+}

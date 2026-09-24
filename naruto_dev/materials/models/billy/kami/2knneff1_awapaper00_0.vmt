@@ -1,0 +1,11 @@
+"VertexlitGeneric"
+{
+    "$basetexture" "models/billy/kami/2knneff1_awapaper00_0"
+	"$nocull" "1"
+
+	"$lightwarptexture" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/lightwarptexture2"
+                "$alphatest" "1"
+
+
+ 
+}

@@ -1,0 +1,8 @@
+"SpriteCard" {
+    "$basetexture" "dslayer/particles/bloodsplash"
+    "$blendframes" "0"
+    "$orientation" "0"
+    "$translucent" "1"
+    "$additive" "0"
+    "$vertexalpha" "1"
+}

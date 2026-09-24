@@ -23,6 +23,9 @@ if SERVER then
 
     AddCSLuaFile("autorun/client/kami/cl_kami_shuriken.lua")
     include("autorun/server/kami/sv_kami_shuriken.lua")
+
+    AddCSLuaFile("autorun/client/kami/cl_kami_roue.lua")
+    include("autorun/server/kami/sv_kami_roue.lua")
 end
 
 if CLIENT then
@@ -30,4 +33,5 @@ if CLIENT then
     include("autorun/client/kami/cl_kami_wings.lua")
     include("autorun/client/kami/cl_kami_shield.lua")
     include("autorun/client/kami/cl_kami_shuriken.lua")
+    include("autorun/client/kami/cl_kami_roue.lua")
 end

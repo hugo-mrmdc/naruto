@@ -8,8 +8,8 @@ if not SERVER then return end
 
 util.AddNetworkString("kami_wings_toggle")
 
-local MODELE   = "models/clan/ame/kami/wings.mdl"
-local SEQUENCE = "idle"
+local MODELE   = "models/clan/ame/kami/ailekami.mdl"
+local SEQUENCE = "aileland"   -- séquences du modèle : aileidle, aileatk, aileland, aileprotect_start/loop/end
 
 --========================================================
 -- RÉGLAGES -> c'est ICI qu'on change les valeurs
@@ -31,11 +31,58 @@ local function Niv(ply, stat, base) return NA_Stat(ply, "kami_ailes", stat, base
 
 -- Téléchargement pour les joueurs : chaque fichier du modèle doit être listé,
 -- le .mdl seul ne suffit pas (sans .vvd ni .vtx, le modèle reste une erreur).
-resource.AddFile("models/clan/ame/kami/wings.mdl")
-resource.AddFile("models/clan/ame/kami/wings.vvd")
-resource.AddFile("models/clan/ame/kami/wings.dx90.vtx")
-resource.AddFile("materials/models/narutorp/kami/wings.vmt")
-resource.AddFile("materials/models/narutorp/kami/wings.vtf")
+for _, ext in ipairs({ "mdl", "vvd", "dx90.vtx", "dx80.vtx", "phy" }) do
+    resource.AddFile("models/clan/ame/kami/ailekami." .. ext)
+end
+for _, mat in ipairs({ "2knneff1_01_0", "2knneff1_awapaper00_0", "ntxr005" }) do
+    resource.AddFile("materials/models/billy/kami/" .. mat .. ".vmt")
+    resource.AddFile("materials/models/billy/kami/" .. mat .. ".vtf")
+end
+
+-- Particules de papier sur le corps et les ailes (jouées par les clients : cl_kami_wings.lua)
+game.AddParticles("particles/solve_kami_geams.pcf")
+PrecacheParticleSystem("kami_02_solve_geams_tornado_v2")
+PrecacheParticleSystem("kami_02_solve_geams_weapon")
+resource.AddFile("particles/solve_kami_geams.pcf")
+resource.AddFile("materials/effects/papertrail/paper_geams_solve_03.vmt")
+resource.AddFile("materials/effects/papertrail/paper_geams_solve_03.vtf")
+
+--[[
+    Placement des ailes : le MÊME qu'avec l'ancien modèle (wings.mdl), dont l'os racine
+    était ValveBiped.Bip01_Spine2 : les ailes partent donc du haut du dos.
+    ailekami a son propre squelette (il ne peut pas se fondre au corps) : il est collé
+    à l'os Spine2 du joueur (ici, côté serveur) et le DÉCALAGE est appliqué à l'affichage
+    par chaque client (cl_kami_wings.lua), à partir de ces convars répliquées.
+
+    Réglable EN JEU dans la console, sans redémarrer, valeurs dans le repère de l'os :
+        kami_aile_x / _y / _z            position (x : le long de la colonne vers le haut)
+        kami_aile_pitch / _yaw / _roll   orientation
+        kami_aile_echelle                taille
+
+    Les valeurs écrites dans PLACEMENT (juste en dessous) sont celles qui s'appliquent :
+    elles sont remises à chaque chargement du script (démarrage, changement de map),
+    quoi qu'il y ait eu de sauvegardé avant. Les commandes ne servent qu'à essayer des
+    valeurs en direct ; pour les garder, reporte-les dans PLACEMENT.
+]]
+local OS_DOS = "ValveBiped.Bip01_Spine2"
+
+-- >>> LES VALEURS À MODIFIER SONT ICI <<<
+local PLACEMENT = {
+    x      = 15,   -- le long de la colonne, vers le haut
+    y      = 3.3,    -- avant / arrière
+    z      = 0,      -- gauche / droite
+    pitch  = 0,
+    yaw    = 90,
+    roll   = 90,
+    echelle = 1,     -- taille
+}
+
+-- Pas d'ARCHIVE : une valeur essayée en console ne survit pas au redémarrage
+local FLAGS = { FCVAR_REPLICATED }
+for nom, valeur in pairs(PLACEMENT) do
+    local cv = CreateConVar("kami_aile_" .. nom, tostring(valeur), FLAGS, "Ailes de papier : " .. nom)
+    cv:SetFloat(valeur)   -- le code fait foi, même si une ancienne valeur était sauvegardée
+end
 
 local wings = {}      -- joueur -> entité ailes
 local etatAvant = {}  -- joueur -> déplacement d'origine
@@ -95,13 +142,9 @@ local function CreerAiles(ply)
     ent:Spawn()
     ent:Activate()
 
-    -- Fusion au squelette : le modèle n'a qu'un os commun (Bip01_Spine2),
-    -- il se colle donc tout seul dans le dos.
-    -- Pas de EF_PARENT_ANIMATES ici : cet effet force les ailes à suivre le cycle
-    -- d'animation du joueur, ce qui empêchait leur propre "idle" de tourner.
+    -- Collé à l'os du dos (comme l'ancien modèle, dont la racine était Spine2)
     ent:SetParent(ply)
-    ent:AddEffects(EF_BONEMERGE)
-    ent:AddEffects(EF_BONEMERGE_FASTCULL)
+    ent:FollowBone(ply, ply:LookupBone(OS_DOS) or 0)
     ent:SetSolid(SOLID_NONE)
     ent:SetMoveType(MOVETYPE_NONE)
     ent:SetOwner(ply)
@@ -204,7 +247,7 @@ net.Receive("kami_wings_toggle", function(_, ply)
 end)
 
 ----------------------------------------------------------
--- Animation des ailes : l'idle tourne en boucle
+-- Animation des ailes : la séquence (aileland) tourne en boucle
 -- (le pilotage, lui, est dans lua/kami/sh_kami_wings_move.lua)
 ----------------------------------------------------------
 hook.Add("Think", "NA_Wings_Idle", function()

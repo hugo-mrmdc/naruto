@@ -93,6 +93,10 @@ local TECHNIQUES = {
       desc = "Fait apparaître des ailes dans ton dos et te permet de voler. Direction avec ZQSD, Espace pour monter, Ctrl pour descendre, rappuie pour te poser.",
       dmg = "6 chakra par seconde" },
 
+    { cat = "Kami", name = "Roue de papier", key = "", id = "kami_roue", rang = "B", icone = "ui/icon/kami_tornade_papier.png", court = "Roue", cooldown = 10,
+      desc = "Deux roues de papier partent côte à côte devant toi et roulent au sol dans la direction de ton regard, en projetant des feuilles, puis reviennent vers toi. Elles blessent et repoussent ceux qu'elles touchent (à l'aller comme au retour) ; un mur les fait revenir. Coûte 30 de chakra.",
+      dmg = "30 par roue et par cible" },
+
     -- ===== JINTON =====
     { cat = "Jinton", name = "Cube de confinement", key = "", id = "jinton_cube", rang = "C", icone = "ui/icon/jinton_cube_confinement.png", court = "Cube", cooldown = 1,
       desc = "Vise un ennemi à portée : un cube l'enferme, l'immobilise 4 secondes et le ronge à chaque tick. Coûte 30 de chakra.",
@@ -142,6 +146,14 @@ local TECHNIQUES = {
     { cat = "Kiminari", name = "Boulets noirs", key = "", id = "kiminari_boulets", rang = "A", icone = "ui/icon/kiminari_boulet_noir.png", court = "Boulets", cooldown = 22,
       desc = "Tu bondis et flottes sur place : dix boules noires apparaissent dans ton dos, puis partent une par une vers là où tu vises (1500 unités max). Chacune explose à l'impact et blesse les ennemis autour. Coûte 30 de chakra.",
       dmg = "8 par boule (10 boules)" },
+
+    -- ===== JITON =====
+    { cat = "Jiton", name = "Sarcophage de sable", key = "", id = "jiton_sarcophage", rang = "C", icone = "ui/icon/jiton_sarcophage_de_sable.png", court = "Sarcophage", cooldown = 20,
+      desc = "Vise un ennemi à portée (800 unités) : un sarcophage de sable se referme sur lui, le blesse une seule fois et l'étourdit 3 secondes. Coûte 30 de chakra.",
+      dmg = "20 (une fois) + étourdissement 3 s" },
+    { cat = "Jiton", name = "Émergence de sable", key = "", id = "jiton_emergence", rang = "B", icone = "ui/icon/jiton_emergence_de_sable.png", court = "Émergence", cooldown = 18,
+      desc = "Le sable jaillit du sol à l'endroit où tu te trouves pendant 6 secondes : tout ennemi qui reste dans la zone (200 unités) est blessé à chaque tick et ralenti de 40 %. Coûte 30 de chakra.",
+      dmg = "8 par tick (toutes les 0,5 s) + ralenti" },
 
     -- ===== ARMES =====
     --[[{ cat = "Armes", name = "Zabuza", key = "Clic gauche / droit",
@@ -246,7 +258,7 @@ local ONGLETS = {
     { nom = "Stats",         icone = "stat.png" },
     { nom = "Jutsus",        icone = "jutsu.png",       cats = { "Katon", "Suiton" },
       desc = "Cette catégorie répertorie les techniques des natures du chakra" },
-    { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari" },
+    { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton" },
       desc = "Cette catégorie répertorie les techniques héritées par le sang" },
     { nom = "Clan",          icone = "clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike" },
       desc = "Cette catégorie répertorie les techniques secrètes des clans" },

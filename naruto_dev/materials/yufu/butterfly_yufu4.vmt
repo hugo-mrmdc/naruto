@@ -1,0 +1,5 @@
+"SpriteCard"
+{
+    $basetexture "yufu/butterfly_yufu4"
+    "$nocull" 1
+}

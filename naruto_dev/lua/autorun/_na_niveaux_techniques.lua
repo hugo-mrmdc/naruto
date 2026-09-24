@@ -386,6 +386,20 @@ NA_NIV_TECH.kami_bouclier = {
     [5] = { chakra = 20, recharge = 12 },
 }
 
+-- Roue de papier (sv_kami_roue.lua) : deux roues qui roulent au sol
+NA_NIV_TECH.kami_roue = {
+    [1] = {
+        degats = 30, chakra = 30, recharge = 10,
+        vitesse = 1500, duree_vie = 1, echelle = 0.3, ecart = 28, devant = 50,
+        intervalle = 0.6, poussee = 350, soulevement = 200,
+        duree_mudra = 0.0, delai_roues = 0.8,
+    },
+    [2] = { degats = 33 },
+    [3] = { degats = 37, recharge = 9 },
+    [4] = { degats = 41 },
+    [5] = { degats = 45, chakra = 25, recharge = 8 },
+}
+
 --========================================================
 -- JINTON
 --========================================================
@@ -570,4 +584,31 @@ NA_NIV_TECH.kiminari_boulets = {
     [3] = { degats = 10, boules = 12, recharge = 20 },
     [4] = { degats = 11, rayon = 110 },
     [5] = { degats = 13, boules = 3, chakra = 25, recharge = 18 },
+}
+
+--========================================================
+-- JITON
+--========================================================
+-- Sarcophage de sable (sv_jiton_sarcophage.lua) : degats = une seule fois, duree = étourdissement
+NA_NIV_TECH.jiton_sarcophage = {
+    [1] = {
+        degats = 20, chakra = 30, recharge = 20, duree = 3, portee = 800, hitbox = 20, duree_mudra = 0.5,
+    },
+    [2] = { degats = 23 },
+    [3] = { degats = 26, duree = 3.3, recharge = 18 },
+    [4] = { degats = 29, portee = 900 },
+    [5] = { degats = 33, duree = 3.8, chakra = 25, recharge = 16 },
+}
+
+-- Émergence de sable (sv_jiton_emergence.lua) : degats = par tick et par ennemi,
+-- ralenti = vitesse des ennemis dans la zone (0.6 = 60 % de leur vitesse)
+NA_NIV_TECH.jiton_emergence = {
+    [1] = {
+        degats = 8, chakra = 30, recharge = 18, duree = 6, intervalle = 0.5,
+        rayon = 200, hauteur = 150, ralenti = 0.6, duree_mudra = 0.5,
+    },
+    [2] = { degats = 9 },
+    [3] = { degats = 10, duree = 7, recharge = 16 },
+    [4] = { degats = 11, rayon = 230, ralenti = 0.55 },
+    [5] = { degats = 13, duree = 8, chakra = 25, recharge = 14, ralenti = 0.5 },
 }

@@ -384,7 +384,8 @@ end, "Ajoute une épée à l'inventaire F4 : ajouter_epee <nom>")
 
 -- Éléments fusionnés à ne PAS recopier sur les icônes de tenue
 local EXCLURE_ICONE = {
-    ["models/clan/ame/kami/wings.mdl"] = true,   -- ailes de papier
+    ["models/clan/ame/kami/wings.mdl"] = true,   -- ailes de papier (ancien modèle)
+    ["models/clan/ame/kami/ailekami.mdl"] = true,   -- ailes de papier
 }
 
 -- Liste des modèles fusionnés au joueur : { modele, skin, couleur }

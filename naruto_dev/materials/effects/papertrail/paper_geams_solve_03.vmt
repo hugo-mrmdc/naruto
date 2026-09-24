@@ -1,0 +1,6 @@
+"Spritecard"
+{
+	"$basetexture" "effects/papertrail/paper_geams_solve_03"
+	"$additive" 1
+	"$overbrightfactor" "4"
+}
