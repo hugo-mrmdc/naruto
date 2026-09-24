@@ -1,0 +1,19 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "jutsu/models/Gaara's Sand/Gaara's Sand"
+	"$bumpmap" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/normal"
+
+	"$lightwarptexture" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/lightwarptexture"
+
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" -.23
+			"texturescrollangle" 100
+		}
+	}
+
+
+}

@@ -1,0 +1,10 @@
+"Spritecard"
+{
+	"$basetexture"	"misc/smoke4"
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+	$DEPTHBLEND "0"    
+	$nocull 1
+	$startfadesize .11
+	$endfadesize .22
+}

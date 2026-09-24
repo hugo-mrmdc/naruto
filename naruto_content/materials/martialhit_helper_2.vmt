@@ -1,0 +1,7 @@
+"SpriteCard"
+ {
+	"$basetexture" "martialhit_helper_2"
+	"$alphatest" 1
+	"$nocull" "1"
+	"$surfaceprop" "nodecal"
+}

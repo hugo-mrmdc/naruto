@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "naruto modelpack/models/bashosen/Bashosen"
+	"$alphatest" 1
+	"$translucent" 1
+	"$lightwarptexture" "models/backpackjaune/toon" }

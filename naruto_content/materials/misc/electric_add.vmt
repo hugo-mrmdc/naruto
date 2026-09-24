@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+	"$basetexture" "misc/electric"
+	"$blendframes" 0
+	"$depthblend" 1
+	"$additive" 1
+}

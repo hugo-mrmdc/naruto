@@ -1,0 +1,8 @@
+"unlitgeneric"
+{
+	"$basetexture"	"misc/bg_glow_usedontele"
+	"$surfaceprop"	"default"
+	"$additive"	1
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+}

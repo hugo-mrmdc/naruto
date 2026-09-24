@@ -1,0 +1,9 @@
+"Spritecard"
+{
+	"$basetexture"	"misc/flame_test3"
+	"$surfaceprop"	"no_decal"
+	"$translucent"	1
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+	$DEPTHBLEND "0" 
+}

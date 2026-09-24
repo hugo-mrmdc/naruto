@@ -1,0 +1,18 @@
+"UnlitTwoTexture"
+{
+	"$basetexture" "models/solve/billy/demonchakra/2nrvbody00_0"
+	"$texture2" "models/solve/billy/demonchakra/2nrvbody00_0"
+	"$model" "1"
+	"$nocull" "1"
+	"$additive" "0"
+
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" "-0.4"
+			"texturescrollangle" "45"
+		}
+	}
+}

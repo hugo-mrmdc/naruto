@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/narutorp/kimimaro/boneblade"
+    "$lightwarptexture" "models/narutorp/clay/toon"
+}

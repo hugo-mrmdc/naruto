@@ -1,0 +1,11 @@
+"Spritecard"
+{
+	"$basetexture" "misc/swirl3c"	
+	$additive 0
+	$vertexalpha 1
+	$vertexcolor 1
+	$nocull 1
+}
+
+
+

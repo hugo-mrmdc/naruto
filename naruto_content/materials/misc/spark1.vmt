@@ -1,0 +1,11 @@
+"UnlitGeneric"
+{
+	"$basetexture" "misc/spark1"	
+	$additive 0
+	$vertexalpha 1
+	$vertexcolor 1
+	$nocull 1
+}
+
+
+

@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "naruto modelpack/models/scrolls/naruto's scroll/naruto's scroll/Naruto's Scroll"
+	"$alphatest" 1
+	"$nocull" 1
+	"$translucent" 1
+	"$lightwarptexture" "models/backpackjaune/toon" }

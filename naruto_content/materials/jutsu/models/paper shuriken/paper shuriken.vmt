@@ -1,4 +1,10 @@
 "VertexlitGeneric"
 {
 	"$basetexture" "jutsu/models/Paper Shuriken/Paper Shuriken"
+	"$nocull" "1"
+
+	"$lightwarptexture" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/lightwarptexture2"
+
+
+ 
 }

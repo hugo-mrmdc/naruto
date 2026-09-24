@@ -1,0 +1,43 @@
+"VertexlitGeneric"
+{
+    "$basetexture" "nagisa_aburame_3/body"
+    "$bumpmap" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/normal"
+
+    "$lightwarptexture" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/lightwarptexture"
+
+            "$blendtintbybasealpha" "1"  "$blendtintcoloroverbase" "0"
+
+        // ------------------------------------------------------------------------
+    // PLAYER COLOR CUSTOMIZATION
+    // ------------------------------------------------------------------------
+
+    // The following chain of proxies is to modulate phong tint (and rimlight,
+    // by extension) according to your chosen player color, but only within a
+    // certain saturation range: 50%. This might be confusing, I tried my best
+    // to comment it, e-mail maxofs2d@facepunchstudios.com if you have any
+    // questions regarding how player colourability is set up in VMTs. GLHF.
+
+    "$blendtintbybasealpha" "1" // alpha channel of $basetexture: color mask.
+     "$blendtintcoloroverbase" "0" // blend mode. anything =/= 0 is ugly!
+
+    // --- Test values. Comment the PlayerColor proxy to use one of these.
+
+    // "$color2" "{255 0 0}" // Blue (default)
+    // "$color2" "{59 121 160}" // Blue (TF2)
+    // "$color2" "{180 52 41}" // Red (TF2)
+    // "$color2" "{100 72 58}" // Brown
+    // "$color2" "{140 208 112}" // Green
+    // "$color2" "{248 166 202}" // Pink
+    // "$color2" "{160 100 140}" // Purple
+    // "$color2" "{242 168 96}" // Yellow (gold-ish)
+
+    "$PhongBrightnessScalar" "0.5" // see below. "0.5" will get overwritten.
+
+    Proxies
+    {
+        PlayerColor
+        {
+            "resultVar"    "$color2" // pass the player color value to Gmod
+            "default"    "1 1 1"// unused for now.
+        }    }
+}
