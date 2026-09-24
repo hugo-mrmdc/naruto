@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"ryu_introcard"
+	"$surfaceprop"	"no_decal"
+	"$additive"	0
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+}

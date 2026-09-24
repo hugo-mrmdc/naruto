@@ -1,0 +1,8 @@
+"Spritecard"
+{
+	"$basetexture"	"sharp/moonring2"
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+	$DEPTHBLEND "0"    
+	$nocull 1
+}

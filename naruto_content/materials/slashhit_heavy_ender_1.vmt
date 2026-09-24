@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"slashhit_heavy_ender_1"
+	"$surfaceprop"	"no_decal"
+	"$additive"	1
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+}
