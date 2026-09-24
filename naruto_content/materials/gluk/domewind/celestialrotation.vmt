@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "gluk/domewind/celestialrotation"
+                "$lightwarptexture" "gluk/domewind/lightwarpshader"
+	"$nocull" 1
+}

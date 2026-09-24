@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "gluk/bugtextures/bug2"
+                "$lightwarptexture" "gluk/bugtextures/lightwarpshader"
+	"$nocull" 1
+}
+
+

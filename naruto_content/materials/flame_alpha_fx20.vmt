@@ -1,0 +1,9 @@
+"Spritecard"
+{
+	"$basetexture"	"flame"
+	"$vertexalpha"	1
+	$DEPTHBLEND "0"   
+                $additive 0
+	$startfadesize .05
+	$endfadesize .075
+}

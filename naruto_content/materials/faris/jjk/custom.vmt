@@ -1,0 +1,14 @@
+SpriteCard{
+	"$baseTexture" "faris/jjk/custom"
+		$vertexalpha	1
+	$vertexcolor	1
+
+	$additive 0
+	
+
+	$addself		10.0
+	$overbrightfactor	2.0
+
+	$depthblend	0
+	$blendframes	1
+}

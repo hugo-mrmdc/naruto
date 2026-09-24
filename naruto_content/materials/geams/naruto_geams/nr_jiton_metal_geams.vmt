@@ -1,0 +1,15 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "geams/naruto_geams/nr_jiton_metal_geams"
+	"$lightwarptexture" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/lightwarptexture"
+
+	"$envmaptint" "[0.5 0.5 0.5]" 
+	"$envmap" "env_cubemap"
+    Proxies {
+        TextureScroll {
+            texturescrollvar "$basetexturetransform"
+            texturescrollrate 0.5
+            texturescrollangle 0
+        }
+    }
+}

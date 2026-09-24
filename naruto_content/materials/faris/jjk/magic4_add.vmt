@@ -1,0 +1,13 @@
+"SpriteCard"
+{
+	$basetexture "faris/jjk/magic4"
+		$vertexalpha	1
+	$vertexcolor	1
+
+	$additive 1
+	$addself		10.0
+	$overbrightfactor	2.0
+
+	$depthblend	0
+	$blendframes	1
+}

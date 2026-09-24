@@ -1,0 +1,6 @@
+"SpriteCard"
+{
+    "$basetexture" "geams/insect_sprite_geams"
+    "$nocull" 1
+	"$translucent" 1
+}

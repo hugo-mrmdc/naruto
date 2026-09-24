@@ -1,0 +1,12 @@
+"UnlitGeneric"
+{
+	"$basetexture" "gluk/fireshurikentextures/fireshuriken2"
+                "$lightwarptexture" "gluk/fireshurikentextures/lightwarpshader"
+	"$nocull" 0
+	"$translucent" 1
+                "$additive" 0
+	"$nodecal" 1
+                "$alphatest" 1
+}
+
+

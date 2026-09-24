@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture" "geams/insect_sprite_geams02"
+	"$nocull" 1
+	"$translucent" 1
+}

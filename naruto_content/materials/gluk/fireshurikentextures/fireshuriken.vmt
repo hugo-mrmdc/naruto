@@ -1,0 +1,44 @@
+"UnlitGeneric"
+{
+	"$basetexture" "gluk/fireshurikentextures/fireshuriken"
+                "$lightwarptexture" "gluk/fireshurikentextures/lightwarpshader"
+	"$nocull" 1
+	"$translucent" 1
+                "$additive" 0
+	"$nodecal" 1
+
+	"$phong" "0"
+	"$phongexponent" 1
+	"$phongboost" 1
+	"$phongfresnelranges"	"[0 0 0]"
+	"$basealphaenvmapmask" 0
+ 
+	"$basemapalphaphongmask" 1
+
+	"$rimlight" 0												
+	"$rimlightexponent" 1
+	"$rimlightboost" "-50"	
+
+	"$angle" 0
+	"$translate" "[0 0]" 
+
+	"Proxies"
+	{
+		"LinearRamp"
+		{
+			rate -600
+			initialValue 0.0
+			resultVar $angle
+		}
+
+		"TextureTransform"
+		{
+			translateVar $translate
+			rotateVar $angle
+			resultVar $basetexturetransform
+		}
+	}
+
+}
+
+
