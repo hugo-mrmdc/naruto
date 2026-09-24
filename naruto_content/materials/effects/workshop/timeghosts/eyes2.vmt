@@ -1,0 +1,6 @@
+"SpriteCard"
+{
+	"$basetexture" "effects/workshop/timeghosts/eyes2"
+	"$additive" "1"
+	"$depthblend" "1"
+}

@@ -1,0 +1,9 @@
+"Spritecard"
+{
+	"$basetexture" "effects/workshop/supernova_halo1"
+	"$surfaceprop"	"default"
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+	"$additive"	1
+	"$nocull" 		1
+}

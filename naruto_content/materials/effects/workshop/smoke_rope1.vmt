@@ -1,0 +1,8 @@
+"Sprite"
+{
+	"$basetexture" 		"effects/workshop/smoke_rope1"
+	"$vertexcolor"		1
+	"$vertexalpha"		1
+	"$depthblend"		0
+	"$spriterendermode"	5
+}

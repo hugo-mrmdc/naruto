@@ -1,0 +1,16 @@
+"Refract"
+{
+	"$normalmap" "effects/workshop/skullsmoke/skullmask3"
+ 	"$refractamount" "0"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+	"$translucent" "1"
+	"$forcerefract" 0
+"$blendframes" 1
+//	"$ignorez" "1"
+ 	"$bluramount" "0"
+	"$nofog" "1"
+//	"$refracttinttexture" "effects/distortion_tint001"
+	"$vertexcolormodulate" "1"
+}
+

@@ -1,0 +1,10 @@
+"SpriteCard"
+{
+	"$basetexture"	"effects/workshop/sparkle_flat"
+	"$translucent"	1
+	"$additive"	1
+	"$vertexalpha"	1
+	"$vertexcolor"	1
+	"$depthblend"	0
+	"$overbrightfactor"	2
+}

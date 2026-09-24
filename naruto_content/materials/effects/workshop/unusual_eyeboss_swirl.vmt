@@ -1,0 +1,9 @@
+"Spritecard"
+{
+	"$baseTexture" "effects/workshop/unusual_eyeboss_swirl"
+	//"$translucent"	"1"
+	//"$overbrightfactor"	"2"
+	"$vertexalpha"	"1"
+	"$vertexcolor"	"1"
+	$DEPTHBLEND "0"   
+}

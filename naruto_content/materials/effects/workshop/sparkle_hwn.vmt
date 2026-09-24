@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+	"$basetexture" "effects/workshop/sparkle_hwn"
+	"$depthblend" 0
+	"$additive" 1
+	"$overbrightfactor" 1.2
+}

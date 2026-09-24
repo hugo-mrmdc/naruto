@@ -1,0 +1,6 @@
+"Sprite"
+{
+	"$basetexture" "effects/workshop/timeghosts/chainrope2"
+	"$spriterendermode" "5"
+	"$depthblend" "1"
+}

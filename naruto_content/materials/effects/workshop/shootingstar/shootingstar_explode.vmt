@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+	"$basetexture" "effects/workshop/shootingstar/shootingstar_explode"
+	"$blendframes" 0
+	"$depthblend" 1
+	"$additive" 1
+}

@@ -1,0 +1,10 @@
+"SpriteCard"
+{
+	"$basetexture"	"effects/workshop/sea_splash_side"
+	"$blendframes"	1
+	"$additive"	1
+	"$vertexcolor" 	1
+	"$vertexalpha"	1
+	"$depthblend" 	0
+	"$overbrightfactor"	2
+}

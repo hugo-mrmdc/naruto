@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+	"$basetexture" "effects/workshop/star_glowing_sprite"
+	"$translucent" 1
+    "$addself" "0"
+    $DEPTHBLEND 0
+}

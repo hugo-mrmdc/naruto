@@ -1,0 +1,8 @@
+"SpriteCard"
+{
+    "$basetexture" "effects/workshop/small_lightning"
+    "$translucent" 0
+    "$alpha" 1
+    "$additive" 1
+  "$depthblend" 0	
+}

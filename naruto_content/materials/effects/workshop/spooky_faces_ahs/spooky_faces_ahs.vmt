@@ -1,0 +1,9 @@
+"Spritecard"
+{
+	//"srgb?$overbrightfactor" "1.5"
+	"$baseTexture" "Effects/workshop\spooky_faces_ahs/spooky_faces_ahs"
+	$translucent 1
+	"$addself" "0"
+	$DEPTHBLEND 0
+}
+

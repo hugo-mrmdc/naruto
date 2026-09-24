@@ -1,0 +1,8 @@
+"Sprite"
+{
+	"$basetexture"	"effects/workshop/smoke_trail1"
+	"$translucent"		1
+	"$vertexcolor"		1
+	"$overbrightfactor" 		2
+	"$spriterendermode" 	4
+}

@@ -1,0 +1,6 @@
+"spritecard"
+{
+	"$basetexture" "effects/workshop/skullsmoke/scary2"
+	"$depthblend" 1
+	"$additive" 1
+}

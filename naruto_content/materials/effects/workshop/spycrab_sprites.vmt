@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	"$baseTexture" "Effects\workshop\spycrab_sprites"
+	$translucent 1
+	$overbrightfactor 2
+	$vertexalpha 1
+	$vertexcolor 1
+}

@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+	"$basetexture" "effects/workshop/sprinkle_rainbow"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+	"$overbrightfactor"	"1"
+}
