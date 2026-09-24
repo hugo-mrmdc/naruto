@@ -1,0 +1,10 @@
+"spritecard"
+{
+	$basetexture	"particle/transformers_devastation/TD_jagged_beam"
+	$addself			1
+	$translucent		1
+	$vertexcolor		1
+	$vertexalpha		1
+	$overbrightfactor		1.5
+	$splinetype		1
+}

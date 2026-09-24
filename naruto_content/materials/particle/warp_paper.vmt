@@ -1,0 +1,12 @@
+"Refract"
+{
+ 	"$normalmap" "particle/warp_paper"
+ 	"$refractamount" "-0.06"
+	"$translucent" "1"
+	"$forcerefract" 1
+ 	"$bluramount" "3"
+	"$nofog" "1"
+	//$NoCull 1
+	$NOVIEWPORTFIXUP 1
+	"$model" 1
+}

@@ -1,0 +1,8 @@
+SpriteCard
+{
+$basetexture "particle\the_wonderful_101\w101_toon_arrow_03"
+$translucent	1
+$splinetype	1
+$overbrightfactor	4
+$addself		1
+}

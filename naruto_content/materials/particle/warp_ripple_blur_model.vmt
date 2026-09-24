@@ -1,0 +1,13 @@
+"Refract"
+{
+ 	"$normalmap" "particle/warp_ripple_normal"
+ 	"$dudvmap" "particle/warp_ripple_dudv"
+ 	"$refractamount" "0.04"
+	"$translucent" "1"
+	"$forcerefract" 1
+ 	"$bluramount" "5"
+	"$nofog" "1"
+	$NoCull 1
+	$NOVIEWPORTFIXUP        1
+	$model 1
+}

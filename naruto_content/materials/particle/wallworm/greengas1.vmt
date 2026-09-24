@@ -1,0 +1,5 @@
+"UnlitGeneric"
+{
+	"$baseTexture" "particle/wallworm/greengas1"
+	"$translucent" "1"
+}
