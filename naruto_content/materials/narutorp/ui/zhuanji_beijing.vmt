@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/zhuanji_beijing"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

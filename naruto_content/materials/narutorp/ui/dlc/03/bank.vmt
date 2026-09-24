@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+	"$baseTexture" "narutorp/ui/dlc/03/bank"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

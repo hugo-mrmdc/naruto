@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/ui/button_group"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

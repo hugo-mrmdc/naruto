@@ -1,0 +1,4 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/ui/weapon/star_gold"
+    "$vertexalpha" "1"
+}

@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/ui/playerhead"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

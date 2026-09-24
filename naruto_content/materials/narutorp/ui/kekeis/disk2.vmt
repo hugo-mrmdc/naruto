@@ -1,0 +1,16 @@
+UnlitGeneric {
+    $basetexture "narutorp/ui/kekeis/disk2"
+    "$detail" "narutorp/ui/kekeis/disk2_noise"
+    "$detailtint" "[1 1 0]"
+    "$detailscale" "2"
+    "$detailblendmode" "1"
+    "$vertexalpha" "1"
+    "Proxies" {
+        "TextureScroll"
+		{
+			"texturescrollvar" "$detailtexturetransform"
+			"texturescrollrate" .5
+			"texturescrollangle" 60
+		}
+    }
+}

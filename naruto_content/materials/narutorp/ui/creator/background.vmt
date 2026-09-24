@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/ui/creator/background"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

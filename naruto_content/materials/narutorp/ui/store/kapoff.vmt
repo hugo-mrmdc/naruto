@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/store/kapoff"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

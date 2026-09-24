@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/chat"
+    "$vertexcolor" "1"
+    "$vertexalpha" "1"
+}

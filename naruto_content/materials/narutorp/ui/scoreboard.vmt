@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/ui/scoreboard"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

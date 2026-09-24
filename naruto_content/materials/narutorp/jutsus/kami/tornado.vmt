@@ -1,0 +1,6 @@
+"UnlitGeneric" {
+    "$basetexture" "narutorp/jutsus/kami/tornado"
+    "$vertexcolor" 1
+    "$vertexalpha" 1
+}
+            

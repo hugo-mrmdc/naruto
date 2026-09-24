@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/ui/skilltree_arrow"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

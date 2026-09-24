@@ -1,0 +1,7 @@
+
+"UnlitGeneric" {
+    "$basetexture" "narutorp/jutsus/satsu/sleep"
+    "$vertexcolor" 1
+    "$vertexalpha" 1
+}
+            

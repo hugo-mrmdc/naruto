@@ -1,0 +1,29 @@
+VertexLitGeneric {
+    "$basetexture" "color/white"
+    "$detail" "narutorp/noise/purple"
+    "$detailblendmode" "1"
+    "$detailblendfactor" "3"
+    "$detailscale" ".4"
+    "$model" 1
+    "$color2" "[2 .1 1]"
+
+    "$bumpmap" "null-bumpmap"
+    "$phong" "1"
+    "$phongexponent" "1"
+    "$phongboost" "50"
+    "$phongfresnelranges" "[0 2 4]"
+    "$phongalbedotint" "1"
+    "$phongtint" "[.8 .1 .6]"
+    
+    $rimlight "1"
+    $rimlightexponent "1"
+    $rimlightboost "200"
+
+    "Proxies" {
+        "TextureScroll" {
+            "textureScrollVar" "$detailtexturetransform"
+            "scrollAngle" "90"
+            "scrollRate" "8"
+        }
+    }
+}

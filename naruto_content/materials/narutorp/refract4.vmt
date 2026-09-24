@@ -1,0 +1,12 @@
+"Refract"
+{
+ 	"$model" 1
+	"$bluramount" .5
+ 	"$refractamount" ".05"
+	"$REFRACTTINT" "{240 245 255}"
+	"$scale" "[1 1]"
+ 	"$dudvmap" "models/shadertest/shader3_dudv"
+	"$normalmap" "models/shadertest/shader3_normal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[.3 .4 .4]"
+}

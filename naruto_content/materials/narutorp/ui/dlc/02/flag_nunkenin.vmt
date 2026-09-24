@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/dlc/02/flag_nunkenin"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

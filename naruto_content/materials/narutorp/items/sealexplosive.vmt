@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+	"$baseTexture" "narutorp/items/sealexplosive"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

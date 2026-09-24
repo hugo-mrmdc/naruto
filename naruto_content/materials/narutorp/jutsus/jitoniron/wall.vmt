@@ -1,0 +1,6 @@
+"UnlitGeneric" {
+    "$basetexture" "narutorp/jutsus/jitoniron/wall"
+    "$vertexcolor" 1
+    "$vertexalpha" 1
+}
+            

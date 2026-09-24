@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+	"$baseTexture" "narutorp/jutsus/subs/thousandarm"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+	"$baseTexture" "narutorp/jutsus/camelia/saison"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

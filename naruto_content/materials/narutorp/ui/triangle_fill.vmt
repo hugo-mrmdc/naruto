@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/triangle_fill"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

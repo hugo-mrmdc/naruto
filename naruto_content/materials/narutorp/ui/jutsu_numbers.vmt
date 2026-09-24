@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/jutsu_numbers"
+    "$vertexcolor" "1"
+    "$vertexalpha" "1"
+}

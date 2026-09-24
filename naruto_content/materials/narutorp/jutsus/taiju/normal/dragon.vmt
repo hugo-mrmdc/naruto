@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+	"$baseTexture" "narutorp/jutsus/taiju/normal/dragon"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

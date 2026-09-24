@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/derma_menu"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

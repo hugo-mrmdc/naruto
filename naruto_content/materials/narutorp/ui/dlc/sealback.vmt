@@ -1,0 +1,17 @@
+UnlitGeneric {
+    "$basetexture" "gui/center_gradient"
+    "$detail" "narutorp/noise/waves"
+    "$detailscale" "1"
+    "$detailblendmode" "8"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "$nocull" "1"
+    "Proxies" {
+        "TextureScroll"
+		{
+			"texturescrollvar" "$detailtexturetransform"
+			"texturescrollrate" 1
+			"texturescrollangle" 90
+		}
+    }
+}

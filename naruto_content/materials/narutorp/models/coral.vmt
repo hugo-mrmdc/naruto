@@ -1,0 +1,18 @@
+VertexLitGeneric {
+    "$basetexture" "narutorp/models/coral"
+    "$bumpmap" "null-bumpmap"
+    "$model" 		"1"
+
+	"$normalmapalphaenvmapmask" "1"
+
+	$phong 	1
+    $phongexponent 	10
+	$phongboost 	15
+    $phongtint 	"[1 .7 .2]"
+    $halflambert 	1
+	$phongfresnelranges "[0 .2 .5]"  //The angle of the dangle
+
+	$rimlight 		"1"
+	$rimlightexponent 	"10" //Range
+	$rimlightboost 	"2"
+}

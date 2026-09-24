@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/sprites/point_floor"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

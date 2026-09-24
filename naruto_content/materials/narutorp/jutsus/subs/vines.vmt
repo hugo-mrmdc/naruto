@@ -1,0 +1,7 @@
+
+"UnlitGeneric" {
+    "$basetexture" "narutorp/jutsus/subs/vines"
+    "$vertexcolor" 1
+    "$vertexalpha" 1
+}
+            

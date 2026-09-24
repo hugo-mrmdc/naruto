@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/mailbox"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

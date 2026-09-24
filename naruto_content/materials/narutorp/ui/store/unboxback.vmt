@@ -1,0 +1,13 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/store/unboxback"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+
+    "Proxies" {
+        "TextureScroll" {
+            "texturescrollvar" "$basetexturetransform"
+            "texturescrollrate" "0.1"
+            "texturescrollangle" "45"
+        }
+    }
+}

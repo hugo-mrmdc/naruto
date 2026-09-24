@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/close_button"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

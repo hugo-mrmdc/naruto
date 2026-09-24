@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture" "narutorp/slashes/chakra"
+	"$nocull" 1
+    "$translucent"	1
+    "$model" 1
+}

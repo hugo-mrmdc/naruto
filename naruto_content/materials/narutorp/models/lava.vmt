@@ -1,0 +1,21 @@
+VertexLitGeneric {
+    "$basetexture" "narutorp/models/lava"
+    "$bumpmap" "narutorp/models/lava_normal"
+
+    "$selfillum" "1"
+    "$selfillummask" "narutorp/models/lava_selfilum"
+    "$model" 		"1"
+
+	"$normalmapalphaenvmapmask" "1"
+
+	$phong 	1
+    $phongexponent 	10
+	$phongboost 	15
+    $phongtint 	"[1 .7 .2]"
+    $halflambert 	1
+	$phongfresnelranges "[0 .2 .5]"  //The angle of the dangle
+
+	$rimlight 		"1"
+	$rimlightexponent 	"10" //Range
+	$rimlightboost 	"2"
+}

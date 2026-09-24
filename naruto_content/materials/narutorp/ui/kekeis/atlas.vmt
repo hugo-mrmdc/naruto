@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/kekeis/atlas"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

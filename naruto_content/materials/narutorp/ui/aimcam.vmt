@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/aimcam"
+    "$vertexcolor" "1"
+    "$vertexalpha" "1"
+}

@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	"$basetexture" "narutorp/jutsus/speed_boost"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/selectoratlas"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

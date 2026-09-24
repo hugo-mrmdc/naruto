@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/dlc/01/creditsback"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

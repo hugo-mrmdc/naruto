@@ -1,0 +1,11 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/minigames/water/back"
+    "$vertexalpha" "1"
+    
+    "Proxies" { 
+        "TextureScroll" {
+            "textureScrollVar" "$basetexturetransform"
+            "textureScrollRate" ".5"
+        }
+    }
+}

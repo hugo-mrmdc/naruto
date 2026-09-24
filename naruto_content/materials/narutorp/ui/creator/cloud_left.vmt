@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/ui/creator/cloud_left"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

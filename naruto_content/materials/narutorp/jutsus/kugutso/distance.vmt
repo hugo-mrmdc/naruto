@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+    "$basetexture" "narutorp/jutsus/kugutso/distance"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

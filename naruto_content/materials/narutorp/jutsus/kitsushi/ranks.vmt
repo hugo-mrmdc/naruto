@@ -1,0 +1,5 @@
+"UnlitGeneric" {    
+    "$basetexture" "narutorp/jutsus/kitsushi/ranks"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

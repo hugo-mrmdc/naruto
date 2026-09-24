@@ -1,0 +1,6 @@
+"UnlitGeneric" {
+    "$basetexture" "narutorp/jutsus/taiju/combattant/charge"
+    "$vertexcolor" 1
+    "$vertexalpha" 1
+}
+            

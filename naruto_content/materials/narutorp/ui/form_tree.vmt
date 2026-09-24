@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/form_tree"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/ui/squad/headcircle"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

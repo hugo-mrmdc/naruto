@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	"$basetexture" "narutorp/jutsus/waterjet"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

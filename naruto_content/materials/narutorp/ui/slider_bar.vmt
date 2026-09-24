@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/ui/slider_bar"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

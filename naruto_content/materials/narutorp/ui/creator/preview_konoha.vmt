@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/ui/creator/preview_konoha"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

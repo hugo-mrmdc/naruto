@@ -1,0 +1,7 @@
+"SpriteCard" {
+    "$basetexture" "narutorp/steam/steam"
+    "$blendframes" "0"
+    "$orientation" "0"
+    "$translucent" "1"
+    "$vertexalpha" "1"
+}

@@ -1,0 +1,4 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/ui/wheel/back"
+    "$vertexalpha" "1"
+}
