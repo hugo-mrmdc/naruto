@@ -1,0 +1,14 @@
+SpriteCard
+{
+$basetexture "particle/smoke1/smoke1.vtf"
+$vertexcolor 1
+$vertexalpha 1
+$translucent 1
+$nocull 1
+$Additive 1
+$STARTFADESIZE .6
+$ENDFADESIZE 2
+$depthblend 1
+$depthblendscale 4
+$overbrightfactor 2
+}

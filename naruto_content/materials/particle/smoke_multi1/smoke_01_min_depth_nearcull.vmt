@@ -1,0 +1,33 @@
+SpriteCard
+{
+$basetexture "particle/smoke_multi1/smoke_01"
+
+$DUALSEQUENCE 1
+$SEQUENCE_BLEND_MODE 1
+$MAXLUMFRAMEBLEND1 0
+$MAXLUMFRAMEBLEND2 1
+$ZOOMANIMATESEQ2 2
+
+$depthblend 1
+$DEPTHBLENDSCALE 12
+$STARTFADESIZE 0.6
+$ENDFADESIZE 1.0
+
+
+//** old
+//"!srgb?$overbrightfactor" "1.2"
+//"GPU<2?$STARTFADESIZE" ".75"
+//"GPU<2?$ENDFADESIZE" "1.0"
+//"GPU<2?$BLENDFRAMES" 0
+//"GPU<2?$DEPTHBLEND" 0
+//$VERTEXFOGAMOUNT 1
+// **
+
+// fallback
+"GPU<2?$STARTFADESIZE" ".35"
+"GPU<2?$ENDFADESIZE" ".65"
+"GPU<2?$BLENDFRAMES" 0
+"GPU<2?$DEPTHBLEND" 0
+//**
+
+}

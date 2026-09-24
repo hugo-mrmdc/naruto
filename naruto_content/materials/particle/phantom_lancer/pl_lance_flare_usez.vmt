@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+	"$basetexture" "particle\phantom_lancer\pl_lance_flare"
+	"$additive" "1"
+	$overbrightfactor 2
+	$depthblend 0
+}

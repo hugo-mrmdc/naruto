@@ -1,0 +1,15 @@
+SpriteCard
+{
+$basetexture "particle/pigeon_particle"
+$translucent 1
+$vertexcolor 1
+$overbrightfactor 1
+$vertexalpha 1
+$distancealpha 1
+
+$softedges 1
+$edgesoftnessstart .66
+$edgesoftnessend .33
+
+
+}

@@ -1,0 +1,9 @@
+"SpriteCard"
+{
+	$basetexture 		"particle/sisterfriede/scythe_charge_flare"
+
+	$additive 			1
+	$translucent 		1
+	
+	$overbrightfactor 	4
+}
