@@ -1,0 +1,8 @@
+UnlitGeneric {
+	$basetexture "env_spark~bloom1"
+	$brightness  "effects/spark_brightness"
+	$additive     1
+    $translucent 1
+    $vertexalpha 1
+	$vertexcolor  1
+}
