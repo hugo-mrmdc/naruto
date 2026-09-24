@@ -1,0 +1,10 @@
+"SpriteCard"
+{
+	// Original shader: AdditiveTextureAndVertexColor
+	"$basetexture" "particle/fire"
+	"$additive" 1
+	//"$vertexcolor" 1
+	$depthblend 1
+	$depthblendscale 100
+
+}

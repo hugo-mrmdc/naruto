@@ -1,0 +1,6 @@
+SpriteCard
+{
+$basetexture "particle/fireball_green"
+$additive 1
+$nofog 1
+}

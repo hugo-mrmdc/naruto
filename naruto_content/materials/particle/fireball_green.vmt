@@ -1,0 +1,10 @@
+SpriteCard
+{
+$basetexture "particle/fireball_green"
+//$additive 1
+//$addself 1.0
+//$overbrightfactor 3.5
+$DEPTHBLEND 1
+$depthblendscale 1500
+$nofog 1
+}
