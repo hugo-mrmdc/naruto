@@ -1,0 +1,9 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"Effects/worms4/smoke"
+	"$surfaceprop"	"default"
+	"$translucent"	0
+	"$vertexcolor" 	1
+	"$vertexalpha"	1
+	"$depthblend" "0"
+}

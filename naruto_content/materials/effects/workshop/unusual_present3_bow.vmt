@@ -1,0 +1,7 @@
+SpriteCard
+{
+	$basetexture "Effects/workshop/unusual_present3_bow"
+	$vertexcolor 1
+	$vertexalpha 1
+	$DEPTHBLEND "0"
+}

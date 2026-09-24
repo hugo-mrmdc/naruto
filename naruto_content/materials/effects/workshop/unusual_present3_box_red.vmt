@@ -1,0 +1,7 @@
+SpriteCard
+{
+	$basetexture "Effects/workshop/unusual_present3_box_red"
+	$vertexcolor 1
+	$vertexalpha 1
+	$DEPTHBLEND "0"
+}

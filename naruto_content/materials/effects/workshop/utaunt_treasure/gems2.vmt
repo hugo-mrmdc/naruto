@@ -1,0 +1,9 @@
+"Spritecard"
+{
+	"$basetexture"	"effects/workshop/utaunt_treasure/gems2"
+	"$translucent"	1
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+	"$depthblend"	0
+	"$blendframes"	0
+}

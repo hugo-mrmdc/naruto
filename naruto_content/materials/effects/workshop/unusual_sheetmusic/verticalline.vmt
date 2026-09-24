@@ -1,0 +1,9 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"effects/workshop/unusual_sheetmusic/verticalline"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+	"$nocull"		1
+}

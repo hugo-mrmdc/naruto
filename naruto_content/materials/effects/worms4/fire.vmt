@@ -1,0 +1,10 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"Effects/worms4/fire"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+	"$vertexcolor" 	1
+	"$vertexalpha"	1
+	"$additive"	1
+	"$depthblend" "0"
+}

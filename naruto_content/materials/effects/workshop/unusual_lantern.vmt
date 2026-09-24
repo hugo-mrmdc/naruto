@@ -1,0 +1,6 @@
+"SpriteCard"
+{
+	"$basetexture"	"Effects\workshop\unusual_lantern"
+	"$translucent"	1
+	"$blendframes"	"0"
+}
