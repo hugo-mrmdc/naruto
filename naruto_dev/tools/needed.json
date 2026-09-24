@@ -1,0 +1,1367 @@
+{
+ "models/accessory/mask_hanzou.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1788
+ },
+ "models/accessory/mask_hanzou.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 50240
+ },
+ "models/accessory/mask_hanzou.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 12001
+ },
+ "models/accessory/mask_hanzou.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 12001
+ },
+ "models/accessory/mask_hanzou.sw.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 11993
+ },
+ "materials/models/mask_hanzou/mask_hanzou.vmt": {
+  "src": "addon naruto_dev",
+  "why": "matériau de mask_hanzou.mdl",
+  "size": 136
+ },
+ "models/clan/ame/kaguya/kim_armor.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 3072
+ },
+ "models/clan/ame/kaguya/kim_armor.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 45376
+ },
+ "models/clan/ame/kaguya/kim_armor.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 11846
+ },
+ "materials/models/narutorp/kimimaro/main.vmt": {
+  "src": "content - 1s (3788730849)",
+  "why": "matériau de kim_armor.mdl",
+  "size": 126
+ },
+ "materials/models/narutorp/kimimaro/mat_0012.vmt": {
+  "src": "content - 1s (3788730849)",
+  "why": "matériau de kim_armor.mdl",
+  "size": 126
+ },
+ "models/clan/ame/kaguya/kim_sword.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 2388
+ },
+ "models/clan/ame/kaguya/kim_sword.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 115072
+ },
+ "models/clan/ame/kaguya/kim_sword.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 22584
+ },
+ "materials/models/narutorp/kimimaro/boneblade.vmt": {
+  "src": "[FSC] Content RP #2 (3400217203)",
+  "why": "matériau de kim_sword.mdl",
+  "size": 131
+ },
+ "models/clan/ame/kami/foc_arme_shuriken_papier.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1708
+ },
+ "models/clan/ame/kami/foc_arme_shuriken_papier.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1216
+ },
+ "models/clan/ame/kami/foc_arme_shuriken_papier.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 399
+ },
+ "models/clan/ame/kami/foc_arme_shuriken_papier.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 399
+ },
+ "models/clan/ame/kami/foc_arme_shuriken_papier.sw.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 391
+ },
+ "models/clan/ame/kami/foc_arme_shuriken_papier.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 611
+ },
+ "materials/jutsu/models/paper shuriken/paper shuriken.vmt": {
+  "src": "Content - 5s (3788745039)",
+  "why": "matériau de foc_arme_shuriken_papier.mdl",
+  "size": 203
+ },
+ "models/clan/ame/kami/wings.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 7668
+ },
+ "models/clan/ame/kami/wings.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 146112
+ },
+ "models/clan/ame/kami/wings.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 32211
+ },
+ "materials/models/narutorp/kami/wings.vmt": {
+  "src": "[FSC] Content RP #2 (3400217203)",
+  "why": "matériau de wings.mdl",
+  "size": 123
+ },
+ "models/fumaspell/acc/foc_arme_shuriken_fuma.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1852
+ },
+ "models/fumaspell/acc/foc_arme_shuriken_fuma.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 58432
+ },
+ "models/fumaspell/acc/foc_arme_shuriken_fuma.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 13629
+ },
+ "models/fumaspell/acc/foc_arme_shuriken_fuma.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 2244
+ },
+ "materials/nuns - small weapons pack/models/demon wind shuriken/demon wind shuriken b/demon wind shuriken b.vmt": {
+  "src": "[FSC] Content RP #2 (3400217203)",
+  "why": "matériau de foc_arme_shuriken_fuma.mdl",
+  "size": 142
+ },
+ "models/fumaspell/orga_props_shuriken.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1884
+ },
+ "models/fumaspell/orga_props_shuriken.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 109376
+ },
+ "models/fumaspell/orga_props_shuriken.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 25209
+ },
+ "models/fumaspell/orga_props_shuriken.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 25209
+ },
+ "models/fumaspell/orga_props_shuriken.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 707
+ },
+ "materials/models/cayzi/ctg/characters/man/body/orga_props_shuriken.vmt": {
+  "src": "[ATG] PlayerModel (3391033750)",
+  "why": "matériau de orga_props_shuriken.mdl",
+  "size": 102
+ },
+ "models/hairs1_head.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 55972
+ },
+ "models/hairs1_head.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 13326720
+ },
+ "models/hairs1_head.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 3919745
+ },
+ "models/hairs1_head.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 3919745
+ },
+ "models/hairs1_head.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 27244
+ },
+ "materials/models/jack/solve/naruto_head/chr_man_hair_global.vmt": {
+  "src": "Content - 5s (3788745039)",
+  "why": "matériau de hairs1_head.mdl",
+  "size": 384
+ },
+ "materials/models/kaesar/solve/naruto_head/t_chr_man_bandage_bc.vmt": {
+  "src": "Content - 3pm (3788736487)",
+  "why": "matériau de hairs1_head.mdl",
+  "size": 243
+ },
+ "materials/models/kaesar/solve/naruto_head/t_chr_headgear_metal_konoha_01_bc.vmt": {
+  "src": "Content - 3pm (3788736487)",
+  "why": "matériau de hairs1_head.mdl",
+  "size": 242
+ },
+ "materials/models/kaesar/solve/naruto_head/t_chr_man_iwabehat_bc.vmt": {
+  "src": "Content - 3pm (3788736487)",
+  "why": "matériau de hairs1_head.mdl",
+  "size": 230
+ },
+ "materials/models/kaesar/solve/naruto_head/t_chr_man_shortbob_01_bc.vmt": {
+  "src": "Content - 3pm (3788736487)",
+  "why": "matériau de hairs1_head.mdl",
+  "size": 233
+ },
+ "materials/models/jack/solve/naruto_head/t_chr_woman_straighthair_l_04_bc.vmt": {
+  "src": "Content - 5s (3788745039)",
+  "why": "matériau de hairs1_head.mdl",
+  "size": 397
+ },
+ "models/head_03.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 2310628
+ },
+ "models/head_03.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 829440
+ },
+ "models/head_03.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 215505
+ },
+ "models/head_03.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 216620
+ },
+ "models/head_03.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 27244
+ },
+ "materials/models/kaesar/solve/naruto_head/t_chr_face_bc.vmt": {
+  "src": "Content - 7s (3788750500)",
+  "why": "matériau de head_03.mdl",
+  "size": 224
+ },
+ "materials/models/kaesar/solve/naruto_head/t_chr_eyebrows_bc.vmt": {
+  "src": "Content - 7s (3788750500)",
+  "why": "matériau de head_03.mdl",
+  "size": 228
+ },
+ "materials/models/kaesar/solve/naruto_head/m_line.vmt": {
+  "src": "Content - 7s (3788750500)",
+  "why": "matériau de head_03.mdl",
+  "size": 478
+ },
+ "materials/models/kaesar/solve/naruto_head/mi_chr_eyes_wthinl_01.vmt": {
+  "src": "Content - 7s (3788750500)",
+  "why": "matériau de head_03.mdl",
+  "size": 493
+ },
+ "materials/models/kaesar/solve/naruto_head/mi_chr_eyes_wthinr_01.vmt": {
+  "src": "Content - 7s (3788750500)",
+  "why": "matériau de head_03.mdl",
+  "size": 493
+ },
+ "models/justu/jinton/cubeonoki2.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1720
+ },
+ "models/justu/jinton/cubeonoki2.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 16960
+ },
+ "models/justu/jinton/cubeonoki2.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 3165
+ },
+ "models/justu/jinton/cubeonoki2.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 3165
+ },
+ "models/justu/jinton/cubeonoki2.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1840
+ },
+ "materials/models/solve/billy/kgparticule/t_wep_eff_d26nj3_a_01_m.vmt": {
+  "src": "addon naruto_dev",
+  "why": "matériau de cubeonoki2.mdl",
+  "size": 191
+ },
+ "models/justu/jinton/cylindreonokisolve.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1912
+ },
+ "models/justu/jinton/cylindreonokisolve.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 24704
+ },
+ "models/justu/jinton/cylindreonokisolve.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 7419
+ },
+ "models/justu/jinton/cylindreonokisolve.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 7419
+ },
+ "models/justu/jinton/cylindreonokisolve.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 3380
+ },
+ "materials/models/solve/billy/kgparticule/blanc.vmt": {
+  "src": "addon naruto_dev",
+  "why": "matériau de cylindreonokisolve.mdl",
+  "size": 298
+ },
+ "models/justu/jinton/sphereonoki.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1720
+ },
+ "models/justu/jinton/sphereonoki.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 32832
+ },
+ "models/justu/jinton/sphereonoki.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 10509
+ },
+ "models/justu/jinton/sphereonoki.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 10509
+ },
+ "models/justu/jinton/sphereonoki.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 23441
+ },
+ "models/m_anm.mdl": {
+  "src": "[wOS] Animation Extension Base (757604550)",
+  "why": "modèle",
+  "size": 879052
+ },
+ "models/m_anm.ani": {
+  "src": "[wOS] Animation Extension Base (757604550)",
+  "why": "modèle",
+  "size": 7123904
+ },
+ "models/mokuton/flower.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1916
+ },
+ "models/mokuton/flower.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 781184
+ },
+ "models/mokuton/flower.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 200151
+ },
+ "models/mokuton/flower.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 200151
+ },
+ "materials/flower/mokuton.vmt": {
+  "src": "addon naruto_dev",
+  "why": "matériau de flower.mdl",
+  "size": 65
+ },
+ "materials/flower/flower.vmt": {
+  "src": "addon naruto_dev",
+  "why": "matériau de flower.mdl",
+  "size": 80
+ },
+ "models/mokuton/mokutonarche.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1740
+ },
+ "models/mokuton/mokutonarche.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 41152
+ },
+ "models/mokuton/mokutonarche.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 9567
+ },
+ "models/mokuton/mokutonarche.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 9567
+ },
+ "materials/models/mokuton/mokuton.vmt": {
+  "src": "addon naruto_dev",
+  "why": "matériau de mokutonarche.mdl",
+  "size": 85
+ },
+ "models/mokuton/mokutondragon1.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 9412
+ },
+ "models/mokuton/mokutondragon1.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 707776
+ },
+ "models/mokuton/mokutondragon1.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 166627
+ },
+ "models/mokuton/mokutondragon1.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 166865
+ },
+ "models/player/wiltos/anim_dynamic_pointer.mdl": {
+  "src": "[wOS] DynaBase - Dynamic Animation Manager (2916561591)",
+  "why": "modèle",
+  "size": 849
+ },
+ "models/player/wiltos/anim_extension_bs.mdl": {
+  "src": "[wOS] Animation Extension - Blade Symphony (848953359)",
+  "why": "modèle",
+  "size": 1012
+ },
+ "models/player/wiltos/anim_extension_mod6.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 22817976
+ },
+ "models/player/wiltos/anim_extension_mod6.vvd": {
+  "src": "[FSC] Content RP #2 (3400217203)",
+  "why": "modèle",
+  "size": 188992
+ },
+ "models/player/wiltos/anim_extension_mod6.dx90.vtx": {
+  "src": "[FSC] Content RP #2 (3400217203)",
+  "why": "modèle",
+  "size": 54401
+ },
+ "models/props_docks/dock01_pole01a_128.mdl": {
+  "src": "addon naruto_content",
+  "why": "modèle",
+  "size": 1460
+ },
+ "models/props_docks/dock01_pole01a_128.vvd": {
+  "src": "addon naruto_content",
+  "why": "modèle",
+  "size": 17024
+ },
+ "models/props_docks/dock01_pole01a_128.dx90.vtx": {
+  "src": "addon naruto_content",
+  "why": "modèle",
+  "size": 5747
+ },
+ "models/props_docks/dock01_pole01a_128.dx80.vtx": {
+  "src": "addon naruto_content",
+  "why": "modèle",
+  "size": 5747
+ },
+ "models/props_docks/dock01_pole01a_128.sw.vtx": {
+  "src": "modelmaps (3785719280)",
+  "why": "modèle",
+  "size": 5747
+ },
+ "models/props_docks/dock01_pole01a_128.phy": {
+  "src": "addon naruto_content",
+  "why": "modèle",
+  "size": 1972
+ },
+ "materials/models/props_docks/dock01a.vmt": {
+  "src": "Content - 11s (3788761373)",
+  "why": "matériau de dock01_pole01a_128.mdl",
+  "size": 211
+ },
+ "models/props_wasteland/rockcliff01b.mdl": {
+  "src": "FSC | Maps - Models (3393458640)",
+  "why": "modèle",
+  "size": 1720
+ },
+ "models/props_wasteland/rockcliff01b.vvd": {
+  "src": "FSC | Maps - Models (3393458640)",
+  "why": "modèle",
+  "size": 15104
+ },
+ "models/props_wasteland/rockcliff01b.dx90.vtx": {
+  "src": "FSC | Maps - Models (3393458640)",
+  "why": "modèle",
+  "size": 4560
+ },
+ "models/props_wasteland/rockcliff01b.dx80.vtx": {
+  "src": "FSC | Maps - Models (3393458640)",
+  "why": "modèle",
+  "size": 4560
+ },
+ "models/props_wasteland/rockcliff01b.sw.vtx": {
+  "src": "FSC | Maps - Models (3393458640)",
+  "why": "modèle",
+  "size": 4560
+ },
+ "models/props_wasteland/rockcliff01b.phy": {
+  "src": "FSC | Maps - Models (3393458640)",
+  "why": "modèle",
+  "size": 3172
+ },
+ "materials/models/props_wasteland/rocks02a.vmt": {
+  "src": "Content ATG (3663817972)",
+  "why": "matériau de rockcliff01b.mdl",
+  "size": 163
+ },
+ "models/salamandre/eclypse_salamandre_chef.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 42040
+ },
+ "models/salamandre/eclypse_salamandre_chef.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 3772096
+ },
+ "models/salamandre/eclypse_salamandre_chef.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1118336
+ },
+ "models/salamandre/eclypse_salamandre_chef.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1123266
+ },
+ "models/salamandre/eclypse_salamandre_chef.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 61846
+ },
+ "materials/models/godio/eclypse_salamandre_chef/eclypse_salamandre_chef.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de eclypse_salamandre_chef.mdl",
+  "size": 215
+ },
+ "materials/models/godio/mat_skin.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de eclypse_salamandre_chef.mdl",
+  "size": 239
+ },
+ "models/salamandre/goro_salamandre_m.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 42220
+ },
+ "models/salamandre/goro_salamandre_m.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1904384
+ },
+ "models/salamandre/goro_salamandre_m.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 562302
+ },
+ "models/salamandre/goro_salamandre_m.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 576517
+ },
+ "models/salamandre/goro_salamandre_m.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 61846
+ },
+ "materials/models/godio/goro_salamandre_m/couleurs_salamandre.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de goro_salamandre_m.mdl",
+  "size": 215
+ },
+ "materials/no_material.vmt": {
+  "src": "Content - 11s (3788761373)",
+  "why": "matériau de goro_salamandre_m.mdl",
+  "size": 36
+ },
+ "models/salamandre/m_chunin1_salamandre.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 43896
+ },
+ "models/salamandre/m_chunin1_salamandre.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 2674816
+ },
+ "models/salamandre/m_chunin1_salamandre.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 698845
+ },
+ "models/salamandre/m_chunin1_salamandre.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 701462
+ },
+ "models/salamandre/m_chunin1_salamandre.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 156193
+ },
+ "materials/models/daichi/m_chunin1_salamandre/m_chunin1_salamandre_bras.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de m_chunin1_salamandre.mdl",
+  "size": 214
+ },
+ "materials/models/daichi/mat_skin.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de m_chunin1_salamandre.mdl",
+  "size": 239
+ },
+ "materials/models/daichi/m_chunin1_salamandre/m_chunin1_salamandre_ame.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de m_chunin1_salamandre.mdl",
+  "size": 213
+ },
+ "materials/models/daichi/m_chunin1_salamandre/m_chunin1_salamandre_logo.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de m_chunin1_salamandre.mdl",
+  "size": 214
+ },
+ "materials/models/daichi/m_chunin1_salamandre/m_salamandre_mask.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de m_chunin1_salamandre.mdl",
+  "size": 206
+ },
+ "materials/models/daichi/m_chunin1_salamandre/m_chunin1_salamandre_bot.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de m_chunin1_salamandre.mdl",
+  "size": 213
+ },
+ "models/salamandre/m_chunin2_salamandre.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 42460
+ },
+ "models/salamandre/m_chunin2_salamandre.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 2937920
+ },
+ "models/salamandre/m_chunin2_salamandre.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 835810
+ },
+ "models/salamandre/m_chunin2_salamandre.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 847039
+ },
+ "models/salamandre/m_chunin2_salamandre.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 156193
+ },
+ "materials/models/daichi/m_chunin2_salamandre/m_chunin2_salamandre_top.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de m_chunin2_salamandre.mdl",
+  "size": 418
+ },
+ "materials/models/daichi/m_chunin2_salamandre/m_chunin2_salamandre_main.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de m_chunin2_salamandre.mdl",
+  "size": 419
+ },
+ "materials/models/daichi/m_chunin2_salamandre/m_chunin2_salamandre_bandages.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de m_chunin2_salamandre.mdl",
+  "size": 421
+ },
+ "models/salamandre/salamandre.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 76856
+ },
+ "models/salamandre/salamandre.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1901696
+ },
+ "models/salamandre/salamandre.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 574087
+ },
+ "models/salamandre/salamandre.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 580854
+ },
+ "models/salamandre/salamandre.sw.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 573383
+ },
+ "materials/models/warwax/salamandre/body.vmt": {
+  "src": "[FSC] Content RP #2 (3400217203)",
+  "why": "matériau de salamandre.mdl",
+  "size": 132
+ },
+ "models/suiton/shark_solve_geams.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 30368
+ },
+ "models/suiton/shark_solve_geams.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 243392
+ },
+ "models/suiton/shark_solve_geams.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 43283
+ },
+ "models/suiton/shark_solve_geams.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 43283
+ },
+ "models/suiton/shark_solve_geams.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1658
+ },
+ "materials/geams/models/solve_jutsu_rework/material_shark.vmt": {
+  "src": "addon naruto_content",
+  "why": "matériau de shark_solve_geams.mdl",
+  "size": 478
+ },
+ "models/tenue/m_fuma_tkj.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 44708
+ },
+ "models/tenue/m_fuma_tkj.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1664768
+ },
+ "models/tenue/m_fuma_tkj.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 500427
+ },
+ "models/tenue/m_fuma_tkj.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 504953
+ },
+ "models/tenue/m_fuma_tkj.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 112995
+ },
+ "materials/models/daichi/w_fuma_tkj/fuma_tkj_b.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de m_fuma_tkj.mdl",
+  "size": 394
+ },
+ "materials/models/daichi/w_fuma_tkj/fuma_tkj.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de m_fuma_tkj.mdl",
+  "size": 392
+ },
+ "materials/models/daichi/w_fuma_tkj/fuma_tkj_l.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de m_fuma_tkj.mdl",
+  "size": 394
+ },
+ "models/tenue/senju/senju_a.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 41992
+ },
+ "models/tenue/senju/senju_a.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1264128
+ },
+ "models/tenue/senju/senju_a.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 380055
+ },
+ "models/tenue/senju/senju_a.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 384983
+ },
+ "models/tenue/senju/senju_a.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 61846
+ },
+ "materials/models/godio/senju_a/senju_a.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de senju_a.mdl",
+  "size": 179
+ },
+ "models/weapon/hiramekarei/atg_hiramekarei_dos.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1808
+ },
+ "models/weapon/hiramekarei/atg_hiramekarei_dos.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 50112
+ },
+ "models/weapon/hiramekarei/atg_hiramekarei_dos.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 13707
+ },
+ "models/weapon/hiramekarei/atg_hiramekarei_dos.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 13707
+ },
+ "models/weapon/hiramekarei/atg_hiramekarei_dos.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 6503
+ },
+ "materials/models_props/daichi/atg_hiramekarei/hiramekarei.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de atg_hiramekarei_dos.mdl",
+  "size": 93
+ },
+ "models/weapon/hiramekarei/atg_hiramekarei_solo.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1812
+ },
+ "models/weapon/hiramekarei/atg_hiramekarei_solo.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 49344
+ },
+ "models/weapon/hiramekarei/atg_hiramekarei_solo.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 12303
+ },
+ "models/weapon/hiramekarei/atg_hiramekarei_solo.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 12303
+ },
+ "models/weapon/hiramekarei/atg_hiramekarei_solo.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 6503
+ },
+ "models/weapon/kabutowari/atg_kabutowari_dos.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1808
+ },
+ "models/weapon/kabutowari/atg_kabutowari_dos.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 41600
+ },
+ "models/weapon/kabutowari/atg_kabutowari_dos.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 9762
+ },
+ "models/weapon/kabutowari/atg_kabutowari_dos.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 9762
+ },
+ "models/weapon/kabutowari/atg_kabutowari_dos.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 694
+ },
+ "materials/models_props/daichi/atg_kabutowari/kabutowari.vmt": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "matériau de atg_kabutowari_dos.mdl",
+  "size": 91
+ },
+ "models/weapon/kabutowari/atg_kabutowari_hache.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1808
+ },
+ "models/weapon/kabutowari/atg_kabutowari_hache.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 17856
+ },
+ "models/weapon/kabutowari/atg_kabutowari_hache.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 4215
+ },
+ "models/weapon/kabutowari/atg_kabutowari_hache.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 4215
+ },
+ "models/weapon/kabutowari/atg_kabutowari_hache.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 694
+ },
+ "models/weapon/kabutowari/atg_kabutowari_marteau.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1812
+ },
+ "models/weapon/kabutowari/atg_kabutowari_marteau.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 23808
+ },
+ "models/weapon/kabutowari/atg_kabutowari_marteau.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 5688
+ },
+ "models/weapon/kabutowari/atg_kabutowari_marteau.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 5688
+ },
+ "models/weapon/kabutowari/atg_kabutowari_marteau.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 694
+ },
+ "models/weapon/kubikiribocho/kubikiribocho.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1780
+ },
+ "models/weapon/kubikiribocho/kubikiribocho.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 572416
+ },
+ "models/weapon/kubikiribocho/kubikiribocho.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 104614
+ },
+ "models/weapon/kubikiribocho/kubikiribocho.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 104614
+ },
+ "models/weapon/kubikiribocho/kubikiribocho.sw.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 104614
+ },
+ "models/weapon/kubikiribocho/kubikiribocho.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 4194
+ },
+ "materials/models/skylyxx/ctg/props/swords/kubikiribocho.vmt": {
+  "src": "[ATG] RESSOURCES #3 (3391053710)",
+  "why": "matériau de kubikiribocho.mdl",
+  "size": 150
+ },
+ "models/weapon/shibuki/shibuki.mdl": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 1964
+ },
+ "models/weapon/shibuki/shibuki.vvd": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 48832
+ },
+ "models/weapon/shibuki/shibuki.dx90.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 9548
+ },
+ "models/weapon/shibuki/shibuki.dx80.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 9548
+ },
+ "models/weapon/shibuki/shibuki.sw.vtx": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 9548
+ },
+ "models/weapon/shibuki/shibuki.phy": {
+  "src": "addon naruto_dev",
+  "why": "modèle",
+  "size": 2028
+ },
+ "materials/models/skylyxx/ctg/props/swords/shibuki.vmt": {
+  "src": "[ATG] RESSOURCES #3 (3391053710)",
+  "why": "matériau de shibuki.mdl",
+  "size": 144
+ },
+ "materials/models/skylyxx/ctg/props/swords/shibuki_scrolls.vmt": {
+  "src": "[ATG] RESSOURCES #3 (3391053710)",
+  "why": "matériau de shibuki.mdl",
+  "size": 152
+ },
+ "materials/models/skylyxx/ctg/props/swords/shibuki_scrolls.vtf": {
+  "src": "[ATG] RESSOURCES #3 (3391053710)",
+  "why": "texture de shibuki_scrolls.vmt",
+  "size": 175000
+ },
+ "materials/models/skylyxx/ctg/props/swords/toon.vtf": {
+  "src": "[ATG] RESSOURCES #3 (3391053710)",
+  "why": "texture de shibuki_scrolls.vmt",
+  "size": 16525
+ },
+ "materials/models/skylyxx/ctg/props/swords/shibuki.vtf": {
+  "src": "[ATG] RESSOURCES #3 (3391053710)",
+  "why": "texture de shibuki.vmt",
+  "size": 175000
+ },
+ "materials/models/skylyxx/ctg/props/swords/kubikiribocho.vtf": {
+  "src": "[ATG] RESSOURCES #3 (3391053710)",
+  "why": "texture de kubikiribocho.vmt",
+  "size": 43928
+ },
+ "materials/models_props/daichi/atg_kabutowari/kabutowari.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de kabutowari.vmt",
+  "size": 11104
+ },
+ "materials/models_props/daichi/atg_hiramekarei/hiramekarei.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de hiramekarei.vmt",
+  "size": 174984
+ },
+ "materials/models/godio/senju_a/senju_a.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de senju_a.vmt",
+  "size": 262368
+ },
+ "materials/models/godio/lightwarpshader.vtf": {
+  "src": "Content - 5s (3788745039)",
+  "why": "texture de senju_a.vmt",
+  "size": 12400
+ },
+ "materials/models/daichi/w_fuma_tkj/fuma_tkj_l.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de fuma_tkj_l.vmt",
+  "size": 349760
+ },
+ "materials/models/loeve_shaders/normal.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de fuma_tkj_l.vmt",
+  "size": 576
+ },
+ "materials/models/loeve_shaders/lightwarptexture2.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de fuma_tkj_l.vmt",
+  "size": 5744
+ },
+ "materials/models/daichi/w_fuma_tkj/fuma_tkj.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de fuma_tkj.vmt",
+  "size": 43912
+ },
+ "materials/models/daichi/w_fuma_tkj/fuma_tkj_b.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de fuma_tkj_b.vmt",
+  "size": 43912
+ },
+ "materials/geams/models/solve_jutsu_rework/material_shark.vtf": {
+  "src": "addon naruto_content",
+  "why": "texture de material_shark.vmt",
+  "size": 1398264
+ },
+ "materials/models/kaesar/solve/naruto_bodies/anbublackops_01/normal.vtf": {
+  "src": "Content - 12s (3788764077)",
+  "why": "texture de material_shark.vmt",
+  "size": 576
+ },
+ "materials/models/kaesar/solve/naruto_bodies/anbublackops_01/lightwarptexture.vtf": {
+  "src": "Content - 11s (3788761373)",
+  "why": "texture de material_shark.vmt",
+  "size": 12400
+ },
+ "materials/models/warwax/salamandre/body.vtf": {
+  "src": "Content - 2s (3788734221)",
+  "why": "texture de body.vmt",
+  "size": 22080
+ },
+ "materials/models/warwax/toon.vtf": {
+  "src": "Content - 6s (3788748135)",
+  "why": "texture de body.vmt",
+  "size": 4224
+ },
+ "materials/models/daichi/m_chunin2_salamandre/m_chunin2_salamandre_bandages.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de m_chunin2_salamandre_bandages.vmt",
+  "size": 349760
+ },
+ "materials/models/daichi/m_chunin2_salamandre/m_chunin2_salamandre_main.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de m_chunin2_salamandre_main.vmt",
+  "size": 349760
+ },
+ "materials/models/daichi/m_chunin2_salamandre/m_chunin2_salamandre_top.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de m_chunin2_salamandre_top.vmt",
+  "size": 349760
+ },
+ "materials/models/daichi/m_chunin1_salamandre/m_chunin1_salamandre_bot.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de m_chunin1_salamandre_bot.vmt",
+  "size": 174984
+ },
+ "materials/models/daichi/lightwarpshader.vtf": {
+  "src": "Content - 6s (3788748135)",
+  "why": "texture de m_chunin1_salamandre_bot.vmt",
+  "size": 12400
+ },
+ "materials/models/daichi/m_chunin1_salamandre/m_salamandre_mask.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de m_salamandre_mask.vmt",
+  "size": 174984
+ },
+ "materials/models/daichi/m_chunin1_salamandre/m_chunin1_salamandre_logo.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de m_chunin1_salamandre_logo.vmt",
+  "size": 43912
+ },
+ "materials/models/daichi/m_chunin1_salamandre/m_chunin1_salamandre_ame.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de m_chunin1_salamandre_ame.vmt",
+  "size": 349760
+ },
+ "materials/models/skylyxx/ctg/characters/mat_proxy.vtf": {
+  "src": "[ATG] RESSOURCES #3 (3391053710)",
+  "why": "texture de mat_skin.vmt",
+  "size": 175000
+ },
+ "materials/models/skylyxx/ctg/characters/toon.vtf": {
+  "src": "[ATG] RESSOURCES #3 (3391053710)",
+  "why": "texture de mat_skin.vmt",
+  "size": 2936
+ },
+ "materials/models/daichi/m_chunin1_salamandre/m_chunin1_salamandre_bras.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de m_chunin1_salamandre_bras.vmt",
+  "size": 174984
+ },
+ "materials/models/godio/goro_salamandre_m/couleurs_salamandre.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de couleurs_salamandre.vmt",
+  "size": 349760
+ },
+ "materials/models/godio/eclypse_salamandre_chef/eclypse_salamandre_chef.vtf": {
+  "src": "[ATG] - PlayerModel - OLDER (3720171985)",
+  "why": "texture de eclypse_salamandre_chef.vmt",
+  "size": 349760
+ },
+ "materials/models/props_wasteland/rocks02a.vtf": {
+  "src": "Content ATG (3663817972)",
+  "why": "texture de rocks02a.vmt",
+  "size": 1398336
+ },
+ "materials/models/props_docks/canal_docks01a.vtf": {
+  "src": "Content - 11s (3788761373)",
+  "why": "texture de dock01a.vmt",
+  "size": 699296
+ },
+ "materials/models/mokuton/mokuton.vtf": {
+  "src": "addon naruto_dev",
+  "why": "texture de mokuton.vmt",
+  "size": 174984
+ },
+ "materials/flower/flower.vtf": {
+  "src": "addon naruto_dev",
+  "why": "texture de flower.vmt",
+  "size": 5592612
+ },
+ "materials/flower/mokuton.vtf": {
+  "src": "addon naruto_dev",
+  "why": "texture de mokuton.vmt",
+  "size": 174984
+ },
+ "materials/models/solve/billy/kgparticule/blanc.vtf": {
+  "src": "addon naruto_dev",
+  "why": "texture de blanc.vmt",
+  "size": 1398336
+ },
+ "materials/models/solve/lightwarpshader.vtf": {
+  "src": "addon naruto_dev",
+  "why": "texture de blanc.vmt",
+  "size": 12400
+ },
+ "materials/models/solve/billy/kgparticule/t_wep_eff_d26nj3_a_01_m.vtf": {
+  "src": "addon naruto_dev",
+  "why": "texture de t_wep_eff_d26nj3_a_01_m.vmt",
+  "size": 349760
+ },
+ "materials/models/kaesar/solve/naruto_head/mi_chr_eyes_wthinl_01.vtf": {
+  "src": "Content - 12s (3788764077)",
+  "why": "texture de mi_chr_eyes_wthinr_01.vmt",
+  "size": 43928
+ },
+ "materials/models/kaesar/solve/naruto_head/normal.vtf": {
+  "src": "Content - 12s (3788764077)",
+  "why": "texture de mi_chr_eyes_wthinr_01.vmt",
+  "size": 576
+ },
+ "materials/models/kaesar/solve/naruto_head/lightwarptexture.vtf": {
+  "src": "Content - 12s (3788764077)",
+  "why": "texture de mi_chr_eyes_wthinr_01.vmt",
+  "size": 5760
+ },
+ "materials/models/kaesar/solve/naruto_head/phong_exp.vtf": {
+  "src": "Content - 12s (3788764077)",
+  "why": "texture de mi_chr_eyes_wthinr_01.vmt",
+  "size": 65743
+ },
+ "materials/models/kaesar/solve/naruto_head/m_line.vtf": {
+  "src": "Content - 7s (3788750500)",
+  "why": "texture de m_line.vmt",
+  "size": 184
+ },
+ "materials/models/kaesar/solve/naruto_head/t_chr_eyebrows_bc.vtf": {
+  "src": "Content - 7s (3788750500)",
+  "why": "texture de t_chr_eyebrows_bc.vmt",
+  "size": 1616
+ },
+ "materials/models/kaesar/solve/naruto_head/t_chr_face_bc.vtf": {
+  "src": "Content - 7s (3788750500)",
+  "why": "texture de t_chr_face_bc.vmt",
+  "size": 2796424
+ },
+ "materials/models/jack/solve/naruto_head/t_chr_woman_straighthair_l_04_bc.vtf": {
+  "src": "Content - 5s (3788745039)",
+  "why": "texture de t_chr_woman_straighthair_l_04_bc.vmt",
+  "size": 22104
+ },
+ "materials/models/kaesar/solve/naruto_head/t_chr_man_shortbob_01_bc.vtf": {
+  "src": "Content - 3pm (3788736487)",
+  "why": "texture de t_chr_man_shortbob_01_bc.vmt",
+  "size": 2968
+ },
+ "materials/models/kaesar/solve/naruto_head/t_chr_man_iwabehat_bc.vtf": {
+  "src": "Content - 12s (3788764077)",
+  "why": "texture de t_chr_man_iwabehat_bc.vmt",
+  "size": 22096
+ },
+ "materials/models/kaesar/solve/naruto_head/t_chr_headgear_metal_konoha_01_bc.vtf": {
+  "src": "Content - 3pm (3788736487)",
+  "why": "texture de t_chr_headgear_metal_konoha_01_bc.vmt",
+  "size": 175000
+ },
+ "materials/models/kaesar/solve/naruto_head/t_chr_man_bandage_bc.vtf": {
+  "src": "Content - 3pm (3788736487)",
+  "why": "texture de t_chr_man_bandage_bc.vmt",
+  "size": 175000
+ },
+ "materials/models/jack/solve/naruto_head/chr_man_hair_global.vtf": {
+  "src": "Content - 12s (3788764077)",
+  "why": "texture de chr_man_hair_global.vmt",
+  "size": 5720
+ },
+ "materials/models/cayzi/ctg/characters/man/body/orga_props_shuriken.vtf": {
+  "src": "[ATG] PlayerModel (3391033750)",
+  "why": "texture de orga_props_shuriken.vmt",
+  "size": 43912
+ },
+ "materials/nuns - small weapons pack/models/demon wind shuriken/demon wind shuriken b/demon wind shuriken b.vtf": {
+  "src": "[FSC] Content RP #2 (3400217203)",
+  "why": "texture de demon wind shuriken b.vmt",
+  "size": 43872
+ },
+ "materials/models/narutorp/kami/wings.vtf": {
+  "src": "[FSC] Content RP #2 (3400217203)",
+  "why": "texture de wings.vmt",
+  "size": 262352
+ },
+ "materials/models/narutorp/clay/toon.vtf": {
+  "src": "content - 1s (3788730849)",
+  "why": "texture de wings.vmt",
+  "size": 16525
+ },
+ "materials/jutsu/models/paper shuriken/paper shuriken.vtf": {
+  "src": "Content - 5s (3788745039)",
+  "why": "texture de paper shuriken.vmt",
+  "size": 5696
+ },
+ "materials/models/kaesar/solve/naruto_bodies/anbublackops_01/lightwarptexture2.vtf": {
+  "src": "Content - 6s (3788748135)",
+  "why": "texture de paper shuriken.vmt",
+  "size": 2936
+ },
+ "materials/models/narutorp/kimimaro/boneblade.vtf": {
+  "src": "[FSC] Content RP #2 (3400217203)",
+  "why": "texture de boneblade.vmt",
+  "size": 32912
+ },
+ "materials/models/narutorp/kimimaro/main.vtf": {
+  "src": "content - 1s (3788730849)",
+  "why": "texture de mat_0012.vmt",
+  "size": 262352
+ },
+ "materials/models/mask_hanzou/mask_hanzou.vtf": {
+  "src": "addon naruto_dev",
+  "why": "texture de mask_hanzou.vmt",
+  "size": 43912
+ }
+}
