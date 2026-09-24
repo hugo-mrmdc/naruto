@@ -1,0 +1,12 @@
+
+"SpriteCard"
+{
+             "$basetexture" "gow_fx/txr_smoke"
+	$additive 0
+	$overbrightfactor 1
+	$blendframes 1
+	$depthblend 0
+	$addself 5
+                $overbrightfactor 3.0
+                $vertexalpha 1
+}

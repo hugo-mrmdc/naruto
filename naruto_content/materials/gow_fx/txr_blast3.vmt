@@ -1,0 +1,18 @@
+"UnlitGeneric"
+{
+             "$basetexture" "gow_fx/txr_blast3"
+               $additive 1
+                "$translucent" "1"
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+"Proxies"
+	{
+	"AnimatedTexture"
+		{
+		"animatedTextureVar" "$basetexture"
+		"animatedTextureFrameNumVar" "$frame"
+		"animatedTextureFrameRate" "10"
+		}
+	}
+
+}

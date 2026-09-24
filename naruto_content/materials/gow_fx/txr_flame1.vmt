@@ -1,0 +1,17 @@
+
+"SpriteCard"
+{
+             "$basetexture" "gow_fx/txr_flame1"
+"$translucent" 1
+	"$vertexcolor" 1
+	"$additive" 1
+	"Proxies"
+	{
+	"AnimatedTexture"
+		{
+		"animatedTextureVar" "$basetexture"
+		"animatedTextureFrameNumVar" "$frame"
+		"animatedTextureFrameRate" "29"
+		}
+	}
+}

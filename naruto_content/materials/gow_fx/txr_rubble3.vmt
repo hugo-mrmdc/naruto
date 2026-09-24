@@ -1,0 +1,8 @@
+
+"SpriteCard"
+{
+             "$basetexture" "gow_fx/txr_rubble3"
+               "$translucent" 1
+	"$vertexcolor" 1
+	"$additive" 0
+}

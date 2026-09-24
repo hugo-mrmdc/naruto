@@ -1,0 +1,30 @@
+"UnlitGeneric"
+{
+	"$basetexture" "gluk/windattacktextures/windeffects2"
+                "$lightwarptexture" "gluk/windattacktextures/lightwarpshader"
+	"$nocull" 1
+	"$translucent" 1
+                "$additive" 0
+	"$nodecal" 1
+
+	"$angle" 0
+	"$translate" "[0 0]" 
+
+	"Proxies"
+	{
+		"LinearRamp"
+		{
+			rate 1500
+			initialValue 0.0
+			resultVar $angle
+		}
+
+		"TextureTransform"
+		{
+			translateVar $translate
+			rotateVar $angle
+			resultVar $basetexturetransform
+		}
+	}
+
+}

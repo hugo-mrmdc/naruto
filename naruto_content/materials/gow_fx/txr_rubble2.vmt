@@ -1,0 +1,9 @@
+
+"UnlitGeneric"
+{
+             "$basetexture" "gow_fx/txr_rubble2"
+               $additive 0
+                "$translucent" "1"
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+}

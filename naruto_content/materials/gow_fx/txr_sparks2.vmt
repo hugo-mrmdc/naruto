@@ -1,0 +1,9 @@
+
+"UnlitGeneric"
+{
+             "$basetexture" "gow_fx/txr_sparks2"
+               $additive 1
+                "$translucent" "1"
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+}
