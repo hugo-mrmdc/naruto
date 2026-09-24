@@ -1,0 +1,8 @@
+"Spritecard"
+{
+	"$basetexture"	"effects/workshop/glow_05_triangle"
+	$vertexcolor 1
+	$vertexalpha 1
+	$translucent 1
+	$additive 1
+}

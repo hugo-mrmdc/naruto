@@ -1,0 +1,5 @@
+"Spritecard"
+{
+	"$basetexture" "Effects/workshop/dollar"
+	"$translucent" 1
+}

@@ -1,0 +1,12 @@
+"Spritecard"
+{
+	"$basetexture" "effects/workshop/firefly"
+	$vertexcolor 1
+	$vertexalpha 1
+	$Additive 1
+	"$addself" "0.3"
+	$translucent 1
+	$overbrightfactor 3
+	"$alphatest" "1"
+	"$depthblend" "0"
+}

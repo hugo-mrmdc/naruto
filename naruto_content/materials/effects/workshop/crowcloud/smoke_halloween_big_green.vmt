@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+	"$basetexture" "effects/workshop/crowcloud/smoke_halloween_big_green"
+	"$blendframes" 1
+	"$depthblend" 1
+	"$additive" 0
+}

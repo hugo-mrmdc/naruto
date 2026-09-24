@@ -1,0 +1,6 @@
+"SpriteCard"
+{
+	"$basetexture" "Effects/workshop/flower_sprites"
+	"$translucent" 1
+	"$DEPTHBLEND" 1
+}

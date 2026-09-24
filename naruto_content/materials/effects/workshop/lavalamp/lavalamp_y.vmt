@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+	"$basetexture" "Effects/workshop/lavalamp/lavalamp_y"
+	"$blendframes" 0
+	"$depthblend" 1
+	"$additive" 1
+}

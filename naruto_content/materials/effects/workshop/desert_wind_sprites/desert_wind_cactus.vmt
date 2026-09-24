@@ -1,0 +1,8 @@
+"Spritecard"
+{
+	"$basetexture" "effects/workshop/desert_wind_sprites/desert_wind_cactus"
+	"$translucent" 0
+	"$vertexcolor" 1
+	"$vertexalpha" 1
+	"$depthblend" 0
+}

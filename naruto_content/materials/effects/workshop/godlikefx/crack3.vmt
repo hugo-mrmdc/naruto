@@ -1,0 +1,10 @@
+"SpriteCard"
+{
+	"$basetexture"	"effects/workshop/godlikefx/crack3"
+	"$additive"	1
+	"$vertexcolor" 	1
+	"$vertexalpha"	1
+	"$depthblend" 	0
+                "$overbrightfactor"  5
+}
+

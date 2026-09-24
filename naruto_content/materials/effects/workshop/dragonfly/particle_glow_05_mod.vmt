@@ -1,0 +1,8 @@
+"SpriteCard"
+{
+	"$basetexture" "effects/workshop/dragonfly/particle_glow_05_mod"
+	$vertexcolor 1
+	$vertexalpha 1
+	$surfaceprop	"default"
+	$additive 1
+}

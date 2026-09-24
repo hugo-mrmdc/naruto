@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+	"$basetexture" "effects/workshop/crowcloud/Animated_Blinking_Eyes"
+	"$blendframes" 1
+	"$depthblend" 1
+	"$additive" 0
+}

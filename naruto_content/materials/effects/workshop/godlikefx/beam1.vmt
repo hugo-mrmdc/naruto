@@ -1,0 +1,8 @@
+"Sprite"
+{
+	"$basetexture" "effects/workshop/godlikefx/beam1"
+	"$blendframes" 0
+	"$depthblend" 1
+	"$translucent" 1
+	"$spriterendermode" 4
+}

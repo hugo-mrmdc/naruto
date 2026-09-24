@@ -1,0 +1,8 @@
+"Spritecard"
+{
+	"$basetexture"	"Effects/workshop/fadingskull/splash_ring_add"
+	"$vertexalpha" 	1
+	"$vertexcolor" 	1
+	"$additive"	1
+                "$depthblend"	0
+}

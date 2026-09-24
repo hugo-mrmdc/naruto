@@ -1,0 +1,21 @@
+"SpriteCard"
+{
+	"$basetexture" "effects/workshop/festive_lights1"
+	"$surfaceprop"	"no_decal"
+	"$vertexcolor"	1
+	"$vertexalpha"	1	
+	"$additive"	1	
+	"$overbrightfactor"	3
+	"Proxies" 
+{ 
+"AnimatedTexture" 
+{ 
+	"animatedTextureVar" "$basetexture" 
+	"animatedTextureFrameNumVar" "$frame" 
+	"animatedTextureFrameRate" "1" 
+}
+} 
+}
+
+
+

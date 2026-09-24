@@ -1,0 +1,8 @@
+"Spritecard"
+{
+	//"srgb?$overbrightfactor" "1.5"
+	"$baseTexture" "effects/workshop/electricfiresprite/electricfiresprite"
+	$translucent 1
+	"$addself" "0"
+	$depthblend 1
+}

@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+	"$basetexture"	"effects/workshop/hippie_flowers"
+	"$vertexalpha"	"1"
+	"$blendframes"	"0"
+	"$depthblend"	"0"
+}
