@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+    "$basetexture" "effects/workshop/prettiest_glow"
+    "$translucent" 1
+    "$alpha" 1
+    "$additive" 0
+}

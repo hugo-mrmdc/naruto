@@ -1,0 +1,6 @@
+"spritecard"
+{
+	"$basetexture" "effects/workshop/ray/ray2"
+	"$additive" 1
+	"$depthblend" 1
+}

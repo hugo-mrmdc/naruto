@@ -1,0 +1,8 @@
+"SpriteCard"
+{
+	"$basetexture" "effects/workshop/sapped/light2"
+	"$blendframes" 0
+	"$depthblend" 1
+	"$additive" 1
+	"$overbrightfactor"	15
+}

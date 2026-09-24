@@ -1,0 +1,10 @@
+"Unlitgeneric"
+{
+	"$basetexture"	"effects/workshop/rainbow_shine"
+	"$surfaceprop"	"no_decal"
+	"$additive"	1
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+}
+
+

@@ -1,0 +1,14 @@
+"SpriteCard"
+{
+	"$basetexture"	"effects/workshop/rainbow_rays"
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+	"$additive"	1
+	"$blendframes"	"0"
+}
+
+
+
+
+
+

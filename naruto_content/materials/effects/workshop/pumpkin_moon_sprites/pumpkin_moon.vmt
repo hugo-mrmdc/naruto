@@ -1,0 +1,9 @@
+"Spritecard"
+{
+	//"srgb?$overbrightfactor" "1.5"
+	"$baseTexture" "Effects/workshop\pumpkin_moon_sprites/pumpkin_moon"
+	$translucent 1
+	"$addself" "0"
+	$DEPTHBLEND 0
+}
+

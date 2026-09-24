@@ -1,0 +1,13 @@
+"SpriteCard"
+{
+	"$basetexture"	"effects/workshop/pumpkin_field"
+	"$translucent" 0
+      	"$vertexcolor" 1
+     	"$vertexalpha" 1
+  	   "$depthblend" 0
+	"$blendframes"	"0"
+
+}
+
+
+
