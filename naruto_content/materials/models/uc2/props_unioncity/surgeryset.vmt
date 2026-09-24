@@ -1,6 +1,0 @@
-"VertexLitGeneric"
-{
-	"$baseTexture" "models/uc2/props_unioncity/surgeryset"
-	$selfillum 1
-	$selfillummask "models/uc2/props_unioncity/surgeryset_lum"
-}

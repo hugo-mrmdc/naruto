@@ -1,7 +1,0 @@
-"VertexLitGeneric"
-{
-	"$model" "1"
-	"$basetexture"	"models/props_forest/oak_leaf_sheet_02"
-	"$alphatest" "1"
-	"$nocull" "1"
-}

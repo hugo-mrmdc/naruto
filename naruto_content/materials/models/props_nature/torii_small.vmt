@@ -1,6 +1,0 @@
-"vertexlitGeneric"
-{
-	"$baseTexture" "models\props_nature\torii_small"
-	"$surfaceprop" "wood"
-	"$alphatest" 1
-}

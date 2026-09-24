@@ -1,7 +1,0 @@
-"VertexlitGeneric"
-{
-	"$basetexture" "models/foc_flag/feu_flag"
-	"$bumpmap" "models/foc_flag/vent_flag_n"
-
-	"$nocull" 1 
-}

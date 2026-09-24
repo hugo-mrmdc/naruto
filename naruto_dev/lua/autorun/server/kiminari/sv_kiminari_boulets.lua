@@ -43,6 +43,8 @@ local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.l
 local DUREE_MUDRA  = 0.3    -- mudras avant l'envol
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 local ANIM_COUPE   = 0.4    -- l'animation de mudras est coupée après ces secondes (0 = entière)
+local ANIM_VOL     = "nrp_ninjutsu_attack_aerial_d21nj3_start"   -- jouée en l'air, avant le premier tir
+local ANIM_VOL_COUPE = 0    -- l'animation en l'air est coupée après ces secondes (0 = entière)
 
 local SON_ENVOL    = "ambient/energy/zap9.wav"
 local SON_CHARGE   = "ambient/energy/electric_loop.wav"
@@ -149,6 +151,7 @@ local function Envol(ply)
     ply:SetVelocity(Vector(0, 0, Niv(ply, "montee", MONTEE)) - ply:GetVelocity())
     ply:EmitSound(SON_ENVOL, 80, 100, 1)
     ply:EmitSound(SON_CHARGE, 70, 120, 0.6)
+    NA_AnimJutsu(ply, ANIM_VOL, Niv(ply, "anim_vol_coupe", ANIM_VOL_COUPE))   -- animation en l'air avant de tirer
 
     local n = math.floor(Niv(ply, "boules", BOULES))
     local delai = Niv(ply, "delai", DELAI)

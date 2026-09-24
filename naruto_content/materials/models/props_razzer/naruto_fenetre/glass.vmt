@@ -1,6 +1,0 @@
-"vertexlitgeneric"
-{
-	"$basetexture" "narutorazzer/glass"
-	"$surfaceprop" "glass"
-               	"$envmap" "env_cubemap"
-}

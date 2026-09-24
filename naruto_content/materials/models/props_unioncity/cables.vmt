@@ -1,7 +1,0 @@
-"vertexlitgeneric"
-{
-	"$basetexture" "unioncity/lights/cables"
-	"$alphatest"	"1"
-	"$nocull"	"1"
-	"$surfaceprop" "plastic"
-}

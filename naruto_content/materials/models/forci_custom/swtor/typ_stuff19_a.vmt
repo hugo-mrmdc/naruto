@@ -1,7 +1,0 @@
-"VertexlitGeneric"
-{
-	"$basetexture" "models\forci_custom\swtor/typ_stuff19_a"
-	"$surfaceprop" "Grass"
-	"$alphatest" 1
-	"$nocull" 1
-}

@@ -1,9 +1,0 @@
-"UnlitGeneric"
-{
-	"$basetexture" "models/narutoMap/sa00ztext57"
-	"$alphatest" 1
-    	"$envmapcontrast" 1
-    	"$envmapsaturation" 1
-    	"$nocull" 1
-
-}

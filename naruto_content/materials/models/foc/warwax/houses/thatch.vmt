@@ -1,7 +1,0 @@
-"VertexLitGeneric"
-{
-	"$basetexture" "models/foc/warwax/houses/Thatch"
-	"$surfaceprop" "Carpet"
-	"$nocull" 1
-	"$model" 1
-}

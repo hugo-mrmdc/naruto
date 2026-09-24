@@ -1,7 +1,0 @@
-"VertexlitGeneric"
-{
-	"$basetexture"	"models/amegakure/tete"
-	"$bumpmap"	"models/tete_normal"
-	"$envmap"	"models/tete_Roughness"
-	"$selfillummask"	"models/tete_h"
-}

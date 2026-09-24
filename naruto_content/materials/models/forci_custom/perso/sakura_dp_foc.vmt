@@ -1,6 +1,0 @@
-"VertexlitGeneric"
-{
-	"$basetexture" "models/forci_custom/perso/sakura_dp_foc"
-	"$alphatest" 1
-	"$nocull" 1
-}

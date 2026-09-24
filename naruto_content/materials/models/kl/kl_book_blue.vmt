@@ -1,8 +1,0 @@
-"VertexlitGeneric"
-{
-	"$basetexture" "models/kl/kl_book_blue"
-	"$bumpmap" "models/kl/kl_bookNRM"
-	"$normalmap" "models/kl/kl_bookNRM"
-}
-
-

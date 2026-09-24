@@ -1,7 +1,0 @@
-"vertexlitgeneric"
-{
-	"$basetexture" "swamp/wood/swampwall015"
-	//"$bumpmap" "wood/wall015_normal"
-	"$surfaceprop" "wood"
-	"%keywords" "tf"
-}

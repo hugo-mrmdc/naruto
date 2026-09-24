@@ -1,8 +1,0 @@
-"VertexlitGeneric"
-{
-	"$basetexture" "Models/props_overgrown/bushes_002b"
-	"$bumpmap" "models\props_overgrown/bushes_002_n"	
-	"$translucent" "1"
-	"$alphatest" "1"
-
-}

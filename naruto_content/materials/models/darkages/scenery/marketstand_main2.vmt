@@ -1,6 +1,0 @@
-"VertexlitGeneric"
-{
-	"$basetexture" "models/darkages/scenery/marketstand_main2"
-	"$alphatest" 1
-	"$nocull" 1
-}

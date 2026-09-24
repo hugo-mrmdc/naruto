@@ -1,9 +1,0 @@
-"vertexlitgeneric"
-{
-	"$basetexture" "labs/se1_glass_window_01"
-	"$surfaceprop" "glass"
-	"$envmap" "env_cubemap"
-	"$envmapmask" "labs/se1_glass_window_01_mask"
-	"$translucent" 1
-	"%keywords" "labs"
-} 

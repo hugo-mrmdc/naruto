@@ -32,6 +32,7 @@ local CHAKRA_COUT  = 40     -- chakra dépensé (0 = gratuit)
 local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.5    -- incantation avant la première salve
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
+local ANIM_TIR     = "m_ni_atk_ninjutsu_d21nj3_start"   -- jouée après les mudras, au début des salves
 
 local SON_CHARGE   = "ambient/energy/electric_loop.wav"
 local SON_TIR      = "ambient/energy/zap%d.wav"     -- %d = 1 à 3
@@ -161,7 +162,10 @@ net.Receive("kiminari_laser_cast", function(_, ply)
         timer.Simple(mudra + i * intervalle, function()
             if i == vagues - 1 then enCours[ply] = nil end
             if not IsValid(ply) then return end
-            if i == 0 then ply:StopSound(SON_CHARGE) end
+            if i == 0 then
+                ply:StopSound(SON_CHARGE)
+                NA_AnimJutsu(ply, ANIM_TIR)   -- animation après les mudras
+            end
             Salve(ply)
         end)
     end

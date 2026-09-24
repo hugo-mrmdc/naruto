@@ -1,8 +1,0 @@
-vertexlitgeneric
-{
-	"$basetexture"	"de_nuke\nukwindowa"
-	"$envmap" "env_cubemap"
-	"$envmapmask" "de_nuke\nukwindowa_ref"
-	"$surfaceprop" "glass"
-
-}

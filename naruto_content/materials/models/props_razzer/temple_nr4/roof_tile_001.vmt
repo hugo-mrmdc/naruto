@@ -1,6 +1,0 @@
-"vertexlitgeneric"
-{
-	"$basetexture" "tile/roof_tile_001"
-	"$bumpmap" "tile/roof_tile_001_normal" 
-	"%keywords" "tf"
-}

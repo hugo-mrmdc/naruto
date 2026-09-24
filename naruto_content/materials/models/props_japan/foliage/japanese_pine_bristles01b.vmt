@@ -1,6 +1,0 @@
-"VertexlitGeneric"
-{
-	"$baseTexture" "models\props_japan\foliage\japanese_pine_bristles01b"
-	"$nocull" "1"
-	"$alphatest" "1"
-}

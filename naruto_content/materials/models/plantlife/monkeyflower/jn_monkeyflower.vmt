@@ -1,6 +1,0 @@
-"vertexlitgeneric"
-{
-	"$alphatest" 1
-        "$baseTexture" "models\Plantlife\monkeyflower\jn_monkeyflower"
-	"$nocull" 1
-}

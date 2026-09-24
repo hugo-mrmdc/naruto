@@ -1,7 +1,0 @@
-"VertexLitGeneric"
-{
-	"$baseTexture" "models\aoc_tents/Pav03a"
-	"$bumpmap" "models\aoc_tents/Pav01a_norm"
-	$alphatest 1
-	"$nocull" 1
-}

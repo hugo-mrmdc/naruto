@@ -1,7 +1,0 @@
-"vertexlitgeneric"
-{
-	"$basetexture"	"medieval/stonewall001a"
-	"$bumpmap"	"medieval/stonewall001a_ssbump"
-	"$surfaceprop"	"concrete"
-	"%keywords"	"tf"
-}

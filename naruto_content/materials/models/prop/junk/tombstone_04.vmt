@@ -1,8 +1,0 @@
-"VertexlitGeneric"
-{
-	// Original shader: VertexLitTexture
-	"$basetexture" "models\prop\junk\tombstone_04"
-        "$bumpmap" "models\prop\junk\tombstone_04_N"
-	"$surfaceprop" "rock"
-        "$model" 1
-}

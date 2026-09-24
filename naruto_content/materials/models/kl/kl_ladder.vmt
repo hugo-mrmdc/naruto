@@ -1,6 +1,0 @@
-"VertexlitGeneric"
-{
-	"$basetexture" "models/kl/kl_ladder"
-	"$bumpmap" "models/kl/kl_ladderNRM"
-	"$normalmap" "models/kl/kl_ladderNRM"
-}

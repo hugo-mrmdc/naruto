@@ -1,7 +1,0 @@
-"VertexLitGeneric"
-{
-	$basetexture "models/props_japan/waterclock01"
-	$surfaceprop wood
-	$model 1
-	
-}

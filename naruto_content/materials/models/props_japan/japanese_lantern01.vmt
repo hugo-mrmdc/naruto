@@ -1,7 +1,0 @@
-"VertexLitGeneric"
-{
-	$basetexture "models/props_japan/japanese_lantern01"
-	$surfaceprop rock
-	$model 1
-	
-}
