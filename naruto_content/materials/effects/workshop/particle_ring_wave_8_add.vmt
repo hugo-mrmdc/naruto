@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+	"$basetexture" "particle\particle_ring_wave_8"
+	$additive 1
+	$depthblend 0
+	$depthblendscale 12
+}

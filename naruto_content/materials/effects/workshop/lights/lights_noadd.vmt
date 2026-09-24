@@ -1,0 +1,9 @@
+"sprite"
+{
+	"$basetexture" "effects/workshop/lights/lights_noadd"
+	"$spriterendermode" 4
+	"$translucent" 1 
+	"$depthblend" 0
+	"$vertexalpha" 1
+	"$vertexcolor" 1
+}

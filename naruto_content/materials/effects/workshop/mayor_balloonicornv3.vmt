@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture" "Effects/workshop/Mayor_Balloonicornv3"
+	"$alphatest" 1
+	"$translucent" 1
+	"$nocull" 1
+}

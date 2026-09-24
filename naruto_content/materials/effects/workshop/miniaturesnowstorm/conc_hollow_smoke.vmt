@@ -1,0 +1,15 @@
+"Refract"
+{
+ 	"$normalmap" "effects/workshop/miniaturesnowstorm/conc_hollow_smoke"
+ 	"$refractamount" "0"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+	"$translucent" "1"
+	"$nocull" 1
+	"$forcerefract" 1
+ 	"$bluramount" "0"
+	"$nofog" "1"
+	"$vertexcolormodulate" "1"
+
+}
+

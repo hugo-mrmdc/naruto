@@ -1,0 +1,20 @@
+"UnlitGeneric"
+{
+	"$basetexture" "effects/workshop/mohawk_flame_purple_nonadd"
+	"$surfaceprop"	"no_decal"
+	"$additive"	0
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+	"$nocull" 1
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,8 @@
+"SpriteCard"
+{
+ 	"$basetexture" "effects/workshop/miniaturesnowstorm/medicbeam_curl_hd"
+	"$translucent"	0
+               "$additive"    1
+                 "$depthblend" 0
+}
+

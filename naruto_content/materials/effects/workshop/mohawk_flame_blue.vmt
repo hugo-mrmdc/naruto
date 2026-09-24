@@ -1,0 +1,18 @@
+"UnlitGeneric"
+{
+	"$basetexture" "effects/workshop/mohawk_flame_blue"
+	"$surfaceprop"	"no_decal"
+	"$additive"	1
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+	"$nocull" 1
+}
+
+
+
+
+
+
+
+
+

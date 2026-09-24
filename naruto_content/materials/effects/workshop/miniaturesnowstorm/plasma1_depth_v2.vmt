@@ -1,0 +1,8 @@
+"SpriteCard"
+{
+ 	"$basetexture" "effects/plasma1"
+	"$translucent" 0
+	"$depthblend" 0
+	"$additive" 1
+}
+

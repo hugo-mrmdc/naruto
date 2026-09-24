@@ -1,0 +1,8 @@
+"SpriteCard"
+{
+ 	"$basetexture" "effects/workshop/miniaturesnowstorm/softglow_utaunt"
+	"$translucent"	0
+               "$additive"    1
+                 "$depthblend" 0
+}
+

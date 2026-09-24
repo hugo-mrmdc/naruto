@@ -1,0 +1,8 @@
+"SpriteCard"
+{
+ 	"$basetexture" "effects/workshop/miniaturesnowstorm/plasma1_hd"
+	"$translucent" 1
+	"$depthblend" 1
+	"$additive" 1
+}
+

@@ -1,0 +1,15 @@
+"UnlitGeneric"
+{
+	"$basetexture" "effects/workshop/poseidon_fin_left_green"
+	"$surfaceprop"	"no_decal"
+	"$additive"	1
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+	"$nocull" 0
+}
+
+
+
+
+
+

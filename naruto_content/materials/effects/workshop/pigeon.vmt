@@ -1,0 +1,8 @@
+"SpriteCard"
+{
+	"$basetexture" "effects/workshop/Pigeon"
+	"$blendframes" 0
+	"$depthblend" 1
+$translucent 1
+	"$additive" 0
+}
