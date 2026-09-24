@@ -1,0 +1,8 @@
+"Spritecard"
+{
+	"$basetexture" "effects/Explosion/explosion_beta_sequence"
+	$translucent 1
+//	"$overbrightfactor" "2"
+//	"$addself" "0.5"
+	"$additive" "1"
+}
