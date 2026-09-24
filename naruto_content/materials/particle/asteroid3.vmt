@@ -1,0 +1,7 @@
+SpriteCard
+{
+	"$basetexture" "particle/asteroid3"
+	"$translucent" 1
+	"$vertexalpha" 1
+	"$vertexcolor" 1
+}
