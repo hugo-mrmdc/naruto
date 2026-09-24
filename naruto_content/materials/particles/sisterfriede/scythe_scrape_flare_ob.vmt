@@ -1,0 +1,15 @@
+"SpriteCard"
+{
+	$basetexture 		"particle/sisterfriede/scythe_scrape_flare"
+
+	$depthblend 		1
+	$depthblendscale 	1
+
+	$overbrightfactor 	2
+	$addself 			1
+	
+	$vertexcolor 		1
+	$vertexalpha 		1
+	
+	$additive 			1
+}

@@ -1,0 +1,22 @@
+"VertexLitGeneric"
+{
+	$basetexture 				"dev/hide"
+
+	$nocull						1
+	$nodecal 					1
+
+	$alphatest 					1
+	$translucent 				1
+	$additive 					1
+	
+	$selfillumt 				1
+	$selfillumtint 				"[ 1 1 1 ]"
+	
+	$emissiveBlendEnabled 		1
+	$emissiveBlendTexture		"particle/particle_glow_04"
+	$emissiveBlendBaseTexture	"particle/sisterfriede/snowflake"
+	$emissiveBlendFlowTexture	"effects/strider_bulge_dudv"
+	$emissiveBlendTint 			"[ 8 10 36 ]"
+	$emissiveBlendStrength 		1
+	$emissiveBlendScrollVector 	"[ 0.6 -1 ]"
+}

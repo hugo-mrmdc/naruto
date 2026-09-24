@@ -1,0 +1,7 @@
+SpriteCard
+{
+
+$basetexture "effects/tracer"
+$additive 1
+$splinetype 2
+}
