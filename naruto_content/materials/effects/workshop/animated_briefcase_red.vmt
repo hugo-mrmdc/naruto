@@ -1,0 +1,8 @@
+"SpriteCard"
+{
+	"$baseTexture" "effects/workshop/animated_briefcase_red"
+	"$alphatest" 1
+	"$translucent" 1
+	"$nocull" 1
+}
+

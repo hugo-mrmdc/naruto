@@ -1,0 +1,6 @@
+"SpriteCard"
+{
+	"$basetexture" "Effects/workshop/alien_text"
+	$translucent	1
+	$blendframes	0
+}

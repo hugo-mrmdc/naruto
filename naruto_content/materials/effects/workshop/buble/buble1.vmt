@@ -1,0 +1,7 @@
+"Spritecard"
+{
+	"$basetexture" "effects/workshop/buble/buble1"
+	"$additive" 0
+	"$depthblend" 1
+	"$translucent" 1
+}

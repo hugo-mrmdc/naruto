@@ -1,0 +1,5 @@
+"SpriteCard"
+{
+	"$basetexture" "Effects/workshop/comicdots"
+	$additive	1
+}

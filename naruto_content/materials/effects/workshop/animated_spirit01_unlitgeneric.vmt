@@ -1,0 +1,9 @@
+UnlitGeneric
+{
+	$basetexture "Effects/workshop/animated_spirit01_flipped"
+	$translucent 1
+	$additive 1
+	$overbrightfactor 2
+	$vertexalpha 1
+	$vertexcolor 1
+}

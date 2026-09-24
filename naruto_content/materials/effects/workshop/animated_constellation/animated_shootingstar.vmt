@@ -1,0 +1,8 @@
+"SpriteCard"
+{
+	"$basetexture" "Effects\workshop\animated_constellation\animated_shootingstar"
+   	$translucent 1
+    	$additive 1
+   	$DEPTHBLEND 0
+}
+

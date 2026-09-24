@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+	"$baseTexture" "Effects\workshop\animated_vulture_bird/vulture_bird"
+	$translucent 1
+	$vertexalpha 1
+	$vertexcolor 1
+}

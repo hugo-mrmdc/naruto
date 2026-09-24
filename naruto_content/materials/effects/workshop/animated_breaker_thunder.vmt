@@ -1,0 +1,8 @@
+"SpriteCard"
+{
+	"$basetexture"	"effects/workshop/animated_breaker_thunder"
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+	"$additive"	1
+	"$overbrightfactor"	3
+}

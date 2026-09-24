@@ -1,0 +1,9 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"effects/workshop/arrow_unusual/pinkarrow_tail"
+	"$additive"	0
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+	$nocull 1
+	$DEPTHBLEND "0"   
+}

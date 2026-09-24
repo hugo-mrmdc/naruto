@@ -1,0 +1,9 @@
+"Spritecard"
+{
+	//"srgb?$overbrightfactor" "1.5"
+	"$baseTexture" "Effects/workshop\animated_ghost/animated_ghost"
+	$translucent 1
+	"$addself" "0"
+	$DEPTHBLEND 0
+}
+

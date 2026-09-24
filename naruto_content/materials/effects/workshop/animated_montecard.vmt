@@ -1,0 +1,9 @@
+"Spritecard"
+{
+	"$basetexture"	"effects/workshop/animated_montecard"
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+	"$farfadeinterval"	1
+	"$overbrightfactor"	2
+
+}

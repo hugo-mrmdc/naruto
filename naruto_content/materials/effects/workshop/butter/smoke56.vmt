@@ -1,0 +1,7 @@
+"spritecard"
+{
+	"$basetexture" "effects/workshop/butter/smoke56"
+	"$additive" 1
+	"$depthblend" 1
+	"$translucent" 0
+}

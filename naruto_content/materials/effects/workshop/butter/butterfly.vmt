@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+	"$basetexture" "effects/workshop/butter/butterfly"
+	"$blendframes" 0
+	"$depthblend" 1
+	"$additive" 1
+}
