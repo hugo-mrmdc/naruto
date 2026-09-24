@@ -1,0 +1,17 @@
+"refract"
+{
+	$normalmap 			"particle/doom/wraithwarp1_normal"
+
+	$refractamount 			0.4
+	$bluramount 			0.2	
+
+	$vertexalpha 			1
+	$vertexcolor 			1
+	$modulate 			1
+
+	$translucent 			1
+	$forcerefract 			1
+ 
+	$nofog 				1
+	$vertexcolormodulate 		1
+}

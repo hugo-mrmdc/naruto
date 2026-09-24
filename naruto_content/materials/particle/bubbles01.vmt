@@ -1,0 +1,8 @@
+SpriteCard
+{
+$basetexture "particle\bubbles01"
+$translucent 1
+
+$vertexcolor 1
+$vertexalpha 1
+}

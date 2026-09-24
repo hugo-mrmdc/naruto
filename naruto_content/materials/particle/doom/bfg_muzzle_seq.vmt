@@ -1,0 +1,15 @@
+SpriteCard
+{
+
+$basetexture "particle/doom/bfg_muzzle_seq"
+
+$MOD2X 1
+$OVERBRIGHTFACTOR 10
+
+$SEQUENCE_BLEND_MODE 0 
+$CROPFACTOR "[1 1]"
+$ADDSELF 1
+$DEPTHBLEND 1
+$BLENDFRAMES 1
+
+}
