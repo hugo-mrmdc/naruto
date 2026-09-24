@@ -1,0 +1,6 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/effects/air/hemisphere"
+    "$vertexalpha" "1"
+    "$nocull" "1"
+    "$vertexcolor" "1"
+}

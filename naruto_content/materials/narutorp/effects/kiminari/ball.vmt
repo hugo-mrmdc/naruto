@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+    "$basetexture" "narutorp/effects/kiminari/ball"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

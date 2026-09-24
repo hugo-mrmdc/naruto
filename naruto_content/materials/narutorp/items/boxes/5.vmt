@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	"$basetexture" "narutorp/items/boxes/5"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

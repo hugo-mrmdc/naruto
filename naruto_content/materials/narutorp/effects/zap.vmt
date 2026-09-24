@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/effects/zap"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

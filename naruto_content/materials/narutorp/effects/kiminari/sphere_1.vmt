@@ -1,0 +1,8 @@
+"SpriteCard" {
+    "$basetexture" "narutorp/effects/kiminari/sphere_1"
+    "$blendframes" "0"
+    "$orientation" "0"
+    
+    
+    "$vertexalpha" "1"
+}

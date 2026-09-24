@@ -1,0 +1,14 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/effects/waterbeam"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "Proxies"
+    {
+        "TextureScroll"
+        {
+            "texturescrollvar" "$baseTextureTransform"
+            "texturescrollrate" "2"
+            "texturescrollangle" "-90"
+        }
+    }
+}

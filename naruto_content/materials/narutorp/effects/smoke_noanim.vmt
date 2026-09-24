@@ -1,0 +1,6 @@
+VertexLitGeneric{
+    "$basetexture" "narutorp/effects/smoke_bright"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "$color2" "[.5 .5 .5]"
+}

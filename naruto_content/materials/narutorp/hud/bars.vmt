@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/hud/bars"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

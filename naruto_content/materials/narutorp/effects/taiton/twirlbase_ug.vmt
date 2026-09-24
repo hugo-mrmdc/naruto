@@ -1,0 +1,6 @@
+"UnlitGeneric" {
+    "$basetexture" "narutorp/effects/taiton/twirlbase"
+    "$vertexcolor" "1"
+    "$additive" "1"
+    "$vertexalpha" "1"
+}

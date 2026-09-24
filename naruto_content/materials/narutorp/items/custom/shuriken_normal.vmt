@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	"$basetexture" "narutorp/items/custom/shuriken_normal"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

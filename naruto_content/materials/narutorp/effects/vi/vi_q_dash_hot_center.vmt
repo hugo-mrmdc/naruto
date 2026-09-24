@@ -1,0 +1,6 @@
+"UnlitGeneric" {
+	"$baseTexture" "narutorp/effects/vi/vi_q_dash_hot_center"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+	"$additive" "1"
+}

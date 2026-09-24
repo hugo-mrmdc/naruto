@@ -1,0 +1,12 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/effects/noise_2"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "Proxies" {
+        "TextureScroll"{
+            "textureScrollVar" "$basetexturetransform"
+            "textureScrollRate" "1.5"
+            "textureScrollAngle" "90"
+        }
+    }
+}

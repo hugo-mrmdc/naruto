@@ -1,0 +1,7 @@
+VertexLitGeneric {
+    "$model" "1"
+    "$basetexture" "narutorp/effects/byakugan/chakra_shield"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "$halflambert" "1"
+}

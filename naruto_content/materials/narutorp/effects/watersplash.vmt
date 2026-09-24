@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/effects/watersplash"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

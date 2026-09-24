@@ -1,0 +1,7 @@
+"SpriteCard" {
+    "$basetexture" "narutorp/effects/lava/lava_melt"
+    "$blendframes" "0"
+    "$orientation" "0"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

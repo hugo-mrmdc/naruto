@@ -1,0 +1,15 @@
+VertexLitGeneric {
+    "$model" "1"
+    "$basetexture" "narutorp/effects/byakugan/stripes_horizontal"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "$halflambert" "1"
+
+    "Proxies" { 
+        "TextureScroll" {
+            "texturescrollvar" "$basetexturetransform"
+            "texturescrollrate" ".15"
+            "texturescrollangle" "90"
+        }
+    }
+}

@@ -1,0 +1,12 @@
+VertexLitGeneric {
+    "$basetexture" "narutorp/effects/chinoike/vladimir_base_e_bloodball_stings"
+    "$nocull" "1"
+    "Proxies" {
+        "TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" .25
+			"texturescrollangle" 60
+		}
+    }
+}

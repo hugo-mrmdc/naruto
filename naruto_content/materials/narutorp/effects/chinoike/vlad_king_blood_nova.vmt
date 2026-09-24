@@ -1,0 +1,33 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/effects/chinoike/vlad_king_blood_nova"
+    "$additive" "1"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "$angle" "0"
+    "$rate" "100"
+
+    "Proxies" {
+        "Sine" {
+            sineperiod 4
+			sinemin -.1
+			sinemax .1
+			timeoffset .2
+			resultvar $size
+        }
+        "GaussianNoise" {
+            resultVar $rate
+            scale 100
+        }
+        "LinearRamp" {
+            rate $rate
+            initialValue 0
+            resultVar $angle
+        }
+        "TextureTransform"
+		{
+			scalevar $size
+            rotateVar $angle
+			resultvar $basetexturetransform
+		}
+    }
+}

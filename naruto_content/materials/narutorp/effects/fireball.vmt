@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/effects/fireball"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/effects/electric_zone"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

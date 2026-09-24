@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/effects/windwallrepel"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

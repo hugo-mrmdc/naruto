@@ -1,0 +1,12 @@
+VertexLitGeneric{
+    "$basetexture" "narutorp/gumball/gumball"
+    "$bumpmap" "null-bumpmap"
+    "$phong" "1"
+    "$phongexponent"			"50"			// either/or
+	"$phongboost"				"5.0"
+	"$phongfresnelranges"		"[0 0.5 1]"
+    "$phongexponentfactor"      "5"
+    $rimlight               1
+	$rimlightexponent       2
+	$rimlightboost          .2
+}

@@ -1,0 +1,7 @@
+"SpriteCard" {
+    "$basetexture" "narutorp/effects/rainrock/flameshit"
+    "$blendframes" "1"
+    "$orientation" "0"
+    "$translucent" "1"
+    "$vertexalpha" "1"
+}

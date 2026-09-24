@@ -1,0 +1,18 @@
+"VertexLitGeneric" {
+	"$baseTexture" "narutorp/effects/kennen/base_floor"
+	"$translucent" "1"
+	"$vertexalpha" "1"
+	"$additive" "1"
+	"$alpha" ".5"
+
+	"$detail" "narutorp/effects/kennen/overlay1"
+	"$detailblendmode" "0"
+
+	"Proxies" {
+		"TextureScroll" {
+			"texturescrollvar" "$detailtexturetransform"
+			"texturescrollrate" 1
+			"texturescrollangle" 90
+		}
+	}
+}

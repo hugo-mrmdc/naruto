@@ -1,0 +1,5 @@
+"VertexLitGeneric" {
+	"$baseTexture" "narutorp/effects/kennen/light4"
+	"$additive" "1"
+	"$selfillum" "1"
+}

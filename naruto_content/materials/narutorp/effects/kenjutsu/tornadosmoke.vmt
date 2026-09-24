@@ -1,0 +1,6 @@
+"UnlitGeneric" {
+    "$basetexture" "narutorp/effects/kenjutsu/tornadosmoke"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "$additive" "1"
+}

@@ -1,0 +1,9 @@
+"SpriteCard" {
+    "$basetexture" "narutorp/effects/taiton/twirl"
+    "$blendframes" "0"
+    "$orientation" "0"
+    "$translucent" "1"
+    "$additive" "1"
+    "$vertexalpha" "1"
+    "$color2" "[.4 .55 .8]"
+}

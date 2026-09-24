@@ -1,0 +1,8 @@
+"SpriteCard" {
+    "$basetexture" "narutorp/effects/explosion/exp_t2"
+    "$blendframes" "0"
+    "$orientation" "0"
+    "$translucent" "1"
+    "$depthblend" "1"
+    "$vertexalpha" "1"
+}

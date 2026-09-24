@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+    "$basetexture" "narutorp/effects/ice/freezetrail"
+    "$vertexcolor" "1"
+    "$vertexalpha" "1"
+}

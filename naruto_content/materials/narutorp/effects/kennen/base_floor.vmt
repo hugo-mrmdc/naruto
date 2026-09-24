@@ -1,0 +1,7 @@
+"VertexLitGeneric" {
+	"$baseTexture" "narutorp/effects/kennen/base_floor"
+	"$translucent" "1"
+	"$vertexalpha" "1"
+	"$additive" "1"
+
+}

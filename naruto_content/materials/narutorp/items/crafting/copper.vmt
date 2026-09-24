@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	"$basetexture" "narutorp/items/crafting/copper"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

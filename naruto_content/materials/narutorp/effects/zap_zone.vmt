@@ -1,0 +1,12 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/effects/zap_zone"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "Proxies" {
+        "AnimatedTexture" {
+            "animatedTextureVar" "$basetexture"
+            "animatedTextureFrameNumVar" "$frame"
+            "animatedTextureFrameRate" "15"
+        }
+    }
+}

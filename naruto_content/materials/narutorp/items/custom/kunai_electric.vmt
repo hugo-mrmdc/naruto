@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	"$basetexture" "narutorp/items/custom/kunai_electric"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/effects/deiton/smoke"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

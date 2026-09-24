@@ -1,0 +1,7 @@
+"SpriteCard" {
+    "$basetexture" "narutorp/effects/ringexplode"
+    "$blendframes" "0"
+    "$orientation" "0"
+    "$translucent" "1"
+    "$vertexalpha" "1"
+}

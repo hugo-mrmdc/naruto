@@ -1,0 +1,6 @@
+"UnlitGeneric" {
+	"$baseTexture" "narutorp/effects/kennen/floor"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+	"$additive" "1"
+}

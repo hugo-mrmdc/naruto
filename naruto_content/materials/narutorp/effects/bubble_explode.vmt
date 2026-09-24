@@ -1,0 +1,5 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/effects/bubbleexplode"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

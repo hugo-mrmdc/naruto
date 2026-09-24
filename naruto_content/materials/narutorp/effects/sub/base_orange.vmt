@@ -1,0 +1,6 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/effects/sub/base_orange"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "$additive" "1"
+}

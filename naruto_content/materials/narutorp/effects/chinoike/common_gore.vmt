@@ -1,0 +1,22 @@
+VertexLitGeneric {
+    "$basetexture" "narutorp/effects/chinoike/common_gore"
+
+    "$nocull" "1"
+    "$size" "1"
+    "$model" "1"
+
+    "Proxies" {
+        "Sine" {
+            sineperiod 1.7
+			sinemin 0.95
+			sinemax 1.05
+			timeoffset .2
+			resultvar $size
+        }
+        "TextureTransform"
+		{
+			scalevar $size
+			resultvar $basetexturetransform
+		}
+    }
+}

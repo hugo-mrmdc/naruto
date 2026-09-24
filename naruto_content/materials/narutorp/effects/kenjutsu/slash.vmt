@@ -1,0 +1,5 @@
+"VertexLitGeneric" {
+    "$basetexture" "narutorp/effects/kenjutsu/slash"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

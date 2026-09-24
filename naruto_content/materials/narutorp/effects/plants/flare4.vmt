@@ -1,0 +1,5 @@
+"SpriteCard" {
+    "$basetexture" "narutorp/effects/plants/flare"
+    "$vertexalpha" "1"
+    "$additive" "1"
+}

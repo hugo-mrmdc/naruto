@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+    "$basetexture" "narutorp/effects/inkuton/splash1"
+    "$vertexcolor" "1"
+    "$vertexalpha" "1"
+}

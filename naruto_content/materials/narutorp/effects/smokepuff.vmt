@@ -1,0 +1,7 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/effects/smokepuff"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "$depthblend" "1"
+    "$nocull" "1"
+}

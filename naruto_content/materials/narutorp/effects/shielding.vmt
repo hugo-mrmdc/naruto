@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+	"$baseTexture" "narutorp/effects/shielding"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

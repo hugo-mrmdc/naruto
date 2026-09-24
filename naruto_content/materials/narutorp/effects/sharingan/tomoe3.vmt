@@ -1,0 +1,5 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/effects/sharingan/tomoe3"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

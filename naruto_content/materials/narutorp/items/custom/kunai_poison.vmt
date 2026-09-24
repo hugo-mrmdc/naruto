@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	"$basetexture" "narutorp/items/custom/kunai_poison"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

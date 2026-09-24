@@ -1,0 +1,6 @@
+"UnlitGeneric" {
+	"$baseTexture" "narutorp/effects/vi/vi_r_target_ring"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+	"$additive" "1"
+}

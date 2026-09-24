@@ -1,0 +1,5 @@
+UnlitGeneric {
+    $basetexture "narutorp/effects/plants/target"
+    $vertexalpha "1"
+    $vertexcolor "1"
+}

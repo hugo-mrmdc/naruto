@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+    "$basetexture" "narutorp/effects/jax/glow"
+    "$vertexcolor" "1"
+    "$vertexalpha" "1"
+}

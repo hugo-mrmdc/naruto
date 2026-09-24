@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+	"$baseTexture" "narutorp/effects/vi/vi_base_q_ground_trench"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

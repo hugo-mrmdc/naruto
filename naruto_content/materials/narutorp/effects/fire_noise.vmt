@@ -1,0 +1,13 @@
+UnlitGeneric{
+    "$basetexture" "narutorp/effects/fire_noise"
+    "$detail" "narutorp/effects/cloud_noise"
+    "$nocull" "1"
+    "$translate" "[0 0]"
+    "Proxies" {
+        "TextureScroll"{
+            "textureScrollVar" "$basetexturetransform"
+            "textureScrollRate" ".5"
+            "textureScrollAngle" "135"
+        }
+    }
+}

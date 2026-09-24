@@ -1,0 +1,13 @@
+"UnlitGeneric" {
+    "$basetexture" "narutorp/effects/taiton/dash"
+    "$additive" "0"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "Proxies" {
+        TextureScroll {
+            texturescrollvar "$basetexturetransform"
+            texturescrollrate 4
+            texturescrollangle 0
+        }
+    }
+}

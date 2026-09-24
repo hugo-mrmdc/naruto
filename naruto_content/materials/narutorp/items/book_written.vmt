@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+	"$baseTexture" "narutorp/items/book_written"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

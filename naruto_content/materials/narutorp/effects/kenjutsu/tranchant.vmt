@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+    "$basetexture" "narutorp/effects/kenjutsu/tranchant"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

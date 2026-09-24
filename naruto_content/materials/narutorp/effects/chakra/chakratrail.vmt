@@ -1,0 +1,17 @@
+"UnlitGeneric" {
+	"$baseTexture" "narutorp/effects/chakra/chakratrail"
+	"$detail" "narutorp/effects/chakra/smoke"
+    "$detailscale" "2"
+    "$detailblendmode" "0"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "$nocull" "1"
+    "Proxies" {
+        "TextureScroll"
+		{
+			"texturescrollvar" "$detailtexturetransform"
+			"texturescrollrate" 2
+			"texturescrollangle" -45
+		}
+    }
+}

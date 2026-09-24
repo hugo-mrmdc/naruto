@@ -1,0 +1,21 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/effects/chakra/fire_anim2"
+    "$detailscale" "2"
+    "$detailblendmode" "0"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "$nocull" "1"
+    "Proxies" {
+        "AnimatedTexture" {
+            "animatedTextureVar" "$basetexture"
+            "animatedTextureFrameNumVar" "$frame"
+            "animatedTextureFrameRate" "15"
+        }
+        "TextureScroll"
+		{
+			"texturescrollvar" "$detailtexturetransform"
+			"texturescrollrate" 2
+			"texturescrollangle" -45
+		}
+    }
+}

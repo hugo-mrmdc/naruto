@@ -1,0 +1,13 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/effects/senju/leave"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+
+    "Proxies" {
+        "AnimatedTexture" {
+            "animatedTextureVar" "$basetexture"
+            "animatedTextureFrameNumVar" "$frame"
+            "animatedTextureFrameRate" "24"
+        }
+    }
+}

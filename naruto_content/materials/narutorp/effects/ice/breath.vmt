@@ -1,0 +1,7 @@
+"SpriteCard" {
+    "$basetexture" "narutorp/effects/ice/breath"
+    "$blendframes" "0"
+    "$translucent" "1"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+}

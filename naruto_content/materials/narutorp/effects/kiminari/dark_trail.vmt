@@ -1,0 +1,4 @@
+"UnlitGeneric" {
+    "$basetexture" "narutorp/effects/kiminari/dark_trail"
+    "$vertexalpha" "1"
+}

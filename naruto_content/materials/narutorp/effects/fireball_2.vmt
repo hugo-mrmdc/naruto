@@ -1,0 +1,15 @@
+UnlitGeneric {
+    "$basetexture" "narutorp/effects/fireball_2"
+    "$vertexalpha" "1"
+    "$vertexcolor" "1"
+    "Proxies" {
+        "AnimatedTexture" {
+            "animatedTextureVar" "$basetexture"
+            "animatedTextureFrameNumVar" "$frame"
+            "animatedTextureFrameRate" "24"
+        }
+        "Alpha" {
+            $alpha $frame
+        }
+    }
+}
