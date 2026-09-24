@@ -1,0 +1,13 @@
+"SpriteCard"
+{
+	$basetexture "faris/custom/impact/elec1"
+	$translucent "1"
+	$vertexalpha	1
+	$vertexcolor	1
+
+	$additive 1
+	$overbrightfactor	3
+
+	$depthblend	0
+	$blendframes	1
+}

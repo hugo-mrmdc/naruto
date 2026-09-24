@@ -1,0 +1,9 @@
+"SpriteCard"
+{
+	$basetexture "faris/custom/impact/magic9"
+	$translucent "1"
+	$blendframes "1"
+	$vertexcolor "1"
+	$vertexalpha "1"
+	$additive "1"
+}

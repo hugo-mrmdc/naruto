@@ -1,0 +1,6 @@
+"UnlitGeneric" {
+	"$baseTexture" "faris/custom/onepiece/T_EF_lightning00_BU15"
+	"$additive" "1"
+	"$vertexalpha" "1"
+	"$vertexcolor" "1"
+}

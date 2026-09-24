@@ -1,0 +1,21 @@
+UnlitGeneric
+{
+	$basetexture faris/effects/impact
+	$surfaceprop Default
+	$translucent 1
+	$vertexcolor 1
+	$vertexalpha 1
+	$additive 1
+    $alpha 1
+	Proxies
+	{
+		"AnimatedTexture"
+        {
+            "animatedtexturevar" "$basetexture"  // Текстура для анимации
+            "animatedtextureframenumvar" "$frame" // Номер текущего кадра
+            "animatedtextureframerate" "16"       // Скорость (кадров в секунду)
+            "animatedtexturewrap" "1"             // 1 = зациклить анимацию
+        }
+	}
+
+}
