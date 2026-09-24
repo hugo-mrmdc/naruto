@@ -1,0 +1,11 @@
+"Spritecard"
+{
+	"$basetexture" "particle/Ac/insandstorm_t_thinsmoke_01_bc"
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+	"$translucent" "1"
+//      "$additive" "1"
+	"$depthblend"  "1"
+	"$depthblendscale"  "45"
+	"$blendframes" "1"
+}

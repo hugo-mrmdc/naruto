@@ -1,0 +1,11 @@
+"Sprite"
+{
+	$basetexture 	"particle/beam_electrical"
+	$additive 		1
+	$spriterendermode 	5
+	$splinetype 		1
+//	$depthblend 		1
+//	$depthblendscale 	1
+//	$addself 			1
+	$overbrightfactor 	8
+}

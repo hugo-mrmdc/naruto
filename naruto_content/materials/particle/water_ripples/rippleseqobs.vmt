@@ -1,0 +1,11 @@
+"Spritecard"
+{
+	"$basetexture" "particle\water_ripples\rippleseqobs"
+	$BLENDFRAMES 1
+	$SEQUENCE_BLEND_MODE 1
+	$depthblend 0
+	"$translucent" 1
+    "$vertexalpha" 1
+    "$vertexcolor" 1
+    "$nocull" 1
+}

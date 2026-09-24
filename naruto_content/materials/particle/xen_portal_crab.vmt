@@ -1,0 +1,9 @@
+"UnlitGeneric"
+{
+	"$basetexture" "particle/xen_portal_crab"
+	"$additive" 1
+	//"$translucent" 1
+	"$vertexalpha" 1
+	"$vertexcolor" 1
+	"$ignorez" "1"
+}
