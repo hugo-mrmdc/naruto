@@ -20,6 +20,10 @@ KamiWings.VITESSE_MONTEE   = 500   -- Espace
 KamiWings.VITESSE_DESCENTE = 500   -- Ctrl
 KamiWings.INERTIE          = 8     -- plus grand = arrêt plus sec, plus petit = plus planant
 
+-- Flottement : léger va-et-vient vertical, comme si les ailes portaient le corps
+KamiWings.FLOTTE_HAUTEUR   = 6     -- amplitude en unités (0 = pas de flottement)
+KamiWings.FLOTTE_PERIODE   = 2.5   -- secondes pour un aller-retour complet
+
 -- Le corps pivote en douceur vers la direction de la caméra (degrés par seconde
 -- environ multipliés par cette valeur). Plus grand = il suit plus vite.
 KamiWings.ROTATION_CORPS   = 20
@@ -56,6 +60,13 @@ hook.Add("Move", "KamiWings_Move", function(ply, mv)
 
     if mv:KeyDown(IN_JUMP) then voulu.z = voulu.z + KamiWings.VITESSE_MONTEE end
     if mv:KeyDown(IN_DUCK) then voulu.z = voulu.z - KamiWings.VITESSE_DESCENTE end
+
+    -- flottement : vitesse = dérivée du sinus, donc la position oscille de FLOTTE_HAUTEUR
+    -- (ailes seulement ; sans effet quand on monte / descend volontairement)
+    if ply:GetNW2Bool("NA_Wings", false) and not mv:KeyDown(IN_JUMP) and not mv:KeyDown(IN_DUCK) then
+        local w = 2 * math.pi / KamiWings.FLOTTE_PERIODE
+        voulu.z = voulu.z + math.cos(CurTime() * w) * w * KamiWings.FLOTTE_HAUTEUR
+    end
 
     -- accélération douce vers la vitesse voulue (la vitesse est portée par le
     -- moteur, donc prédite elle aussi)
@@ -102,21 +113,33 @@ end)
 -- CLIENT : le corps suit la caméra en douceur
 ----------------------------------------------------------
 if CLIENT then
-    hook.Add("PrePlayerDraw", "KamiWings_BodyYaw", function(ply)
-        if not EnVol(ply) then
-            ply.KamiWingsYaw = nil
-            return
+    -- Le cap est calculé UNE fois par image (PrePlayerDraw peut être appelé plusieurs fois
+    -- par image : ombres, reflets... la rotation allait alors trop vite / par à-coups).
+    hook.Add("PreRender", "KamiWings_BodyYaw", function()
+        for _, ply in ipairs(player.GetAll()) do
+            if not EnVol(ply) then
+                ply.KamiWingsYaw = nil
+                continue
+            end
+
+            local cible = ply:EyeAngles().y
+            local actuel = ply.KamiWingsYaw or cible
+
+            -- rotation progressive par le chemin le plus court
+            local diff = math.NormalizeAngle(cible - actuel)
+            ply.KamiWingsYaw = actuel + diff * math.Clamp(KamiWings.ROTATION_CORPS * FrameTime(), 0, 1)
         end
+    end)
 
-        local cible = ply:EyeAngles().y
-        local actuel = ply.KamiWingsYaw or cible
+    -- Appliqué au joueur ET avant de lire l'os des ailes (cl_kami_wings.lua), quel que soit
+    -- l'ordre de dessin : sinon les ailes lisent le squelette de l'image précédente et traînent.
+    function KamiWings.AppliquerCap(ply)
+        if not ply.KamiWingsYaw then return end
+        ply:SetRenderAngles(Angle(0, ply.KamiWingsYaw, 0))
+        ply:InvalidateBoneCache()   -- sinon les ailes gardent l'ancienne orientation
+    end
 
-        -- rotation progressive par le chemin le plus court
-        local diff = math.NormalizeAngle(cible - actuel)
-        actuel = actuel + diff * math.Clamp(KamiWings.ROTATION_CORPS * FrameTime(), 0, 1)
-        ply.KamiWingsYaw = actuel
-
-        ply:SetRenderAngles(Angle(0, actuel, 0))
-        ply:InvalidateBoneCache()   -- sinon les ailes (bonemerge) gardent l'ancienne orientation
+    hook.Add("PrePlayerDraw", "KamiWings_BodyYaw", function(ply)
+        if EnVol(ply) then KamiWings.AppliquerCap(ply) end
     end)
 end

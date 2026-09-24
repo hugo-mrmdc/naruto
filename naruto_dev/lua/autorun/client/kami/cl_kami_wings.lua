@@ -27,6 +27,10 @@ end
 
 local function AfficherAiles(self, flags)
     local ply = self:GetParent()
+    if IsValid(ply) then
+        KamiWings.AppliquerCap(ply)
+        ply:SetupBones()   -- squelette de CETTE image, pas de la précédente
+    end
     local os = IsValid(ply) and ply:LookupBone(OS_DOS)
     local m = os and ply:GetBoneMatrix(os)
 

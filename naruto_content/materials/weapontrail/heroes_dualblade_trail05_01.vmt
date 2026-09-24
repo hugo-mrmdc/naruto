@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "weapontrail/heroes_dualblade_trail05_01"
+	"$additive" "1"
+	"$vertexalpha" "1"
+	"$vertexcolor" 1
+	
+	"$nocull" 1
+}

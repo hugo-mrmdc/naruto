@@ -565,12 +565,12 @@ NA_NIV_TECH.kiminari_prison = {
 -- Laser Circus (sv_kiminari_laser.lua) : degats = par laser
 NA_NIV_TECH.kiminari_laser = {
     [1] = {
-        degats = 14, chakra = 40, recharge = 5, vagues = 3, intervalle = 0.35, cibles = 5,
-        portee = 1200, angle = 45, duree_mudra = 0.5,
+        degats = 14, chakra = 40, recharge = 5, vagues = 3, intervalle = 0.35,
+        portee = 1200, duree_mudra = 0.5,
     },
     [2] = { degats = 16 },
     [3] = { degats = 18, vagues = 4, recharge = 5 },
-    [4] = { degats = 20, cibles = 6, portee = 1400 },
+    [4] = { degats = 20, portee = 1400 },
     [5] = { degats = 40, vagues = 5, chakra = 35, recharge = 5 },
 }
 
@@ -611,4 +611,39 @@ NA_NIV_TECH.jiton_emergence = {
     [3] = { degats = 10, duree = 7, recharge = 16 },
     [4] = { degats = 11, rayon = 230, ralenti = 0.55 },
     [5] = { degats = 13, duree = 8, chakra = 25, recharge = 14, ralenti = 0.5 },
+}
+
+-- Tornade de sable (sv_jiton_tornade.lua / entities/jiton_tornade.lua) : degats = une fois par ennemi,
+-- distance parcourue = vitesse x duree
+NA_NIV_TECH.jiton_tornade = {
+    [1] = {
+        degats = 25, chakra = 40, recharge = 24, vitesse = 600, duree = 2.5, rayon = 110,
+        hauteur = 220, projection = 350, duree_mudra = 0.5,
+    },
+    [2] = { degats = 28 },
+    [3] = { degats = 32, duree = 3, recharge = 22 },
+    [4] = { degats = 36, rayon = 130 },
+    [5] = { degats = 42, vitesse = 700, duree = 3, chakra = 35, recharge = 18 },
+}
+
+-- Nuage de sable (sv_jiton_nuage.lua) : duree = secondes de vol
+NA_NIV_TECH.jiton_nuage = {
+    [1] = { chakra = 35, recharge = 45, duree = 20, duree_mudra = 0.5 },
+    [2] = { duree = 22 },
+    [3] = { duree = 25, recharge = 40 },
+    [4] = { duree = 28, chakra = 30 },
+    [5] = { duree = 32, recharge = 35 },
+}
+
+-- Vortex de sable (sv_jiton_vortex.lua) : même aspiration que le Vortex de sang
+NA_NIV_TECH.jiton_vortex = {
+    [1] = {
+        degats = 10, chakra = 30, recharge = 20, duree = 3.5, rayon = 200, force = 3000,
+        portee = 900, rayon_attire = 450, tourbillon = 900, pas = 0.05, vitesse_pnj = 350,
+        intervalle = 0.5, duree_mudra = 0.5,
+    },
+    [2] = { degats = 12 },
+    [3] = { degats = 14, duree = 4,   rayon = 230 },
+    [4] = { degats = 16, recharge = 18 },
+    [5] = { degats = 20, duree = 5,   rayon = 260, force = 3600 },
 }

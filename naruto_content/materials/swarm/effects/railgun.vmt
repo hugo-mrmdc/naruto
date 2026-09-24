@@ -1,0 +1,28 @@
+Refract
+{
+Refract_DX60
+{
+$fallbackmaterial "effects/strider_pinch_dudv_dx60"
+}
+$model 1
+$refractamount ".01"
+$bluramount 0
+
+
+$nofog 1
+$normalmap "swarm/effects/railgun"
+
+$bumpframe 0
+$translucent 1
+
+$forcerefract 1
+
+
+
+
+
+
+
+
+
+}

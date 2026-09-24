@@ -1,0 +1,9 @@
+"UnlitGeneric"
+{
+	"$basetexture" "weapontrail/heroes_dualblade_dark01_02"
+	"$additive" "0"
+	"$vertexalpha" "1"
+	"$vertexcolor" 1
+	
+	"$nocull" 1
+}

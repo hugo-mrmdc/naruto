@@ -5,6 +5,9 @@
 game.AddParticles("particles/atg_faris.pcf")
 PrecacheParticleSystem("[1]_sand_sarcophag")
 PrecacheParticleSystem("[1]_sand_emergence")
+PrecacheParticleSystem("[1]_sand_vortex")
+PrecacheParticleSystem("[1]_sand_tornado")
+PrecacheParticleSystem("[1]_sand_cloud")
 
 -- Émergence de sable : ralenti des joueurs qui se tiennent dans la zone.
 -- NW2Float "NA_JitonEmergenceFin" = moment où le ralenti s'arrête, "NA_JitonEmergenceRalenti" =
@@ -21,15 +24,30 @@ if SERVER then
     resource.AddFile("particles/atg_faris.pcf")
     resource.AddFile("materials/ui/icon/jiton_sarcophage_de_sable.png")
     resource.AddFile("materials/ui/icon/jiton_emergence_de_sable.png")
+    resource.AddFile("materials/ui/icon/jiton_vortex_de_sable.png")
+    resource.AddFile("materials/ui/icon/jiton_tornade_de_sable.png")
+    resource.AddFile("materials/ui/icon/jiton_suspension_du_desert.png")
 
     AddCSLuaFile("autorun/client/jiton/cl_jiton_sarcophage.lua")
     include("autorun/server/jiton/sv_jiton_sarcophage.lua")
 
     AddCSLuaFile("autorun/client/jiton/cl_jiton_emergence.lua")
     include("autorun/server/jiton/sv_jiton_emergence.lua")
+
+    AddCSLuaFile("autorun/client/jiton/cl_jiton_vortex.lua")
+    include("autorun/server/jiton/sv_jiton_vortex.lua")
+
+    AddCSLuaFile("autorun/client/jiton/cl_jiton_tornade.lua")
+    include("autorun/server/jiton/sv_jiton_tornade.lua")
+
+    AddCSLuaFile("autorun/client/jiton/cl_jiton_nuage.lua")
+    include("autorun/server/jiton/sv_jiton_nuage.lua")
 end
 
 if CLIENT then
     include("autorun/client/jiton/cl_jiton_sarcophage.lua")
     include("autorun/client/jiton/cl_jiton_emergence.lua")
+    include("autorun/client/jiton/cl_jiton_vortex.lua")
+    include("autorun/client/jiton/cl_jiton_tornade.lua")
+    include("autorun/client/jiton/cl_jiton_nuage.lua")
 end

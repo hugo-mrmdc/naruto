@@ -1,0 +1,8 @@
+"Sprite"
+{
+	"$spriteorientation" "vp_parallel"
+	"$spriteorigin" "[ 0.50 0.50 ]"
+	"$basetexture" "sprites/light_glow02"
+	$startfadesize 0.2
+	$endfadesize 0.425
+}

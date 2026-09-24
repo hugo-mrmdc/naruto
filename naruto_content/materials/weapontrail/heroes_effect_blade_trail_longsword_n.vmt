@@ -1,0 +1,25 @@
+
+"Refract"
+{
+ 	"$bumpmap"		"weapontrail/heroes_effect_blade_trail_longsword_n"
+	"$BUMPFRAME"		"0"
+
+ 	"$BLURAMOUNT"		"0"
+	"$FADEOUTONSILHOUETTE"	"0"
+
+	"$REFRACTAMOUNT"	"0.03"
+	
+	"$BLENDTINT"			"[1 1 1]"
+//	"$BLENDTEXTURE"			"weapontrail/dust"
+//	"$ADDITIVE"		"1"
+
+	"$NOWRITEZ"		"0"
+	"$NOCULL" 		"1"
+	
+	"$VERTEXCOLOR"		"1"	
+	"$VERTEXALPHA"		"1"
+
+	"$DISCARD_ALPHA"	"1"	
+	
+	"$NOFOG" 	"1"
+}

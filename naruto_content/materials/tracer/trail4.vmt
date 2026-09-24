@@ -1,0 +1,9 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"tracer/trail4"
+	"$additive"	0
+                 "$translucent" "1"
+
+	"$vertexcolor"	1
+	"$vertexalpha"	1
+}

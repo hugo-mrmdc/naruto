@@ -1,0 +1,15 @@
+Refract
+{
+
+$normalmap "vorovanno/particle/water/Water_beam_01_normal"
+$dudvmap "vorovanno/particle/water/Water_beam_01__dudv"
+$refractamount "-.6"
+
+$vertexalpha 1
+$vertexcolor 1
+$translucent 1
+
+
+$nofog 1
+$vertexcolormodulate 1
+}

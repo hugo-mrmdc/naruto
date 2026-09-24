@@ -1,0 +1,8 @@
+"Sprite"
+{
+	$nosrgb 1
+	// formerly "oriented"
+	"$spriteorientation" "oriented"
+	"$spriteorigin" "[ 0.50 0.50 ]"
+	"$basetexture" "sprites/glow_fluorescent01"
+}

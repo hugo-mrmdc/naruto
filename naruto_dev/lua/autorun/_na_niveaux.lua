@@ -61,7 +61,7 @@ NA_NIV.LIGNEES = {
     { "kami_shuriken", "kami_circle", "kami_bouclier", "kami_ailes", "kami_roue" },
     { "jinton_cube", "jinton_bouclier", "jinton_laser" },
     { "kiminari_frappe", "kiminari_prison", "kiminari_laser", "kiminari_boulets" },
-    { "jiton_sarcophage", "jiton_emergence" },
+    { "jiton_sarcophage", "jiton_emergence", "jiton_vortex", "jiton_tornade", "jiton_nuage" },
     { "kaguya_armure", "kaguya_danse", "kaguya_legion" },
     { "chinoike_ketsuryugan", "chinoike_genjutsu", "chinoike_pluie", "chinoike_vortex" },
 }

@@ -1,10 +1,9 @@
 --========================================================
 -- Kiminari : Laser Circus (SERVEUR)
 --
--- Après les mudras, le lanceur tire VAGUES salves de lasers : à chaque salve,
--- un laser part de sa main vers chaque ennemi visible devant lui (cône ANGLE,
--- PORTEE max, CIBLES max), qui prend des dégâts. Sans ennemi, un laser part
--- quand même vers le point visé.
+-- Après les mudras, le lanceur tire VAGUES salves : à chaque salve, un laser part
+-- de sa main vers le point qu'il REGARDE (PORTEE max, pas de visée automatique) ;
+-- l'ennemi touché par ce rayon prend des dégâts.
 -- Particule : laser_circus_kiminari_pat (particles/patlick_atgparticules.pcf),
 -- un rayon du point de contrôle 0 (départ) au point de contrôle 1 (arrivée).
 --
@@ -22,10 +21,8 @@ util.AddNetworkString("kiminari_laser_fx")
 local DEGATS       = 14     -- dégâts par laser
 local VAGUES       = 3      -- nombre de salves
 local INTERVALLE   = 0.35   -- secondes entre deux salves
-local CIBLES       = 5      -- ennemis touchés au maximum par salve
 
 local PORTEE       = 1200   -- distance max des lasers
-local ANGLE        = 45     -- demi-angle du cône devant le lanceur (degrés)
 
 local RECHARGE     = 26     -- secondes avant de pouvoir relancer (depuis le lancement)
 local CHAKRA_COUT  = 40     -- chakra dépensé (0 = gratuit)
@@ -63,70 +60,36 @@ local function Depart(ply)
     return ply:EyePos() + ply:GetAimVector() * 20
 end
 
--- Ennemis visibles dans le cône devant le lanceur, les plus proches d'abord
-local function Cibles(ply, depart)
-    local portee = Niv(ply, "portee", PORTEE)
-    local cosMin = math.cos(math.rad(Niv(ply, "angle", ANGLE)))
-    local regard = ply:GetAimVector()
-    local liste = {}
-
-    for _, ent in ipairs(ents.FindInSphere(depart, portee)) do
-        if not EstCible(ent, ply) then continue end
-        local centre = ent:WorldSpaceCenter()
-        local dir = centre - depart
-        local dist = dir:Length()
-        if dist > portee or dist < 1 then continue end
-        if regard:Dot(dir / dist) < cosMin then continue end
-
-        local tr = util.TraceLine({ start = depart, endpos = centre, filter = { ply, ent }, mask = MASK_SHOT })
-        if tr.Hit then continue end   -- un mur entre les deux
-
-        liste[#liste + 1] = { ent = ent, dist = dist }
-    end
-
-    table.sort(liste, function(a, b) return a.dist < b.dist end)
-    local max = Niv(ply, "cibles", CIBLES)
-    local res = {}
-    for i = 1, math.min(#liste, max) do res[i] = liste[i].ent end
-    return res
-end
-
 local function Salve(ply)
     if not IsValid(ply) or not ply:Alive() then return end
 
     local depart = Depart(ply)
-    local cibles = Cibles(ply, depart)
-    local arrivees = {}
 
-    for _, ent in ipairs(cibles) do
+    -- le laser va où le lanceur regarde ; ce qu'il touche est blessé
+    local tr = util.TraceLine({
+        start = ply:EyePos(),
+        endpos = ply:EyePos() + ply:GetAimVector() * Niv(ply, "portee", PORTEE),
+        filter = ply,
+        mask = MASK_SHOT,
+    })
+
+    if EstCible(tr.Entity, ply) then
         local dmg = DamageInfo()
         dmg:SetDamage(NA_Stat(ply, "kiminari_laser", "degats", DEGATS))
         dmg:SetAttacker(ply)
         dmg:SetInflictor(ply)
         dmg:SetDamageType(DMG_SHOCK)
-        dmg:SetDamagePosition(ent:WorldSpaceCenter())
-        ent:TakeDamageInfo(dmg)
-        ent:EmitSound(string.format(SON_TOUCHE, math.random(1, 6)), 75, math.random(95, 110), 0.8)
-        arrivees[#arrivees + 1] = ent:WorldSpaceCenter()
-    end
-
-    -- personne : un laser part quand même vers le point visé
-    if #arrivees == 0 then
-        local tr = util.TraceLine({
-            start = ply:EyePos(),
-            endpos = ply:EyePos() + ply:GetAimVector() * Niv(ply, "portee", PORTEE),
-            filter = ply,
-            mask = MASK_SHOT,
-        })
-        arrivees[1] = tr.HitPos
+        dmg:SetDamagePosition(tr.HitPos)
+        tr.Entity:TakeDamageInfo(dmg)
+        tr.Entity:EmitSound(string.format(SON_TOUCHE, math.random(1, 6)), 75, math.random(95, 110), 0.8)
     end
 
     ply:EmitSound(string.format(SON_TIR, math.random(1, 3)), 80, math.random(100, 115), 0.9)
 
     net.Start("kiminari_laser_fx")
         net.WriteVector(depart)
-        net.WriteUInt(#arrivees, 6)
-        for _, pos in ipairs(arrivees) do net.WriteVector(pos) end
+        net.WriteUInt(1, 6)
+        net.WriteVector(tr.HitPos)
     net.Broadcast()
 end
 

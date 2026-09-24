@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+    "$basetexture" "Ya_jjk_trail_2"
+    "$translucent" 1
+    "$vertexalpha" 1
+    "$vertexcolor" 1
+    "$nocull" 1
+}

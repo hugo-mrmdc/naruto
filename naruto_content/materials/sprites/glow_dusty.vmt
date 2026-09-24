@@ -1,0 +1,49 @@
+"UnlitTwoTexture"
+{
+	"$spriteorientation" "vp_parallel"
+	"$spriteorigin" "[ 0.50 0.00 ]"
+	"%tooltexture" "sprites/glow_dusty"
+	"$basetexture" "effects/dust_window_scroll"
+	"$texture2" "sprites/glow_Test02"
+	"$nodecal"	1
+	"$scale" "[1 1]"
+	"$scroll" "[7 7]"
+	"$additive"	1
+	$vertexalpha 1
+	$vertexcolor 1
+	
+//	$ignorevertexcolors 1
+
+"Proxies"
+{
+// put proxies below me
+
+// put proxies above me
+
+"LinearRamp"
+{
+  "resultVar" "$scroll[0]"
+  "rate" -.025
+}
+"LinearRamp"
+{
+  "resultVar" "$scroll[1]"
+  "rate" -.05
+}
+"TextureTransform"
+{
+  "scaleVar" "$scale"
+  "translateVar" "$scroll"
+  "resultVar" "$basetexturetransform"
+}
+"Empty"
+{	
+// disabling LampBeam proxy - doesnt play nicely with the scroller
+	"lampbeam"
+	{
+	}
+}
+
+}
+
+}
