@@ -1,0 +1,7 @@
+"Sprite"
+{
+	$basetexture 		"particle/darksouls/sword_trail"
+	$additive 			1
+	$spriterendermode 	5
+	$splinetype 		1
+}

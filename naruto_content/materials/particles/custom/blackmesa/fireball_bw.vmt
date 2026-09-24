@@ -1,0 +1,10 @@
+SpriteCard
+{
+	$basetexture		"particles/custom/blackmesa/fireball_bw"
+	$additive			1
+	$addself			3.0
+	$overbrightfactor	1.5
+	//$DEPTHBLEND		1
+	//$depthblendscale	8
+	$nofog				1
+}

@@ -1,0 +1,12 @@
+"SpriteCard"
+{
+	$basetexture 		"particle/darksouls/lightningbolt"
+	$translucent 		1
+	$additive 			1
+	
+	$blendframes 		0
+
+	$overbrightfactor	1
+//	$depthblend 		1
+//	$depthblendscale 	4
+}

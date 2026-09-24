@@ -1,0 +1,9 @@
+"SpriteCard"
+{
+	"$basetexture" "particles/custom/bo4/fxt8_water_bubble_md"
+	$vertexcolor 1
+	$vertexalpha 1
+	$translucent 1
+	//$depthblendscale 8
+	$overbrightfactor 2
+}

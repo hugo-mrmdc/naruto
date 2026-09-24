@@ -1,0 +1,9 @@
+SpriteCard
+{
+	"$basetexture" "particles/custom/bo4/bo4_fireball_bw"
+	$vertexcolor 1
+	$vertexalpha 1
+	$additive 1
+	$depthblendscale 0
+	$overbrightfactor 2
+}

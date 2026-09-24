@@ -1,0 +1,7 @@
+"SpriteCard"
+{
+	"$baseTexture" 			"particles/custom/bo1/fxt_env_electric_arc2"
+	"$translucent"			1
+	"$additive"				1
+	"$overbrightfactor"		2
+}

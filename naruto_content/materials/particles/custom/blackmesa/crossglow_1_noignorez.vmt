@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	"$basetexture" "particles/custom/blackmesa/crossglow_1"
+    "$translucent" "1"
+    "$vertexcolor" "1"
+    "$vertexalpha" "1"
+    "$additive" 1
+}
