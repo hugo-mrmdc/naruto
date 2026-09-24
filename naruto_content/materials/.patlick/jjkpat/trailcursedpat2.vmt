@@ -1,0 +1,9 @@
+"UnlitGeneric"
+{
+	"$basetexture" ".patlick\jjkpat/trailcursedpat1"
+    	"$surfaceprop"  "Default"
+    	"$translucent"  1
+    	"Proxies"
+    {
+    }
+}

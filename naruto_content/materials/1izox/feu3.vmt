@@ -1,0 +1,8 @@
+"Spritecard"
+{
+	"srgb?$overbrightfactor" "1"
+	"$basetexture" "1izox\feu3"
+	$translucent 1
+//	"$overbrightfactor" "50"
+	"$addself" "3"
+}

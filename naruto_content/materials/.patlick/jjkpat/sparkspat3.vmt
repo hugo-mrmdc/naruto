@@ -1,0 +1,9 @@
+"SpriteCard"
+{
+	$basetexture ".patlick\jjkpat/sparkspat3"
+	$translucent "1"
+	$blendframes "1"
+	$vertexcolor "0"
+	$vertexalpha "0"
+	$additive "0"
+}

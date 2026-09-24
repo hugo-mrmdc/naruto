@@ -1,0 +1,12 @@
+"SpriteCard"
+{
+	"$basetexture" "amry_groundcracks"
+	$MOD2X 1
+	$INVSRCALPHA 0
+	$OVERBRIGHTFACTOR 10
+	$SEQUENCE_BLEND_MODE 0 //2
+	$CROPFACTOR "[1 1]"
+//76561199235045344
+}
+
+

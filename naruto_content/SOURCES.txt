@@ -1,16 +1,22 @@
 Contenu regroupé pour le serveur Naruto RP.
 
 Fichiers extraits des addons workshop suivants (crédit à leurs auteurs) :
-  - ATG 1
+  - Content - 11s
+  - Content - 12s
+  - Content - 2s
+  - Content - 3pm
+  - Content - 5s
+  - Content - 6s
+  - Content - 7s
   - Content ATG
-  - [ATG] - Content Map 2
-  - [ATG] - Content Map 3
-  - [ATG] - Content Naruto
+  - FSC | Maps - Models
   - [ATG] - PlayerModel - OLDER
-  - [ATG] PLAYERMODEL 2
   - [ATG] PlayerModel
-  - [ATG] Props 2
   - [ATG] RESSOURCES #3
+  - [FSC] Content RP #2
+  - [wOS] Animation Extension Base
+  - content - 1s
+  - modelmaps
 
 Restent nécessaires en abonnement workshop :
   - [wOS] DynaBase - Dynamic Animation Manager (2916561591)

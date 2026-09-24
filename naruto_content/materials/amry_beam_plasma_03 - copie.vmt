@@ -1,0 +1,10 @@
+"SpriteCard"
+{
+    "$basetexture" "amry_beam_plasma_03 - Copie"
+    $splinetype 1
+    $depthblend 0
+    //$orientation 3
+    $vertexcolor 1
+//76561199235045344
+$vertexalpha 1
+}

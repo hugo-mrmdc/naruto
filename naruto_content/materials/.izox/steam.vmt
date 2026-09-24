@@ -1,0 +1,6 @@
+"SpriteCard"
+{
+	"$basetexture" ".izox\steam"
+	$additive 1
+	$overbrightfactor 10
+}
