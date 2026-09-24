@@ -1,0 +1,9 @@
+"UnlitGeneric"
+{
+	"$basetexture" "effects/workshop/aestheticsigns/aestheticsigns_sparkle"
+	"$translucent" 0
+	"$additive" 1
+ 	"$vertexalpha" 1
+  	"$vertexcolor" 1
+ 	"$depthblend" 1
+}

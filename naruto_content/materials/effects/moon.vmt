@@ -1,0 +1,8 @@
+"UnLitGeneric"
+{
+	// Original shader: AddTexture
+	"$basetexture" "effects/moon"
+	"$alphatest"	"1"
+//	"$nofog" "1"
+//	"$vertexcolor" 1
+}

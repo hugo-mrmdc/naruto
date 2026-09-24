@@ -1,0 +1,10 @@
+LightmappedGeneric
+{
+$basetexture "effects/tractor_beam_core_wipe"
+$translucent 1
+$additive 1
+$color "[1 1 1]" 
+$vertexalpha 1
+$vertexcolor 1
+$nocull 1 
+}

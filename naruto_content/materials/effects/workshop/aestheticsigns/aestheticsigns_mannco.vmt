@@ -1,0 +1,9 @@
+"SpriteCard"
+{
+	"$basetexture" "effects/workshop/aestheticsigns/aestheticsigns_mannco"
+	"$translucent" 0
+ 	"$vertexalpha" 1
+  	"$vertexcolor" 1
+	"$overbrightfactor" 3
+ 	"$depthblend" 0
+}

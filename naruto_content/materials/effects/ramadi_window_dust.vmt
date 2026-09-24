@@ -1,0 +1,65 @@
+"UnLitTwoTexture"
+    {
+         "%tooltexture" "effects/ramadi_dust_lightray"
+         "$basetexture" "effects/ramadi_dust_scroll"
+         "$texture2" "effects/ramadi_dust_lightray"
+         //"$basetexturetransform" "center .5 .5 scale .1 .1 rotate 0 translate 0 0"
+         //"$translucent" 1
+         "$additive" "1"
+         "$nodecal"     "1"
+         "$nocull" "1"
+         //"$no_fullbright" 1
+         //"$nofog" "1"
+         
+         "$scale" "[.75 .25]"
+         "$scroll" "[2 2]"
+         "$colorInverted" "0"
+         "$Invert" "1"
+		 "$Invert2"	"-1"
+         
+         "Proxies"
+         {
+                    "PlayerProximity"
+                    {
+                            "scale"                 "0.0052083" // transforms 0...192 to about 0..1 ( 1 / distance )
+							"resultVar"     "$colorInverted"
+                    }
+     
+                    "Clamp"
+                    {
+                            "min" "0"
+                            "max" "1"
+                            "srcvar1" "$colorInverted"
+                            "resultVar" "$colorInverted"
+                    }
+					"multiply"
+					{
+						"srcvar1"  "$Invert2"
+						"srcvar2"   "$colorInverted"
+						"resultvar" "$colorInverted"
+					}
+                    "Add"
+                    {
+                "srcvar1" "$Invert"
+                "srcvar2" "$colorInverted"
+                "resultVar" "$color"
+                    }
+     
+                    "LinearRamp"
+                     {
+                       "resultVar" "$scroll[0]"
+                       "rate" -.025
+                      }
+                      "LinearRamp"
+                      {
+                       "resultVar" "$scroll[1]"
+                       "rate" -.05
+                      }
+                      "TextureTransform"
+                      {
+                       "scaleVar" "$scale"
+                       "translateVar" "$scroll"
+                       "resultVar" "$basetexturetransform"
+                      }
+             }
+    }
