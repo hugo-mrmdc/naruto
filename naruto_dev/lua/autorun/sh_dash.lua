@@ -22,13 +22,13 @@ local ACTIF         = true
 local TOUCHE        = KEY_Q   -- touche du dash (KEY_Q, KEY_C, KEY_ALT...)
 
 local FORCE         = 800    -- vitesse de la poussée
-local DUREE         = 0.25    -- secondes pendant lesquelles la vitesse est tenue
+local DUREE         = 0.4    -- secondes pendant lesquelles la vitesse est tenue
                               -- (sans ça, le frottement du sol mange le dash et
                               --  il est bien plus court qu'en l'air)
 local GLISSE        = true    -- true = plus aucun frottement au sol pendant le dash
 local SAUT          = 0       -- petit décollage du sol (0 = reste collé)
 local RECHARGE      = 0.9     -- secondes entre deux dashs
-local COUT_CHAKRA   = 8       -- chakra dépensé par dash (0 = gratuit)
+local COUT_CHAKRA   = 0       -- chakra dépensé par dash (0 = gratuit)
 local CHAKRA_MAX    = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 
 local AU_SOL        = false   -- true = dash uniquement au sol

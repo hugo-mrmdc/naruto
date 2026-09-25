@@ -14,6 +14,7 @@ if not SERVER then return end
 -- RÉGLAGES -> c'est ICI qu'on change les valeurs
 --========================================================
 local PORTEE_MAX        = 900    -- distance maximale de placement devant le joueur
+local HAUTEUR           = 5     -- décalage du typhon vers le haut par rapport au sol (unités ; 0 = posé au sol)
 local DUREE             = 6      -- durée du typhon (secondes)
 local RAYON_ATTRACTION  = 220    -- rayon dans lequel les ennemis sont aspirés
 local RAYON_COEUR       = 220    -- rayon du cœur qui blesse (~ taille des particules, agrandies x2)
@@ -72,7 +73,7 @@ local function Poser(ply)
     local typhon = ents.Create("salamandre_typhon")
     if not IsValid(typhon) then return end
 
-    typhon:SetPos(PointVise(ply))
+    typhon:SetPos(PointVise(ply) + Vector(0, 0, HAUTEUR))
     typhon:SetOwner(ply)
     typhon.Duree = Niv(ply, "duree", DUREE)
     typhon.RayonAttraction = Niv(ply, "rayon_attraction", RAYON_ATTRACTION)

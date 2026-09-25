@@ -211,6 +211,18 @@ NA_NIV_TECH.suiton_requin = {
     [5] = { recharge = 4, hitbox = 28 },
 }
 
+-- Boule d'eau (sv_suiton_waterball.lua)
+NA_NIV_TECH.suiton_waterball = {
+    [1] = {
+        degats = 30, chakra = 20, recharge = 6,
+        vitesse = 1400, duree_vie = 2, hitbox = 22, echelle = 0.5, recul = 350, duree_mudra = 0.6,
+    },
+    [2] = { degats = 34 },
+    [3] = { degats = 38, recharge = 5.5, hitbox = 25 },
+    [4] = { degats = 42 },
+    [5] = { degats = 48, chakra = 16, recharge = 4.5, hitbox = 28 },
+}
+
 -- Prison aqueuse (sv_suiton_prison.lua)
 NA_NIV_TECH.suiton_prison = {
     [1] = {

@@ -8,8 +8,7 @@
 -- Équiper une technique dans la barre (touches 1 à 6) :
 --   - glisse la technique sur un emplacement de la barre ;
 --   - ou clique sur la technique, puis sur un emplacement ;
---   - ou double-clic (premier emplacement libre) ;
---   - ou clic droit sur la technique -> "Équiper dans l'emplacement N".
+--   - ou double-clic (premier emplacement libre).
 --   Clic droit sur un emplacement pour le vider.
 --
 -- Pour ajouter une technique : une ligne dans TECHNIQUES ci-dessous.
@@ -42,6 +41,9 @@ local TECHNIQUES = {
     -- ===== SUITON =====
     { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "", court = "Requin", cooldown = 5, cd = 5.3,
       desc = "Envoie un requin d'eau sur la cible visée." },
+    { cat = "Suiton", name = "Boule d'eau", key = "", id = "suiton_waterball", rang = "B", icone = "ui/icon/suiton_bombe_eau.png", court = "Boule d'eau", cooldown = 6,
+      desc = "Lance une boule d'eau droit devant toi : elle blesse et repousse le premier ennemi touché. Coûte 20 de chakra.",
+      dmg = "30 à l'impact + projection" },
     { cat = "Suiton", name = "Prison aqueuse", key = "", id = "suiton_prison", rang = "B", icone = "ui/icon/suiton_prison_aqueuse.png", court = "Prison", cooldown = 12,
       desc = "Enferme l'ennemi visé (800 unités max) dans une prison d'eau : il est soulevé dans les airs, étourdi et immobilisé pendant 3 secondes, et subit des dégâts à chaque tick. Il ne peut recevoir aucun autre dégât tant qu'il est dans la prison. Coûte 30 de chakra.",
       dmg = "4 par tick (toutes les 0,5 s), étourdi 3 s" },
@@ -671,23 +673,6 @@ local function Open()
     local tailleCase = math.floor(cW * 0.062)
     local ecart = math.floor(cW * 0.014)
 
-    local function MenuEquiper(tech)
-        local m = DermaMenu()
-        for i = 1, NA_SkillBar.NB do
-            local occupe = NA_SkillBar.Get(i)
-            local label = "Équiper dans l'emplacement " .. i
-            local info = occupe and NA_TechniqueParId(occupe)
-            if info then label = label .. "  (remplace " .. info.name .. ")" end
-            m:AddOption(label, function() NA_SkillBar.Equiper(i, tech.id) end)
-        end
-        local deja = EmplacementDe(tech.id)
-        if deja then
-            m:AddSpacer()
-            m:AddOption("Retirer de la barre", function() NA_SkillBar.Vider(deja) end)
-        end
-        m:Open()
-    end
-
     -- Une technique dans la grille
     local function CaseTechnique(parent, tech)
         local equipable = Equipable(tech) and NA_SkillBar ~= nil
@@ -736,9 +721,6 @@ local function Open()
                 NA_SkillBar.Equiper(libre, tech.id)
                 selection = nil
             end
-        end
-        if equipable then
-            b.DoRightClick = function() MenuEquiper(tech) end
         end
     end
 
