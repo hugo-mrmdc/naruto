@@ -98,6 +98,7 @@ end
 ----------------------------------------------------------
 NA_BASCULES = NA_BASCULES or {}
 NA_BASCULES.chinoike_ketsuryugan = "NA_Ketsuryugan"   -- sv_chinoike_ketsuryugan.lua
+NA_BASCULES.kaguya_armure = "NA_ArmureOs"             -- sv_kaguya_armure.lua
 
 function NA_TechniqueActive(id, ply)
     ply = ply or LocalPlayer()

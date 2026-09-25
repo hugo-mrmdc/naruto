@@ -179,10 +179,11 @@ local function MettreAJour(ply, now, dt)
     end
 
     -- régénération automatique (CHAKRA_REGEN, 0 = désactivée ; coupée tant que
-    -- le Ketsuryugan consomme du chakra : sv_chinoike_ketsuryugan.lua)
+    -- le Ketsuryugan ou l'armure d'os consomment du chakra : sv_chinoike_ketsuryugan.lua,
+    -- sv_kaguya_armure.lua)
     if CHAKRA_REGEN <= 0 then return end
     if (nextRegen[ply] or 0) > now then return end
-    if ply:GetNW2Bool("NA_Ketsuryugan", false) then return end
+    if ply:GetNW2Bool("NA_Ketsuryugan", false) or ply:GetNW2Bool("NA_ArmureOs", false) then return end
     local cur = GetChakra(ply)
     if cur < CHAKRA_MAX then
         SetChakra(ply, cur + CHAKRA_REGEN * dt)
@@ -200,7 +201,7 @@ hook.Add("Think", "NA_Sprint_Chakra", function()
     nextTick = now + dt
 
     -- La recharge (R) marche aussi pendant qu'un drain consomme du chakra
-    -- (Ketsuryugan...) : les deux s'additionnent.
+    -- (Ketsuryugan, armure d'os...) : les deux s'additionnent.
     for _, ply in ipairs(player.GetAll()) do
         MettreAJour(ply, now, dt)
     end

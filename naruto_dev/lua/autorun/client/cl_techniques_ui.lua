@@ -109,8 +109,8 @@ local TECHNIQUES = {
       dmg = "6 par tick (toutes les 0,25 s)" },
 
     -- ===== KAGUYA =====
-    { cat = "Kaguya", name = "Armure d'os", key = "", id = "kaguya_armure", rang = "C", icone = "ui/icon/kaguya_armure_os.png", court = "Armure", cooldown = 30,
-      desc = "Une armure d'os pousse sur ton corps pendant 15 secondes : tu encaisses 40 % de dégâts en moins. Coûte 25 de chakra.",
+    { cat = "Kaguya", name = "Armure d'os", key = "", id = "kaguya_armure", rang = "C", icone = "ui/icon/kaguya_armure_os.png", court = "Armure", cooldown = 10,
+      desc = "Fais pousser une armure d'os sur ton corps (rappuie pour la retirer) : tant qu'elle est active, tu encaisses 40 % de dégâts en moins. Consomme 4 de chakra par seconde (tu peux recharger avec R en même temps) ; elle se brise quand le chakra est vide. Il faut 20 de chakra pour l'activer.",
       dmg = "-40 % de dégâts subis" },
     { cat = "Kaguya", name = "Légion d'os", key = "", id = "kaguya_legion", rang = "A", icone = "ui/icon/kaguya_legion_os.png", court = "Légion", cooldown = 25,
       desc = "Des os jaillissent autour de toi pendant 8 secondes et blessent tous les ennemis proches à chaque tick. Coûte 30 de chakra.",

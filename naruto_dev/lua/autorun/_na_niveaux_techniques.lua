@@ -443,16 +443,18 @@ NA_NIV_TECH.jinton_laser = {
 --========================================================
 -- KAGUYA
 --========================================================
--- Armure d'os (sv_kaguya_armure.lua) : pas de dégâts branchés
+-- Armure d'os (sv_kaguya_armure.lua) : à activer / désactiver
+--   chakra = PAR SECONDE, reduction = % de dégâts subis en moins,
+--   recharge = secondes avant de pouvoir la réactiver (après l'arrêt)
 NA_NIV_TECH.kaguya_armure = {
     [1] = {
-        chakra = 25, recharge = 30,
-        malus_vitesse = 0, duree = 15, duree_mudra = 0.5, reduction = 40,
+        chakra = 4, recharge = 10, chakra_mini = 20,
+        malus_vitesse = 0, duree_mudra = 0.5, reduction = 40,
     },
-    [2] = { recharge = 29 },
-    [3] = { chakra = 22, recharge = 27 },
-    [4] = { recharge = 26 },
-    [5] = { chakra = 20, recharge = 24 },
+    [2] = { reduction = 42 },
+    [3] = { chakra = 3.5, recharge = 9, reduction = 45 },
+    [4] = { reduction = 48 },
+    [5] = { chakra = 3, recharge = 8, reduction = 50 },
 }
 
 -- Danse des os (sv_kaguya_danse.lua) : soin = vie rendue au lanceur par tick

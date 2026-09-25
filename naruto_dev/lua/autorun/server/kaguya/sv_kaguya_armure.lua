@@ -1,12 +1,16 @@
 --========================================================
 -- Kaguya : Armure d'os (SERVEUR)
 --
--- Buff sur soi : pendant DUREE secondes, une armure d'os
--- (models/clan/ame/kaguya/kim_armor.mdl) apparaît sur le lanceur, fusionnée à
--- son squelette : tout le monde la voit, et elle suit ses animations.
--- Tant qu'elle tient, il encaisse beaucoup moins de dégâts.
+-- Technique à activer / désactiver (même touche) :
+--   - une armure d'os (models/clan/ame/kaguya/kim_armor.mdl) apparaît sur le
+--     lanceur, fusionnée à son squelette : tout le monde la voit, et elle suit
+--     ses animations ;
+--   - tant qu'elle est active, il encaisse beaucoup moins de dégâts ;
+--   - elle consomme du chakra chaque seconde (la régénération AUTOMATIQUE est
+--     coupée, mais on peut recharger avec R en même temps : sv_sprint_chakra.lua) ;
+--     à 0 chakra, elle se désactive.
 --
--- Réseau : NW2Bool "NA_ArmureOs" et NW2Float "NA_ArmureOsFin"
+-- Réseau : NW2Bool "NA_ArmureOs" (active)
 --========================================================
 
 if not SERVER then return end
@@ -29,12 +33,12 @@ local DECALAGE     = Vector(-3, 0, 3)            -- avant / droite / haut, dans 
 local ROTATION     = Angle(-90, 90, 0)
 local ECHELLE      = 1
 
-local DUREE        = 15     -- secondes du buff
 local REDUCTION    = 40    -- % de dégâts reçus en moins
 local MALUS_VITESSE = 0     -- vitesse de course en moins, en unités (0 = aucun malus)
 
-local RECHARGE     = 30     -- secondes avant de pouvoir relancer (depuis le lancement)
-local CHAKRA_COUT  = 25     -- chakra dépensé (0 = gratuit)
+local CHAKRA_SEC   = 4      -- chakra consommé par seconde
+local CHAKRA_MINI  = 20     -- chakra requis pour l'activer
+local RECHARGE     = 10     -- secondes avant de pouvoir la réactiver (après l'arrêt)
 local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.5    -- incantation avant l'armure
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
@@ -54,19 +58,20 @@ local function Actif(ply)
     return IsValid(ply) and ply:GetNW2Bool("NA_ArmureOs", false)
 end
 
-local function Arreter(ply)
+local function Arreter(ply, raison)
     if not IsValid(ply) then return end
-    timer.Remove("kaguya_armure_" .. ply:EntIndex())
-
-
 
     if Actif(ply) then
+        local recharge = Niv(ply, "recharge", RECHARGE)
+        pret[ply] = CurTime() + recharge
+        if NA_CD then NA_CD.Set(ply, "kaguya_armure", recharge) end   -- recharge visible dans la barre
+
         if ply:Alive() then ply:EmitSound(SON_FIN, 75, 100, 0.7) end
         if Niv(ply, "malus_vitesse", MALUS_VITESSE) > 0 then ply:SetRunSpeed(ply:GetRunSpeed() + Niv(ply, "malus_vitesse", MALUS_VITESSE)) end
+        if raison then ply:PrintMessage(HUD_PRINTCENTER, raison) end
     end
 
     ply:SetNW2Bool("NA_ArmureOs", false)
-    ply:SetNW2Float("NA_ArmureOsFin", 0)
 end
 NA_KaguyaArmureFin = Arreter
 
@@ -98,38 +103,32 @@ concommand.Add("kaguya_armure_placer", function(ply, _, args)
 end)
 
 local function Activer(ply)
-    if not IsValid(ply) or not ply:Alive() then return end
-    Arreter(ply)
+    if not IsValid(ply) or not ply:Alive() or Actif(ply) then return end
 
     PublierPlacement(ply)
 
-
     ply:SetNW2Bool("NA_ArmureOs", true)
-    ply:SetNW2Float("NA_ArmureOsFin", CurTime() + Niv(ply, "duree", DUREE))
     ply:EmitSound(SON_DEBUT, 80, 90, 0.9)
 
     if Niv(ply, "malus_vitesse", MALUS_VITESSE) > 0 then ply:SetRunSpeed(math.max(50, ply:GetRunSpeed() - Niv(ply, "malus_vitesse", MALUS_VITESSE))) end
-
-    timer.Create("kaguya_armure_" .. ply:EntIndex(), Niv(ply, "duree", DUREE), 1, function() Arreter(ply) end)
 end
 
 net.Receive("kaguya_armure_cast", function(_, ply)
-    if not NA_Debloquee(ply, "kaguya_armure") then return end   -- technique pas encore débloquée (F6)
-    if not IsValid(ply) or not ply:Alive() or enCours[ply] then return end
-    if (pret[ply] or 0) > CurTime() or Actif(ply) then return end
+    if not IsValid(ply) then return end
 
-    local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
-    if NA_Stat(ply, "kaguya_armure", "chakra", CHAKRA_COUT) > 0 then
-        if chakra < NA_Stat(ply, "kaguya_armure", "chakra", CHAKRA_COUT) then
-            ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
-            return
-        end
-        ply:SetNW2Float("NA_Chakra", chakra - NA_Stat(ply, "kaguya_armure", "chakra", CHAKRA_COUT))
+    -- déjà active : on la coupe, toujours (avant toute autre vérification)
+    if Actif(ply) then return Arreter(ply) end
+
+    if not NA_Debloquee(ply, "kaguya_armure") then return end   -- technique pas encore débloquée (F6)
+    if not ply:Alive() or enCours[ply] then return end
+
+    if (pret[ply] or 0) > CurTime() then return end
+    if ply:GetNW2Float("NA_Chakra", CHAKRA_MAX) < Niv(ply, "chakra_mini", CHAKRA_MINI) then
+        ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
+        return
     end
 
     enCours[ply] = true
-    pret[ply] = CurTime() + NA_Stat(ply, "kaguya_armure", "recharge", RECHARGE)
-    if NA_CD then NA_CD.Set(ply, "kaguya_armure", NA_Stat(ply, "kaguya_armure", "recharge", RECHARGE)) end   -- recharge visible dans la barre
 
     NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
@@ -139,6 +138,29 @@ net.Receive("kaguya_armure_cast", function(_, ply)
         enCours[ply] = nil
         Activer(ply)
     end)
+end)
+
+-- secours : couper l'armure depuis la console ou le chat
+concommand.Add("kaguya_armure_off", function(ply)
+    if IsValid(ply) then Arreter(ply) end
+end)
+
+----------------------------------------------------------
+-- Consommation du chakra (10 fois par seconde)
+----------------------------------------------------------
+local prochain = 0
+hook.Add("Think", "KaguyaArmure_Chakra", function()
+    local now = CurTime()
+    if now < prochain then return end
+    local dt = 0.1
+    prochain = now + dt
+
+    for _, ply in ipairs(player.GetAll()) do
+        if not Actif(ply) then continue end
+        local reste = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX) - Niv(ply, "chakra", CHAKRA_SEC) * dt
+        ply:SetNW2Float("NA_Chakra", math.Clamp(reste, 0, CHAKRA_MAX))
+        if reste <= 0 then Arreter(ply, "Chakra épuisé : l'armure d'os se brise") end
+    end
 end)
 
 ----------------------------------------------------------
@@ -158,7 +180,7 @@ hook.Add("PlayerDeath", "KaguyaArmure_Mort", function(ply)
     Arreter(ply)
 end)
 
-hook.Add("PlayerSpawn", "KaguyaArmure_Spawn", Arreter)
+hook.Add("PlayerSpawn", "KaguyaArmure_Spawn", function(ply) Arreter(ply) end)
 
 hook.Add("PlayerDisconnected", "KaguyaArmure_Nettoyage", function(ply)
     Arreter(ply)
