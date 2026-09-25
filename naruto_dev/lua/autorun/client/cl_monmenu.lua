@@ -386,6 +386,7 @@ end, "Ajoute une épée à l'inventaire F4 : ajouter_epee <nom>")
 local EXCLURE_ICONE = {
     ["models/clan/ame/kami/wings.mdl"] = true,   -- ailes de papier (ancien modèle)
     ["models/clan/ame/kami/ailekami.mdl"] = true,   -- ailes de papier
+    ["models/clan/ame/kami/fauxkami.mdl"] = true,   -- faux de papier (main droite, pendant le vol)
 }
 
 -- Liste des modèles fusionnés au joueur : { modele, skin, couleur }

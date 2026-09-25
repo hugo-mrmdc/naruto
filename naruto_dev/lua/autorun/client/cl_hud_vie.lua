@@ -206,7 +206,7 @@ local function ConstruirePortrait(ply)
     for _, enfant in ipairs(ply:GetChildren()) do
         local mdl = IsValid(enfant) and enfant:GetModel()
         if mdl and mdl ~= "" and enfant:IsEffectActive(EF_BONEMERGE) and not enfant:GetNoDraw()
-            and not deja[string.lower(mdl)] then
+            and not deja[string.lower(mdl)] and string.lower(mdl) ~= "models/clan/ame/kami/fauxkami.mdl" then   -- la faux de papier (vol) n'a pas sa place dans le portrait
             local c = enfant:GetColor()
             AjouterPiece(ent, mdl, Vector(c.r, c.g, c.b))
         end

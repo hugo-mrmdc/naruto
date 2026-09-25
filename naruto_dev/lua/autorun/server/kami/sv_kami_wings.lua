@@ -9,6 +9,7 @@ if not SERVER then return end
 util.AddNetworkString("kami_wings_toggle")
 
 local MODELE   = "models/clan/ame/kami/ailekami.mdl"
+local MODELE_FAUX = "models/clan/ame/kami/fauxkami.mdl"   -- faux de papier tenue de la main droite pendant le vol
 local SEQUENCE = "aileland"   -- séquences du modèle : aileidle, aileatk, aileland, aileprotect_start/loop/end
 
 --========================================================
@@ -33,6 +34,9 @@ local function Niv(ply, stat, base) return NA_Stat(ply, "kami_ailes", stat, base
 -- le .mdl seul ne suffit pas (sans .vvd ni .vtx, le modèle reste une erreur).
 for _, ext in ipairs({ "mdl", "vvd", "dx90.vtx", "dx80.vtx", "phy" }) do
     resource.AddFile("models/clan/ame/kami/ailekami." .. ext)
+end
+for _, ext in ipairs({ "mdl", "vvd", "dx90.vtx", "dx80.vtx", "phy" }) do
+    resource.AddFile("models/clan/ame/kami/fauxkami." .. ext)
 end
 for _, mat in ipairs({ "2knneff1_01_0", "2knneff1_awapaper00_0", "ntxr005" }) do
     resource.AddFile("materials/models/billy/kami/" .. mat .. ".vmt")
@@ -85,6 +89,7 @@ for nom, valeur in pairs(PLACEMENT) do
 end
 
 local wings = {}      -- joueur -> entité ailes
+local faux = {}       -- joueur -> entité faux (main droite)
 local etatAvant = {}  -- joueur -> déplacement d'origine
 local nextUse = {}
 local casting = {}
@@ -155,11 +160,41 @@ local function CreerAiles(ply)
     return ent
 end
 
+-- La faux (fauxkami) a pour os racine ValveBiped.Bip01_R_Hand : fusionnée au joueur
+-- (bonemerge), elle se retrouve d'elle-même dans sa main droite.
+local function CreerFaux(ply)
+    if IsValid(faux[ply]) then return faux[ply] end
+
+    local ent = ents.Create("prop_dynamic")
+    if not IsValid(ent) then return end
+
+    ent:SetModel(MODELE_FAUX)
+    ent:SetPos(ply:GetPos())
+    ent:SetAngles(ply:GetAngles())
+    ent:SetKeyValue("solid", "0")
+    ent:Spawn()
+    ent:Activate()
+
+    ent:SetParent(ply)
+    ent:AddEffects(EF_BONEMERGE)
+    ent:SetSolid(SOLID_NONE)
+    ent:SetMoveType(MOVETYPE_NONE)
+    ent:SetOwner(ply)
+
+    faux[ply] = ent
+    return ent
+end
+
 local function RetirerAiles(ply)
     if IsValid(wings[ply]) then
         wings[ply]:Remove()
     end
     wings[ply] = nil
+
+    if IsValid(faux[ply]) then
+        faux[ply]:Remove()
+    end
+    faux[ply] = nil
 end
 
 ----------------------------------------------------------
@@ -200,6 +235,7 @@ local function Decoller(ply)
     }
 
     CreerAiles(ply)
+    CreerFaux(ply)
 
     -- Le déplacement est calculé par le hook "Move" partagé (sh_kami_wings_move.lua),
     -- avec prédiction côté client : on reste en déplacement "marche" normal.
@@ -270,7 +306,9 @@ hook.Add("Think", "NA_Wings_Chakra", function()
     for ply, ent in pairs(wings) do
         if not IsValid(ply) or not ply:Alive() then
             if IsValid(ent) then ent:Remove() end
+            if IsValid(faux[ply]) then faux[ply]:Remove() end
             wings[ply] = nil
+            faux[ply] = nil
             etatAvant[ply] = nil
             continue
         end

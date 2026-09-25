@@ -406,26 +406,26 @@ NA_NIV_TECH.kami_roue = {
 -- Cube de confinement (sv_jinton_cube.lua)
 NA_NIV_TECH.jinton_cube = {
     [1] = {
-        degats = 10, chakra = 30, recharge = 1, hitbox = 20,
-        portee = 900, duree_mudra = 0.6, duree = 3, intervalle = 0.5, echelle = 1.1,
+        degats = 40, chakra = 30, recharge = 1, hitbox = 20,
+        portee = 900, duree_mudra = 0.6, duree = 1.5, intervalle = 0.7, echelle = 1.1,
     },
-    [2] = { degats = 20 },
-    [3] = { degats = 25, hitbox = 24 },
-    [4] = { degats = 30 },
-    [5] = { degats = 40, chakra = 24, hitbox = 28 },
+    [2] = { degats = 40,duree = 1.7 },
+    [3] = { degats = 40, hitbox = 24,duree = 2 },
+    [4] = { degats = 40 ,duree = 2.5},
+    [5] = { degats = 40, chakra = 24, hitbox = 28,duree = 3 },
 }
 
 -- Bouclier Jinton (sv_jinton_bouclier.lua) : degats = explosion du bouclier
 NA_NIV_TECH.jinton_bouclier = {
     [1] = {
-        degats = 30, chakra = 25, recharge = 20,
+        degats = 70, chakra = 25, recharge = 20,
         explo_hauteur = 140, explo_rayon = 200, pourcent_vie = 20, echelle = 1.35, duree = 10,
         duree_mudra = 0.5,
     },
-    [2] = { degats = 33 },
-    [3] = { degats = 36, recharge = 18.5 },
-    [4] = { degats = 39 },
-    [5] = { degats = 42, chakra = 20, recharge = 16 },
+    [2] = { degats = 80 },
+    [3] = { degats = 90, recharge = 18.5 },
+    [4] = { degats = 100 },
+    [5] = { degats = 120, chakra = 20, recharge = 16 },
 }
 
 -- Rayon de dissolution (sv_jinton_laser.lua)
