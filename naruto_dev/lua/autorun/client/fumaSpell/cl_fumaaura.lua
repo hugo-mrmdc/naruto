@@ -44,7 +44,8 @@ end
 
 hook.Add("Think", "NA_AuraFuma", function()
     for _, ply in ipairs(player.GetAll()) do
-        local actif = ply:Alive() and ply:GetNW2Bool("NA_AuraFuma", false)
+        -- pas d'aura sur un joueur invisible (Fuma) : elle dessinerait sa silhouette. Elle revient à la réapparition.
+        local actif = ply:Alive() and ply:GetNW2Bool("NA_AuraFuma", false) and not ply:GetNWBool("IsInvisible", false)
         if actif and not ancres[ply] then
             Demarrer(ply)
         elseif not actif and ancres[ply] then

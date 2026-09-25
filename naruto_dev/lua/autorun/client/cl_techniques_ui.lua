@@ -63,6 +63,14 @@ local TECHNIQUES = {
       desc = "Lance une boule de vent droit devant toi : elle blesse le premier ennemi touché et le projette violemment en arrière et vers le haut. Coûte 20 de chakra.",
       dmg = "25 à l'impact + projection" },
 
+    -- ===== RAITON =====
+    { cat = "Raiton", name = "Jugement de l'éclair", key = "", id = "raiton_jugement", rang = "B", icone = "ui/icon/raiton_jugement_eclair.png", court = "Jugement", cooldown = 14,
+      desc = "La foudre s'abat là où tu regardes (900 unités max) : tous les ennemis proches du point d'impact prennent des dégâts et sont étourdis un instant. Coûte 30 de chakra.",
+      dmg = "30 dégâts + étourdi 1,5 s" },
+    { cat = "Raiton", name = "Cercle de foudre", key = "", id = "raiton_cercle", rang = "B", icone = "ui/icon/raiton_cercle_de_foudre.png", court = "Cercle", cooldown = 15,
+      desc = "Déploie un cercle de foudre autour de toi : à chaque impulsion (3 en tout), tous les ennemis dans la zone prennent des dégâts et sont repoussés vers l'extérieur. Coûte 35 de chakra.",
+      dmg = "12 par impulsion (3 impulsions) + projection" },
+
     -- ===== MOKUTON =====
     { cat = "Mokuton", name = "Arche", key = KEY_K, id = "mokuton_arche", rang = "C", icone = "", court = "Arche", cd = 2,
       desc = "Fait jaillir une arche de bois devant toi." },
@@ -291,7 +299,7 @@ local DOSSIER = "ui/main_menu/"
 
 local ONGLETS = {
     { nom = "Stats",         icone = "stat.png" },
-    { nom = "Jutsus",        icone = "jutsu.png",       cats = { "Katon", "Suiton", "Futon" },
+    { nom = "Jutsus",        icone = "jutsu.png",       cats = { "Katon", "Suiton", "Futon", "Raiton" },
       desc = "Cette catégorie répertorie les techniques des natures du chakra" },
     { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton" },
       desc = "Cette catégorie répertorie les techniques héritées par le sang" },

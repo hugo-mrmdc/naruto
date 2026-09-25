@@ -178,7 +178,7 @@ end)
 -- (même animation que la course droite, pas d'animation latérale à glisser)
 local function OrienterCorps(ply, vel)
     local C = NA_SprintChakra
-    if not C or not C.TOURNER_CORPS then ply.NA_CorpsYaw = nil return end
+    if not C or not C.TOURNER_CORPS or ply.NA_SouffleActif then ply.NA_CorpsYaw = nil return end   -- pas de rotation vers la course pendant le souffle katon
 
     local cible = vel:Angle().y
     if ply.NA_CorpsYaw then

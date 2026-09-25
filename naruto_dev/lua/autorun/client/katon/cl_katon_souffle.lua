@@ -37,7 +37,10 @@ local function Fin(ply)
     local s = souffles[ply]
     if not s then return end
     if IsValid(s.fx) then s.fx:StopEmission() end
-    if IsValid(ply) then ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM) end
+    if IsValid(ply) then
+        ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
+        ply.NA_SouffleActif = nil
+    end
     souffles[ply] = nil
 end
 
@@ -59,6 +62,9 @@ net.Receive("katon_souffle_fx", function()
         fin = CurTime() + duree,
         seq = (seq and seq >= 0) and seq or nil,
     }
+    -- pendant le souffle, le corps reste dans l'axe de la caméra (la course de chakra ne le tourne plus,
+    -- cl_sprint_chakra.lua) : le jet de flammes et le personnage regardent au même endroit
+    ply.NA_SouffleActif = true
 end)
 
 hook.Add("Think", "katon_souffle_fx", function()

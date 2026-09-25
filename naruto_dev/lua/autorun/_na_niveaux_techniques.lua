@@ -287,6 +287,32 @@ NA_NIV_TECH.futon_windball = {
 }
 
 --========================================================
+-- RAITON
+--========================================================
+-- Jugement de l'éclair (sv_raiton_jugement.lua) : duree = étourdissement
+NA_NIV_TECH.raiton_jugement = {
+    [1] = {
+        degats = 30, chakra = 30, recharge = 14, duree = 1.5, rayon = 180, portee = 900, duree_mudra = 0.4,
+    },
+    [2] = { degats = 34 },
+    [3] = { degats = 38, duree = 1.8, recharge = 13 },
+    [4] = { degats = 42, rayon = 210 },
+    [5] = { degats = 48, duree = 2.2, chakra = 24, recharge = 11 },
+}
+
+-- Cercle de foudre (sv_raiton_cercle.lua) : à chaque impulsion, dégâts + projection vers l'extérieur
+NA_NIV_TECH.raiton_cercle = {
+    [1] = {
+        degats = 55, chakra = 35, recharge = 15,
+        rayon = 320, impulsions = 1, intervalle = 0.8, recul = 700, souleve = 250, duree_mudra = 0.5,
+    },
+    [2] = { degats = 67 },
+    [3] = { degats = 74, recharge = 13.5},
+    [4] = { degats = 81, rayon = 350 },
+    [5] = { degats = 95, chakra = 28, recharge = 12},
+}
+
+--========================================================
 -- MOKUTON
 --========================================================
 -- Arche (mokuton_arche_sv.lua)

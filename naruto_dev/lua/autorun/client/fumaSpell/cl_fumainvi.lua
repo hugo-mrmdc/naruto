@@ -61,3 +61,15 @@ hook.Add("PreDrawPlayerHands", "Invis_HideHands", function(hands, ply)
         return true
     end
 end)
+
+-- Pendant l'invisibilité, AUCUNE particule ne reste accrochée au joueur (brûlure, aura, poison, ailes,
+-- effets de technique...) : sans ça elles dessinaient sa silhouette. Elles sont coupées à chaque image,
+-- donc même une particule lancée pendant l'invisibilité disparaît tout de suite.
+hook.Add("Think", "Invis_CoupeParticules", function()
+    for _, ply in ipairs(player.GetAll()) do
+        if ply:GetNWBool("IsInvisible", false) then
+            ply:StopParticles()
+            ply:StopParticleEmission()
+        end
+    end
+end)

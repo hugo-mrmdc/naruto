@@ -81,20 +81,20 @@ if SERVER then
     local pret = {}
 
     local function Possible(ply)
-        if not ACTIF or not IsValid(ply) or not ply:Alive() then return false end
-        if (pret[ply] or 0) > CurTime() then return false end
-        if ply:GetMoveType() ~= MOVETYPE_WALK then return false end   -- noclip, échelle, vol
-        if ply:InVehicle() or ply:WaterLevel() >= 2 then return false end
+        if not ACTIF or not IsValid(ply) or not ply:Alive() then return false, "mort ou dash désactivé" end
+        if (pret[ply] or 0) > CurTime() then return false, "recharge" end
+        if ply:GetMoveType() ~= MOVETYPE_WALK then return false, "type de mouvement " .. ply:GetMoveType() .. " (noclip, échelle, vol)" end   -- noclip, échelle, vol
+        if ply:InVehicle() or ply:WaterLevel() >= 2 then return false, "véhicule ou dans l'eau" end
         if not ply:IsOnGround() then
             -- en l'air : nombre de dashs limité, remis à zéro en retouchant le sol
-            if AU_SOL or DASH_EN_LAIR <= 0 then return false end
-            if (ply.NA_DashsEnLair or 0) >= DASH_EN_LAIR then return false end
+            if AU_SOL or DASH_EN_LAIR <= 0 then return false, "dash en l'air interdit" end
+            if (ply.NA_DashsEnLair or 0) >= DASH_EN_LAIR then return false, "déjà dashé en l'air (retouche le sol)" end
         end
-        if not EN_ACCROUPI and ply:Crouching() then return false end
-        if NA_EstEtourdi and NA_EstEtourdi(ply) then return false end
-        if ply:GetNW2Bool("NA_Wings", false) or ply:GetNW2Bool("NA_Vol", false) then return false end
-        if ply:GetNWBool("MokutonRide", false) then return false end
-        if COUT_CHAKRA > 0 and ply:GetNW2Float("NA_Chakra", CHAKRA_MAX) < COUT_CHAKRA then return false end
+        if not EN_ACCROUPI and ply:Crouching() then return false, "accroupi" end
+        if NA_EstEtourdi and NA_EstEtourdi(ply) then return false, "étourdi" end
+        if ply:GetNW2Bool("NA_Wings", false) or ply:GetNW2Bool("NA_Vol", false) then return false, "en vol (ailes)" end
+        if ply:GetNWBool("MokutonRide", false) then return false, "sur le dragon" end
+        if COUT_CHAKRA > 0 and ply:GetNW2Float("NA_Chakra", CHAKRA_MAX) < COUT_CHAKRA then return false, "pas assez de chakra" end
         return true
     end
 
@@ -123,7 +123,12 @@ if SERVER then
     end
 
     net.Receive("na_dash", function(_, ply)
-        if not Possible(ply) then return end
+        local ok, raison = Possible(ply)
+        if not ok then
+            -- developer 1 : la raison du refus s'affiche dans ta console
+            if IsValid(ply) and GetConVar("developer"):GetInt() > 0 then ply:PrintMessage(HUD_PRINTCONSOLE, "[Dash] refusé : " .. tostring(raison) .. "\n") end
+            return
+        end
 
         pret[ply] = CurTime() + RECHARGE
         if COUT_CHAKRA > 0 then

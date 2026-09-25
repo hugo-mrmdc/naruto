@@ -56,6 +56,7 @@ NA_NIV.LIGNEES = {
     { "katon_boule", "katon_dome", "katon_souffle","katon_saut" },
     { "suiton_waterball", "suiton_prison", "suiton_bulle","suiton_requin" },
     { "futon_windslash", "futon_tornade", "futon_windball" },
+    { "raiton_jugement", "raiton_cercle" },
     { "mokuton_arche", "mokuton_fleur", "mokuton_dragon" },
     { "salamandre_poison", "salamandre_dome", "salamandre_corps", "salamandre_tornade" },
     { "fuma_tp", "fuma_invisibilite", "fuma_aura", "fuma_jugement", "fuma_ciel" },
