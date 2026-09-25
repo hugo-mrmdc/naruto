@@ -40,6 +40,10 @@ local ARRETE_COURSE = false   -- true = le dash coupe la course de chakra
 
 local SON           = "player/suit_sprint.wav"   -- "" = pas de son
 
+-- L'animation de dash est coupée après ce délai (secondes) pour revenir plus vite à l'idle / la marche.
+-- 0 = elle va au bout de sa durée d'origine. DUREE = elle s'arrête avec la poussée.
+local COUPE_ANIM    = 0.45
+
 local ANIMS = {
     avant   = "nrp_base_dashstep_front",
     gauche  = "nrp_base_dashstep_left",
@@ -159,6 +163,7 @@ if SERVER then
             net.Start("Jutsu_Anim_Play")
                 net.WriteEntity(ply)
                 net.WriteString(anim)
+                net.WriteFloat(COUPE_ANIM)   -- coupe : l'animation s'arrête à ce moment (jutsu_anim_cl.lua)
             net.Broadcast()
         end
 

@@ -53,9 +53,9 @@ NA_NIV.POINTS_PAR_KILL = 1   -- points gagnés en tuant un autre joueur
 -- débloqué celle d'avant dans la même ligne. La première est libre.
 -- Même ordre que l'affichage (rangs C, puis B, puis A : cl_techniques_ui.lua).
 NA_NIV.LIGNEES = {
-    { "katon_boule", "katon_saut", "katon_dome", "katon_souffle" },
-    { "suiton_requin", "suiton_waterball", "suiton_prison", "suiton_bulle" },
-    { "futon_windslash", "futon_tornade" },
+    { "katon_boule", "katon_dome", "katon_souffle","katon_saut" },
+    { "suiton_waterball", "suiton_prison", "suiton_bulle","suiton_requin" },
+    { "futon_windslash", "futon_tornade", "futon_windball" },
     { "mokuton_arche", "mokuton_fleur", "mokuton_dragon" },
     { "salamandre_poison", "salamandre_dome", "salamandre_corps", "salamandre_tornade" },
     { "fuma_tp", "fuma_invisibilite", "fuma_aura", "fuma_jugement", "fuma_ciel" },

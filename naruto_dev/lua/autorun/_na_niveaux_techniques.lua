@@ -265,13 +265,25 @@ NA_NIV_TECH.futon_windslash = {
 -- Tornade de vent (sv_futon_tornade.lua)
 NA_NIV_TECH.futon_tornade = {
     [1] = {
-        degats = 6, chakra = 30, recharge = 12,
+        degats = 60, chakra = 30, recharge = 12,
         duree = 2, vitesse = 1200, rayon = 130, hauteur = 250, intervalle = 0.25, recul = 300, souleve = 220, duree_mudra = 0.8,
     },
-    [2] = { degats = 7 },
-    [3] = { degats = 8, recharge = 11, duree = 2 },
-    [4] = { degats = 9 },
-    [5] = { degats = 10, chakra = 24, recharge = 9, duree = 2 },
+    [2] = { degats = 70 },
+    [3] = { degats = 80, recharge = 11, duree = 2 },
+    [4] = { degats = 90 },
+    [5] = { degats = 100, chakra = 24, recharge = 9, duree = 2 },
+}
+
+-- Wind Ball (sv_futon_windball.lua)
+NA_NIV_TECH.futon_windball = {
+    [1] = {
+        degats = 25, chakra = 20, recharge = 6,
+        vitesse = 1500, duree_vie = 2, hitbox = 30, hitbox_haut = 30, echelle = 0.5, recul = 600, souleve = 250, duree_mudra = 0.5,
+    },
+    [2] = { degats = 28 },
+    [3] = { degats = 32, recharge = 5.5, hitbox = 34 },
+    [4] = { degats = 36 },
+    [5] = { degats = 42, chakra = 16, recharge = 4.5, hitbox = 38, recul = 750 },
 }
 
 --========================================================
