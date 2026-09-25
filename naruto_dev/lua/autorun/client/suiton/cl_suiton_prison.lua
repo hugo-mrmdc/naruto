@@ -25,6 +25,9 @@ local RAYON_MODELE = 104.6
 local REDUCTION    = 0.85   -- 1 = juste assez grande pour contenir la cible ; plus petit = plus serrée
 local ALPHA        = 255    -- transparence de la bulle (255 = celle de son matériau)
 
+-- Case "Sans bulle d'eau" (menu des techniques, clic sur la Prison aqueuse) : 1 = seulement la particule
+local cvSansModele = CreateClientConVar("na_prison_sans_modele", "0", true, false, "1 = pas de bulle d'eau (modèle) autour de la cible de la prison aqueuse")
+
 local prisons = {}   -- cible -> { fx = particule, mdl = sphère, fin = fin de la prison }
 
 local function Fin(cible)
@@ -42,7 +45,7 @@ net.Receive("suiton_prison_fx", function()
 
     Fin(cible)
 
-    local mdl = ClientsideModel(MODELE, RENDERGROUP_TRANSLUCENT)
+    local mdl = not cvSansModele:GetBool() and ClientsideModel(MODELE, RENDERGROUP_TRANSLUCENT) or nil
     if IsValid(mdl) then
         -- assez grosse pour contenir la cible
         local haut = cible:OBBMaxs().z - cible:OBBMins().z

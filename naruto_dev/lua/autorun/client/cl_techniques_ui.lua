@@ -914,6 +914,35 @@ local function Open()
         end
     end
 
+    -- option de la Prison aqueuse : case "sans bulle d'eau" (retire le modèle, garde la particule).
+    -- Visible quand la technique est choisie (clic dessus). Réglage : na_prison_sans_modele (cl_suiton_prison.lua)
+    local optModele = vgui.Create("DButton", droite)
+    optModele:SetText("")
+    surface.SetFont("NA.Jutsu.Petit")
+    local libOpt = "SANS BULLE D'EAU"
+    local ow, oh = surface.GetTextSize(libOpt)
+    local oc = oh * 1.3
+    optModele:SetSize(oc + 8 + ow, oc)
+    optModele:SetPos((dW - optModele:GetWide()) / 2, dH - oc - dH * 0.03)
+    optModele:SetVisible(false)
+    local function SansModele()
+        local cv = GetConVar("na_prison_sans_modele")
+        return cv and cv:GetBool() or false
+    end
+    optModele.Think = function(pan)
+        pan:SetVisible(selection ~= nil and selection.id == "suiton_prison")
+    end
+    optModele.Paint = function(pan, w, h)
+        local coche = SansModele()
+        Image(DOSSIER .. (coche and "checkbox_on.png" or "checkbox_off.png"), 0, 0, h, h)
+        draw.SimpleText(libOpt, "NA.Jutsu.Petit", h + 8, h / 2,
+            (coche or pan:IsHovered()) and C_OR or C_DOUX, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    end
+    optModele.DoClick = function()
+        RunConsoleCommand("na_prison_sans_modele", SansModele() and "0" or "1")
+        surface.PlaySound("ui/buttonclick.wav")
+    end
+
     Rafraichir()
 end
 
