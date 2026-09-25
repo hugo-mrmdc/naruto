@@ -45,8 +45,20 @@ local TECHNIQUES = {
       desc = "Lance une boule d'eau droit devant toi : elle blesse et repousse le premier ennemi touché. Coûte 20 de chakra.",
       dmg = "30 à l'impact + projection" },
     { cat = "Suiton", name = "Prison aqueuse", key = "", id = "suiton_prison", rang = "B", icone = "ui/icon/suiton_prison_aqueuse.png", court = "Prison", cooldown = 12,
-      desc = "Enferme l'ennemi visé (800 unités max) dans une prison d'eau : il est soulevé dans les airs, étourdi et immobilisé pendant 3 secondes, et subit des dégâts à chaque tick. Il ne peut recevoir aucun autre dégât tant qu'il est dans la prison. Coûte 30 de chakra.",
-      dmg = "4 par tick (toutes les 0,5 s), étourdi 3 s" },
+      desc = "Enferme l'ennemi visé (800 unités max) dans une prison d'eau : maintiens le CLIC DROIT pour la garder : il est soulevé dans les airs, étourdi et immobilisé (5 secondes maximum), et subit des dégâts à chaque tick. Il ne peut recevoir aucun autre dégât tant qu'il est dans la prison. Relâche pour le libérer. Coûte 30 de chakra.",
+      dmg = "4 par tick (toutes les 0,5 s), étourdi tant que tu maintiens (5 s max)" },
+
+    { cat = "Suiton", name = "Bulles", key = "", id = "suiton_bulle", rang = "B", icone = "ui/icon/suiton_douche_aqueuse.png", court = "Bulles", cooldown = 8,
+      desc = "Souffle une salve de bulles d'eau en éventail devant toi : chaque bulle qui touche un ennemi éclate et lui fait mal, donc plus il en prend, plus ça fait mal. Coûte 25 de chakra.",
+      dmg = "8 par bulle (10 bulles)" },
+
+    -- ===== FUTON =====
+    { cat = "Futon", name = "Wind Slash", key = "", id = "futon_windslash", rang = "B", icone = "ui/icon/futon_lamelle_air.png", court = "Wind Slash", cooldown = 5,
+      desc = "Lance une lame de vent en forme de croissant droit devant toi : elle fonce en ligne droite et blesse le premier ennemi touché. Coûte 20 de chakra.",
+      dmg = "35 à l'impact" },
+    { cat = "Futon", name = "Tornade", key = "", id = "futon_tornade", rang = "B", icone = "ui/icon/futon_tornade_vent.png", court = "Tornade", cooldown = 12,
+      desc = "Fait surgir une tornade de vent devant toi : elle avance dans la direction de ton regard pendant 4 secondes, blesse tout ce qu'elle touche et le projette en l'air. Elle se dissipe contre un mur. Coûte 30 de chakra.",
+      dmg = "6 par tick (toutes les 0,25 s)" },
 
     -- ===== MOKUTON =====
     { cat = "Mokuton", name = "Arche", key = KEY_K, id = "mokuton_arche", rang = "C", icone = "", court = "Arche", cd = 2,
@@ -276,7 +288,7 @@ local DOSSIER = "ui/main_menu/"
 
 local ONGLETS = {
     { nom = "Stats",         icone = "stat.png" },
-    { nom = "Jutsus",        icone = "jutsu.png",       cats = { "Katon", "Suiton" },
+    { nom = "Jutsus",        icone = "jutsu.png",       cats = { "Katon", "Suiton", "Futon" },
       desc = "Cette catégorie répertorie les techniques des natures du chakra" },
     { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton" },
       desc = "Cette catégorie répertorie les techniques héritées par le sang" },

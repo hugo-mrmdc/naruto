@@ -214,25 +214,64 @@ NA_NIV_TECH.suiton_requin = {
 -- Boule d'eau (sv_suiton_waterball.lua)
 NA_NIV_TECH.suiton_waterball = {
     [1] = {
-        degats = 30, chakra = 20, recharge = 6,
-        vitesse = 1400, duree_vie = 2, hitbox = 22, echelle = 0.5, recul = 350, duree_mudra = 0.6,
+        degats = 60, chakra = 20, recharge = 6,
+        vitesse = 1400, duree_vie = 2, hitbox = 26, echelle = 0.5, recul = 350, duree_mudra = 0.6,
     },
-    [2] = { degats = 34 },
-    [3] = { degats = 38, recharge = 5.5, hitbox = 25 },
-    [4] = { degats = 42 },
-    [5] = { degats = 48, chakra = 16, recharge = 4.5, hitbox = 28 },
+    [2] = { degats = 70 },
+    [3] = { degats = 80, recharge = 5.5, hitbox = 25 },
+    [4] = { degats = 90 },
+    [5] = { degats = 100, chakra = 16, recharge = 4.5, hitbox = 28 },
 }
 
 -- Prison aqueuse (sv_suiton_prison.lua)
 NA_NIV_TECH.suiton_prison = {
     [1] = {
         degats = 4, chakra = 30, recharge = 12,
-        duree = 3, portee = 800, hitbox = 20, duree_mudra = 0.6, hauteur = 100, intervalle = 0.5,
+        duree = 5, portee = 800, hitbox = 20, duree_mudra = 0.6, hauteur = 100, intervalle = 0.5,   -- duree = durée MAXIMALE (clic droit maintenu)
     },
-    [2] = { degats = 4.5, duree = 3.5 },
+    [2] = { degats = 4.5, duree = 5.5 },
     [3] = { degats = 5, recharge = 11, portee = 900 },
-    [4] = { degats = 5.5, duree = 4 },
-    [5] = { degats = 6, chakra = 25, recharge = 9, duree = 4.5 },
+    [4] = { degats = 5.5, duree = 6 },
+    [5] = { degats = 6, chakra = 25, recharge = 9, duree = 7 },
+}
+
+-- Bulles (sv_suiton_bulle.lua)
+NA_NIV_TECH.suiton_bulle = {
+    [1] = {
+        degats = 5, chakra = 25, recharge = 8,
+        nombre = 10, duree_salve = 0.7, vitesse = 800, duree_vie = 3, hitbox = 26, duree_mudra = 0.6,
+    },
+    [2] = { degats = 6, nombre = 10 },
+    [3] = { degats = 8, recharge = 7, hitbox = 28 },
+    [4] = { degats = 10, nombre = 11 },
+    [5] = { degats = 12, chakra = 20, recharge = 6, nombre = 13 },
+}
+
+--========================================================
+-- FUTON
+--========================================================
+-- Wind Slash (sv_futon_windslash.lua)
+NA_NIV_TECH.futon_windslash = {
+    [1] = {
+        degats = 35, chakra = 20, recharge = 5,
+        vitesse = 1800, duree_vie = 1.5, hitbox = 40, hitbox_haut = 15, echelle = 0.6, roulis = 0, duree_mudra = 0.5,
+    },
+    [2] = { degats = 40 },
+    [3] = { degats = 45, recharge = 4.5, hitbox = 45 },
+    [4] = { degats = 50 },
+    [5] = { degats = 58, chakra = 16, recharge = 4, hitbox = 50 },
+}
+
+-- Tornade de vent (sv_futon_tornade.lua)
+NA_NIV_TECH.futon_tornade = {
+    [1] = {
+        degats = 6, chakra = 30, recharge = 12,
+        duree = 2, vitesse = 1200, rayon = 130, hauteur = 250, intervalle = 0.25, recul = 300, souleve = 220, duree_mudra = 0.8,
+    },
+    [2] = { degats = 7 },
+    [3] = { degats = 8, recharge = 11, duree = 2 },
+    [4] = { degats = 9 },
+    [5] = { degats = 10, chakra = 24, recharge = 9, duree = 2 },
 }
 
 --========================================================
@@ -634,11 +673,11 @@ NA_NIV_TECH.kiminari_laser = {
 NA_NIV_TECH.kiminari_boulets = {
     [1] = {
         degats = 8, chakra = 30, recharge = 22, boules = 10, delai = 0.6, intervalle = 0.25, vitesse = 2200,
-        rayon = 90, portee = 1500, montee = 1000, fin_vol = 0.5, duree_mudra = 0.3, anim_coupe = 0.4,
+        rayon = 150, portee = 1500, montee = 1000, fin_vol = 0.5, duree_mudra = 0.3, anim_coupe = 0.4,
     },
     [2] = { degats = 9 },
     [3] = { degats = 10, boules = 12, recharge = 20 },
-    [4] = { degats = 11, rayon = 110 },
+    [4] = { degats = 11, rayon = 150 },
     [5] = { degats = 13, boules = 3, chakra = 25, recharge = 18 },
 }
 
