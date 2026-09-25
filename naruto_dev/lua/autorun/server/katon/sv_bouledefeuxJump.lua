@@ -125,6 +125,7 @@ hook.Add("Think", "naruto_dev_uchih1_projectiles_move", function()
             net.WriteBool(false)     -- stop
             net.WriteVector(p.pos or vector_origin)
             net.WriteAngle(angle_zero)
+            net.WriteBool(p.hit == true)     -- touché (et non simple fin de vie) : explosion côté client
             net.Broadcast()
 
             Projectiles[id] = nil
@@ -165,8 +166,12 @@ hook.Add("Think", "naruto_dev_uchih1_projectiles_move", function()
                     dmg:SetInflictor(game.GetWorld())
                     dmg:SetDamagePosition(tr.HitPos)
                     hit:TakeDamageInfo(dmg)
+
+                    NA_Bruler(hit, p.owner, NA_Stat(p.owner, "katon_saut", "brulure_duree", 4),
+                        NA_Stat(p.owner, "katon_saut", "brulure_dps", 4))
                 end
                 p.alive = false
+                p.hit   = true
             end
         end
     end

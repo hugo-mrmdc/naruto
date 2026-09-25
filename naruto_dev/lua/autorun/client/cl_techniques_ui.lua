@@ -32,6 +32,9 @@ local TECHNIQUES = {
       desc = "Projette une boule de feu qui suit la direction du regard." },
     { cat = "Katon", name = "Boule de feu sautée", key = KEY_J, id = "katon_saut", rang = "C", icone = "", court = "Saut feu", cooldown = 1, cd = 2,
       desc = "Charge de chakra puis boule de feu avec un bond." },
+    { cat = "Katon", name = "Dôme de feu", key = "", id = "katon_dome", rang = "B", icone = "ui/icon/shakuton_zone_ardente.png", court = "Dôme feu", cooldown = 10,
+      desc = "Un dôme de flammes surgit au sol autour de toi pendant 5 secondes : il blesse et brûle tous les ennemis dedans. Coûte 20 de chakra.",
+      dmg = "6 par tick (toutes les 0,5 s) + brûlure" },
 
     -- ===== SUITON =====
     { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "", court = "Requin", cooldown = 5, cd = 5.3,

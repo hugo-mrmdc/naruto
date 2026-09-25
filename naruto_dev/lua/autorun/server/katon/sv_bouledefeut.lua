@@ -21,6 +21,40 @@ local function Niv(ply, stat, base) return NA_Stat(ply, "katon_boule", stat, bas
 local Projectiles = {}
 local projId = 0
 
+-- Brûlure maison (partagée avec sv_bouledefeuxJump.lua) : 1 tick de dégâts par seconde,
+-- indépendante du statut "burn" du gamemode. Les brûlures se cumulent.
+local burnId = 0
+local NET_BURN = "naruto_dev_katon_burn"
+util.AddNetworkString(NET_BURN)
+
+function NA_Bruler(ent, owner, duree, dps)
+    if not IsValid(ent) or not (ent:IsPlayer() or ent:IsNPC() or ent:IsNextBot()) then return end
+    duree = math.floor(tonumber(duree) or 0)
+    if duree < 1 then return end
+
+    burnId = burnId + 1
+    local id = "na_burn_" .. burnId   -- une brûlure = un timer : elles se cumulent (chaque touche en ajoute une)
+    print("[KATON] brulure sur", ent, duree .. " s", dps .. " dps")   -- debug : à retirer une fois validé
+    timer.Create(id, 1, duree, function()
+        if not IsValid(ent) or ent:Health() <= 0 or (ent:IsPlayer() and not ent:Alive()) then
+            timer.Remove(id)
+            return
+        end
+        local dmg = DamageInfo()
+        dmg:SetDamage(dps)
+        dmg:SetDamageType(DMG_BURN)
+        dmg:SetAttacker(IsValid(owner) and owner or game.GetWorld())
+        dmg:SetInflictor(game.GetWorld())
+        dmg:SetDamagePosition(ent:WorldSpaceCenter())
+        ent:TakeDamageInfo(dmg)
+    end)
+
+    net.Start(NET_BURN)
+        net.WriteEntity(ent)
+        net.WriteFloat(duree)
+    net.Broadcast()
+end
+
 local function SpawnProjectile(ply)
     projId = projId % 65535 + 1
     local id = projId
@@ -59,6 +93,7 @@ hook.Add("Think", "naruto_dev_katon_projectiles_move", function()
                 net.WriteBool(false) -- stop
                 net.WriteVector(p.pos or vector_origin)
                 net.WriteAngle(angle_zero)
+                net.WriteBool(p.hit == true)   -- touché (et non simple fin de vie) : explosion côté client
             net.Broadcast()
 
             Projectiles[id] = nil
@@ -99,8 +134,12 @@ hook.Add("Think", "naruto_dev_katon_projectiles_move", function()
                     dmg:SetInflictor(game.GetWorld())
                     dmg:SetDamagePosition(tr.HitPos)
                     hit:TakeDamageInfo(dmg)
+
+                    NA_Bruler(hit, p.owner, NA_Stat(p.owner, "katon_boule", "brulure_duree", 4),
+                        NA_Stat(p.owner, "katon_boule", "brulure_dps", 4))
                 end
                 p.alive = false
+                p.hit   = true
             end
         end
     end

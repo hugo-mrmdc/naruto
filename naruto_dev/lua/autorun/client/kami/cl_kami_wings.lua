@@ -8,7 +8,7 @@ local MODELE = "models/clan/ame/kami/ailekami.mdl"
 local SEQ_AILES = "aileland"   -- séquence des ailes (la même que côté serveur)
 
 -- Animation du joueur pendant le vol (nom exact : anim_extension_mod6.mdl)
-local ANIM_VOL = "nrp_ninjutsu_heal_aerial_d51nj2_shadowclone_idle_type01"
+local ANIM_VOL = "m_ni_sht_ninjutsu_d70nj1_loop"
 
 --[[
     Placement des ailes, appliqué à l'AFFICHAGE : le décalage (convars répliquées

@@ -6,9 +6,14 @@ local FX_NAME  = "[1]_katon_boule_feu_orugi_big" -- le vrai nom
 
 print("[KATON CL] Loaded (follow fx)")
 
+local PCF_HIT = "particles/atg_reworkpvp.pcf"
+local FX_HIT  = "izox_katon_pluie_explode" -- explosion à l'impact
+
 hook.Add("InitPostEntity", "uchih1_followfx_precache", function()
     game.AddParticles(PCF_PATH)
+    game.AddParticles(PCF_HIT)
     PrecacheParticleSystem(FX_NAME)
+    PrecacheParticleSystem(FX_HIT)
     print("[KATON CL] precache ok:", FX_NAME)
 end)
 
@@ -110,6 +115,7 @@ net.Receive(NET_POS, function()
     local ang   = net.ReadAngle()
 
     if not alive then
+        if net.ReadBool() then ParticleEffect(FX_HIT, pos, angle_zero) end
         local b = balls[id]
         if b and IsValid(b.mdl) then
             b.mdl:StopParticles()

@@ -25,6 +25,8 @@ ENT.Gravite   = 0      -- chute par seconde² (0 = ligne droite)
 ENT.Rayon     = 6      -- demi-largeur de la zone de touche
 
 if SERVER then
+    local DEBUG_CVAR = CreateConVar("na_poison_hitbox", "0", FCVAR_NONE, "1 = affiche la hitbox du crachat de poison")
+
     function ENT:Initialize()
         self:SetModel(self.Model)
         self:SetMoveType(MOVETYPE_NONE)
@@ -92,6 +94,9 @@ if SERVER then
 
         local best
         for _, off in ipairs({ vector_origin, r, -r, u, -u }) do
+            if DEBUG_CVAR:GetBool() then   -- na_poison_hitbox 1 : montre les 5 couloirs de trace
+                debugoverlay.Line(from + off, to + off, 2, Color(120, 255, 60), true)
+            end
             local tr = util.TraceLine({
                 start = from + off,
                 endpos = to + off,

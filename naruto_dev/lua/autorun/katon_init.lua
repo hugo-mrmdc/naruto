@@ -6,9 +6,12 @@ if SERVER then
     include("autorun/server/katon/sv_bouledefeut.lua")
     AddCSLuaFile("autorun/client/katon/cl_bouledefeuxJump.lua")
     include("autorun/server/katon/sv_bouledefeuxJump.lua")
+    AddCSLuaFile("autorun/client/katon/cl_katon_dome.lua")
+    include("autorun/server/katon/sv_katon_dome.lua")
 end
 
 if CLIENT then
     include("autorun/client/katon/cl_bouledefeut.lua")
     include("autorun/client/katon/cl_bouledefeuxJump.lua")
+    include("autorun/client/katon/cl_katon_dome.lua")
 end

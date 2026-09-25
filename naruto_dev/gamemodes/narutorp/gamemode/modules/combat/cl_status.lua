@@ -3,7 +3,6 @@
 ]]
 
 local Status = NRP.Status
-local FX = NRP.FX
 local MAT_GLOW = Material("sprites/light_glow02_add")
 
 local genjutsuCM = {
@@ -46,18 +45,23 @@ end)
 -- Le genjutsu se voit par la teinte et le flou ci-dessus.
 
 -- Flammes sur les joueurs en feu, étoiles au-dessus des joueurs étourdis
-local nextFlame = {}
+-- La brûlure est une particule attachée au joueur (atg_reworkpvp.pcf), coupée quand le statut se termine
+local FX_BURN = "katon_brulureatg"
+game.AddParticles("particles/atg_reworkpvp.pcf")
+PrecacheParticleSystem(FX_BURN)
+local burning = setmetatable({}, { __mode = "k" })
 
 hook.Add("PostPlayerDraw", "NRP.Status.PlayerFX", function(ply)
     if ply:IsDormant() then return end
     local now = CurTime()
 
-    if Status.Has(ply, "burn") and (nextFlame[ply] or 0) < now then
-        nextFlame[ply] = now + 0.15
-        FX.Particles(ply:GetPos() + Vector(0, 0, math.random(10, 60)), "effects/fire_cloud1", 1, {
-            color = Color(255, 150, 60), speed = 10, life = 0.5, size = 10, endSize = 2,
-            velocity = Vector(0, 0, 40), spread = 12,
-        })
+    local onFire = Status.Has(ply, "burn")
+    if onFire and not burning[ply] then
+        burning[ply] = true
+        ParticleEffectAttach(FX_BURN, PATTACH_ABSORIGIN_FOLLOW, ply, 0)
+    elseif not onFire and burning[ply] then
+        burning[ply] = nil
+        ply:StopParticlesNamed(FX_BURN)
     end
 
     if Status.Has(ply, "stun") then

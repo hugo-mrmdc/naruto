@@ -70,6 +70,8 @@ NA_NIV.NOMS = {
     { "delai_cercle",     "DÉLAI DU CERCLE",       " S" },
     { "duree_vie",        "DURÉE DE VIE",          " S" },
     { "life",             "DURÉE DE VIE",          " S" },
+    { "brulure_duree",    "DURÉE BRÛLURE",         " S" },
+    { "brulure_dps",      "DÉGÂTS BRÛLURE / S",    "" },
     { "swarm_life",       "DURÉE DE VIE (NUÉE)",   " S" },
     { "etourdi",          "ÉTOURDISSEMENT",        " S" },
     { "stun_time",        "ÉTOURDISSEMENT",        " S" },
@@ -146,11 +148,12 @@ NA_NIV_TECH.katon_boule = {
     [1] = {
         degats = 35, recharge = 1, hitbox = 18,
         life = 2.5, speed = 1600,
+        brulure_duree = 4, brulure_dps = 4,
     },
     [2] = { degats = 38 },
-    [3] = { degats = 42, hitbox = 21 },
+    [3] = { degats = 42, hitbox = 21, brulure_dps = 5 },
     [4] = { degats = 45 },
-    [5] = { degats = 50, recharge = 0.8, hitbox = 24 },
+    [5] = { degats = 50, recharge = 0.8, hitbox = 24, brulure_duree = 5, brulure_dps = 6 },
 }
 
 -- Boule de feu sautée (sv_bouledefeuxJump.lua)
@@ -158,11 +161,25 @@ NA_NIV_TECH.katon_saut = {
     [1] = {
         degats = 35, recharge = 1, hitbox = 18,
         life = 2.5, speed = 1600,
+        brulure_duree = 4, brulure_dps = 4,
     },
     [2] = { degats = 38 },
-    [3] = { degats = 42, hitbox = 21 },
+    [3] = { degats = 42, hitbox = 21, brulure_dps = 5 },
     [4] = { degats = 45 },
-    [5] = { degats = 50, recharge = 0.8, hitbox = 24 },
+    [5] = { degats = 50, recharge = 0.8, hitbox = 24, brulure_duree = 5, brulure_dps = 6 },
+}
+
+-- Dôme de feu (sv_katon_dome.lua)
+NA_NIV_TECH.katon_dome = {
+    [1] = {
+        degats = 6, chakra = 20, recharge = 10,
+        duree = 5, rayon = 300, intervalle = 0.5, duree_mudra = 0.8,
+        brulure_duree = 4, brulure_dps = 4,
+    },
+    [2] = { degats = 7 },
+    [3] = { degats = 8, recharge = 9, brulure_dps = 5 },
+    [4] = { degats = 9 },
+    [5] = { degats = 10, chakra = 16, recharge = 8, brulure_duree = 5, brulure_dps = 6 },
 }
 
 --========================================================
@@ -219,14 +236,14 @@ NA_NIV_TECH.mokuton_fleur = {
 --   degats = impact du crachat, poison = dégâts par tick du poison
 NA_NIV_TECH.salamandre_poison = {
     [1] = {
-        degats = 50, poison = 10, chakra = 10, recharge = 1, hitbox = 6,
+        degats = 50, poison = 10, chakra = 10, recharge = 1, hitbox = 30,
         poison_duree = 5, poison_tick = 1, vitesse = 1500, duree_vie = 3, gravite = 0,
         duree_mudra = 1, delai_lancer = 0.5,
     },
     [2] = { degats = 55, poison = 11 },
-    [3] = { degats = 60, poison = 12, hitbox = 8 },
+    [3] = { degats = 60, poison = 12, hitbox = 30 },
     [4] = { degats = 65, poison = 13 },
-    [5] = { degats = 70, poison = 14, chakra = 8, recharge = 0.8, hitbox = 10 },
+    [5] = { degats = 70, poison = 14, chakra = 8, recharge = 0.8, hitbox = 30 },
 }
 
 -- Dôme de brume (sv_dome_salamandre.lua)
