@@ -23,7 +23,7 @@ local RECHARGE     = 10     -- secondes après la FIN de la zone avant de pouvoi
 local CHAKRA_COUT  = 20     -- chakra au lancement (0 = gratuit)
 local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.8    -- incantation avant l'apparition de la zone
-local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
+local ANIM_APPEL   = "nrp_ninjutsu_defend_mudwall"
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

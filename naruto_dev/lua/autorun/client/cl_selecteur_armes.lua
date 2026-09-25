@@ -148,6 +148,7 @@ end
 local function Ouvert()
     return CurTime() - derniereMolette < DUREE_AFFICHAGE
 end
+NA_SelecteurOuvert = Ouvert   -- le clic droit ferme ce menu : la barre de techniques ne le prend pas (cl_skillbar.lua)
 
 ----------------------------------------------------------
 -- Molette

@@ -115,6 +115,12 @@ local function playSequenceOn(ply, seqName, coupe)
 
     ply:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, seq, 0, true)
 
+    -- fin prévue de cette animation (3 s max, comme NA_AnimJutsu) : le souffle katon
+    -- (cl_katon_souffle.lua) attend ce moment pour reprendre sa propre animation
+    local duree = ply:SequenceDuration(seq)
+    if coupe and coupe > 0 then duree = math.min(duree, coupe) end
+    ply.NA_AnimFin = CurTime() + math.min(duree, 3)
+
     -- coupe l'animation après "coupe" secondes (sauf si une autre a été lancée entre-temps)
     local jeton = (ply.NA_AnimJeton or 0) + 1
     ply.NA_AnimJeton = jeton

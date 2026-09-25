@@ -1,7 +1,8 @@
 --========================================================
 -- Barre de techniques (CLIENT)
 --
--- 6 emplacements en bas de l'écran, lancés avec les touches 1 à 6.
+-- 6 emplacements en bas de l'écran : les touches 1 à 6 SÉLECTIONNENT la
+-- technique, le clic droit la lance.
 -- On y équipe les techniques depuis le menu F2 (cl_techniques_ui.lua).
 -- L'équipement est enregistré dans garrysmod/data/naruto_skillbar.txt.
 --
@@ -154,24 +155,37 @@ end
 Charger()
 
 ----------------------------------------------------------
--- Lancement (touches 1 à 6)
+-- Sélection (touches 1 à 6) puis lancement (clic droit)
 -- On passe par les commandes "slot1"..."slot6" déjà liées à 1..6 :
--- un emplacement occupé lance sa technique et bloque le changement d'arme,
+-- un emplacement occupé est SÉLECTIONNÉ (et bloque le changement d'arme),
 -- un emplacement vide laisse la touche faire son travail habituel.
+-- Rappuyer sur la touche de la technique sélectionnée la désélectionne :
+-- le clic droit redevient celui de l'arme.
 ----------------------------------------------------------
+Bar.Selection = Bar.Selection or nil
+
 function Bar.Utiliser(slot)
     local id = Bar.Slots[slot]
     if not id then return false end
 
-    -- NA_Lancer refuse d'elle-même une technique en recharge (son + voile rouge)
-    NA_Lancer(id)
-
-    -- emplacement occupé : on garde la touche, même si la technique était refusée
+    Bar.Selection = (Bar.Selection ~= slot) and slot or nil
+    surface.PlaySound("ui/buttonclick.wav")
     return true
 end
 
 hook.Add("PlayerBindPress", "NA_SkillBar_Binds", function(ply, bind, pressed)
     if not pressed then return end
+
+    -- clic droit : lance la technique sélectionnée
+    if string.find(bind, "+attack2", 1, true) then
+        local id = Bar.Selection and Bar.Slots[Bar.Selection]
+        if not id then Bar.Selection = nil return end
+        if NA_SelecteurOuvert and NA_SelecteurOuvert() then return end   -- le clic droit annule le menu d'armes
+
+        -- NA_Lancer refuse d'elle-même une technique en recharge (son + voile rouge)
+        NA_Lancer(id)
+        return true   -- le clic droit ne fait pas aussi l'attaque spéciale de l'arme
+    end
 
     local n = string.match(bind, "^slot(%d)$")
     n = tonumber(n)
@@ -234,6 +248,14 @@ local function DessinerEmplacement(x, y, taille, slot, id, alpha)
     surface.SetMaterial(MAT_CASE)
     surface.SetDrawColor(255, 255, 255, alpha)
     surface.DrawTexturedRect(x, y, taille, taille)
+
+    -- technique sélectionnée (clic droit pour la lancer) : anneau doré qui pulse
+    if id and Bar.Selection == slot then
+        local pulse = 0.7 + 0.3 * math.sin(CurTime() * 5)
+        for e = 0, 2 do
+            surface.DrawCircle(cx, cy, taille * 0.45 + e, 255, 215, 120, 255 * pulse * alpha / 255)
+        end
+    end
 
     if id then
         local col = Bar.Couleur(id)

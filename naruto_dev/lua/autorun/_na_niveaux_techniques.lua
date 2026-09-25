@@ -182,6 +182,19 @@ NA_NIV_TECH.katon_dome = {
     [5] = { degats = 10, chakra = 16, recharge = 8, brulure_duree = 5, brulure_dps = 6 },
 }
 
+-- Souffle katon (sv_katon_souffle.lua)
+NA_NIV_TECH.katon_souffle = {
+    [1] = {
+        degats = 5, chakra = 25, recharge = 8,
+        duree = 3, portee = 450, intervalle = 0.25, duree_mudra = 0.8,
+        brulure_duree = 4, brulure_dps = 4,
+    },
+    [2] = { degats = 5.5 },
+    [3] = { degats = 6, recharge = 7, portee = 500, brulure_dps = 5 },
+    [4] = { degats = 6.5 },
+    [5] = { degats = 7, chakra = 20, recharge = 6, duree = 3.5, brulure_duree = 5, brulure_dps = 6 },
+}
+
 --========================================================
 -- SUITON
 --========================================================
@@ -196,6 +209,18 @@ NA_NIV_TECH.suiton_requin = {
     [3] = { recharge = 4.5, hitbox = 22 },
     [4] = { hitbox = 24 },
     [5] = { recharge = 4, hitbox = 28 },
+}
+
+-- Prison aqueuse (sv_suiton_prison.lua)
+NA_NIV_TECH.suiton_prison = {
+    [1] = {
+        degats = 4, chakra = 30, recharge = 12,
+        duree = 3, portee = 800, hitbox = 20, duree_mudra = 0.6, hauteur = 100, intervalle = 0.5,
+    },
+    [2] = { degats = 4.5, duree = 3.5 },
+    [3] = { degats = 5, recharge = 11, portee = 900 },
+    [4] = { degats = 5.5, duree = 4 },
+    [5] = { degats = 6, chakra = 25, recharge = 9, duree = 4.5 },
 }
 
 --========================================================

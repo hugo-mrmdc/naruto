@@ -35,10 +35,16 @@ local TECHNIQUES = {
     { cat = "Katon", name = "Dôme de feu", key = "", id = "katon_dome", rang = "B", icone = "ui/icon/shakuton_zone_ardente.png", court = "Dôme feu", cooldown = 10,
       desc = "Un dôme de flammes surgit au sol autour de toi pendant 5 secondes : il blesse et brûle tous les ennemis dedans. Coûte 20 de chakra.",
       dmg = "6 par tick (toutes les 0,5 s) + brûlure" },
+    { cat = "Katon", name = "Souffle katon", key = "", id = "katon_souffle", rang = "B", icone = "ui/icon/katon_souffle_feu.png", court = "Souffle", cooldown = 8,
+      desc = "Souffle un jet de flammes devant toi pendant 3 secondes, dans la direction de ton regard : il blesse et brûle tous les ennemis dans le cône. Coûte 25 de chakra.",
+      dmg = "5 par tick (toutes les 0,25 s) + brûlure" },
 
     -- ===== SUITON =====
     { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "", court = "Requin", cooldown = 5, cd = 5.3,
       desc = "Envoie un requin d'eau sur la cible visée." },
+    { cat = "Suiton", name = "Prison aqueuse", key = "", id = "suiton_prison", rang = "B", icone = "ui/icon/suiton_prison_aqueuse.png", court = "Prison", cooldown = 12,
+      desc = "Enferme l'ennemi visé (800 unités max) dans une prison d'eau : il est soulevé dans les airs, étourdi et immobilisé pendant 3 secondes, et subit des dégâts à chaque tick. Il ne peut recevoir aucun autre dégât tant qu'il est dans la prison. Coûte 30 de chakra.",
+      dmg = "4 par tick (toutes les 0,5 s), étourdi 3 s" },
 
     -- ===== MOKUTON =====
     { cat = "Mokuton", name = "Arche", key = KEY_K, id = "mokuton_arche", rang = "C", icone = "", court = "Arche", cd = 2,
