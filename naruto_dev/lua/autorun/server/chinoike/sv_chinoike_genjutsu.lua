@@ -63,13 +63,14 @@ local function TrouverCible(ply)
     local t = Vector(taille, taille, taille)
     local portee = NA_Stat(ply, "chinoike_genjutsu", "portee", PORTEE)
 
-    local mur = util.TraceHull({
+    -- le mur est mesuré avec un simple RAYON : avec la boîte, le sol la coupait très tôt dès qu'on visait bas
+    local mur = util.TraceLine({
         start = oeil, endpos = oeil + ply:GetAimVector() * portee,
-        mins = -t, maxs = t, mask = MASK_SOLID_BRUSHONLY,
+        mask = MASK_SOLID_BRUSHONLY,
     })
 
     local cible, distMin = nil, math.huge
-    for _, ent in ipairs(ents.FindAlongRay(oeil, mur.HitPos, -t, t)) do
+    for _, ent in ipairs(NA_FindAlongRay(oeil, mur.HitPos, t)) do
         if EstCible(ent, ply) then
             local d = oeil:DistToSqr(ent:WorldSpaceCenter())
             if d < distMin then cible, distMin = ent, d end

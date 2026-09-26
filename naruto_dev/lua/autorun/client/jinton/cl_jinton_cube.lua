@@ -32,12 +32,12 @@ hook.Add("PostDrawTranslucentRenderables", "JintonCube_HitboxVisee", function(de
 
     -- même calcul que le serveur : boîte jusqu'au premier mur, cible valable la plus proche
     local oeil = ply:EyePos()
-    local tr = util.TraceHull({
+    local tr = util.TraceLine({
         start = oeil, endpos = oeil + ply:GetAimVector() * portee,
-        mins = -t, maxs = t, mask = MASK_SOLID_BRUSHONLY,
+        mask = MASK_SOLID_BRUSHONLY,
     })
     local cible, distMin = nil, math.huge
-    for _, ent in ipairs(ents.FindAlongRay(oeil, tr.HitPos, -t, t)) do
+    for _, ent in ipairs(NA_FindAlongRay(oeil, tr.HitPos, t)) do
         if EstCible(ent, ply) then
             local d = oeil:DistToSqr(ent:WorldSpaceCenter())
             if d < distMin then cible, distMin = ent, d end

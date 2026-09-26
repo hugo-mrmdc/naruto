@@ -31,6 +31,10 @@ local stepScale = 4
 -- stun
 local STUN_TIME = 4.0
 
+-- mudras
+local DUREE_MUDRA = 0.6   -- incantation avant que les arches tombent (la cible est revisée à la fin)
+local ANIM_MUDRA  = "nrp_ninjutsu_defend_dragonflamebombs_start"
+
 -- damage
 local DAMAGE_AMOUNT = 20
 local DAMAGE_RADIUS = 120
@@ -38,11 +42,17 @@ local DAMAGE_RADIUS = 120
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
 local function Niv(ply, stat, base) return NA_Stat(ply, "mokuton_arche", stat, base) end
 
-local DEBUG_HITBOX = false
+-- mode développeur (developer 1) : hitbox de visée, zone de dégâts et arche affichées
+local function Dev() return GetConVar("developer"):GetInt() > 0 end
+
+local FX_CHUTE = "kenjutsu_zone_pat"   -- jouée quand une arche touche le sol (particles/patlick_atgparticules.pcf)
 
 if SERVER then
     resource.AddFile("sound/mokuton/wood3.wav")
     PrecacheParticleSystem("hit_2_arche")
+    resource.AddFile("particles/patlick_atgparticules.pcf")
+    game.AddParticles("particles/patlick_atgparticules.pcf")
+    PrecacheParticleSystem(FX_CHUTE)
 end
 
 -- =========================================
@@ -78,60 +88,54 @@ local function GetWorldGroundZ(pos)
 end
 
 -- =========================================
--- Targeting
+-- Targeting (comme le Cube Jinton)
 -- =========================================
+local function EstCible(ent, lanceur)
+    if not IsValid(ent) or ent == lanceur then return false end
+    if ent:IsPlayer() then return ent:Alive() end
+    if ent:IsNPC() then return ent:GetNPCState() ~= NPC_STATE_DEAD end
+    if ent:IsNextBot() then return ent:Health() > 0 end
+    return false
+end
+
+-- Valeurs lues par le client pour afficher la hitbox en mode développeur (cl : mokuton_arche_cl.lua)
+SetGlobal2Float("NA_MokutonArchePortee", TRACE_RANGE)
+SetGlobal2Float("NA_MokutonArcheVisee", HULL_TAILLE)
+
+-- Ennemi visé : une boîte (hitbox de visée) est lancée depuis les yeux le long du regard,
+-- jusqu'au premier mur (ou portée). Parmi TOUT ce qu'elle traverse, on prend la cible valable
+-- la plus proche : un objet quelconque devant la cible (prop, entité invisible...) ne la cache plus.
 local function GetLookTarget(ply)
     if not IsValid(ply) then return end
 
-    local startPos = ply:EyePos()
-    local dir      = ply:EyeAngles():Forward()
-    local endPos   = startPos + dir * Niv(ply, "trace_range", TRACE_RANGE)
-    local hb       = NA_Stat(ply, "mokuton_arche", "hitbox", HULL_TAILLE)
-    local hullMins, hullMaxs = Vector(-hb, -hb, -hb), Vector(hb, hb, hb)
+    local oeil = ply:EyePos()
+    local hb   = NA_Stat(ply, "mokuton_arche", "hitbox", HULL_TAILLE)   -- hitbox par niveau
+    local t    = Vector(hb, hb, hb)
 
-    local trLine = util.TraceLine({
-        start  = startPos,
-        endpos = endPos,
-        filter = ply,
-        mask   = MASK_SHOT
+    -- la boîte s'arrête au premier mur, mesuré avec un simple RAYON : avec une boîte, le sol la coupait
+    -- très tôt dès qu'on visait bas (bassin, jambes) et la cible n'était plus dans la zone de visée
+    local mur = util.TraceLine({
+        start = oeil, endpos = oeil + ply:GetAimVector() * Niv(ply, "trace_range", TRACE_RANGE),
+        mask = MASK_SOLID_BRUSHONLY,
     })
+    local fin = mur.HitPos
 
-    if DEBUG_HITBOX then
-        debugoverlay.Line(startPos, trLine.HitPos, 0.1, Color(0,150,255), true)
-        debugoverlay.Cross(trLine.HitPos, 4, 0.1, Color(0,150,255), true)
-    end
-
-    local ent = trLine.Entity
-    if IsValid(ent) and (ent:IsPlayer() or ent:IsNPC() or ent:IsNextBot()) then
-        if DEBUG_HITBOX then
-            local mins, maxs = ent:WorldSpaceAABB()
-            debugoverlay.Box(Vector(0,0,0), mins, maxs, 0.1, Color(0,255,0,120))
+    local cible, distMin = nil, math.huge
+    for _, ent in ipairs(NA_FindAlongRay(oeil, fin, t)) do
+        if EstCible(ent, ply) then
+            local d = oeil:DistToSqr(ent:WorldSpaceCenter())
+            if d < distMin then cible, distMin = ent, d end
         end
-        return ent
     end
 
-    local trHull = util.TraceHull({
-        start  = startPos,
-        endpos = endPos,
-        mins   = hullMins,
-        maxs   = hullMaxs,
-        filter = ply,
-        mask   = MASK_SHOT_HULL
-    })
-
-    if DEBUG_HITBOX then
-        debugoverlay.SweptBox(startPos, trHull.HitPos, hullMins, hullMaxs, angle_zero, 0.1, Color(255,255,0,120))
-        debugoverlay.Cross(trHull.HitPos, 4, 0.1, Color(255,255,0,120), true)
+    -- mode développeur : la hitbox reste affichée 2 s à chaque lancement
+    if Dev() then
+        local couleur = cible and Color(0, 255, 0, 40) or Color(255, 60, 60, 40)
+        debugoverlay.SweptBox(oeil, fin, -t, t, angle_zero, 2, couleur)
+        if cible then debugoverlay.Box(cible:GetPos(), cible:OBBMins(), cible:OBBMaxs(), 2, Color(0, 255, 0, 60)) end
     end
 
-    ent = trHull.Entity
-    if IsValid(ent) and (ent:IsPlayer() or ent:IsNPC() or ent:IsNextBot()) then
-        if DEBUG_HITBOX then
-            local mins, maxs = ent:WorldSpaceAABB()
-            debugoverlay.Box(Vector(0,0,0), mins, maxs, 0.1, Color(0,255,0,120))
-        end
-        return ent
-    end
+    return cible
 end
 
 -- =========================================
@@ -225,8 +229,8 @@ local function StunEntity(ent, duration)
     ent._mokuton_stun_token = (ent._mokuton_stun_token or 0) + 1
     local token = ent._mokuton_stun_token
 
-    -- snapshot MoveType
-    ent._mokuton_oldMoveType = ent:GetMoveType()
+    -- snapshot MoveType (pas si la cible est déjà étourdie : on garderait MOVETYPE_NONE et elle resterait figée)
+    if ent._mokuton_oldMoveType == nil then ent._mokuton_oldMoveType = ent:GetMoveType() end
 
     -- snap sol début
     GroundEntity(ent)
@@ -274,7 +278,7 @@ local function StunEntity(ent, duration)
     ent:SetMoveType(MOVETYPE_NONE)
 
     if ent.SetAIEnabled then
-        ent._mokuton_oldAI = ent:IsAIEnabled()
+        if ent._mokuton_oldAI == nil then ent._mokuton_oldAI = ent:IsAIEnabled() end
         ent:SetAIEnabled(false)
     end
 
@@ -283,7 +287,7 @@ local function StunEntity(ent, duration)
     if ent.StopMoving then ent:StopMoving() end
 
     if ent.loco then
-        ent._mokuton_oldSpeed = ent.loco:GetDesiredSpeed()
+        if ent._mokuton_oldSpeed == nil then ent._mokuton_oldSpeed = ent.loco:GetDesiredSpeed() end
         ent.loco:SetDesiredSpeed(0)
         ent.loco:SetVelocity(vector_origin)
     end
@@ -337,7 +341,10 @@ local function DoImpactDamage(attacker, inflictor, pos)
     if IsValid(attacker) then dmg:SetAttacker(attacker) end
     if IsValid(inflictor) then dmg:SetInflictor(inflictor) end
 
-    for _, e in ipairs(ents.FindInSphere(pos, Niv(attacker, "damage_radius", DAMAGE_RADIUS))) do
+    local rayon = Niv(attacker, "damage_radius", DAMAGE_RADIUS)
+    if Dev() then debugoverlay.Sphere(pos, rayon, 3, Color(255, 60, 60, 25), true) end   -- zone de dégâts
+
+    for _, e in ipairs(ents.FindInSphere(pos, rayon)) do
         if IsValid(e) and (e:IsPlayer() or e:IsNPC() or e:IsNextBot()) then
             if e ~= attacker then
                 e:TakeDamageInfo(dmg)
@@ -379,6 +386,11 @@ local function SpawnMokutonArcheOnPos(ply, index, groundPos)
             ent:SetPos(groundPos)
 
             DoImpactDamage(ply, ent, groundPos)
+            if Dev() then
+                local mins, maxs = ent:WorldSpaceAABB()
+                debugoverlay.Box(vector_origin, mins, maxs, 3, Color(0, 150, 255, 40))   -- l'arche elle-même
+            end
+            ParticleEffect(FX_CHUTE, groundPos, angle_zero)
 
             net.Start("Mokuton_PlaySound")
             net.WriteVector(groundPos)
@@ -399,22 +411,9 @@ local function SpawnMokutonArcheOnPos(ply, index, groundPos)
     return ent
 end
 
--- =========================================
--- Network receive (SERVER)
--- =========================================
-if SERVER then
-    net.Receive("KSpawn_Request", function(_, ply)
-        if not NA_Debloquee(ply, "mokuton_arche") then return end   -- technique pas encore débloquée (F6)
-        if not IsValid(ply) or not ply:Alive() then return end
-
-        ply._kspawn_next = ply._kspawn_next or 0
-        if ply._kspawn_next > CurTime() then return end
-        ply._kspawn_next = CurTime() + NA_Stat(ply, "mokuton_arche", "recharge", COOLDOWN)
-        if NA_CD then NA_CD.Set(ply, "mokuton_arche", NA_Stat(ply, "mokuton_arche", "recharge", COOLDOWN)) end -- recharge visible dans la barre
-
-        local target = GetLookTarget(ply)
-        if not IsValid(target) then return end
-
+-- Fait tomber les arches sur la cible (après les mudras)
+local function LancerArches(ply, target)
+    do
         -- stun la cible
         StunEntity(target, Niv(ply, "stun_time", STUN_TIME))
 
@@ -445,5 +444,51 @@ if SERVER then
                 if IsValid(arch) then arch:Remove() end
             end
         end)
+    end
+end
+
+-- =========================================
+-- Network receive (SERVER)
+-- =========================================
+if SERVER then
+    net.Receive("KSpawn_Request", function(_, ply)
+        if not NA_Debloquee(ply, "mokuton_arche") then return end   -- technique pas encore débloquée (F6)
+        if not IsValid(ply) or not ply:Alive() then return end
+
+        ply._kspawn_next = ply._kspawn_next or 0
+        if ply._kspawn_next > CurTime() then return end
+
+        local target = GetLookTarget(ply)
+        if not IsValid(target) then return end   -- pas de cible : rien ne se lance, pas de recharge
+
+        ply._kspawn_next = CurTime() + NA_Stat(ply, "mokuton_arche", "recharge", COOLDOWN)
+        if NA_CD then NA_CD.Set(ply, "mokuton_arche", NA_Stat(ply, "mokuton_arche", "recharge", COOLDOWN)) end -- recharge visible dans la barre
+
+        -- mudras, puis les arches tombent sur la cible visée à la fin (à défaut, celle du début)
+        local mudra = Niv(ply, "duree_mudra", DUREE_MUDRA)
+        NA_AnimJutsu(ply, ANIM_MUDRA)   -- animation + pas de coups pendant (_na_mudra.lua)
+        ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
+        if NA_Mudra then NA_Mudra(ply, mudra) end   -- pas de coups pendant les mudras (_na_mudra.lua)
+
+        timer.Simple(mudra, function()
+            if not IsValid(ply) or not ply:Alive() then return end
+            local cible = GetLookTarget(ply)
+            if not IsValid(cible) then cible = target end
+            if not IsValid(cible) then return end
+            LancerArches(ply, cible)
+        end)
     end)
 end
+
+-- Mort ou réapparition pendant l'étourdissement : la victime est libérée (sinon elle pouvait rester gelée)
+local function Liberer(ply)
+    if not ply._mokuton_stun_until then return end
+    timer.Remove("mokuton_stun_" .. ply:EntIndex())
+    ply._mokuton_stun_until = nil
+    ply._mokuton_stun_ang   = nil
+    ply:Freeze(false)
+    ply:SetNW2Bool("NA_Etourdi", false)
+    ply._mokuton_oldMoveType = nil
+end
+hook.Add("PlayerDeath", "Mokuton_LibererMort", Liberer)
+hook.Add("PlayerSpawn", "Mokuton_LibererSpawn", Liberer)

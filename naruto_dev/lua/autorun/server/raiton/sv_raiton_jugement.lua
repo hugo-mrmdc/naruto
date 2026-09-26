@@ -1,7 +1,7 @@
 --========================================================
 -- Raiton : Jugement de l'éclair (SERVEUR)
 --
--- Après une courte incantation, la foudre tombe là où le lanceur regarde à ce moment (PORTEE
+-- Sans incantation, la foudre tombe là où le lanceur regarde à ce moment (PORTEE
 -- max ; au-delà, au sol sous le point de portée max) : la particule execution_eclair_pat
 -- (particles/patlick_atgparticules.pcf) y apparaît, et tout ennemi dans le rayon prend des dégâts et
 -- est étourdi DUREE secondes (NA_Etourdir, sv_etourdissement.lua).
@@ -24,10 +24,10 @@ local PORTEE       = 900    -- distance max du point visé
 local RECHARGE     = 14     -- secondes avant de pouvoir relancer (depuis le lancement)
 local CHAKRA_COUT  = 30     -- chakra dépensé (0 = gratuit)
 local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
-local DUREE_MUDRA  = 0.4    -- incantation avant la foudre (le point visé est pris à sa FIN)
 local DUREE_FX     = 1.5    -- secondes de la particule sur le point frappé
-local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
-local ANIM_COUPE   = 0.6    -- l'animation de mudras est coupée après ces secondes (0 = entière)
+local ANIM_APPEL   = "m_ni_def_ninjutsu_d25nj3"
+local ANIM_VITESSE = 2      -- vitesse de l'animation (1 = normale, 2 = deux fois plus vite)
+local DELAI_FOUDRE = 0.4   -- secondes entre le début de l'animation et la chute de la foudre
 
 local SON_DECHARGE = "ambient/energy/zap9.wav"
 local SON_TOUCHE   = "ambient/energy/spark%d.wav"   -- %d = 1 à 6
@@ -40,8 +40,7 @@ resource.AddFile("particles/patlick_atgparticules.pcf")
 game.AddParticles("particles/patlick_atgparticules.pcf")
 PrecacheParticleSystem("execution_eclair_pat")
 
-local enCours = {}
-local pret    = {}
+local pret   = {}
 
 local function EstCible(ent, lanceur)
     if not IsValid(ent) or ent == lanceur then return false end
@@ -106,7 +105,7 @@ end
 
 net.Receive("raiton_jugement_cast", function(_, ply)
     if not NA_Debloquee(ply, "raiton_jugement") then return end   -- technique pas encore débloquée (F6)
-    if not IsValid(ply) or not ply:Alive() or enCours[ply] then return end
+    if not IsValid(ply) or not ply:Alive() then return end
     if (pret[ply] or 0) > CurTime() then return end
 
     local cout = Niv(ply, "chakra", CHAKRA_COUT)
@@ -119,26 +118,16 @@ net.Receive("raiton_jugement_cast", function(_, ply)
         ply:SetNW2Float("NA_Chakra", chakra - cout)
     end
 
-    enCours[ply] = true
     local recharge = Niv(ply, "recharge", RECHARGE)
     pret[ply] = CurTime() + recharge
     if NA_CD then NA_CD.Set(ply, "raiton_jugement", recharge) end   -- recharge visible dans la barre
 
-    local mudra = Niv(ply, "duree_mudra", DUREE_MUDRA)
-    NA_AnimJutsu(ply, ANIM_APPEL, ANIM_COUPE)   -- animation + pas de coups pendant (_na_mudra.lua)
-    ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
-    if NA_Mudra then NA_Mudra(ply, mudra) end   -- pas de coups pendant les mudras (_na_mudra.lua)
-
-    timer.Simple(mudra, function()
-        enCours[ply] = nil
-        if not IsValid(ply) or not ply:Alive() then return end
-        Foudre(ply, PointVise(ply))   -- point visé à la fin des mudras
+    NA_AnimJutsu(ply, ANIM_APPEL, 0, ANIM_VITESSE)   -- animation + pas de coups pendant (_na_mudra.lua)
+    timer.Simple(Niv(ply, "delai_foudre", DELAI_FOUDRE), function()
+        if IsValid(ply) then Foudre(ply, PointVise(ply)) end   -- point visé au moment où la foudre part
     end)
 end)
 
-hook.Add("PlayerDeath", "RaitonJugement_Mort", function(ply) enCours[ply] = nil end)
-
 hook.Add("PlayerDisconnected", "RaitonJugement_Nettoyage", function(ply)
-    enCours[ply] = nil
     pret[ply] = nil
 end)

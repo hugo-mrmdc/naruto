@@ -103,7 +103,7 @@ hook.Add("InitPostEntity", "Jutsu_Anim_AutoDiag", function()
     timer.Simple(10, function() writeDiag("auto") end)
 end)
 
-local function playSequenceOn(ply, seqName, coupe)
+local function playSequenceOn(ply, seqName, coupe, vitesse)
     if not IsValid(ply) then return false end
     if type(seqName) ~= "string" or seqName == "" then return false end
 
@@ -114,10 +114,12 @@ local function playSequenceOn(ply, seqName, coupe)
     end
 
     ply:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, seq, 0, true)
+    vitesse = vitesse or 1
+    if vitesse ~= 1 then ply:SetLayerPlaybackRate(GESTURE_SLOT_CUSTOM, vitesse) end
 
     -- fin prévue de cette animation (3 s max, comme NA_AnimJutsu) : le souffle katon
     -- (cl_katon_souffle.lua) attend ce moment pour reprendre sa propre animation
-    local duree = ply:SequenceDuration(seq)
+    local duree = ply:SequenceDuration(seq) / vitesse
     if coupe and coupe > 0 then duree = math.min(duree, coupe) end
     ply.NA_AnimFin = CurTime() + math.min(duree, 3)
 
@@ -140,7 +142,8 @@ net.Receive("Jutsu_Anim_Play", function()
     local ply = net.ReadEntity()
     local seqName = net.ReadString()
     local coupe = (net.BytesLeft() or 0) >= 4 and net.ReadFloat() or 0
-    playSequenceOn(ply, seqName, coupe)
+    local vitesse = (net.BytesLeft() or 0) >= 4 and net.ReadFloat() or 1
+    playSequenceOn(ply, seqName, coupe, vitesse)
 end)
 
 -- ✅ API propre: Jutsu.Play("nom_sequence")

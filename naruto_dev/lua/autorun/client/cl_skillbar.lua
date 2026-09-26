@@ -46,6 +46,7 @@ local COULEURS = {
     Suiton     = Color(60, 150, 255),
     Futon      = Color(150, 230, 210),
     Raiton     = Color(120, 170, 255),
+    Doton      = Color(190, 140, 80),
     Mokuton    = Color(120, 200, 90),
     Salamandre = Color(150, 220, 60),
     Fuma       = Color(180, 180, 200),

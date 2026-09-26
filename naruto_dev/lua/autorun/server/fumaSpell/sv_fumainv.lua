@@ -84,6 +84,8 @@ local function SetInvisible(ply, state)
 end
 
 
+NA_Invisible = SetInvisible   -- utilisable par d'autres scripts (Doton : voyage souterrain, sv_doton_taupe.lua)
+
 -- Nuage de fumée (vu par tout le monde) + son
 local function Fumee(ply)
     ParticleEffect(FX_FUMEE, ply:WorldSpaceCenter(), Angle(0, 0, 0))
@@ -92,6 +94,7 @@ end
 
 local function Apparaitre(ply)
     if not IsValid(ply) or not ply:GetNWBool("IsInvisible", false) then return end
+    if ply:GetNW2Bool("NA_Souterrain", false) or ply:GetNW2Bool("NA_Hobi", false) then return end   -- caché par le voyage souterrain Doton ou le cocon Mokuton, pas par Fuma
     timer.Remove("fuma_invis_" .. ply:EntIndex())
     SetInvisible(ply, false)
     Fumee(ply)

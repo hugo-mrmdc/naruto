@@ -56,8 +56,9 @@ NA_NIV.LIGNEES = {
     { "katon_boule", "katon_dome", "katon_souffle","katon_saut" },
     { "suiton_waterball", "suiton_prison", "suiton_bulle","suiton_requin" },
     { "futon_windslash", "futon_tornade", "futon_windball" },
-    { "raiton_jugement", "raiton_cercle" },
-    { "mokuton_arche", "mokuton_fleur", "mokuton_dragon" },
+    { "raiton_jugement", "raiton_cercle", "raiton_boule" },
+    { "doton_pierre", "doton_seisme", "doton_taupe" },
+    { "mokuton_arche", "mokuton_fleur", "mokuton_protection", "mokuton_dragon" },
     { "salamandre_poison", "salamandre_dome", "salamandre_corps", "salamandre_tornade" },
     { "fuma_tp", "fuma_invisibilite", "fuma_aura", "fuma_jugement", "fuma_ciel" },
     { "kami_shuriken", "kami_circle", "kami_bouclier", "kami_ailes", "kami_roue" },
@@ -143,10 +144,14 @@ function NA_NIV.Reglee(id, genre, niveau)
 end
 
 -- Valeur d'une stat à un niveau (sans joueur : sert aussi à l'affichage F6)
+-- Toutes les durées de mudras (technique par technique : "duree_mudra") sont multipliées par ceci
+NA_NIV.FACTEUR_MUDRA = 0.5
+
 function NA_NIV.Valeur(id, genre, niveau, base)
     local v = NA_NIV.Reglee(id, genre, niveau)
-    if v ~= nil then return v end
-    return (tonumber(base) or 0) * NA_NIV.Multiplicateur(genre, niveau)
+    if v == nil then v = (tonumber(base) or 0) * NA_NIV.Multiplicateur(genre, niveau) end
+    if genre == "duree_mudra" then v = v * NA_NIV.FACTEUR_MUDRA end
+    return v
 end
 
 -- Valeur d'une technique au niveau du joueur.

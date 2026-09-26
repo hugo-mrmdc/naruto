@@ -29,14 +29,15 @@ local TECHNIQUES = {
     -- ===== KATON =====
     { cat = "Katon", name = "Boule de feu", key = KEY_Y, id = "katon_boule", rang = "C", icone = "ui/icon/katon_boule_feu.png", court = "Feu", cooldown = 1, cd = 3,
       desc = "Projette une boule de feu qui suit la direction du regard." },
-    { cat = "Katon", name = "Boule de feu sautée", key = KEY_J, id = "katon_saut", rang = "C", icone = "", court = "Saut feu", cooldown = 1, cd = 2,
-      desc = "Charge de chakra puis boule de feu avec un bond." },
+   
     { cat = "Katon", name = "Dôme de feu", key = "", id = "katon_dome", rang = "C", icone = "ui/icon/shakuton_zone_ardente.png", court = "Dôme feu", cooldown = 10,
       desc = "Un dôme de flammes surgit au sol autour de toi pendant 5 secondes : il blesse et brûle tous les ennemis dedans. Coûte 20 de chakra.",
       dmg = "6 par tick (toutes les 0,5 s) + brûlure" },
     { cat = "Katon", name = "Souffle katon", key = "", id = "katon_souffle", rang = "C", icone = "ui/icon/katon_souffle_feu.png", court = "Souffle", cooldown = 8,
       desc = "Souffle un jet de flammes devant toi pendant 3 secondes, dans la direction de ton regard : il blesse et brûle tous les ennemis dans le cône. Coûte 25 de chakra.",
       dmg = "5 par tick (toutes les 0,25 s) + brûlure" },
+     { cat = "Katon", name = "Boule de feu sautée", key = KEY_J, id = "katon_saut", rang = "C", icone = "", court = "Saut feu", cooldown = 1, cd = 2,
+      desc = "Charge de chakra puis boule de feu avec un bond." },
 
     -- ===== SUITON =====
     { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "", court = "Requin", cooldown = 5, cd = 5.3,
@@ -59,23 +60,41 @@ local TECHNIQUES = {
     { cat = "Futon", name = "Tornade", key = "", id = "futon_tornade", rang = "C", icone = "ui/icon/futon_tornade_vent.png", court = "Tornade", cooldown = 12,
       desc = "Fait surgir une tornade de vent devant toi : elle avance dans la direction de ton regard pendant 4 secondes, blesse tout ce qu'elle touche et le projette en l'air. Elle se dissipe contre un mur. Coûte 30 de chakra.",
       dmg = "6 par tick (toutes les 0,25 s)" },
-    { cat = "Futon", name = "Wind Ball", key = "", id = "futon_windball", rang = "B", icone = "ui/icon/futon_balle_vent.png", court = "Wind Ball", cooldown = 6,
+    { cat = "Futon", name = "Wind Ball", key = "", id = "futon_windball", rang = "C", icone = "ui/icon/futon_balle_vent.png", court = "Wind Ball", cooldown = 6,
       desc = "Lance une boule de vent droit devant toi : elle blesse le premier ennemi touché et le projette violemment en arrière et vers le haut. Coûte 20 de chakra.",
       dmg = "25 à l'impact + projection" },
 
     -- ===== RAITON =====
-    { cat = "Raiton", name = "Jugement de l'éclair", key = "", id = "raiton_jugement", rang = "B", icone = "ui/icon/raiton_jugement_eclair.png", court = "Jugement", cooldown = 14,
+    { cat = "Raiton", name = "Jugement de l'éclair", key = "", id = "raiton_jugement", rang = "C", icone = "ui/icon/raiton_jugement_eclair.png", court = "Jugement", cooldown = 14,
       desc = "La foudre s'abat là où tu regardes (900 unités max) : tous les ennemis proches du point d'impact prennent des dégâts et sont étourdis un instant. Coûte 30 de chakra.",
       dmg = "30 dégâts + étourdi 1,5 s" },
-    { cat = "Raiton", name = "Cercle de foudre", key = "", id = "raiton_cercle", rang = "B", icone = "ui/icon/raiton_cercle_de_foudre.png", court = "Cercle", cooldown = 15,
+    { cat = "Raiton", name = "Cercle de foudre", key = "", id = "raiton_cercle", rang = "C", icone = "ui/icon/raiton_cercle_de_foudre.png", court = "Cercle", cooldown = 15,
       desc = "Déploie un cercle de foudre autour de toi : à chaque impulsion (3 en tout), tous les ennemis dans la zone prennent des dégâts et sont repoussés vers l'extérieur. Coûte 35 de chakra.",
       dmg = "12 par impulsion (3 impulsions) + projection" },
+
+    { cat = "Raiton", name = "Boule de foudre", key = "", id = "raiton_boule", rang = "C", icone = "ui/icon/raiton_boule_electrique.png", court = "Boule", cooldown = 10,
+      desc = "Lance une boule de foudre droit devant toi : elle blesse le premier ennemi touché et l'étourdit un instant. Coûte 25 de chakra.",
+      dmg = "30 dégâts + étourdi 1,5 s" },
+
+    -- ===== DOTON =====
+    { cat = "Doton", name = "Boule de roche", key = "", id = "doton_pierre", rang = "C", icone = "ui/icon/doton_boule_de_roche.png", court = "Roche", cooldown = 8,
+      desc = "Lance un rocher droit devant toi : il roule en ligne droite, blesse le premier ennemi touché et le projette en arrière. Coûte 20 de chakra.",
+      dmg = "40 à l'impact + projection" },
+    { cat = "Doton", name = "Séisme", key = "", id = "doton_seisme", rang = "C", icone = "ui/icon/doton_tremblement_de_terre.png", court = "Séisme", cooldown = 10,
+      desc = "Fait trembler le sol autour de toi pendant 5 secondes : tous les ennemis dans la zone prennent des dégâts à chaque impulsion. Coûte 20 de chakra.",
+      dmg = "5 par impulsion (toutes les 0,5 s, pendant 5 s)" },
+    { cat = "Doton", name = "Voyage souterrain", key = "", id = "doton_taupe", rang = "C", icone = "ui/icon/doton_taupe.png", court = "Taupe", cooldown = 15,
+      desc = "Tu passes sous terre pendant 6 secondes : tu deviens invisible et tu ne peux plus subir aucun dégât, mais tu ne peux ni sauter ni faire la course de chakra. Appuie sur E pour ressortir plus tôt ; aucun jutsu possible sous terre. Coûte 30 de chakra.",
+      dmg = "Invulnérable 6 s" },
 
     -- ===== MOKUTON =====
     { cat = "Mokuton", name = "Arche", key = KEY_K, id = "mokuton_arche", rang = "C", icone = "", court = "Arche", cd = 2,
       desc = "Fait jaillir une arche de bois devant toi." },
     { cat = "Mokuton", name = "Fleur", key = KEY_O, id = "mokuton_fleur", rang = "C", icone = "", court = "Fleur", cd = 1.5,
       desc = "Fait pousser une fleur de bois à l'endroit visé." },
+    { cat = "Mokuton", name = "Protection de bois", key = "", id = "mokuton_protection", rang = "C", icone = "", court = "Protection", cooldown = 15,
+      desc = "Un cocon de bois se referme autour de toi pendant 6 secondes : tu es invincible et tu te soignes à chaque impulsion, mais tu ne peux lancer aucun jutsu. Coûte 25 de chakra.",
+      dmg = "Soigne 4 toutes les 0,5 s + invincible" },
     { cat = "Mokuton", name = "Dragon", key = "B / L", id = "mokuton_dragon", rang = "A", icone = "", court = "Dragon", cooldown = 1,
       desc = "Invoque le dragon et monte dessus (B), ou le renvoie (L). Dans la barre, un seul emplacement fait les deux. En vol : Espace pour monter, Ctrl pour descendre." },
     { cat = "Mokuton", name = "Dragon : attraper", key = KEY_E,
@@ -299,7 +318,7 @@ local DOSSIER = "ui/main_menu/"
 
 local ONGLETS = {
     { nom = "Stats",         icone = "stat.png" },
-    { nom = "Jutsus",        icone = "jutsu.png",       cats = { "Katon", "Suiton", "Futon", "Raiton" },
+    { nom = "Jutsus",        icone = "jutsu.png",       cats = { "Katon", "Suiton", "Futon", "Raiton", "Doton" },
       desc = "Cette catégorie répertorie les techniques des natures du chakra" },
     { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton" },
       desc = "Cette catégorie répertorie les techniques héritées par le sang" },

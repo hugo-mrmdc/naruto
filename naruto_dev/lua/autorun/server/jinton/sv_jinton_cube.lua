@@ -61,15 +61,16 @@ local function TrouverCible(ply, portee)
     local oeil = ply:EyePos()
     local t = HitboxVisee(ply)
 
-    -- la boîte s'arrête au premier mur
-    local mur = util.TraceHull({
+    -- la boîte s'arrête au premier mur, mesuré avec un simple RAYON : avec la boîte, le sol la coupait
+    -- très tôt dès qu'on visait bas (bassin, jambes) et la cible n'était plus dans la zone de visée
+    local mur = util.TraceLine({
         start = oeil, endpos = oeil + ply:GetAimVector() * portee,
-        mins = -t, maxs = t, mask = MASK_SOLID_BRUSHONLY,
+        mask = MASK_SOLID_BRUSHONLY,
     })
     local fin = mur.HitPos
 
     local cible, distMin = nil, math.huge
-    for _, ent in ipairs(ents.FindAlongRay(oeil, fin, -t, t)) do
+    for _, ent in ipairs(NA_FindAlongRay(oeil, fin, t)) do
         if EstCible(ent, ply) then
             local d = oeil:DistToSqr(ent:WorldSpaceCenter())
             if d < distMin then cible, distMin = ent, d end

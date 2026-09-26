@@ -6,8 +6,8 @@
 -- sous le point de portée max) : la particule
 -- [19]_kiminari_charge (particles/atg_farisv2.pcf) y apparaît et
 -- la décharge frappe : tout ennemi dans le rayon prend des dégâts et est
--- étourdi DUREE secondes (NA_Etourdir, sv_etourdissement.lua), avec la même
--- particule sur lui tant qu'il est étourdi.
+-- étourdi DUREE secondes (NA_Etourdir, sv_etourdissement.lua). La particule ne
+-- s'affiche qu'au point visé (rien sur l'ennemi étourdi).
 -- Particules affichées par cl_kiminari_frappe.lua (message "kiminari_frappe_fx").
 --========================================================
 
@@ -108,7 +108,7 @@ local function Decharge(ply, point)
         ent:TakeDamageInfo(dmg)
 
         if NA_Etourdir then NA_Etourdir(ent, duree) end
-        Fx(ent, duree)
+        -- pas de particule sur l'ennemi étourdi : la frappe ne s'affiche qu'au point visé
         ent:EmitSound(string.format(SON_TOUCHE, math.random(1, 6)), 75, math.random(95, 110), 0.8)
     end
 

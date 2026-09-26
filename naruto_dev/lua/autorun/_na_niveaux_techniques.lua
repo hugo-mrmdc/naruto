@@ -292,7 +292,7 @@ NA_NIV_TECH.futon_windball = {
 -- Jugement de l'éclair (sv_raiton_jugement.lua) : duree = étourdissement
 NA_NIV_TECH.raiton_jugement = {
     [1] = {
-        degats = 30, chakra = 30, recharge = 14, duree = 1.5, rayon = 180, portee = 900, duree_mudra = 0.4,
+        degats = 30, chakra = 30, recharge = 14, duree = 1.5, rayon = 180, portee = 900,
     },
     [2] = { degats = 34 },
     [3] = { degats = 38, duree = 1.8, recharge = 13 },
@@ -312,6 +312,48 @@ NA_NIV_TECH.raiton_cercle = {
     [5] = { degats = 95, chakra = 28, recharge = 12},
 }
 
+-- Boule de foudre (sv_raiton_boule.lua) : duree = étourdissement
+NA_NIV_TECH.raiton_boule = {
+    [1] = { degats = 30, chakra = 25, recharge = 10, duree = 1.5, vitesse = 1300, duree_mudra = 0.3 },
+    [2] = { degats = 34 },
+    [3] = { degats = 38, duree = 1.8, recharge = 9 },
+    [4] = { degats = 42, vitesse = 1500 },
+    [5] = { degats = 48, duree = 2.2, chakra = 20, recharge = 8 },
+}
+
+--========================================================
+-- DOTON
+--========================================================
+-- Boule de roche (sv_doton_pierre.lua)
+NA_NIV_TECH.doton_pierre = {
+    [1] = {
+        degats = 40, chakra = 20, recharge = 8,
+        vitesse = 1300, duree_vie = 2, hitbox = 22, hitbox_haut = 22, echelle = 0.45, recul = 500, souleve = 200, duree_mudra = 0.6,
+    },
+    [2] = { degats = 45 },
+    [3] = { degats = 50, recharge = 7 },
+    [4] = { degats = 56, hitbox = 25, echelle = 0.52 },
+    [5] = { degats = 65, chakra = 16, recharge = 6 },
+}
+
+-- Séisme (sv_doton_seisme.lua) : dégâts à chaque tick ; la recharge compte depuis la FIN de la zone
+NA_NIV_TECH.doton_seisme = {
+    [1] = { degats = 5, chakra = 20, recharge = 10, duree = 5, rayon = 250, intervalle = 0.5, duree_mudra = 0.8 },
+    [2] = { degats = 6 },
+    [3] = { degats = 7, recharge = 9 },
+    [4] = { degats = 8, rayon = 280 },
+    [5] = { degats = 10, chakra = 16, recharge = 8, duree = 6 },
+}
+
+-- Voyage souterrain (sv_doton_taupe.lua) : duree = temps sous terre ; recharge compte depuis la sortie
+NA_NIV_TECH.doton_taupe = {
+    [1] = { chakra = 30, recharge = 15, duree = 6 },
+    [2] = { duree = 7 },
+    [3] = { recharge = 13 },
+    [4] = { duree = 8 },
+    [5] = { chakra = 24, recharge = 11, duree = 10 },
+}
+
 --========================================================
 -- MOKUTON
 --========================================================
@@ -320,7 +362,7 @@ NA_NIV_TECH.mokuton_arche = {
     [1] = {
         degats = 20, recharge = 2, hitbox = 40,
         trace_range = 1000, damage_radius = 120, height = 800, drop_time = 0.6, stun_time = 4,
-        count = 3, delay = 0.1, gap = 4,
+        count = 3, delay = 0.1, gap = 4, duree_mudra = 0.6,
     },
     [2] = { degats = 22 },
     [3] = { degats = 24, hitbox = 46 },
@@ -338,6 +380,15 @@ NA_NIV_TECH.mokuton_fleur = {
     [3] = { degats = 60, recharge = 1.3 },
     [4] = { degats = 65 },
     [5] = { degats = 70, recharge = 1.2 },
+}
+
+-- Protection de bois (mokuton_protection_sv.lua) : duree = temps cocon FERMÉ ; recharge compte depuis la fin
+NA_NIV_TECH.mokuton_protection = {
+    [1] = { chakra = 25, recharge = 15, duree = 6, soin = 4, intervalle = 0.5, echelle = 1, duree_mudra = 0.6 },
+    [2] = { soin = 5 },
+    [3] = { recharge = 13, duree = 7 },
+    [4] = { soin = 6 },
+    [5] = { chakra = 20, recharge = 10, duree = 8, soin = 8 },
 }
 
 -- Dragon (mokuton_dragon_sv.lua) : aucune stat branchée par NA_Stat,

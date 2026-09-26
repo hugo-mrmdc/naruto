@@ -142,6 +142,20 @@ function NA_Lancer(id)
         return false
     end
 
+    -- sous terre (Doton : voyage souterrain) : pas de jutsu, E pour ressortir (sv_doton_taupe.lua)
+    if ply:GetNW2Bool("NA_Souterrain", false) then
+        NA_DernierRefus[id] = CurTime()
+        Diag(id, "sous terre")
+        return false
+    end
+
+    -- dans le cocon de bois (Mokuton : protection) : pas de jutsu (mokuton_protection_sv.lua)
+    if ply:GetNW2Bool("NA_Hobi", false) then
+        NA_DernierRefus[id] = CurTime()
+        Diag(id, "dans le cocon de bois")
+        return false
+    end
+
     -- en train de recharger son chakra (R) : pas de jutsu
     if NA_EnRechargeChakra and NA_EnRechargeChakra(ply) then
         NA_DernierRefus[id] = CurTime()

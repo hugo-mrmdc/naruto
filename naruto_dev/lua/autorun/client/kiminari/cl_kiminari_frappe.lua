@@ -1,7 +1,7 @@
 --========================================================
 -- Kiminari : Frappe noire (CLIENT)
--- Lancement depuis la barre de techniques, et particule de charge sur le
--- point visé (pendant l'incantation) puis sur chaque ennemi étourdi
+-- Lancement depuis la barre de techniques, et particule de la frappe sur le
+-- point visé (rien sur les ennemis étourdis)
 -- (message "kiminari_frappe_fx", sv_kiminari_frappe.lua).
 --========================================================
 
@@ -49,6 +49,8 @@ net.Receive("kiminari_frappe_fx", function()
     local ent = surEntite and net.ReadEntity() or nil
     local pos = not surEntite and net.ReadVector() or nil
     local duree = net.ReadFloat()
+
+    if surEntite then return end   -- rien sur les ennemis étourdis : la frappe ne s'affiche qu'au point visé
 
     if not surEntite then
         Demarrer({}, pos, duree)
