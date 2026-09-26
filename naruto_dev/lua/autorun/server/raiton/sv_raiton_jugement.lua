@@ -25,7 +25,7 @@ local RECHARGE     = 14     -- secondes avant de pouvoir relancer (depuis le lan
 local CHAKRA_COUT  = 30     -- chakra dépensé (0 = gratuit)
 local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_FX     = 1.5    -- secondes de la particule sur le point frappé
-local ANIM_APPEL   = "m_ni_def_ninjutsu_d25nj3"
+local ANIM_APPEL   = "nrp_ninjutsu_defend_d25nj3"   -- (nom réel dans anim_extension_mod6.mdl)
 local ANIM_VITESSE = 2      -- vitesse de l'animation (1 = normale, 2 = deux fois plus vite)
 local DELAI_FOUDRE = 0.4   -- secondes entre le début de l'animation et la chute de la foudre
 

@@ -357,7 +357,7 @@ NA_NIV_TECH.doton_taupe = {
 --========================================================
 -- MOKUTON
 --========================================================
--- Arche (mokuton_arche_sv.lua)
+-- Arche (server/mokuton/mokuton_arche_sv.lua)
 NA_NIV_TECH.mokuton_arche = {
     [1] = {
         degats = 20, recharge = 2, hitbox = 40,
@@ -370,7 +370,7 @@ NA_NIV_TECH.mokuton_arche = {
     [5] = { degats = 28, recharge = 1.6, hitbox = 52 },
 }
 
--- Fleur (mokuton_fleur_sv.lua)
+-- Fleur (server/mokuton/mokuton_fleur_sv.lua)
 NA_NIV_TECH.mokuton_fleur = {
     [1] = {
         degats = 50, recharge = 1.5,
@@ -382,7 +382,7 @@ NA_NIV_TECH.mokuton_fleur = {
     [5] = { degats = 70, recharge = 1.2 },
 }
 
--- Protection de bois (mokuton_protection_sv.lua) : duree = temps cocon FERMÉ ; recharge compte depuis la fin
+-- Protection de bois (server/mokuton/mokuton_protection_sv.lua) : duree = temps cocon FERMÉ ; recharge compte depuis la fin
 NA_NIV_TECH.mokuton_protection = {
     [1] = { chakra = 25, recharge = 15, duree = 6, soin = 4, intervalle = 0.5, echelle = 1, duree_mudra = 0.6 },
     [2] = { soin = 5 },
@@ -391,7 +391,25 @@ NA_NIV_TECH.mokuton_protection = {
     [5] = { chakra = 20, recharge = 10, duree = 8, soin = 8 },
 }
 
--- Dragon (mokuton_dragon_sv.lua) : aucune stat branchée par NA_Stat,
+-- Mains de bois (server/mokuton/mokuton_wood_hand_sv.lua)
+NA_NIV_TECH.mokuton_wood_hand = {
+    [1] = { degats = 30, chakra = 30, recharge = 12, rayon = 200, souleve = 350, portee = 900, echelle = 1, duree_mudra = 0.5 },
+    [2] = { degats = 35, recharge = 11 },
+    [3] = { degats = 40, recharge = 10 },
+    [4] = { degats = 46, rayon = 220, portee = 1000 },
+    [5] = { degats = 55, chakra = 24, recharge = 8 },
+}
+
+-- Golem de bois (server/mokuton/mokuton_golem_sv.lua) : degats = attaque 1 ; duree = temps transformé ; recharge après la fin
+NA_NIV_TECH.mokuton_golem = {
+    [1] = { degats = 40, chakra = 60, recharge = 40, duree = 30, rayon = 200, reduction = 50, duree_mudra = 0.6 },
+    [2] = { degats = 46 },
+    [3] = { degats = 52, duree = 35, recharge = 36 },
+    [4] = { degats = 60, rayon = 220 },
+    [5] = { degats = 70, chakra = 50, duree = 45, recharge = 10, reduction = 60 },
+}
+
+-- Dragon (server/mokuton/mokuton_dragon_sv.lua) : aucune stat branchée par NA_Stat,
 -- les niveaux ne changent rien tant que le fichier serveur ne les lit pas.
 
 --========================================================

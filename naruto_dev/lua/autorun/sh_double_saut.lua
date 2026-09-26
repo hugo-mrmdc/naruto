@@ -41,6 +41,7 @@ local function Possible(ply)
     if ply:InVehicle() then return false end
     if ply:GetNW2Bool("NA_Wings", false) or ply:GetNW2Bool("NA_Vol", false) then return false end   -- en vol
     if ply:GetNWBool("MokutonRide", false) then return false end
+    if ply:GetNW2Bool("NA_Golem", false) then return false end
     if SEULEMENT_EN_COURSE_CHAKRA and not ply:GetNW2Bool("NA_ChakraRun", false) then return false end
     if COUT_CHAKRA > 0 and ply:GetNW2Float("NA_Chakra", NA_CHAKRA_MAX or 100) < COUT_CHAKRA then return false end
     return true

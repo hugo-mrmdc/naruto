@@ -99,6 +99,7 @@ end
 NA_BASCULES = NA_BASCULES or {}
 NA_BASCULES.chinoike_ketsuryugan = "NA_Ketsuryugan"   -- sv_chinoike_ketsuryugan.lua
 NA_BASCULES.kaguya_armure = "NA_ArmureOs"             -- sv_kaguya_armure.lua
+NA_BASCULES.mokuton_golem = "NA_Golem"                -- server/mokuton/mokuton_golem_sv.lua (rappuyer redonne l'apparence normale)
 
 function NA_TechniqueActive(id, ply)
     ply = ply or LocalPlayer()
@@ -149,7 +150,14 @@ function NA_Lancer(id)
         return false
     end
 
-    -- dans le cocon de bois (Mokuton : protection) : pas de jutsu (mokuton_protection_sv.lua)
+    -- transformé en golem (Mokuton) : pas de jutsu ; seul le golem lui-même se relance (c'est la bascule ci-dessus)
+    if ply:GetNW2Bool("NA_Golem", false) then
+        NA_DernierRefus[id] = CurTime()
+        Diag(id, "transformé en golem")
+        return false
+    end
+
+    -- dans le cocon de bois (Mokuton : protection) : pas de jutsu (server/mokuton/mokuton_protection_sv.lua)
     if ply:GetNW2Bool("NA_Hobi", false) then
         NA_DernierRefus[id] = CurTime()
         Diag(id, "dans le cocon de bois")

@@ -88,17 +88,24 @@ local TECHNIQUES = {
       dmg = "Invulnérable 6 s" },
 
     -- ===== MOKUTON =====
-    { cat = "Mokuton", name = "Arche", key = KEY_K, id = "mokuton_arche", rang = "C", icone = "", court = "Arche", cd = 2,
+    { cat = "Mokuton", name = "Arche", key = KEY_K, id = "mokuton_arche", rang = "C", icone = "ui/icon/arche.png", court = "Arche", cd = 2,
       desc = "Fait jaillir une arche de bois devant toi." },
-    { cat = "Mokuton", name = "Fleur", key = KEY_O, id = "mokuton_fleur", rang = "C", icone = "", court = "Fleur", cd = 1.5,
-      desc = "Fait pousser une fleur de bois à l'endroit visé." },
-    { cat = "Mokuton", name = "Protection de bois", key = "", id = "mokuton_protection", rang = "C", icone = "", court = "Protection", cooldown = 15,
+    --{ cat = "Mokuton", name = "Fleur", key = KEY_O, id = "mokuton_fleur", rang = "C", icone = "", court = "Fleur", cd = 1.5,
+      --desc = "Fait pousser une fleur de bois à l'endroit visé." },
+    { cat = "Mokuton", name = "Protection de bois", key = "", id = "mokuton_protection", rang = "C", icone = "ui/icon/protection_mokuton.png", court = "Protection", cooldown = 15,
       desc = "Un cocon de bois se referme autour de toi pendant 6 secondes : tu es invincible et tu te soignes à chaque impulsion, mais tu ne peux lancer aucun jutsu. Coûte 25 de chakra.",
       dmg = "Soigne 4 toutes les 0,5 s + invincible" },
-    { cat = "Mokuton", name = "Dragon", key = "B / L", id = "mokuton_dragon", rang = "A", icone = "", court = "Dragon", cooldown = 1,
-      desc = "Invoque le dragon et monte dessus (B), ou le renvoie (L). Dans la barre, un seul emplacement fait les deux. En vol : Espace pour monter, Ctrl pour descendre." },
-    { cat = "Mokuton", name = "Dragon : attraper", key = KEY_E,
-      desc = "En vol, attrape la cible devant toi dans la gueule. Rappuie pour la lâcher." },
+    { cat = "Mokuton", name = "Mains de bois", key = "", id = "mokuton_wood_hand", rang = "B", icone = "ui/icon/mokuton_mains.png", court = "Mains", cooldown = 12,
+      desc = "Les mains du Bouddha rieur surgissent du sol là où tu regardes (900 unités max) et frappent : tous les ennemis proches sont blessés et projetés en l'air, puis les mains disparaissent. Coûte 30 de chakra.",
+      dmg = "30 dégâts + projection en l'air" },
+ 
+    { cat = "Mokuton", name = "Dragon", key = "B / L", id = "mokuton_dragon", rang = "B", icone = "ui/icon/dragon_mokuton.png", court = "Dragon", cooldown = 1,
+      desc = "Invoque le dragon et monte dessus (B), ou le renvoie (L). En vol, le CLIC DROIT (ou l'emplacement de la barre) lance le dragon comme un projectile dans la direction de ton regard. En vol : Espace pour monter, Ctrl pour descendre." },
+         { cat = "Mokuton", name = "Golem de bois", key = "", id = "mokuton_golem", rang = "A", icone = "ui/icon/golem_mokuton.png", court = "Golem", cooldown = 40,
+      desc = "Tu deviens un golem de bois géant pendant 30 secondes et tu résistes à 50 % des dégâts : le clic gauche lance un combo de trois attaques qui blessent et projettent tout devant toi. Tu ne peux ni lancer de jutsu ni dasher sous cette forme. Rappuie pour redevenir normal. Coûte 60 de chakra.",
+      dmg = "40 / 52 / 80 par coup du combo" },
+  --  { cat = "Mokuton", name = "Dragon : attraper", key = KEY_E,
+    --  desc = "En vol, attrape la cible devant toi dans la gueule. Rappuie pour la lâcher." },
 
     -- ===== SALAMANDRE =====
     { cat = "Salamandre", name = "Invocation", key = KEY_U,

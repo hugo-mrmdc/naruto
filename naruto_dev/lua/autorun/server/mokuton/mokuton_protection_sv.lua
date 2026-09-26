@@ -11,6 +11,10 @@
 if not SERVER then return end
 
 util.AddNetworkString("mokuton_protection_cast")
+resource.AddFile("particles/atg_farisv2.pcf")   -- particules du cocon : [6]_mokuton_growups_add2 et [6]_mokuton_growups_add
+game.AddParticles("particles/atg_farisv2.pcf")
+PrecacheParticleSystem("[6]_mokuton_growups_add2")
+PrecacheParticleSystem("[6]_mokuton_growups_add")
 
 --========================================================
 -- RÉGLAGES -> c'est ICI qu'on change les valeurs
@@ -25,7 +29,10 @@ local ECHELLE      = 1      -- taille du cocon (1 = taille d'origine du modèle)
 local DECALAGE     = Vector(0, 0, 0)   -- position du cocon par rapport aux pieds du joueur
 local ANGLE_YAW    = 0      -- rotation du cocon par rapport au regard du joueur (degrés)
 local DUREE_MUDRA  = 0.6    -- incantation avant que le cocon se referme
-local ANIM_MUDRA   = "nrp_ninjutsu_defend_dragonflamebombs_start"
+local ANIM_MUDRA   = "nrp_ninjutsu_defend_mudwall"   -- la même animation que le Séisme Doton
+local ANIM_VITESSE = 2      -- vitesse de l'animation (1 = normale, 2 = deux fois plus vite) : comme le Séisme
+local ATTENTE_SOL_MAX = 5      -- si tu la lances en l'air : secondes d'attente max avant d'atterrir (au-delà, la technique est annulée)
+local LIBERE_AVANCE = 0.8    -- secondes AVANT la fin de la technique où tu peux de nouveau bouger (l'invincibilité et le blocage des jutsu durent jusqu'à la fin)
 local ANIM_FERME   = "nr_mokuton_Hobi_close"
 local ANIM_IDLE    = "nr_mokuton_Hobi_close_idle"
 local ANIM_OUVRE   = "nr_mokuton_Hobi_open"
@@ -40,7 +47,7 @@ local posFigee = {} -- joueur -> position où il est bloqué
 local enMudra = {}  -- joueur -> true pendant les mudras
 
 local function Timer(ply, suffixe) return "mokuton_protection_" .. suffixe .. "_" .. ply:EntIndex() end
-local SUFFIXES = { "mudra", "idle", "ouvre", "fin", "soin" }
+local SUFFIXES = { "attente", "mudra", "idle", "ouvre", "libre", "fin", "soin" }
 
 -- Tout arrêter : cocon retiré, joueur de nouveau visible
 local function Arreter(ply)
@@ -49,6 +56,7 @@ local function Arreter(ply)
     cocons[ply] = nil
     enMudra[ply] = nil
     ply:SetNW2Bool("NA_Hobi", false)
+    ply:SetNW2Bool("NA_HobiFige", false)
     if ply:GetMoveType() == MOVETYPE_NONE then ply:SetMoveType(MOVETYPE_WALK) end   -- de nouveau libre de bouger
     posFigee[ply] = nil
 end
@@ -63,6 +71,7 @@ local function Lancer(ply)
     cocon:Spawn()
     cocons[ply] = cocon
     ply:SetNW2Bool("NA_Hobi", true)
+    ply:SetNW2Bool("NA_HobiFige", true)   -- lu par sh_mokuton_protection.lua : immobile jusqu'à LIBERE_AVANCE avant la fin
     posFigee[ply] = ply:GetPos()
     ply:SetMoveType(MOVETYPE_NONE)   -- immobile ; la caméra reste libre
 
@@ -77,6 +86,19 @@ local function Lancer(ply)
     timer.Create(Timer(ply, "soin"), Niv(ply, "intervalle", INTERVALLE), 0, function()
         if not IsValid(ply) then return end
         ply:SetHealth(math.min(ply:GetMaxHealth(), ply:Health() + Niv(ply, "soin", SOIN)))
+    end)
+
+    -- on peut bouger LIBERE_AVANCE secondes avant la FIN de la technique (encore invincible et sans jutsu jusque-là).
+    -- Programmé dès le lancement : la fin = fermeture + durée + ouverture + 0,2 ; si la libération tombe avant le
+    -- début de l'ouverture, elle a quand même lieu à l'heure.
+    local idOuvre = cocon:LookupSequence(ANIM_OUVRE)
+    local dureeOuvre = (idOuvre and idOuvre >= 0) and cocon:SequenceDuration(idOuvre) or 1
+    local fin = ferme + duree + dureeOuvre + 0.2
+    timer.Create(Timer(ply, "libre"), math.max(fin - LIBERE_AVANCE, 0), 1, function()
+        if not IsValid(ply) then return end
+        ply:SetNW2Bool("NA_HobiFige", false)
+        if ply:GetMoveType() == MOVETYPE_NONE then ply:SetMoveType(MOVETYPE_WALK) end
+        posFigee[ply] = nil
     end)
 
     -- 3) ouverture : plus de soin
@@ -97,16 +119,15 @@ local function Lancer(ply)
     end)
 end
 
-net.Receive("mokuton_protection_cast", function(_, ply)
-    if not NA_Debloquee(ply, "mokuton_protection") then return end   -- technique pas encore débloquée (F6)
-    if not IsValid(ply) or not ply:Alive() then return end
-    if enMudra[ply] or ply:GetNW2Bool("NA_Hobi", false) or ply:GetNW2Bool("NA_Souterrain", false) then return end
-    if (pret[ply] or 0) > CurTime() then return end
+-- Début réel de la technique (au sol) : chakra, mudras, puis le cocon se referme
+local function Demarrer(ply)
+    if not IsValid(ply) or not ply:Alive() then enMudra[ply] = nil return end
 
     local cout = Niv(ply, "chakra", CHAKRA_COUT)
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
     if cout > 0 then
         if chakra < cout then
+            enMudra[ply] = nil
             ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
             return
         end
@@ -115,15 +136,41 @@ net.Receive("mokuton_protection_cast", function(_, ply)
 
     if NA_StopChakraRun then NA_StopChakraRun(ply) end   -- lancer une technique coupe la course de chakra
 
-    -- mudras, puis le cocon se referme
     enMudra[ply] = true
     local mudra = Niv(ply, "duree_mudra", DUREE_MUDRA)
-    NA_AnimJutsu(ply, ANIM_MUDRA)   -- animation + pas de coups pendant (_na_mudra.lua)
+    NA_AnimJutsu(ply, ANIM_MUDRA, 0, ANIM_VITESSE)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
     if NA_Mudra then NA_Mudra(ply, mudra) end   -- pas de coups pendant les mudras (_na_mudra.lua)
     timer.Create(Timer(ply, "mudra"), mudra, 1, function()
         enMudra[ply] = nil
         if IsValid(ply) and ply:Alive() then Lancer(ply) end
+    end)
+end
+
+net.Receive("mokuton_protection_cast", function(_, ply)
+    if not NA_Debloquee(ply, "mokuton_protection") then return end   -- technique pas encore débloquée (F6)
+    if not IsValid(ply) or not ply:Alive() then return end
+    if enMudra[ply] or ply:GetNW2Bool("NA_Hobi", false) or ply:GetNW2Bool("NA_Souterrain", false) then return end
+    if (pret[ply] or 0) > CurTime() then return end
+
+    -- au sol : la technique commence tout de suite
+    if ply:OnGround() then return Demarrer(ply) end
+
+    -- en l'air : on attend d'être au sol (le chakra n'est dépensé qu'au vrai début ; enMudra empêche un 2e lancement)
+    enMudra[ply] = true
+    local essais = math.floor(ATTENTE_SOL_MAX / 0.05)
+    timer.Create(Timer(ply, "attente"), 0.05, essais, function()
+        if not IsValid(ply) or not ply:Alive() then
+            timer.Remove(Timer(ply, "attente"))
+            if IsValid(ply) then enMudra[ply] = nil end
+            return
+        end
+        if ply:OnGround() then
+            timer.Remove(Timer(ply, "attente"))
+            Demarrer(ply)
+        elseif timer.RepsLeft(Timer(ply, "attente")) == 0 then
+            enMudra[ply] = nil   -- jamais atterri : annulé sans rien dépenser
+        end
     end)
 end)
 

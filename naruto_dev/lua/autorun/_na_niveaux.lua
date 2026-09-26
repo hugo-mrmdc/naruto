@@ -58,7 +58,7 @@ NA_NIV.LIGNEES = {
     { "futon_windslash", "futon_tornade", "futon_windball" },
     { "raiton_jugement", "raiton_cercle", "raiton_boule" },
     { "doton_pierre", "doton_seisme", "doton_taupe" },
-    { "mokuton_arche", "mokuton_fleur", "mokuton_protection", "mokuton_dragon" },
+    { "mokuton_arche", "mokuton_protection", "mokuton_wood_hand", "mokuton_dragon", "mokuton_golem" },
     { "salamandre_poison", "salamandre_dome", "salamandre_corps", "salamandre_tornade" },
     { "fuma_tp", "fuma_invisibilite", "fuma_aura", "fuma_jugement", "fuma_ciel" },
     { "kami_shuriken", "kami_circle", "kami_bouclier", "kami_ailes", "kami_roue" },
