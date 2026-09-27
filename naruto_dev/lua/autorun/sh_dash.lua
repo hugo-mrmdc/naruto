@@ -92,6 +92,7 @@ if SERVER then
         end
         if not EN_ACCROUPI and ply:Crouching() then return false, "accroupi" end
         if NA_EstEtourdi and NA_EstEtourdi(ply) then return false, "étourdi" end
+        if ply:GetNW2Bool("NA_Canalise", false) then return false, "technique canalisée en cours" end
         if ply:GetNW2Bool("NA_Wings", false) or ply:GetNW2Bool("NA_Vol", false) then return false, "en vol (ailes)" end
         if ply:GetNWBool("MokutonRide", false) then return false, "sur le dragon" end
         if ply:GetNW2Bool("NA_Golem", false) then return false, "golem" end

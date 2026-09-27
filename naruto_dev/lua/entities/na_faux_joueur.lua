@@ -48,11 +48,23 @@ if SERVER then
         self.DernierCoup = 0
     end
 
-    -- reste sur place, en attente
+    -- reste sur place, en attente ; joue l'animation d'étourdissement partagée
+    -- (act_stunning) tant que le NW2Bool "NA_Etourdi" est actif (posé par
+    -- NA_Etourdir, le cube Jinton, la prison aqueuse... : cf. sv_jinton_cube.lua
+    -- pour que le cube le pose bien aussi sur ce nextbot).
     function ENT:RunBehaviour()
         while true do
-            self:StartActivity(ACT_HL2MP_IDLE)
-            coroutine.wait(1)
+            if self:GetNW2Bool("NA_Etourdi", false) then
+                local seq = self:LookupSequence("act_stunning")
+                if seq and seq >= 0 then
+                    self:ResetSequence(seq)
+                else
+                    self:StartActivity(ACT_HL2MP_IDLE)
+                end
+            else
+                self:StartActivity(ACT_HL2MP_IDLE)
+            end
+            coroutine.wait(0.2)
         end
     end
 

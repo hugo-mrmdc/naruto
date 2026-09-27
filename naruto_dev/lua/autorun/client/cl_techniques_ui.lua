@@ -200,6 +200,15 @@ local TECHNIQUES = {
     { cat = "Hyuga", name = "Paume du Hakke", key = "", id = "hyuga_paume", rang = "C", icone = "ui/icon/hyuga_128_poing_hakke.png", court = "Paume", cooldown = 8,
       desc = "Une frappe instantanée au corps à corps : projette de la chakra dans la cible touchée, la blesse et l'expulse en arrière. Coûte 12 de chakra.",
       dmg = "32 dégâts + projection" },
+    { cat = "Hyuga", name = "32 Points du Hakke", key = "", id = "hyuga_32points", rang = "B", icone = "ui/icon/hyuga_poing_chakra.png", court = "32 Points", cooldown = 20,
+      desc = "Un déluge de frappes devant toi : la cible touchée est étourdie et encaisse des dégâts à chaque tick pendant toute la durée de l'étourdissement. Pendant toute la technique, tu es invulnérable et totalement immobilisé (si tu es en l'air, tu ne retombes pas avant la fin). Coûte 35 de chakra.",
+      dmg = "6 par tick (toutes les 0,25 s) + étourdi 3 s" },
+    { cat = "Hyuga", name = "64 Points du Hakke", key = "", id = "hyuga_64points", rang = "A", icone = "ui/icon/hyuga_64_poing_hakke.png", court = "64 Points", cooldown = 26,
+      desc = "Le déluge de frappes ultime : la cible touchée est étourdie et encaisse des dégâts à chaque tick pendant toute la durée de l'étourdissement. Pendant toute la technique, tu es invulnérable et totalement immobilisé (si tu es en l'air, tu ne retombes pas avant la fin). Coûte 45 de chakra.",
+      dmg = "8 par tick (toutes les 0,2 s) + étourdi 4 s" },
+    { cat = "Hyuga", name = "Tourbillon Divin", key = "", id = "hyuga_tourbillon", rang = "A", icone = "ui/icon/hyuga_tourbillion_divin_hakke.png", court = "Tourbillon", cooldown = 16,
+      desc = "Une rotation défensive de chakra autour de toi pendant 2,5 secondes : tous les ennemis proches sont blessés et repoussés à chaque impulsion. Coûte 35 de chakra.",
+      dmg = "15 par impulsion (toutes les 0,5 s) + projection" },
 
     -- ===== KIMINARI =====
     { cat = "Kiminari", name = "Frappe noire", key = "", id = "kiminari_frappe", rang = "C", icone = "ui/icon/kiminari_frappe_noir.png", court = "Frappe", cooldown = 18,

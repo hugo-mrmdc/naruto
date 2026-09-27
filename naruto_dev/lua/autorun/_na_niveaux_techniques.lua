@@ -766,6 +766,48 @@ NA_NIV_TECH.hyuga_paume = {
     [5] = { degats = 45, chakra = 10, recharge = 6 },
 }
 
+-- 32 Points du Hakke (server/hyuga/sv_hyuga_32points.lua)
+--   degats = PAR TICK de la rafale, intervalle = secondes entre 2 ticks,
+--   etourdi = secondes d'étourdissement de la cible (= durée totale de la rafale)
+NA_NIV_TECH.hyuga_32points = {
+    [1] = {
+        degats = 6, chakra = 35, recharge = 20, portee = 300, rayon = 50,
+        intervalle = 0.25, etourdi = 1,
+    },
+    [2] = { degats = 7 },
+    [3] = { degats = 8, recharge = 18, etourdi = 2 },
+    [4] = { degats = 9 },
+    [5] = { degats = 10, chakra = 30, recharge = 5, etourdi = 2.5 },
+}
+
+-- 64 Points du Hakke (server/hyuga/sv_hyuga_64points.lua)
+--   degats = PAR TICK de la rafale, intervalle = secondes entre 2 ticks,
+--   etourdi = secondes d'étourdissement de la cible (= durée totale de la rafale)
+NA_NIV_TECH.hyuga_64points = {
+    [1] = {
+        degats = 8, chakra = 45, recharge = 26, portee = 300, rayon = 50,
+        intervalle = 0.2, etourdi = 4,
+    },
+    [2] = { degats = 9 },
+    [3] = { degats = 10, recharge = 23, etourdi = 4.5 },
+    [4] = { degats = 11 },
+    [5] = { degats = 13, chakra = 38, recharge = 2, etourdi = 5 },
+}
+
+-- Tourbillon Divin (server/hyuga/sv_hyuga_tourbillon.lua)
+--   degats = PAR IMPULSION, intervalle = secondes entre 2 impulsions,
+--   duree = durée totale de la rotation
+NA_NIV_TECH.hyuga_tourbillon = {
+    [1] = {
+        degats = 15, chakra = 35, recharge = 16, duree = 2.5, intervalle = 0.5,
+        rayon = 200, recul = 700, souleve = 150,
+    },
+    [2] = { degats = 17 },
+    [3] = { degats = 19, recharge = 14, duree = 3 },
+    [4] = { degats = 21 },
+    [5] = { degats = 24, chakra = 30, recharge = 12, duree = 3.5 },
+}
+
 --========================================================
 -- KIMINARI
 --========================================================

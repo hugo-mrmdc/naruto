@@ -84,6 +84,7 @@ local function StartChakraRun(ply)
     -- en vol avec les ailes, la course de chakra n'a pas de sens (et viderait la jauge)
     if ply:GetNW2Bool("NA_Wings", false) or ply:GetNW2Bool("NA_Vol", false) then return end
     if ply:GetNW2Bool("NA_Souterrain", false) then return end   -- pas de course de chakra sous terre (sv_doton_taupe.lua)
+    if ply:GetNW2Bool("NA_Canalise", false) then return end   -- technique canalisée en cours (32 Points, Tourbillon...)
     if GetChakra(ply) < CHAKRA_MINIMUM then
         ply:EmitSound("buttons/button10.wav", 60, 100, 0.4)
         return

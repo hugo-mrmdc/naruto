@@ -39,10 +39,14 @@ if SERVER then
     -- de mourir : ils restaient debout à 0 PV). On les maintient sur place à chaque
     -- Think et on annule ce qu'ils étaient en train de faire.
     local function Immobiliser(ent, cube)
+        -- NA_Etourdi : posé dans tous les cas (même hors joueur), c'est lui que
+        -- lisent les animations d'étourdissement (cl_etourdi_anim.lua pour les
+        -- vrais joueurs, na_faux_joueur.lua pour le mannequin d'entraînement).
+        ent:SetNW2Bool("NA_Etourdi", true)
+
         if ent:IsPlayer() then
             ent:Freeze(true)
             ent:SetVelocity(-ent:GetVelocity())
-            ent:SetNW2Bool("NA_Etourdi", true)
         else
             cube.PositionTenue = ent:GetPos()
             if ent:IsNPC() then
@@ -71,9 +75,10 @@ if SERVER then
         -- un autre étourdissement est encore en cours (sv_etourdissement.lua)
         if NA_EstEtourdi and NA_EstEtourdi(ent) then return end
 
+        ent:SetNW2Bool("NA_Etourdi", false)
+
         if ent:IsPlayer() then
             ent:Freeze(false)
-            ent:SetNW2Bool("NA_Etourdi", false)
             if ent:GetMoveType() == MOVETYPE_NONE then ent:SetMoveType(MOVETYPE_WALK) end
         end
     end

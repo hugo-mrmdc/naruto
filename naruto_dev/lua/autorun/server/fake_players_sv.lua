@@ -5,11 +5,17 @@
 -- lua/entities/na_faux_joueur.lua) qu'on peut frapper et combo :
 -- vie, barre au-dessus de la tête, chiffres de dégâts, jutsus, stun...
 --
+-- (Les vrais bots GMod sont impossibles en singleplayer : "Cannot create a
+-- player bot in singleplayer!" C'est pour ça qu'on reste sur ce nextbot.)
+--
 -- Commandes (console, admins seulement) :
 --   fakeplayers_spawn [nombre] [vie]   ex : fakeplayers_spawn      -> 1 devant toi
 --                                           fakeplayers_spawn 3 1000 -> 3 en cercle, 1000 PV
+--   fakeplayers_spawn_moi [vie]        1 faux joueur à TA tenue (corps, tête,
+--                                      cheveux, yeux) : pour voir les animations
+--                                      de tes coups sur ton propre modèle
 --   fakeplayers_clear                  supprime tous les faux joueurs
--- Dans le chat : !faux [nombre] [vie]  et  !fauxclear
+-- Dans le chat : !faux [nombre] [vie], !fauxmoi [vie], !fauxclear
 --========================================================
 
 if not SERVER then return end
@@ -112,7 +118,84 @@ concommand.Add("fakeplayers_clear", function(ply)
     Supprimer(ply)
 end)
 
--- raccourcis dans le chat : !faux [nombre] [vie], !fauxclear
+----------------------------------------------------------
+-- Faux joueur à TA PROPRE apparence (tenue, tête, cheveux, yeux) : pour voir
+-- les animations de tes coups/techniques sur ton propre modèle.
+--   fakeplayers_spawn_moi [vie]   ou  !fauxmoi [vie] dans le chat
+----------------------------------------------------------
+
+-- Copie une pièce fusionnée (tête / cheveux, sv_playerskin.lua) sur "base"
+local function CreerPieceSur(base, modele, couleur, sousMateriau0, bodygroup0, bodygroup1)
+    if not modele or modele == "" then return end
+    local ent = ents.Create("prop_dynamic")
+    if not IsValid(ent) then return end
+
+    ent:SetModel(modele)
+    ent:SetPos(base:GetPos())
+    ent:SetAngles(base:GetAngles())
+    ent:Spawn()
+
+    ent:SetParent(base)
+    ent:AddEffects(EF_BONEMERGE)
+    ent:AddEffects(EF_BONEMERGE_FASTCULL)
+    ent:AddEffects(EF_PARENT_ANIMATES)
+    ent:SetSolid(SOLID_NONE)
+    ent:SetMoveType(MOVETYPE_NONE)
+    ent:SetOwner(base)
+    ent:SetRenderMode(RENDERMODE_TRANSALPHA)
+    ent:SetColor(couleur or color_white)
+    if sousMateriau0 and sousMateriau0 ~= "" then ent:SetSubMaterial(0, sousMateriau0) end
+    if bodygroup0 then ent:SetBodygroup(0, bodygroup0) end
+    if bodygroup1 then ent:SetBodygroup(1, bodygroup1) end
+
+    return ent
+end
+
+local function ApparaitreAvecMaTenue(ply, vie)
+    if not IsValid(ply) then return end
+    if not Autorise(ply) then return ply:ChatPrint("Réservé aux admins.") end
+
+    vie = math.max(math.floor(tonumber(vie) or VIE_DEFAUT), 1)
+
+    local base = ply:GetPos()
+    local avant = ply:GetForward()
+    avant.z = 0
+    avant:Normalize()
+
+    local pos = AuSol(ply, base + avant * DISTANCE)
+    local ang = (base - pos):Angle()
+
+    local bot = NA_FauxJoueurs.Creer(pos, ang, ply:GetModel(), vie)
+    if not IsValid(bot) then
+        return ply:ChatPrint("Aucun faux joueur créé : l'entité n'est pas chargée. Relance la map (changelevel) puis réessaie.")
+    end
+
+    -- tête + cheveux : mêmes modèle, peau, coiffure que le joueur
+    if IsValid(ply.NA_Head) then
+        local tete = CreerPieceSur(bot, ply.NA_Head:GetModel(), ply.NA_Head.__NA_NormalColor,
+            ply.NA_Head:GetSubMaterial(0), ply.NA_Head:GetBodygroup(0), ply.NA_Head:GetBodygroup(1))
+
+        -- yeux choisis par le joueur (sous-matériaux 3 et 4, sv_yeux.lua)
+        local yeux = ply:GetNW2String("NA_Yeux", "")
+        if yeux ~= "" and IsValid(tete) then
+            tete:SetSubMaterial(3, yeux)
+            tete:SetSubMaterial(4, yeux)
+        end
+    end
+    if IsValid(ply.NA_Hair) then
+        CreerPieceSur(bot, ply.NA_Hair:GetModel(), ply.NA_Hair.__NA_NormalColor, nil, ply.NA_Hair:GetBodygroup(0))
+    end
+
+    bot:SetColor(ply:GetColor())   -- teinte de peau du corps
+
+    ply:ChatPrint(string.format("Faux joueur à ta tenue créé (%d PV). fakeplayers_clear pour le supprimer.", vie))
+end
+
+concommand.Add("fakeplayers_spawn_moi", function(ply, _, args)
+    ApparaitreAvecMaTenue(ply, args[1])
+end)
+
+-- raccourcis dans le chat : !faux [nombre] [vie], !fauxclear, !fauxmoi [vie]
 hook.Add("PlayerSay", "NA_FauxJoueurs_Chat", function(ply, texte)
     local args = string.Explode(" ", string.Trim(string.lower(texte)))
     if args[1] == "!faux" or args[1] == "/faux" then
@@ -120,6 +203,9 @@ hook.Add("PlayerSay", "NA_FauxJoueurs_Chat", function(ply, texte)
         return ""
     elseif args[1] == "!fauxclear" or args[1] == "/fauxclear" then
         Supprimer(ply)
+        return ""
+    elseif args[1] == "!fauxmoi" or args[1] == "/fauxmoi" then
+        ApparaitreAvecMaTenue(ply, args[2])
         return ""
     end
 end)

@@ -28,7 +28,7 @@ local CHAKRA_COUT   = 30     -- chakra dépensé (0 = gratuit)
 local CHAKRA_MAX    = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA   = 0.6    -- incantation avant l'apparition de la prison
 local ANIM_APPEL    = "nrp_ninjutsu_defend_dragonflamebombs_start"
-local ANIM_CIBLE    = "nrp_beaten_bellydown_middle_loop"   -- animation de la cible pendant la prison
+local ANIM_CIBLE    = "act_stunning"   -- animation de la cible pendant la prison
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

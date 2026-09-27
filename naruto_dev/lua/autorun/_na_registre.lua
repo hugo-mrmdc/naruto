@@ -179,6 +179,14 @@ function NA_Lancer(id)
         return false
     end
 
+    -- technique canalisée en cours (32 Points du Hakke, Tourbillon Divin...) :
+    -- pas d'autre jutsu tant qu'elle dure (NW2Bool générique, réutilisable)
+    if ply:GetNW2Bool("NA_Canalise", false) then
+        NA_DernierRefus[id] = CurTime()
+        Diag(id, "technique canalisée en cours")
+        return false
+    end
+
     -- mains vides ou mode caméra : pas de jutsu (cl_selecteur_armes.lua)
     if NA_JutsuBloque and NA_JutsuBloque(ply) then
         NA_DernierRefus[id] = CurTime()   -- la case clignote en rouge, sans son

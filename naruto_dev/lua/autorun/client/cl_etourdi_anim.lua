@@ -7,7 +7,7 @@
 --========================================================
 -- RÉGLAGES
 --========================================================
-local ANIM = "nrp_beaten_bellydown_large_loop"
+local ANIM = "act_stunning"
 --========================================================
 
 local function SeqEtourdi(ply)

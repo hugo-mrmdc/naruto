@@ -20,9 +20,13 @@ function NA_Etourdir(ent, duree)
     ent.NA_EtourdiFin = math.max(ent.NA_EtourdiFin or 0, CurTime() + duree)
     etourdis[ent] = true
 
+    -- NA_Etourdi : posé dans tous les cas (même hors joueur), c'est lui que
+    -- lisent les animations d'étourdissement (cl_etourdi_anim.lua pour les
+    -- vrais joueurs, na_faux_joueur.lua pour le mannequin d'entraînement).
+    ent:SetNW2Bool("NA_Etourdi", true)
+
     if ent:IsPlayer() then
         ent:Freeze(true)
-        ent:SetNW2Bool("NA_Etourdi", true)
         ent:SetVelocity(-ent:GetVelocity())
     else
         ent.NA_EtourdiPos = ent.NA_EtourdiPos or ent:GetPos()
@@ -47,9 +51,9 @@ local function Liberer(ent)
     ent.NA_EtourdiPos = nil
     if CubeActif(ent) then return end   -- le cube Jinton le tient encore : il le libérera
 
+    ent:SetNW2Bool("NA_Etourdi", false)
     if ent:IsPlayer() then
         ent:Freeze(false)
-        ent:SetNW2Bool("NA_Etourdi", false)
     end
 end
 NA_Liberer = Liberer

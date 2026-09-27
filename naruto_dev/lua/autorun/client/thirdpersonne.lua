@@ -49,15 +49,26 @@ hook.Add("Think", "NA_TPS_ToggleV", function()
     wasDownV = down
 end)
 
-local function GetDist()
+-- Caméra plus reculée et plus haute pendant le Tourbillon Divin (hyuga), pour voir par-dessus la particule
+local DISTANCE_TOURBILLON_BONUS = 80
+local HAUTEUR_TOURBILLON_BONUS = 60
+
+local function GetDist(ply)
     local c = GetConVar("na_tps_dist_cl")
     local v = (c and c:GetInt()) or DISTANCE
+    if IsValid(ply) and ply:GetNW2Float("NA_TourbillonFin", 0) > CurTime() then
+        v = v + DISTANCE_TOURBILLON_BONUS
+    end
     return math.Clamp(v, DIST_MIN, DIST_MAX)
 end
 
-local function GetHeight()
+local function GetHeight(ply)
     local c = GetConVar("na_tps_height_cl")
-    return math.Clamp((c and c:GetInt()) or HAUTEUR, -100, 200)
+    local h = math.Clamp((c and c:GetInt()) or HAUTEUR, -100, 200)
+    if IsValid(ply) and ply:GetNW2Float("NA_TourbillonFin", 0) > CurTime() then
+        h = h + HAUTEUR_TOURBILLON_BONUS
+    end
+    return h
 end
 
 -- Remet les valeurs écrites en haut de ce fichier
@@ -93,8 +104,8 @@ hook.Add("CalcView", "NA_TPS_CalcView", function(ply, pos, ang, fov)
     if not IsValid(ply) or not ply:Alive() then return end
     if ply ~= LocalPlayer() then return end
 
-    local dist   = GetDist()
-    local height = GetHeight()
+    local dist   = GetDist(ply)
+    local height = GetHeight(ply)
 
     local view = {}
     view.fov = fov

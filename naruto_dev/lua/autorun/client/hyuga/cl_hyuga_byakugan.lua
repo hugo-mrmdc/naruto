@@ -103,18 +103,21 @@ hook.Add("PreDrawHalos", "HyugaByakugan_Halos", function()
     end
     if #valides == 0 then return end
 
-    halo.Add(valides, Color(210, 215, 255), 2, 2, 1, true, true)
+    halo.Add(valides, Color(100, 180, 255), 3, 3, 1, true, true)
 end)
 
 ----------------------------------------------------------
--- Tenketsu : le réseau de chakra (squelette) des cibles, en traits fins bleus,
--- à travers les murs.
+-- Tenketsu : les points de chakra (squelette) des cibles, en ronds pleins
+-- bleus (vrai cercle, materials/hyuga/tenketsu_dot.png, pas un glow additif
+-- qui rend transparent ni un carré), à travers les murs.
 --
--- On ne relie que les os qui portent une hitbox (tronc, membres, tête...) :
--- les os "techniques" du modèle (armes, IK...) n'ont pas de hitbox et peuvent
--- se retrouver à une position aberrante (ex : au sol) quand ils ne sont pas
--- animés. On les saute en remontant les parents jusqu'au prochain os valide.
+-- On ne pose des points que sur les os qui portent une hitbox (tronc,
+-- membres, tête...) : les os "techniques" du modèle (armes, IK...) n'ont pas
+-- de hitbox et peuvent se retrouver à une position aberrante (ex : au sol)
+-- quand ils ne sont pas animés.
 ----------------------------------------------------------
+local MAT_TENKETSU = Material("hyuga/tenketsu_dot.png", "noclamp smooth")
+local TAILLE_TENKETSU = 2.5
 local COULEUR_TENKETSU = Color(70, 170, 255)
 
 -- Os portant une hitbox pour cette entité (calculé une fois, mis en cache dessus)
@@ -132,32 +135,19 @@ local function OsValides(ent)
     return valides
 end
 
--- Prochain ancêtre valide de "os" (nil si aucun avant la racine)
-local function ParentValide(ent, valides, os)
-    local parent = ent:GetBoneParent(os)
-    while parent and parent >= 0 and not valides[parent] do
-        parent = ent:GetBoneParent(parent)
-    end
-    return (parent and parent >= 0) and parent or nil
-end
-
 hook.Add("PostDrawTranslucentRenderables", "HyugaByakugan_Tenketsu", function()
     local ply = LocalPlayer()
     if not IsValid(ply) or not ply:GetNW2Bool("NA_Byakugan", false) or #cibles == 0 then return end
 
+    render.SetMaterial(MAT_TENKETSU)
     render.DepthRange(0, 0)   -- force le dessin tout devant : visible à travers les murs et les corps
 
     for _, ent in ipairs(cibles) do
         if IsValid(ent) then
-            local valides = OsValides(ent)
-            for os in pairs(valides) do
-                local parent = ParentValide(ent, valides, os)
-                if parent then
-                    local posA = ent:GetBonePosition(os)
-                    local posB = ent:GetBonePosition(parent)
-                    if posA and posB then
-                        render.DrawLine(posA, posB, COULEUR_TENKETSU, false)
-                    end
+            for os in pairs(OsValides(ent)) do
+                local pos = ent:GetBonePosition(os)
+                if pos then
+                    render.DrawSprite(pos, TAILLE_TENKETSU, TAILLE_TENKETSU, COULEUR_TENKETSU)
                 end
             end
         end
