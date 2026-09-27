@@ -739,6 +739,34 @@ NA_NIV_TECH.chinoike_vortex = {
 }
 
 --========================================================
+-- HYUGA
+--========================================================
+-- Byakugan (server/hyuga/sv_hyuga_byakugan.lua) : à activer / désactiver
+--   chakra = PAR SECONDE, rayon = distance de détection à travers les murs
+NA_NIV_TECH.hyuga_byakugan = {
+    [1] = {
+        chakra = 1, chakra_mini = 15, recharge = 15, duree_mudra = 0.3, rayon = 1000,
+    },
+    [2] = { rayon = 1200 },
+    [3] = { chakra = 2, rayon = 1400 },
+    [4] = { rayon = 1700 },
+    [5] = { chakra = 3, recharge = 12, rayon = 2000 },
+}
+
+-- Paume du Hakke (server/hyuga/sv_hyuga_paume.lua)
+--   portee/rayon = portée du bras et zone d'impact, recul/souleve = projection
+NA_NIV_TECH.hyuga_paume = {
+    [1] = {
+        degats = 32, chakra = 12, recharge = 8, portee = 500, rayon = 60,
+        recul = 550, souleve = 80, delai_impact = 0.65,
+    },
+    [2] = { degats = 35 },
+    [3] = { degats = 38, recharge = 7 },
+    [4] = { degats = 41 },
+    [5] = { degats = 45, chakra = 10, recharge = 6 },
+}
+
+--========================================================
 -- KIMINARI
 --========================================================
 -- Frappe noire (sv_kiminari_frappe.lua) : duree = étourdissement

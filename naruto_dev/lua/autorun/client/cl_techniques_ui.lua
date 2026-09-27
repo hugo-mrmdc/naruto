@@ -133,7 +133,7 @@ local TECHNIQUES = {
     { cat = "Fuma", name = "Aura Fuma", key = "", id = "fuma_aura", rang = "B", icone = "ui/icon/fuma_morsure_sanglante.png", court = "Aura", cooldown = 25,
       desc = "Une aura t'entoure pendant 12 secondes : tu infliges 30 % de dégâts en plus et tu en encaisses 25 % de moins. Coûte 20 de chakra.",
       dmg = "+30 % de dégâts, -25 % de dégâts subis" },
-    { cat = "Fuma", name = "Shuriken Céleste", key = "", id = "fuma_ciel", rang = "B", icone = "ui/icon/fuma_shuriken_acier.png", court = "Céleste", cooldown = 28,
+    { cat = "Fuma", name = "Shuriken Céleste", key = "", id = "fuma_ciel", rang = "A", icone = "ui/icon/fuma_shuriken_acier.png", court = "Céleste", cooldown = 28,
       desc = "Un shuriken géant tombe du ciel sur le point que tu vises et explose en fumée au sol : dégâts de zone et projection. Coûte 35 de chakra.",
       dmg = "70 au centre" },
     { cat = "Fuma", name = "Invisibilité", key = "", id = "fuma_invisibilite", rang = "C", icone = "ui/icon/fuma_invisible.png", court = "Invisible", cooldown = 8,
@@ -192,6 +192,14 @@ local TECHNIQUES = {
     { cat = "Chinoike", name = "Vortex de sang", key = "", id = "chinoike_vortex", rang = "B", icone = "ui/icon/typhon_chinoike.png", court = "Vortex", cd = 20,
       desc = "Un vortex de sang s'ouvre au sol là où tu vises (900 unités max) pendant 3,5 secondes : il aspire les ennemis vers son cœur, qui les blesse. Coûte 30 de chakra.",
       dmg = "10 par tick (toutes les 0,5 s)" },
+
+    -- ===== HYUGA =====
+    { cat = "Hyuga", name = "Byakugan", key = "", id = "hyuga_byakugan", rang = "C", icone = "ui/icon/hyuga_byakugan.png", court = "Byakugan", cooldown = 15,
+      desc = "Active ton Byakugan (rappuie pour le couper) : tant qu'il est actif, tu détectes les ennemis proches à travers les murs. Consomme 1 de chakra par seconde (tu peux recharger avec R en même temps) ; il s'éteint quand le chakra est vide. Il faut 15 de chakra pour l'activer.",
+      dmg = "détection à travers les murs (1000 unités)" },
+    { cat = "Hyuga", name = "Paume du Hakke", key = "", id = "hyuga_paume", rang = "C", icone = "ui/icon/hyuga_128_poing_hakke.png", court = "Paume", cooldown = 8,
+      desc = "Une frappe instantanée au corps à corps : projette de la chakra dans la cible touchée, la blesse et l'expulse en arrière. Coûte 12 de chakra.",
+      dmg = "32 dégâts + projection" },
 
     -- ===== KIMINARI =====
     { cat = "Kiminari", name = "Frappe noire", key = "", id = "kiminari_frappe", rang = "C", icone = "ui/icon/kiminari_frappe_noir.png", court = "Frappe", cooldown = 18,
@@ -329,7 +337,7 @@ local ONGLETS = {
       desc = "Cette catégorie répertorie les techniques des natures du chakra" },
     { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton" },
       desc = "Cette catégorie répertorie les techniques héritées par le sang" },
-    { nom = "Clan",          icone = "clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike" },
+    { nom = "Clan",          icone = "clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike", "Hyuga" },
       desc = "Cette catégorie répertorie les techniques secrètes des clans" },
     { nom = "Arts Ninja",    icone = "kentai.png",    cats = { "Armes", "Déplacement", "Divers" },
       desc = "Cette catégorie répertorie toutes les techniques des arts ninja" },

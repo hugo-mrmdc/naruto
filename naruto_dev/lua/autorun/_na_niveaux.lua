@@ -67,6 +67,7 @@ NA_NIV.LIGNEES = {
     { "jiton_sarcophage", "jiton_emergence", "jiton_vortex", "jiton_tornade", "jiton_nuage" },
     { "kaguya_armure", "kaguya_danse", "kaguya_legion" },
     { "chinoike_ketsuryugan", "chinoike_genjutsu", "chinoike_pluie", "chinoike_vortex" },
+    { "hyuga_byakugan", "hyuga_paume" },
 }
 --========================================================
 
