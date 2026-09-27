@@ -3,6 +3,8 @@
 -- Chiffres de dégâts qui apparaissent au-dessus de la cible touchée : petit
 -- "pop", montée, puis disparition. Les coups très rapprochés sur la même cible
 -- (ticks de laser, de cube...) s'additionnent dans un seul chiffre.
+-- Couleur selon la source : bleu pour les jutsu, orange pour le physique
+-- (poings, armes). Un coup qui cumule les deux types garde le dernier reçu.
 --========================================================
 
 --========================================================
@@ -19,9 +21,9 @@ local TAILLE_FORT  = 58      -- taille des gros coups
 local ECHELLE_MIN  = 0.85    -- taille minimale quand la cible est loin (1 = jamais réduit)
 local EPAISSEUR    = 3       -- épaisseur du contour
 
-local COULEUR      = Color(255, 245, 225)
-local COULEUR_FORT = Color(255, 190, 40)
-local CONTOUR      = Color(25, 5, 5, 255)
+local COULEUR_JUTSU    = Color(80, 175, 255)    -- dégâts de jutsu (ninjutsu/genjutsu)
+local COULEUR_PHYSIQUE = Color(255, 140, 35)    -- dégâts physiques (poings, armes)
+local CONTOUR          = Color(25, 5, 5, 255)
 --========================================================
 
 local function CreerPolices()
@@ -39,6 +41,7 @@ net.Receive("NA_Degats", function()
     local index = net.ReadUInt(16)
     local pos = net.ReadVector()
     local valeur = net.ReadUInt(16)
+    local jutsu = net.ReadBool()
     local now = CurTime()
 
     local dernier = parCible[index]
@@ -47,10 +50,11 @@ net.Receive("NA_Degats", function()
         dernier.valeur = dernier.valeur + valeur
         dernier.debut = now
         dernier.pos = pos
+        dernier.jutsu = jutsu
         return
     end
 
-    local c = { pos = pos, valeur = valeur, debut = now, dx = math.Rand(-ECART, ECART) }
+    local c = { pos = pos, valeur = valeur, debut = now, dx = math.Rand(-ECART, ECART), jutsu = jutsu }
     chiffres[#chiffres + 1] = c
     parCible[index] = c
 end)
@@ -80,7 +84,7 @@ hook.Add("HUDPaint", "NA_Degats_Dessin", function()
                 local alpha = t < 0.7 and 255 or 255 * (1 - (t - 0.7) / 0.3)
 
                 local fort = c.valeur >= SEUIL_FORT
-                local couleur = fort and COULEUR_FORT or COULEUR
+                local couleur = c.jutsu and COULEUR_JUTSU or COULEUR_PHYSIQUE
                 local police = fort and "NA.Degats.Fort" or "NA.Degats"
 
                 local texte = tostring(c.valeur)

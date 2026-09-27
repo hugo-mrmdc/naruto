@@ -227,7 +227,10 @@ function Combat.Damage(victim, info)
         end
 
         victim.NRPApplyingDamage = true
+        -- kind connu ici -> on tranche nous-mêmes plutôt que de laisser sv_degats_type.lua deviner
+        victim.NRPTypeDegats = (info.kind == "melee" or info.kind == "tool") and "physique" or "jutsu"
         victim:TakeDamageInfo(dmg)
+        victim.NRPTypeDegats = nil
         victim.NRPApplyingDamage = nil
     end
 

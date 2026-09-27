@@ -17,9 +17,13 @@ hook.Add("PostEntityTakeDamage", "NA_DegatsAffiches", function(cible, dmg, pris)
     local montant = dmg:GetDamage()
     if montant < 0.5 then return end
 
+    -- posé par sv_degats_type.lua (ou directement par NRP.Combat.Damage) juste avant TakeDamageInfo
+    local estJutsu = cible.NRPTypeDegats == "jutsu"
+
     net.Start("NA_Degats")
         net.WriteUInt(cible:EntIndex(), 16)
         net.WriteVector(cible:GetPos() + Vector(0, 0, cible:OBBMaxs().z + 6))   -- au-dessus de la tête
         net.WriteUInt(math.min(math.Round(montant), 65535), 16)
+        net.WriteBool(estJutsu)
     net.Send(attaquant)
 end)
