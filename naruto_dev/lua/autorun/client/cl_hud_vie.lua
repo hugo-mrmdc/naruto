@@ -23,8 +23,9 @@ local TAILLE_NUAGE    = 1.15  -- échelle du nuage décoratif (image 248 x 75)
 -- Cadrage du portrait (buste)
 -- (cadre ~33 unités de haut : la tête en haut, les épaules et le haut du torse en bas)
 local PORTRAIT_FOV      = 30
-local PORTRAIT_DISTANCE = 62   -- distance de la caméra (plus grand = plus de torse, tête plus petite)
-local PORTRAIT_HAUTEUR  = -6   -- centre du cadrage par rapport à la tête (négatif = plus de torse)
+local PORTRAIT_DISTANCE = 68   -- distance de la caméra (plus grand = plus de torse, tête plus petite)
+local PORTRAIT_HAUTEUR  = -2   -- centre du cadrage par rapport à la tête (négatif = plus de torse ; assez haut
+                               -- pour que les cheveux, même longs ou en pointes, ne soient pas coupés)
 
 local CHAKRA_MAX     = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local AFFICHER_FAIM  = true   -- n'apparaît que si NW2Float "NA_Faim" existe (0 à 100)
@@ -82,6 +83,7 @@ local function Signature(ply)
         ply:GetModel(), ply:GetSkin(),
         ply:GetNW2String("NA_TeteModele", ""), ply:GetNW2String("NA_CheveuxModele", ""),
         ply:GetNW2String("NA_Yeux", ""),   -- yeux changés (Ketsuryugan...) : portrait refait
+        ply:GetNW2String("NA_Perso", ""),  -- visage / couleurs personnalisés
     }, "|")
 end
 
@@ -135,9 +137,14 @@ local function CreerPanneau()
     function panneau:PostDrawModel(ent)
         for _, cs in ipairs(extras) do
             if IsValid(cs) then
-                local c = cs.Couleur or Vector(255, 255, 255)
-                render.SetColorModulation(c.x / 255, c.y / 255, c.z / 255)
-                cs:DrawModel()
+                if cs.NA_Forme then NA_PoserFormes(cs, 0) end   -- bouche, yeux, nez du visage : reposés à chaque image
+                if cs.Recul then
+                    NA_DessinerRecul(cs, ent, cs.Recul)
+                else
+                    local c = cs.Couleur or Vector(255, 255, 255)
+                    render.SetColorModulation(c.x / 255, c.y / 255, c.z / 255)
+                    cs:DrawModel()
+                end
             end
         end
         render.SetColorModulation(1, 1, 1)
@@ -171,13 +178,18 @@ local function CreerPanneau()
     end
 end
 
-local function AjouterPiece(ent, modele, couleur)
+-- recul > 0 : pièce non fusionnée, dessinée reculée (NA_DessinerRecul, cl_perso.lua)
+local function AjouterPiece(ent, modele, couleur, recul)
     if not modele or modele == "" then return end
     local cs = ClientsideModel(modele, RENDERGROUP_OPAQUE)
     if not IsValid(cs) then return end
     cs:SetNoDraw(true)
-    cs:SetParent(ent)
-    cs:AddEffects(EF_BONEMERGE)
+    if recul and recul > 0 then
+        cs.Recul = recul
+    else
+        cs:SetParent(ent)
+        cs:AddEffects(EF_BONEMERGE)
+    end
     cs.Couleur = couleur
     extras[#extras + 1] = cs
     return cs
@@ -192,13 +204,18 @@ local function ConstruirePortrait(ply)
     if not IsValid(ent) then return end
 
     ent:SetSkin(ply:GetSkin())
+    NA_PeauCorps(ent, NA_PERSO.Decoder(ply:GetNW2String("NA_Perso", "")))
     for b = 0, ply:GetNumBodyGroups() - 1 do ent:SetBodygroup(b, ply:GetBodygroup(b)) end
     local seq = ent:LookupSequence("idle_all_01")
     if seq and seq >= 0 then ent:ResetSequence(seq) end
 
-    local tete = AjouterPiece(ent, ply:GetNW2String("NA_TeteModele", ""), ply:GetNW2Vector("NA_TeteCouleur", Vector(255, 255, 255)))
+    local choix = NA_PERSO.Decoder(ply:GetNW2String("NA_Perso", ""))
+    local recul = choix.visage > 0 and choix.recul or 0   -- visages numérotés : tête et cheveux reculés
+    local tete = AjouterPiece(ent, ply:GetNW2String("NA_TeteModele", ""), ply:GetNW2Vector("NA_TeteCouleur", Vector(255, 255, 255)), recul)
     if tete and NA_MateriauxTete then NA_MateriauxTete(tete, ply) end   -- visage teinté + yeux (cl_playerskin.lua)
-    AjouterPiece(ent, ply:GetNW2String("NA_CheveuxModele", ""), ply:GetNW2Vector("NA_CheveuxCouleur", Vector(255, 255, 255)))
+    local modeleCheveux = ply:GetNW2String("NA_CheveuxModele", "")
+    local cheveux = AjouterPiece(ent, modeleCheveux, ply:GetNW2Vector("NA_CheveuxCouleur", Vector(255, 255, 255)), recul)
+    if cheveux then NA_TeinterCheveux(cheveux, NA_PERSO.Decoder(ply:GetNW2String("NA_Perso", ""))) end
 
     -- autres éléments fusionnés au joueur (masque, ailes...) s'il y en a
     local deja = {}

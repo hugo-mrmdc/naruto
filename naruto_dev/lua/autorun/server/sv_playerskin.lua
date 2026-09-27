@@ -71,6 +71,25 @@ local function AppliquerInvisibilite(ply, ent)
     end
 end
 
+-- Tête et cheveux du joueur : les réglages ci-dessus, modifiés par son choix
+-- (menu de personnalisation : sv_perso.lua). Rend aussi le choix lui-même.
+local function Definitions(ply)
+    local p = NA_PersoDe and NA_PersoDe(ply) or NA_PERSO.DEFAUT
+    local tete, cheveux = table.Copy(TETE), table.Copy(CHEVEUX)
+
+    if p.visage > 0 then
+        tete.modele = NA_PERSO.ModeleTete(p)
+        tete.visage = nil   -- pas de matériau de la tête d'origine : la peau est posée côté client
+        tete.barbe  = p.barbe
+    end
+    cheveux.modele = NA_PERSO.ModeleCheveux(p)
+    cheveux.coupe = NA_PERSO.CoupeCheveux(p)   -- coupe (bodygroup) du modèle d'origine
+    -- pas de teinte sur le modèle (elle colorerait bandeaux et bandages) : la couleur des
+    -- cheveux est posée côté client sur leur matériau (NA_TeinterCheveux, cl_perso.lua)
+    cheveux.couleur = Color(255, 255, 255)
+    return tete, cheveux, p
+end
+
 local function CreerPiece(ply, def)
     local ent = ents.Create("prop_dynamic")
     if not IsValid(ent) then return end
@@ -92,6 +111,8 @@ local function CreerPiece(ply, def)
     ent.__NA_NormalColor = def.couleur
     ent:SetColor(def.couleur)
     if def.visage then ent:SetSubMaterial(0, def.visage) end   -- visage teinté couleur peau
+    if def.coupe then ent:SetBodygroup(0, def.coupe) end       -- bodygroup "Headgear" du modèle de coiffure d'origine
+    if def.barbe then ent:SetBodygroup(1, def.barbe) end       -- bodygroup "beard" des visages
 
     AppliquerInvisibilite(ply, ent)
     return ent
@@ -99,14 +120,16 @@ end
 
 -- Informe les clients des pièces portées (utilisé pour les poser sur le corps
 -- après la mort, voir cl_playerskin.lua). Chaîne vide = aucune.
-local function Publier(ply, avecTete)
-    ply:SetNW2String("NA_TeteModele", avecTete and TETE.modele or "")
-    ply:SetNW2String("NA_CheveuxModele", avecTete and CHEVEUX.modele or "")
-    ply:SetNW2Vector("NA_TeteCouleur", Vector(TETE.couleur.r, TETE.couleur.g, TETE.couleur.b))
-    ply:SetNW2Vector("NA_CheveuxCouleur", Vector(CHEVEUX.couleur.r, CHEVEUX.couleur.g, CHEVEUX.couleur.b))
-    ply:SetNW2String("NA_TeteVisage", avecTete and TETE.visage or "")
+local function Publier(ply, avecTete, tete, cheveux, choix)
+    ply:SetNW2String("NA_TeteModele", avecTete and tete.modele or "")
+    ply:SetNW2String("NA_CheveuxModele", avecTete and cheveux.modele or "")
+    ply:SetNW2Vector("NA_TeteCouleur", Vector(tete.couleur.r, tete.couleur.g, tete.couleur.b))
+    ply:SetNW2Vector("NA_CheveuxCouleur", Vector(cheveux.couleur.r, cheveux.couleur.g, cheveux.couleur.b))
+    ply:SetNW2String("NA_TeteVisage", avecTete and tete.visage or "")
+    ply:SetNW2String("NA_Perso", avecTete and NA_PERSO.Encoder(choix) or "")   -- détails du visage (cl_perso.lua)
     -- entité de la tête : les clients la font cligner des yeux (cl_clignement.lua)
     ply:SetNW2Entity("NA_TeteEnt", avecTete and ply.NA_Head or NULL)
+    ply:SetNW2Entity("NA_CheveuxEnt", avecTete and ply.NA_Hair or NULL)   -- couleur des cheveux : cl_perso.lua
 end
 
 ----------------------------------------------------------
@@ -119,19 +142,25 @@ function NA_AppliquerApparence(ply)
     RetirerPieces(ply)
 
     if not ply:Alive() or ADejaUneTete(ply:GetModel()) then
-        Publier(ply, false)
+        Publier(ply, false, TETE, CHEVEUX)
         return
     end
 
     if not ply:LookupBone("ValveBiped.Bip01_Head1") and not ply:LookupBone("ValveBiped.Bip01_Head") then
         -- modèle sans squelette humain : rien à fusionner
-        Publier(ply, false)
+        Publier(ply, false, TETE, CHEVEUX)
         return
     end
 
-    ply.NA_Head = CreerPiece(ply, TETE)
-    ply.NA_Hair = CreerPiece(ply, CHEVEUX)
-    Publier(ply, true)
+    local tete, cheveux, choix = Definitions(ply)
+    ply.NA_Head = CreerPiece(ply, tete)
+    ply.NA_Hair = CreerPiece(ply, cheveux)
+    Publier(ply, true, tete, cheveux, choix)
+
+    -- pas de teinte sur le joueur : elle colorerait aussi la tenue. La peau du corps est
+    -- teintée à part, côté client (NA_PeauCorps, cl_perso.lua). On garde la transparence
+    -- (invisibilité Fuma).
+    ply:SetColor(Color(255, 255, 255, ply:GetColor().a))
     if NA_AppliquerYeux then NA_AppliquerYeux(ply) end   -- yeux choisis (sv_yeux.lua)
 end
 

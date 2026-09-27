@@ -51,6 +51,7 @@ function NA_AppliquerYeux(ply)
     if not IsValid(ply) then return end
     local tete = ply.NA_Head
     if not IsValid(tete) then return end
+    if tete:GetModel() ~= "models/head_03.mdl" then return end   -- les visages personnalisés (models/head/) ont leurs propres yeux
 
     local mat = ply:GetNW2String("NA_Yeux", "")
     if mat == "" then mat = NA_YEUX_NORMAUX end   -- yeux normaux : copie à iris réduit

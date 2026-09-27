@@ -396,10 +396,15 @@ local function ElementsDuJoueur(exclure)
     if not IsValid(ply) then return liste end
 
     for _, enfant in ipairs(ply:GetChildren()) do
-        if IsValid(enfant) and enfant:IsEffectActive(EF_BONEMERGE) and not enfant:GetNoDraw() then
+        -- (la tête et les cheveux sont cachés chez nous quand cl_perso.lua les dessine reculés : on les garde)
+        local tenue = enfant == ply:GetNW2Entity("NA_TeteEnt") or enfant == ply:GetNW2Entity("NA_CheveuxEnt")
+        if IsValid(enfant) and enfant:IsEffectActive(EF_BONEMERGE) and (tenue or not enfant:GetNoDraw()) then
             local mdl = enfant:GetModel()
             if mdl and mdl ~= "" and not (exclure and exclure[string.lower(mdl)]) then
-                liste[#liste + 1] = { modele = mdl, skin = enfant:GetSkin(), couleur = enfant:GetColor() }
+                -- tête et cheveux : reconnus pour recevoir leurs matériaux (visage, couleurs...)
+                local role = (enfant == ply:GetNW2Entity("NA_TeteEnt") and "tete")
+                    or (enfant == ply:GetNW2Entity("NA_CheveuxEnt") and "cheveux") or nil
+                liste[#liste + 1] = { modele = mdl, skin = enfant:GetSkin(), couleur = enfant:GetColor(), role = role }
             end
         end
     end
@@ -409,26 +414,40 @@ end
 -- Recopie ces éléments sur l'entité d'un DModelPanel
 local function Fusionner(ent, elements)
     local extras = {}
+    local ply = LocalPlayer()
+    local choix = IsValid(ply) and NA_PERSO.Decoder(ply:GetNW2String("NA_Perso", "")) or NA_PERSO.DEFAUT
+    NA_PeauCorps(ent, choix)   -- peau du corps teintée (la tenue ne l'est pas), cl_perso.lua
     for _, e in ipairs(elements) do
         local cs = ClientsideModel(e.modele, RENDERGROUP_OPAQUE)
         if IsValid(cs) then
             cs:SetNoDraw(true)
-            cs:SetParent(ent)
-            cs:AddEffects(EF_BONEMERGE)
+            if e.role and choix.visage > 0 and choix.recul > 0 then
+                cs.Recul = choix.recul   -- tête et cheveux reculés, non fusionnés (NA_DessinerRecul, cl_perso.lua)
+            else
+                cs:SetParent(ent)
+                cs:AddEffects(EF_BONEMERGE)
+            end
             cs:SetSkin(e.skin or 0)
             cs.Couleur = e.couleur
+            if e.role == "tete" then NA_MateriauxTete(cs, ply)              -- visage, yeux, sourcils, barbe (cl_playerskin.lua)
+            elseif e.role == "cheveux" then NA_TeinterCheveux(cs, choix) end -- couleur, bandeau, logo, coupe (cl_perso.lua)
             extras[#extras + 1] = cs
         end
     end
     return extras
 end
 
-local function DessinerExtras(extras)
+local function DessinerExtras(extras, ent)
     for _, cs in ipairs(extras or {}) do
         if IsValid(cs) then
-            local c = cs.Couleur or color_white
-            render.SetColorModulation(c.r / 255, c.g / 255, c.b / 255)
-            cs:DrawModel()
+            if cs.NA_Forme then NA_PoserFormes(cs, 0) end   -- bouche, yeux, nez du visage : reposés à chaque image
+            if cs.Recul then
+                NA_DessinerRecul(cs, ent, cs.Recul)
+            else
+                local c = cs.Couleur or color_white
+                render.SetColorModulation(c.r / 255, c.g / 255, c.b / 255)
+                cs:DrawModel()
+            end
         end
     end
     render.SetColorModulation(1, 1, 1)
@@ -452,8 +471,8 @@ local function CreerIconeTenue(parent, it, marge, taille)
     mp:SetMouseInputEnabled(false)
     mp:SetModel(it.modelPath)
     mp:SetFOV(48)
-    mp:SetCamPos(Vector(78, 28, 44))
-    mp:SetLookAt(Vector(0, 0, 38))
+    mp:SetCamPos(Vector(86, 30, 46))   -- assez loin et haut pour que les cheveux ne soient pas coupés
+    mp:SetLookAt(Vector(0, 0, 40))
     mp:SetColor(IsValid(ply) and ply:GetColor() or color_white)
     mp:SetDirectionalLight(BOX_TOP, Color(255, 245, 230))
     mp:SetAmbientLight(Color(90, 80, 70))
@@ -471,7 +490,7 @@ local function CreerIconeTenue(parent, it, marge, taille)
         self:RunAnimation()
     end
     function mp:PostDrawModel()
-        DessinerExtras(self.Extras)
+        DessinerExtras(self.Extras, self:GetEntity())
     end
     function mp:OnRemove()
         SupprimerExtras(self.Extras)
@@ -536,6 +555,39 @@ local function DessinerAccessoire(ent, csm, it)
     csm:DrawModel()
 end
 
+-- Épée rangée dans le dos : même placement que dans le jeu (naruto_arme_base.lua, DessinerDos) :
+-- celui réglé par le joueur (PlacementsDos), sinon celui de l'arme (SWEP.Dos)
+local function DessinerEpeeDos(ent, csm, classe, cfg)
+    local liste = istable(cfg.os) and cfg.os or { cfg.os or "ValveBiped.Bip01_Spine4" }
+    local os
+    for _, nom in ipairs(liste) do
+        os = ent:LookupBone(nom)
+        if os then break end
+    end
+    local mat = os and ent:GetBoneMatrix(os)
+    if not mat then return end
+
+    local perso = PlacementsDos[classe]
+    local d = perso and Vector(perso.x, perso.y, perso.z) or cfg.pos or vector_origin
+    local r = perso and Angle(perso.p, perso.ya, perso.r) or cfg.ang or angle_zero
+
+    local pos, ang = mat:GetTranslation(), mat:GetAngles()
+    if cfg.mode == "local" then
+        pos, ang = LocalToWorld(d, r, pos, ang)
+    else
+        ang = Angle(ang)
+        ang:RotateAroundAxis(ang:Right(), r.p)
+        ang:RotateAroundAxis(ang:Up(), r.y)
+        ang:RotateAroundAxis(ang:Forward(), r.r)
+        pos = pos + ang:Forward() * d.x + ang:Right() * d.y + ang:Up() * d.z
+    end
+
+    csm:SetPos(pos)
+    csm:SetAngles(ang)
+    csm:SetModelScale((perso and perso.s) or cfg.echelle or 1, 0)
+    csm:DrawModel()
+end
+
 local function CreerApercu(parent)
     local ply = LocalPlayer()
     local modele = (SlotsEquipement.armure and SlotsEquipement.armure.modelPath) or ply:GetModel()
@@ -543,8 +595,8 @@ local function CreerApercu(parent)
     local ap = vgui.Create("DModelPanel", parent)
     ap:SetModel(modele)
     ap:SetFOV(38)
-    ap:SetCamPos(Vector(95, 0, 42))
-    ap:SetLookAt(Vector(0, 0, 37))
+    ap:SetCamPos(Vector(118, 0, 41))   -- corps entier, cheveux compris (hauteur visible ~0 à 81)
+    ap:SetLookAt(Vector(0, 0, 40.5))
     ap:SetColor(ply:GetColor())
     ap:SetDirectionalLight(BOX_TOP, Color(255, 245, 230))
     ap:SetAmbientLight(Color(90, 80, 70))
@@ -561,6 +613,17 @@ local function CreerApercu(parent)
 
     -- tête, cheveux, ailes... : tout ce qui est fusionné au squelette du joueur
     ap.Extras = Fusionner(ent, ElementsDuJoueur())
+
+    -- épée équipée : montrée dans le dos, comme en jeu
+    local arme = SlotsEquipement.arme
+    local defArme = arme and arme.classe and weapons.Get(arme.classe)
+    if defArme and defArme.Dos and defArme.Dos.modele then
+        local cs = ClientsideModel(defArme.Dos.modele, RENDERGROUP_OPAQUE)
+        if IsValid(cs) then
+            cs:SetNoDraw(true)
+            ap.Epee = { cs = cs, classe = arme.classe, cfg = defArme.Dos }
+        end
+    end
 
     -- masque et accessoire équipés
     ap.Accessoires = {}
@@ -599,17 +662,20 @@ local function CreerApercu(parent)
     end
 
     function ap:PostDrawModel(e)
-        DessinerExtras(self.Extras)
+        DessinerExtras(self.Extras, e)
 
         e:SetupBones()
         for _, a in ipairs(self.Accessoires) do
             if IsValid(a.cs) then DessinerAccessoire(e, a.cs, a.it) end
         end
+        local epee = self.Epee
+        if epee and IsValid(epee.cs) then DessinerEpeeDos(e, epee.cs, epee.classe, epee.cfg) end
     end
 
     function ap:OnRemove()
         SupprimerExtras(self.Extras)
         for _, a in ipairs(self.Accessoires or {}) do if IsValid(a.cs) then a.cs:Remove() end end
+        if self.Epee and IsValid(self.Epee.cs) then self.Epee.cs:Remove() end
     end
 
     return ap

@@ -41,6 +41,12 @@ local function Prevoir(e, now)
     e.prochain = now + math.Rand(ECART_MIN, ECART_MAX)
 end
 
+-- Fermeture des paupières (0 à 1) de cette tête à cet instant (cl_perso.lua dessine une copie de la tête)
+function NA_YeuxFermes(tete)
+    local e = etat[tete]
+    return e and e.ferme or 0
+end
+
 hook.Add("Think", "NA_Clignement", function()
     local now = CurTime()
     local moi = LocalPlayer()
@@ -55,12 +61,15 @@ hook.Add("Think", "NA_Clignement", function()
         local e = etat[tete]
         if not e then
             local id = tete:GetFlexIDByName(FLEX)
-            if not id then etat[tete] = { flex = false } continue end   -- modèle sans ce flex
-            e = { flex = id }
+            -- visages personnalisés (models/head/) : pas de "basic_blink", le clignement
+            -- passe par la forme d'yeux choisie (NA_PoserFormes, cl_perso.lua)
+            local face = string.StartWith(tete:GetModel() or "", "models/head/face_")
+            if not id and not face then etat[tete] = { flex = false } continue end   -- modèle sans ce flex
+            e = { flex = id, face = face }
             Prevoir(e, now)
             etat[tete] = e
         end
-        if not e.flex then continue end
+        if not e.flex and not e.face then continue end
 
         -- début d'un clignement
         if not e.debut and now >= e.prochain then
@@ -96,6 +105,7 @@ hook.Add("Think", "NA_Clignement", function()
             tete.RenderOverride = function(self, flags)
                 local et = etat[self]
                 if et and et.flex then self:SetFlexWeight(et.flex, et.ferme or 0) end
+                if et and et.face then NA_PoserFormes(self, et.ferme or 0) end
                 self:DrawModel(flags)
             end
         end

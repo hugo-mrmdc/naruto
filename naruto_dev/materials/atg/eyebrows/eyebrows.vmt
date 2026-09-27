@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+    "$basetexture" "atg/eyebrows/eyebrows_1"
+    "$lightwarptexture" "atg/shared/lightwarpshader"
+
+    "$alphatest" "1"
+}

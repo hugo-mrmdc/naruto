@@ -13,6 +13,11 @@ local surCorps = {}   -- ragdoll -> { modèles clientside }
 -- La vraie tête du joueur les reçoit déjà du serveur (sv_playerskin.lua).
 function NA_MateriauxTete(cs, ply)
     if not IsValid(cs) or not IsValid(ply) then return end
+
+    -- visage personnalisé (models/head/) : peau, yeux, sourcils... (cl_perso.lua)
+    local p = NA_PERSO.Decoder(ply:GetNW2String("NA_Perso", ""))
+    if p.visage > 0 then return NA_HabillerVisage(cs, p, ply:GetNW2String("NA_Yeux", "")) end
+
     local visage = ply:GetNW2String("NA_TeteVisage", "")
     if visage ~= "" then cs:SetSubMaterial(0, visage) end
 
@@ -46,16 +51,19 @@ local function Habiller(ragdoll, ply)
 
                 -- la tête garde son visage et les yeux choisis
                 if n == 1 then NA_MateriauxTete(cs, ply) end
+                if n == 2 then NA_TeinterCheveux(cs, NA_PERSO.Decoder(ply:GetNW2String("NA_Perso", ""))) end
 
                 -- corps : yeux fermés (flex de clignement, voir cl_clignement.lua)
                 local blink = n == 1 and cs:GetFlexIDByName("basic_blink")
                 if blink then cs:SetFlexWeight(blink, 1) end
+                if n == 1 and cs.NA_Forme then NA_PoserFormes(cs, 1) end   -- visages personnalisés
 
                 pieces[#pieces + 1] = cs
             end
         end
     end
 
+    NA_PeauCorps(ragdoll, NA_PERSO.Decoder(ply:GetNW2String("NA_Perso", "")))
     surCorps[ragdoll] = pieces
 end
 

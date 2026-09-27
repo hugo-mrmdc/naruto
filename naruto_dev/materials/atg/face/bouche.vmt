@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "atg/face/bouche"
+	"$lightwarptexture" "atg/shared/toon"
+}

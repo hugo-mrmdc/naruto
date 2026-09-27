@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "atg\shared/line_b"
+	"$lightwarptexture" "atg\shared/lightwarpshader"
+}
