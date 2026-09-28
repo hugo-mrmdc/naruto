@@ -919,3 +919,30 @@ NA_NIV_TECH.jiton_vortex = {
     [4] = { degats = 16, recharge = 18 },
     [5] = { degats = 20, duree = 5,   rayon = 260, force = 3600 },
 }
+
+--========================================================
+-- SENJU
+--========================================================
+-- Renforcement (sv_senju_renfo.lua) : à activer / désactiver
+--   chakra = PAR SECONDE, bonus_degats / reduction / bonus_vitesse = en %,
+--   regen_vie = points de vie par seconde,
+--   recharge = secondes avant de pouvoir le réactiver (après l'arrêt)
+NA_NIV_TECH.senju_renfo = {
+    [1] = {
+        chakra = 3, recharge = 15, chakra_mini = 20, duree_mudra = 0.5,
+        bonus_degats = 15, reduction = 15, bonus_vitesse = 8, regen_vie = 2,
+    },
+    [2] = { bonus_degats = 17, reduction = 17 },
+    [3] = { chakra = 2.5, bonus_degats = 20, reduction = 20, bonus_vitesse = 10, regen_vie = 3 },
+    [4] = { bonus_degats = 23, reduction = 22 },
+    [5] = { chakra = 2, recharge = 12, bonus_degats = 26, reduction = 25, bonus_vitesse = 12, regen_vie = 4 },
+}
+
+-- Soin (sv_senju_soin.lua) : vie rendue = soin_pourcent % de la vie MAX, étalés sur "duree" secondes
+NA_NIV_TECH.senju_soin = {
+    [1] = { soin_pourcent = 25, duree = 5, chakra = 30, recharge = 25, duree_mudra = 0.5 },
+    [2] = { soin_pourcent = 27 },
+    [3] = { soin_pourcent = 30, chakra = 27, recharge = 23 },
+    [4] = { soin_pourcent = 33 },
+    [5] = { soin_pourcent = 35, chakra = 24, recharge = 20 },
+}

@@ -179,6 +179,14 @@ local TECHNIQUES = {
       desc = "Vise un ennemi : un lien s'accroche entre ton torse et lui pendant 6 secondes. Il perd de la vie à chaque tick et tu la récupères. Coûte 30 de chakra.",
       dmg = "12 par tick, +8 de vie pour toi" },
 
+    -- ===== SENJU =====
+    { cat = "Senju", name = "Renforcement Senju", key = "", id = "senju_renfo", rang = "B", icone = "ui/icon/senju_renfo.png", court = "Renfo", cooldown = 15,
+      desc = "Un chakra vert t'entoure (rappuie pour l'arrêter) : tant qu'il est actif, tu infliges 15 % de dégâts en plus, tu cours 8 % plus vite, tu subis 15 % de dégâts en moins et ta vie se régénère de 2 points par seconde. Consomme 3 de chakra par seconde (tu peux recharger avec R en même temps) ; il s'arrête quand le chakra est vide. Il faut 20 de chakra pour l'activer.",
+      dmg = "+15 % de dégâts, -15 % de dégâts subis, +8 % de vitesse" },
+    { cat = "Senju", name = "Soin Senju", key = "", id = "senju_soin", rang = "B", icone = "ui/icon/senju_soin.png", court = "Soin", cooldown = 25,
+      desc = "Une aura de chakra t'entoure et te soigne : tu récupères 25 % de ta vie maximale, répartis sur 5 secondes. Tu peux te déplacer et te battre pendant le soin. Coûte 30 de chakra.",
+      dmg = "+25 % de la vie max sur 5 secondes" },
+
     -- ===== CHINOIKE =====
     { cat = "Chinoike", name = "Ketsuryugan", key = "", id = "chinoike_ketsuryugan", rang = "C", icone = "ui/icon/chinoike_ketsuryugan.png", court = "Ketsu", cooldown = 5,
       desc = "Active ton Ketsuryugan (rappuie pour le couper) : tant qu'il est actif, tu infliges 20 % de dégâts en plus, tu cours 15 % plus vite et chaque coup porté te rend 20 % des dégâts infligés en vie. Consomme 5 de chakra par seconde (tu peux recharger avec R en même temps) ; il s'éteint quand le chakra est vide. Il faut 20 de chakra pour l'activer.",
@@ -346,7 +354,7 @@ local ONGLETS = {
       desc = "Cette catégorie répertorie les techniques des natures du chakra" },
     { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton" },
       desc = "Cette catégorie répertorie les techniques héritées par le sang" },
-    { nom = "Clan",          icone = "clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike", "Hyuga" },
+    { nom = "Clan",          icone = "clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike", "Hyuga", "Senju" },
       desc = "Cette catégorie répertorie les techniques secrètes des clans" },
     { nom = "Arts Ninja",    icone = "kentai.png",    cats = { "Armes", "Déplacement", "Divers" },
       desc = "Cette catégorie répertorie toutes les techniques des arts ninja" },

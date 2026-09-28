@@ -52,6 +52,8 @@ SWEP.SonSwing   = Sound("npc/zombie/claw_miss1.wav")
 SWEP.SonImpact  = Sound("Flesh.ImpactHard")
 SWEP.TypeDegats = DMG_CLUB
 
+SWEP.Slash = false   -- pas d'effet de slash : des poings ne font pas de swing
+
 SWEP.Special = nil   -- pas d'attaque au clic droit
 
 function SWEP:ShouldDropOnDie()

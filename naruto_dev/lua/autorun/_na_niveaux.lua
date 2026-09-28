@@ -68,6 +68,7 @@ NA_NIV.LIGNEES = {
     { "kaguya_armure", "kaguya_danse", "kaguya_legion" },
     { "chinoike_ketsuryugan", "chinoike_genjutsu", "chinoike_pluie", "chinoike_vortex" },
     { "hyuga_byakugan", "hyuga_paume", "hyuga_32points", "hyuga_64points", "hyuga_tourbillon" },
+    { "senju_renfo", "senju_soin" },
 }
 --========================================================
 

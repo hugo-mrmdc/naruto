@@ -89,6 +89,24 @@ SWEP.SonSwing   = Sound("fuma/swing1.wav")
 SWEP.SonImpact  = nil          -- son quand un coup touche (nil = aucun)
 SWEP.TypeDegats = DMG_SLASH    -- DMG_CLUB pour les coups de poing / pied
 
+-- Slash du clic gauche (optionnel, réglages propres à cette arme ; voir la liste complète
+-- dans lua/autorun/client/cl_slash_arme.lua). Angles X Y Z par coup, en degrés :
+-- X = roulis (90 = vertical), Y = bascule (négatif = lève l'avant), Z = cap.
+--   SWEP.Slash = {
+--       angles  = { {x = 0, y = -25, z = 0}, {x = -45, y = -25, z = 0}, {x = 90, y = -40, z = 0} },
+--       couleur = "bleu", echelle = 2, alpha = 160,
+--   }
+-- SWEP.Slash = false : PAS de slash pour cette arme (poings, armes sans swing...)
+SWEP.Slash = nil
+
+-- Explosion différée (optionnel) : quand un même ennemi est touché "coups" fois par le clic
+-- gauche, une explosion se déclenche sur lui "delai" secondes plus tard. nil = aucune.
+--   coups (nombre de touches), delai (s), expire (s sans toucher avant que le compte reparte à 0),
+--   rayon, degats, recul / reculHaut (projection des joueurs), particule, son,
+--   sonMarque (son au moment où l'ennemi est marqué, facultatif)
+--   SWEP.Explosif = { coups = 3, delai = 1, rayon = 130, degats = 45, particule = "...", son = "..." }
+SWEP.Explosif = nil
+
 -- Attaque spéciale (clic droit). nil = pas d'attaque spéciale.
 --   anim, vitesseAnim (vitesse de son animation, 1 = normale),
 --   explosions : { { delai, distance }, ... } devant le joueur
@@ -97,6 +115,7 @@ SWEP.Special = nil
 
 if SERVER then
     util.AddNetworkString("NA_Arme_Anim")
+    util.AddNetworkString("NA_Arme_Slash")   -- effet de slash (cl_slash_arme.lua)
 end
 
 -- Particules communes aux attaques spéciales
@@ -211,6 +230,20 @@ function SWEP:PrimaryAttack()
         end)
     end
 
+    -- effet de slash chez tout le monde (un par touche pour les coups multiples)
+    -- SWEP.Slash = false : pas de slash pour cette arme (poings...)
+    if self.Slash ~= false then
+        for i = 0, sons - 1 do
+            timer.Simple(i * ecart, function()
+                if not IsValid(self) or not IsValid(owner) then return end
+                net.Start("NA_Arme_Slash")
+                    net.WriteEntity(owner)
+                    net.WriteUInt(index, 4)
+                net.Broadcast()
+            end)
+        end
+    end
+
     local f = self.Frappe
     self.Attaque = {
         debut      = now + (coup.delai or f.delai or 0),
@@ -259,6 +292,66 @@ function SWEP:CiblesDansLaZone(owner, portee)
     return cibles
 end
 
+-- Compte les touches sur chaque ennemi et programme l'explosion différée (SWEP.Explosif)
+local marques = setmetatable({}, { __mode = "k" })   -- [arme] = { [ennemi] = { n, dernier, pos, enAttente } }
+
+function SWEP:CompterCoup(owner, ent)
+    local cfg = self.Explosif
+    if not cfg then return end
+
+    local now = CurTime()
+    marques[self] = marques[self] or setmetatable({}, { __mode = "k" })
+    local m = marques[self][ent]
+    if not m or now - m.dernier > (cfg.expire or 4) then
+        m = { n = 0, dernier = now }
+        marques[self][ent] = m
+    end
+    if m.enAttente then return end   -- une explosion est déjà prévue sur lui
+
+    m.n = m.n + 1
+    m.dernier = now
+    m.pos = ent:WorldSpaceCenter()
+    if m.n < (cfg.coups or 3) then return end
+
+    -- touché assez de fois : il explose dans "delai" secondes
+    m.enAttente = true
+    if cfg.sonMarque then ent:EmitSound(cfg.sonMarque, 70, 100) end
+
+    timer.Simple(cfg.delai or 1, function()
+        if marques[self] then marques[self][ent] = nil end
+        if not IsValid(self) or not IsValid(owner) then return end
+
+        local pos = IsValid(ent) and ent:WorldSpaceCenter() or m.pos   -- s'il est mort : là où il était
+        if cfg.particule then ParticleEffect(cfg.particule, pos, angle_zero) end
+        if cfg.son then sound.Play(cfg.son, pos, 85, 100, 1) end
+
+        local rayon = cfg.rayon or 130
+        for _, cible in ipairs(ents.FindInSphere(pos, rayon)) do
+            if not EstCible(cible, owner) then continue end
+
+            local attenuation = 1 - math.Clamp(cible:WorldSpaceCenter():Distance(pos) / rayon, 0, 1) * 0.5
+
+            local dmg = DamageInfo()
+            dmg:SetDamage((cfg.degats or 45) * attenuation)
+            dmg:SetAttacker(owner)
+            dmg:SetInflictor(self)
+            dmg:SetDamageType(DMG_BLAST)
+            dmg:SetDamagePosition(pos)
+            cible:TakeDamageInfo(dmg)
+
+            if cible:IsPlayer() and ((cfg.recul or 0) > 0 or (cfg.reculHaut or 0) > 0) then
+                local dir = cible:GetPos() - pos
+                dir.z = 0
+                if dir:LengthSqr() < 1 then dir = owner:GetForward() end
+                dir:Normalize()
+                cible:SetVelocity(dir * (cfg.recul or 0) * attenuation + Vector(0, 0, cfg.reculHaut or 0))
+            end
+        end
+
+        if Debug() then debugoverlay.Sphere(pos, rayon, 1, Color(255, 120, 0, 40), true) end
+    end)
+end
+
 function SWEP:Think()
     -- type de prise toujours à jour (même si le fichier de l'arme a été modifié
     -- alors qu'elle était déjà en main)
@@ -297,6 +390,7 @@ function SWEP:Think()
             dmg:SetDamagePosition(ent:WorldSpaceCenter())
             dmg:SetDamageForce(owner:GetAimVector() * 2000)
             ent:TakeDamageInfo(dmg)
+            self:CompterCoup(owner, ent)
 
             if self.SonImpact then ent:EmitSound(self.SonImpact, 75, math.random(95, 105)) end
 
@@ -520,6 +614,7 @@ net.Receive("NA_Arme_Anim", function()
             debut = CurTime(),
             duree = ply:SequenceDuration(seq) / math.max(vitesse, 0.01),
             fondu = IsValid(wep) and wep.FonduAnim or 0.25,
+            seq   = seq,   -- pour l'animation en l'air (voir plus bas)
         }
     end
 end)
@@ -547,6 +642,42 @@ hook.Add("Think", "NA_Arme_FonduGeste", function()
         poids = poids * poids * (3 - 2 * poids)
         ply:AnimSetGestureWeight(GESTURE_SLOT_ATTACK_AND_RELOAD, poids)
     end
+end)
+
+----------------------------------------------------------
+-- Coups donnés en l'air
+-- Un geste superposé est masqué par l'animation de saut ; tant que le joueur est en
+-- l'air pendant un coup, l'animation du coup devient donc l'animation principale
+-- (même principe que cl_recharge_chakra.lua). Au sol, rien ne change.
+----------------------------------------------------------
+local function SeqEnLair(ply)
+    local g = ply.NA_GesteArme
+    if not g or not g.seq or ply:OnGround() or ply:GetMoveType() ~= MOVETYPE_WALK then return end
+    if CurTime() - g.debut >= g.duree then return end
+    return g.seq, g
+end
+
+hook.Add("CalcMainActivity", "NA_Arme_CoupEnLair", function(ply)
+    local seq = SeqEnLair(ply)
+    if seq then return ACT_MP_JUMP, seq end
+end)
+
+hook.Add("UpdateAnimation", "NA_Arme_CoupEnLair_Force", function(ply)
+    local seq, g = SeqEnLair(ply)
+    if not seq then return end
+
+    -- le coup passe avant l'animation d'un jutsu / du double saut (nrp_base_doublejump), jouée
+    -- dans le geste GESTURE_SLOT_CUSTOM par jutsu_anim_cl.lua, qui sinon la masque
+    if (ply.NA_AnimFin or 0) > CurTime() then
+        ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
+        ply.NA_AnimFin = 0
+        ply.NA_AnimJeton = (ply.NA_AnimJeton or 0) + 1
+    end
+
+    if ply:GetSequence() ~= seq then ply:SetSequence(seq) end
+    ply:SetCycle(math.Clamp((CurTime() - g.debut) / g.duree, 0, 0.999))
+    ply:SetPlaybackRate(0)   -- le cycle est réglé à la main chaque image : pas d'avance en plus
+    return true
 end)
 
 ----------------------------------------------------------

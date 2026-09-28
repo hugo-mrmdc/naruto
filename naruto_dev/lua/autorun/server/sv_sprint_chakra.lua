@@ -182,10 +182,10 @@ local function MettreAJour(ply, now, dt)
 
     -- régénération automatique (CHAKRA_REGEN, 0 = désactivée ; coupée tant que
     -- le Ketsuryugan ou l'armure d'os consomment du chakra : sv_chinoike_ketsuryugan.lua,
-    -- sv_kaguya_armure.lua)
+    -- sv_kaguya_armure.lua, sv_senju_renfo.lua)
     if CHAKRA_REGEN <= 0 then return end
     if (nextRegen[ply] or 0) > now then return end
-    if ply:GetNW2Bool("NA_Ketsuryugan", false) or ply:GetNW2Bool("NA_ArmureOs", false) then return end
+    if ply:GetNW2Bool("NA_Ketsuryugan", false) or ply:GetNW2Bool("NA_ArmureOs", false) or ply:GetNW2Bool("NA_SenjuRenfo", false) then return end
     local cur = GetChakra(ply)
     if cur < CHAKRA_MAX then
         SetChakra(ply, cur + CHAKRA_REGEN * dt)

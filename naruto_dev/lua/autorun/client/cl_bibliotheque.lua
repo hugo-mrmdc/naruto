@@ -51,7 +51,7 @@ local ONGLETS = {
     } },
     { nom = "Arts Ninja", icone = "kenTai.png", groupes = {} },
     { nom = "Clans", icone = "icon_clan.png", groupes = {
-        { nom = "Salamandre" }, { nom = "Fuma" }, { nom = "Kami" }, { nom = "Kaguya" }, { nom = "Chinoike" }, { nom = "Hyuga" },
+        { nom = "Salamandre" }, { nom = "Fuma" }, { nom = "Kami" }, { nom = "Kaguya" }, { nom = "Chinoike" }, { nom = "Hyuga" }, { nom = "Senju" },
     } },
     { nom = "Suivis", icone = "sub.png", suivis = true },
 }
