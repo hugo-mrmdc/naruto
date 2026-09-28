@@ -444,6 +444,8 @@ function SWEP:SecondaryAttack()
 end
 
 -- Attaque spéciale par défaut : explosions successives devant le joueur.
+-- Chaque explosion : delai, distance (devant soi), cote (optionnel, décalage
+-- latéral : négatif = gauche, positif = droite, absent/0 = centré).
 -- Une arme peut la remplacer en définissant sa propre fonction SWEP:LancerSpecial.
 function SWEP:LancerSpecial(owner, s)
     for _, e in ipairs(s.explosions or {}) do
@@ -451,8 +453,9 @@ function SWEP:LancerSpecial(owner, s)
             if not IsValid(self) or not IsValid(owner) or not owner:Alive() then return end
             if owner:GetActiveWeapon() ~= self then return end
 
-            local pos = owner:GetShootPos() + owner:GetAimVector() * e.distance
-            if s.particule then ParticleEffect(s.particule, pos, owner:EyeAngles()) end
+            local ang = owner:EyeAngles()
+            local pos = owner:GetShootPos() + owner:GetAimVector() * e.distance + ang:Right() * (e.cote or 0)
+            if s.particule then ParticleEffect(s.particule, pos, ang) end
             if s.son then self:EmitSound(s.son) end
 
             for _, ent in ipairs(ents.FindInSphere(pos, s.rayon)) do
