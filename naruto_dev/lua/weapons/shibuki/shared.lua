@@ -9,7 +9,7 @@ AddCSLuaFile()
 game.AddParticles("particles/patlick_atgkaton.pcf")
 game.AddParticles("particles/boule_bakuton.pcf")
 PrecacheParticleSystem("bombe_argilefinal_explo_base_pat")
-PrecacheParticleSystem("super")
+PrecacheParticleSystem("nice")
 
 SWEP.Base      = "naruto_arme_base"
 SWEP.PrintName = "Shibuki"
@@ -77,7 +77,7 @@ SWEP.Explosif = {
     degats    = 45,
     recul     = 250,
     reculHaut = 150,
-    particule = "super",   -- explosion de boule_bakuton.pcf
+    particule = "nice",   -- explosion de boule_bakuton.pcf
     son       = "bakuton/solve_bakuton_explosion.wav",
     sonMarque = "weapons/grenade/tick1.wav",   -- petit tic quand l'ennemi est marqué (retire la ligne pour aucun son)
 }
