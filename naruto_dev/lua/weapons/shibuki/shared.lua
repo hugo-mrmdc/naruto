@@ -5,11 +5,11 @@
 --========================================================
 AddCSLuaFile()
 
--- Particules : attaque spéciale (patlick_atgkaton.pcf) et explosion des 3 coups (boule_bakuton.pcf)
+-- Particules : attaque spéciale (patlick_atgkaton.pcf) et explosion des 3 coups (bigboom.pcf)
 game.AddParticles("particles/patlick_atgkaton.pcf")
-game.AddParticles("particles/boule_bakuton.pcf")
+game.AddParticles("particles/bigboom.pcf")
 PrecacheParticleSystem("bombe_argilefinal_explo_base_pat")
-PrecacheParticleSystem("nice")
+PrecacheParticleSystem("ExplosionCore_MidAir")
 
 SWEP.Base      = "naruto_arme_base"
 SWEP.PrintName = "Shibuki"
@@ -62,7 +62,7 @@ SWEP.SonSwing = Sound("fuma/swing1.wav")
 --   z = cap (tourne à gauche / droite). Autres réglages possibles : couleur, echelle, alpha...
 SWEP.Slash = {
     angles = {
-        { x = 15,   y = -25, z = 0 },   -- coup 1 : nrp_sword_slashhorizon
+        { x = 50,   y = -10, z = 0 },   -- coup 1 : nrp_sword_slashhorizon
         { x = -45, y = -25, z = 0 },   -- coup 2 : nrp_sword_turnslashingshoulder
         { x = 100,  y = -40, z = 20 },   -- coup 3 : nrp_sword_slashing
     },
@@ -77,7 +77,7 @@ SWEP.Explosif = {
     degats    = 45,
     recul     = 250,
     reculHaut = 150,
-    particule = "nice",   -- explosion de boule_bakuton.pcf
+    particule = "ExplosionCore_MidAir",   -- explosion de bigboom.pcf
     son       = "bakuton/solve_bakuton_explosion.wav",
     sonMarque = "weapons/grenade/tick1.wav",   -- petit tic quand l'ennemi est marqué (retire la ligne pour aucun son)
 }
@@ -90,21 +90,21 @@ SWEP.Special = {
     recharge   = 5,
     duree      = 1.5,
     explosions = {
-        { delai = 0.3,  distance = 100, cote = -60 },  -- gauche
-        { delai = 0.3,  distance = 100, cote = 0 },    -- milieu
-        { delai = 0.3,  distance = 100, cote = 60 },   -- droite
-        { delai = 0.45, distance = 150 },
-        { delai = 0.6,  distance = 200 },
-        { delai = 0.75, distance = 250 },
-        { delai = 0.9,  distance = 300 },
-        { delai = 1.05, distance = 350 },
-        { delai = 1.2,  distance = 400 },
-        { delai = 1.35, distance = 450 },
+        { delai = 0.8,  distance = 100, cote = -60 },  -- gauche
+        { delai = 0.8,  distance = 100, cote = 0 },    -- milieu
+        { delai = 0.8,  distance = 100, cote = 60 },   -- droite
+        { delai = 0.95, distance = 150 },
+        { delai = 1.1,  distance = 200 },
+        { delai = 1.25, distance = 250 },
+        { delai = 2.2,  distance = 300 },
+        { delai = 1.55, distance = 350 },
+        { delai = 1.7,  distance = 400 },
+        { delai = 1.85, distance = 450 },
     },
     rayon      = 150,
     degats     = 60,
     recul      = 300,
     reculHaut  = 200,
-    particule  = "nice",
+    particule  = "ExplosionCore_MidAir",
     son        = "bakuton/solve_bakuton_explosion.wav",
 }

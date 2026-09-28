@@ -128,7 +128,7 @@ local DEFAUTS = {
     na_slash          = "1",
     na_slash_couleur  = "blanc",
     na_slash_teinte   = "255 255 255",
-    na_slash_alpha    = "130",
+    na_slash_alpha    = "235",
     na_slash_echelle  = "1.8",
     na_slash_dist     = "0",
     na_slash_haut     = "45",
@@ -337,7 +337,9 @@ local function Dessiner(s, t, pos, avant, cote)
             local x = (v.x * s.cos - v.y * s.sin) * s.echelle
             local y = (v.x * s.sin + v.y * s.cos) * s.echelle
             local u = s.sens > 0 and v.u or 1 - v.u
-            local a = math.Clamp((avance * 1.3 - u) * 4, 0, 1) * fondu
+            local d = avance * 1.3 - u                                   -- distance derrière la pointe du tracé
+            local w = math.abs(v.v - 0.5) * 2                            -- 0 = milieu du croissant, 1 = bord
+            local a = math.Clamp(d * 4, 0, 1) * (1 - 0.4 * math.Clamp(d, 0, 1)) * (1 - 0.25 * w * w) * fondu
 
             mesh.Position(pos + avant * x + cote * y)
             mesh.TexCoord(0, v.u, v.v)

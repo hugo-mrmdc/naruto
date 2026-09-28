@@ -1,4 +1,4 @@
---========================================================
+<--========================================================
 -- Hyuga : 32 Points du Hakke (SERVEUR)
 --
 -- Frappe instantanée : même zone rectangulaire devant le lanceur que la

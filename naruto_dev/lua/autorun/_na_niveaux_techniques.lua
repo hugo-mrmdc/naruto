@@ -882,7 +882,7 @@ NA_NIV_TECH.jiton_emergence = {
     [2] = { degats = 9 },
     [3] = { degats = 10, duree = 7, recharge = 16 },
     [4] = { degats = 11, rayon = 230, ralenti = 0.55 },
-    [5] = { degats = 13, duree = 8, chakra = 25, recharge = 14, ralenti = 0.5 },
+    [5] = { degats = 13, duree = 8, chakra = 25, recharge = 14, ralenyti = 0.5 },
 }
 
 -- Tornade de sable (sv_jiton_tornade.lua / entities/jiton_tornade.lua) : degats = une fois par ennemi,
@@ -924,18 +924,18 @@ NA_NIV_TECH.jiton_vortex = {
 -- SENJU
 --========================================================
 -- Renforcement (sv_senju_renfo.lua) : à activer / désactiver
---   chakra = PAR SECONDE, bonus_degats / reduction / bonus_vitesse = en %,
+--   chakra = coût au lancement (une fois), duree = secondes d'effet, bonus_degats / reduction / bonus_vitesse = en %,
 --   regen_vie = points de vie par seconde,
---   recharge = secondes avant de pouvoir le réactiver (après l'arrêt)
+--   recharge = secondes avant de pouvoir le réactiver (après la fin)
 NA_NIV_TECH.senju_renfo = {
     [1] = {
-        chakra = 3, recharge = 15, chakra_mini = 20, duree_mudra = 0.5,
-        bonus_degats = 15, reduction = 15, bonus_vitesse = 8, regen_vie = 2,
+        chakra = 25, recharge = 15, duree = 12, duree_mudra = 0.5,
+        bonus_degats = 10,bonus_vitesse = 5,
     },
-    [2] = { bonus_degats = 17, reduction = 17 },
-    [3] = { chakra = 2.5, bonus_degats = 20, reduction = 20, bonus_vitesse = 10, regen_vie = 3 },
-    [4] = { bonus_degats = 23, reduction = 22 },
-    [5] = { chakra = 2, recharge = 12, bonus_degats = 26, reduction = 25, bonus_vitesse = 12, regen_vie = 4 },
+    [2] = { bonus_degats = 17, duree = 13 },
+    [3] = { chakra = 22, duree = 15, bonus_degats = 20, bonus_vitesse = 8 },
+    [4] = { bonus_degats = 22, duree = 17 },
+    [5] = { chakra = 20, recharge = 12, duree = 20, bonus_degats = 25, bonus_vitesse = 12 },
 }
 
 -- Soin (sv_senju_soin.lua) : vie rendue = soin_pourcent % de la vie MAX, étalés sur "duree" secondes
@@ -945,4 +945,37 @@ NA_NIV_TECH.senju_soin = {
     [3] = { soin_pourcent = 30, chakra = 27, recharge = 23 },
     [4] = { soin_pourcent = 33 },
     [5] = { soin_pourcent = 35, chakra = 24, recharge = 20 },
+}
+
+-- Frappe terrestre (sv_senju_frappe.lua) : coup de poing au sol, onde de choc devant le lanceur
+--   degats = dégâts de l'onde, rayon = taille de la zone, projection / proj_haut = force de projection,
+--   delai_impact = secondes entre le début de l'animation et le coup au sol
+NA_NIV_TECH.senju_frappe = {
+    [1] = { degats = 60, chakra = 30, recharge = 12, rayon = 200, projection = 350, proj_haut = 200, delai_impact = 0.4 },
+    [2] = { degats = 75 },
+    [3] = { degats = 83, chakra = 27, recharge = 11 },
+    [4] = { degats = 95, rayon = 230 },
+    [5] = { degats = 107, chakra = 24, recharge = 9, projection = 420 },
+}
+
+-- Coup de pied céleste (sv_senju_pied.lua) : saut puis plongeon là où regarde le joueur, onde de choc à l'atterrissage
+--   degats / rayon / projection / proj_haut = comme la Frappe terrestre, saut = force du saut,
+--   vitesse = vitesse du plongeon, delai_plongee = secondes de saut avant de foncer
+NA_NIV_TECH.senju_pied = {
+    [1] = { degats = 60, chakra = 45, recharge = 20, rayon = 320, projection = 500, proj_haut = 300, saut = 550, vitesse = 1500, delai_plongee = 0.45 },
+    [2] = { degats = 65 },
+    [3] = { degats = 72, chakra = 40, recharge = 18 },
+    [4] = { degats = 80, rayon = 360 },
+    [5] = { degats = 180, chakra = 35, recharge = 5, projection = 600 },
+}
+
+-- Ermite naturel (sv_senju_ermite.lua) : buff à durée fixe ; chakra = coût au lancement (une fois),
+--   duree = secondes d'effet, bonus_degats / reduction / bonus_vitesse = en %, regen_vie = PV par seconde,
+--   recharge = secondes avant de pouvoir la relancer (après la fin)
+NA_NIV_TECH.senju_ermite = {
+    [1] = { chakra = 50, recharge = 1, duree = 20, duree_mudra = 1, bonus_degats = 20, reduction = 15, bonus_vitesse = 10, regen_vie = 3 },
+    [2] = { bonus_degats = 23, duree = 22 },
+    [3] = { chakra = 45, duree = 25, reduction = 18, regen_vie = 4 },
+    [4] = { bonus_degats = 27, duree = 28 },
+    [5] = { chakra = 40, recharge = 1, duree = 40, bonus_degats = 32, reduction = 22, bonus_vitesse = 14, regen_vie = 6 },
 }

@@ -70,11 +70,6 @@ net.Receive("senju_soin_cast", function(_, ply)
     if not ply:Alive() or enCours[ply] or Actif(ply) then return end
     if (pret[ply] or 0) > CurTime() then return end
 
-    if ply:Health() >= ply:GetMaxHealth() then
-        ply:PrintMessage(HUD_PRINTCENTER, "Ta vie est déjà au maximum")
-        return
-    end
-
     local cout = Niv(ply, "chakra", CHAKRA_COUT)
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
     if cout > 0 then

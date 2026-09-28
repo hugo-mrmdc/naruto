@@ -2,7 +2,7 @@
 {
 	"$basetexture" "katanart/effects/blade"
 	"$nocull" 1
-	"$additive" 1
+	"$translucent" 1
 	"$vertexalpha" 1
 	"$vertexcolor" 1
 }

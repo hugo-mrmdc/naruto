@@ -156,4 +156,5 @@ net.Receive(NET_FIRE, function(_, ply)
     if NA_CD then NA_CD.Set(ply, "katon_boule", NA_Stat(ply, "katon_boule", "recharge", COOLDOWN)) end -- recharge visible dans la barre
 
     SpawnProjectile(ply)
+    if NA_Mudra then NA_Mudra(ply, 0.6) end   -- pas de coup entre deux boules de feu / juste après la dernière
 end)

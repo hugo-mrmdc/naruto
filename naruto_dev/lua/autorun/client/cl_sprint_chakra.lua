@@ -211,6 +211,10 @@ end)
 
 -- réappliqué juste avant l'affichage : le moteur recalcule l'orientation du corps entre-temps
 hook.Add("PrePlayerDraw", "NA_Sprint_Orientation", function(ply)
+    -- en l'air (saut, dash...), un autre hook UpdateAnimation peut passer avant celui de la course et
+    -- laisser un cap périmé : le corps restait figé dans la direction de la course jusqu'au sol
+    if ply.NA_CorpsYaw and not ply:OnGround() then ply.NA_CorpsYaw = nil end
+
     if ply.NA_CorpsYaw then
         ply:SetRenderAngles(Angle(0, ply.NA_CorpsYaw, 0))
         ply:InvalidateBoneCache()

@@ -159,8 +159,10 @@ function NA_Lancer(id)
         return false
     end
 
-    -- dans le cocon de bois (Mokuton : protection) : pas de jutsu (server/mokuton/mokuton_protection_sv.lua)
-    if ply:GetNW2Bool("NA_Hobi", false) then
+    -- dans le cocon de bois (Mokuton : protection) : pas de jutsu, sauf les 0.2 dernières secondes
+    -- (NA_HobiJutsu, server/mokuton/mokuton_protection_sv.lua ; NA_Hobi reste vrai un peu plus longtemps,
+    -- pour l'invincibilité et le cocon visible)
+    if ply:GetNW2Bool("NA_HobiJutsu", false) then
         NA_DernierRefus[id] = CurTime()
         Diag(id, "dans le cocon de bois")
         return false

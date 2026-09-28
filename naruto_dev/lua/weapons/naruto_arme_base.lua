@@ -232,7 +232,8 @@ function SWEP:PrimaryAttack()
 
     -- effet de slash chez tout le monde (un par touche pour les coups multiples)
     -- SWEP.Slash = false : pas de slash pour cette arme (poings...)
-    if self.Slash ~= false then
+    -- DÉSACTIVÉ pour l'instant (rendu pas assez bien) : retire "false and" pour le remettre
+    if false and self.Slash ~= false then
         for i = 0, sons - 1 do
             timer.Simple(i * ecart, function()
                 if not IsValid(self) or not IsValid(owner) then return end
@@ -555,8 +556,12 @@ end
 local function DessinerEnMain(m, ply, nomOs, cfg)
     local os = ply:LookupBone(nomOs)
     if not os then return end
-    local pos, ang = ply:GetBonePosition(os)
-    if not pos then return end
+    -- os recalculés maintenant : sur une animation forcée (double saut, coup en l'air) le cache
+    -- d'os peut être périmé, et l'arme partait alors ailleurs que dans la main
+    ply:SetupBones()
+    local mat = ply:GetBoneMatrix(os)
+    if not mat then return end
+    local pos, ang = mat:GetTranslation(), mat:GetAngles()
 
     local d, r = cfg.pos or vector_origin, cfg.rot or angle_zero
     pos = pos + ang:Forward() * d.x + ang:Right() * d.y + ang:Up() * d.z
@@ -605,6 +610,10 @@ net.Receive("NA_Arme_Anim", function()
 
     local seq = ply:LookupSequence(nom)
     if seq and seq >= 0 then
+        -- l'animation d'un jutsu encore en cours (jutsu_anim_cl.lua) est coupée : sinon elle masque le coup
+        ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
+        ply.NA_AnimFin = 0
+        ply.NA_AnimJeton = (ply.NA_AnimJeton or 0) + 1
         ply:AddVCDSequenceToGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD, seq, 0, true)
         ply:AnimSetGestureWeight(GESTURE_SLOT_ATTACK_AND_RELOAD, 0)
         -- l'emplacement de geste correspond au calque d'animation du même numéro

@@ -4,7 +4,8 @@
 -- Un cocon de bois (entité mokuton_hobi, lua/entities) se referme autour du lanceur
 -- (nr_mokuton_Hobi_close), reste fermé (nr_mokuton_Hobi_close_idle) pendant DUREE secondes puis
 -- s'ouvre (nr_mokuton_Hobi_open). Pendant ce temps le lanceur est invincible et se soigne à chaque
--- tick, mais ne peut lancer AUCUN jutsu (refusé par _na_registre.lua, NW2Bool "NA_Hobi").
+-- tick, et ne peut lancer aucun jutsu (refusé par _na_registre.lua, NW2Bool "NA_HobiJutsu") jusqu'aux
+-- JUTSU_AVANCE dernières secondes de la technique.
 -- Le serveur décide de tout : recharge, chakra, soin.
 --========================================================
 
@@ -32,7 +33,8 @@ local DUREE_MUDRA  = 0.6    -- incantation avant que le cocon se referme
 local ANIM_MUDRA   = "nrp_ninjutsu_defend_mudwall"   -- la même animation que le Séisme Doton
 local ANIM_VITESSE = 2      -- vitesse de l'animation (1 = normale, 2 = deux fois plus vite) : comme le Séisme
 local ATTENTE_SOL_MAX = 5      -- si tu la lances en l'air : secondes d'attente max avant d'atterrir (au-delà, la technique est annulée)
-local LIBERE_AVANCE = 0.8    -- secondes AVANT la fin de la technique où tu peux de nouveau bouger (l'invincibilité et le blocage des jutsu durent jusqu'à la fin)
+local LIBERE_AVANCE = 0.8    -- secondes AVANT la fin de la technique où tu peux de nouveau bouger (l'invincibilité dure jusqu'à la fin)
+local JUTSU_AVANCE  = 0.4    -- secondes AVANT la fin de la technique où tu peux de nouveau lancer un jutsu
 local ANIM_FERME   = "nr_mokuton_Hobi_close"
 local ANIM_IDLE    = "nr_mokuton_Hobi_close_idle"
 local ANIM_OUVRE   = "nr_mokuton_Hobi_open"
@@ -47,7 +49,7 @@ local posFigee = {} -- joueur -> position où il est bloqué
 local enMudra = {}  -- joueur -> true pendant les mudras
 
 local function Timer(ply, suffixe) return "mokuton_protection_" .. suffixe .. "_" .. ply:EntIndex() end
-local SUFFIXES = { "attente", "mudra", "idle", "ouvre", "libre", "fin", "soin" }
+local SUFFIXES = { "attente", "mudra", "idle", "ouvre", "libre", "jutsu", "fin", "soin" }
 
 -- Tout arrêter : cocon retiré, joueur de nouveau visible
 local function Arreter(ply)
@@ -56,6 +58,7 @@ local function Arreter(ply)
     cocons[ply] = nil
     enMudra[ply] = nil
     ply:SetNW2Bool("NA_Hobi", false)
+    ply:SetNW2Bool("NA_HobiJutsu", false)
     ply:SetNW2Bool("NA_HobiFige", false)
     if ply:GetMoveType() == MOVETYPE_NONE then ply:SetMoveType(MOVETYPE_WALK) end   -- de nouveau libre de bouger
     posFigee[ply] = nil
@@ -71,6 +74,7 @@ local function Lancer(ply)
     cocon:Spawn()
     cocons[ply] = cocon
     ply:SetNW2Bool("NA_Hobi", true)
+    ply:SetNW2Bool("NA_HobiJutsu", true)   -- lu par _na_registre.lua : bloque les jutsu jusqu'à JUTSU_AVANCE avant la fin
     ply:SetNW2Bool("NA_HobiFige", true)   -- lu par sh_mokuton_protection.lua : immobile jusqu'à LIBERE_AVANCE avant la fin
     posFigee[ply] = ply:GetPos()
     ply:SetMoveType(MOVETYPE_NONE)   -- immobile ; la caméra reste libre
@@ -99,6 +103,9 @@ local function Lancer(ply)
         ply:SetNW2Bool("NA_HobiFige", false)
         if ply:GetMoveType() == MOVETYPE_NONE then ply:SetMoveType(MOVETYPE_WALK) end
         posFigee[ply] = nil
+    end)
+    timer.Create(Timer(ply, "jutsu"), math.max(fin - JUTSU_AVANCE, 0), 1, function()
+        if IsValid(ply) then ply:SetNW2Bool("NA_HobiJutsu", false) end
     end)
 
     -- 3) ouverture : plus de soin

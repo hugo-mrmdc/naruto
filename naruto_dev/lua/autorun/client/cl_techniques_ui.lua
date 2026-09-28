@@ -181,11 +181,20 @@ local TECHNIQUES = {
 
     -- ===== SENJU =====
     { cat = "Senju", name = "Renforcement Senju", key = "", id = "senju_renfo", rang = "B", icone = "ui/icon/senju_renfo.png", court = "Renfo", cooldown = 15,
-      desc = "Un chakra vert t'entoure (rappuie pour l'arrêter) : tant qu'il est actif, tu infliges 15 % de dégâts en plus, tu cours 8 % plus vite, tu subis 15 % de dégâts en moins et ta vie se régénère de 2 points par seconde. Consomme 3 de chakra par seconde (tu peux recharger avec R en même temps) ; il s'arrête quand le chakra est vide. Il faut 20 de chakra pour l'activer.",
-      dmg = "+15 % de dégâts, -15 % de dégâts subis, +8 % de vitesse" },
+      desc = "Un chakra vert t'entoure pendant 12 secondes (rappuie pour l'arrêter avant) : tu infliges 10 % de dégâts en plus et tu cours 5 % plus vite. Coûte 25 de chakra, une seule fois : la durée ne dépend pas du chakra restant.",
+      dmg = "+10 % de dégâts, +5 % de vitesse pendant 12 s" },
     { cat = "Senju", name = "Soin Senju", key = "", id = "senju_soin", rang = "B", icone = "ui/icon/senju_soin.png", court = "Soin", cooldown = 25,
       desc = "Une aura de chakra t'entoure et te soigne : tu récupères 25 % de ta vie maximale, répartis sur 5 secondes. Tu peux te déplacer et te battre pendant le soin. Coûte 30 de chakra.",
       dmg = "+25 % de la vie max sur 5 secondes" },
+    { cat = "Senju", name = "Frappe terrestre", key = "", id = "senju_frappe", rang = "B", icone = "ui/icon/senju_frappe_terrestre.png", court = "Frappe", cooldown = 12,
+      desc = "Tu frappes le sol du poing devant toi : une onde de choc blesse et projette tous les ennemis proches. Coûte 30 de chakra.",
+      dmg = "35 de dégâts + projection" },
+    { cat = "Senju", name = "Coup de pied céleste", key = "", id = "senju_pied", rang = "A", icone = "ui/icon/senju_choc_sismique.png", court = "Pied", cooldown = 20,
+      desc = "Tu sautes puis fonces dans la direction où tu regardes. À l'atterrissage, une énorme onde de choc blesse et projette tous les ennemis proches. Coûte 45 de chakra.",
+      dmg = "60 de dégâts + projection" },
+    { cat = "Senju", name = "Ermite naturel", key = "", id = "senju_ermite", rang = "S", icone = "ui/icon/senju_ermite_naturel.png", court = "Ermite", cooldown = 45,
+      desc = "Tu puises dans l'énergie de la nature pendant 20 secondes : tu infliges 20 % de dégâts en plus, tu subis 15 % de dégâts en moins, tu cours 10 % plus vite et ta vie se régénère de 3 points par seconde. Coûte 50 de chakra, une seule fois.",
+      dmg = "+20 % de dégâts, -15 % de dégâts subis, +10 % de vitesse pendant 20 s" },
 
     -- ===== CHINOIKE =====
     { cat = "Chinoike", name = "Ketsuryugan", key = "", id = "chinoike_ketsuryugan", rang = "C", icone = "ui/icon/chinoike_ketsuryugan.png", court = "Ketsu", cooldown = 5,
