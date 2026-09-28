@@ -82,18 +82,29 @@ SWEP.Explosif = {
     sonMarque = "weapons/grenade/tick1.wav",   -- petit tic quand l'ennemi est marqué (retire la ligne pour aucun son)
 }
 
--- Clic droit : deux explosions devant soi
+-- Clic droit : 10 explosions devant soi (gauche/milieu/droite puis de plus en plus loin devant)
 SWEP.Special = {
     nom        = "Shibuki",
     anim       = "customman_attack_shibuki_y retarget",
     vitesseAnim = 1,    -- vitesse de l'animation (1 = normale)
     recharge   = 5,
     duree      = 1.5,
-    explosions = { { delai = 1, distance = 80 }, { delai = 1.5, distance = 140 } },
+    explosions = {
+        { delai = 0.3,  distance = 100, cote = -60 },  -- gauche
+        { delai = 0.3,  distance = 100, cote = 0 },    -- milieu
+        { delai = 0.3,  distance = 100, cote = 60 },   -- droite
+        { delai = 0.45, distance = 150 },
+        { delai = 0.6,  distance = 200 },
+        { delai = 0.75, distance = 250 },
+        { delai = 0.9,  distance = 300 },
+        { delai = 1.05, distance = 350 },
+        { delai = 1.2,  distance = 400 },
+        { delai = 1.35, distance = 450 },
+    },
     rayon      = 150,
     degats     = 60,
     recul      = 300,
     reculHaut  = 200,
-    particule  = "bombe_argilefinal_explo_base_pat",
+    particule  = "nice",
     son        = "bakuton/solve_bakuton_explosion.wav",
 }
