@@ -20,10 +20,6 @@ Inv.Items = NRP.CreateRegistry("items", {
     },
     validate = function(def)
         if not isstring(def.name) then return false, "nom manquant" end
-        if def.missionItem then
-            def.tradeable = false
-            def.droppable = false
-        end
         if def.equip and not NRP.Config.InventorySettings.EquipSlots[def.equip.slot] then
             return false, "emplacement d'équipement inconnu"
         end

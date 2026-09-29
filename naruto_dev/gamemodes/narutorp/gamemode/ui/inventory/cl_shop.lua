@@ -28,7 +28,7 @@ local function Open(npc, shopId)
         local list = {}
         if selling then
             for _, entry in ipairs(Inv.SortedEntries(data.inventory)) do
-                if not entry.def.missionItem and entry.def.price > 0 then
+                if entry.def.price > 0 then
                     list[#list + 1] = { def = entry.def, qty = entry.qty }
                 end
             end

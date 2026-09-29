@@ -1,5 +1,5 @@
 --[[
-    Module : entités persistantes par carte (PNJ de mission, marchands, mannequins...)
+    Module : entités persistantes par carte (marchands, mannequins d'entraînement...)
 
         NRP.World.SpawnPersistent(class, pos, ang, data)
         !persist        -> rend persistante l'entité visée
@@ -14,7 +14,6 @@ local World = NRP.World
 local DB = NRP.DB
 
 World.Classes = {
-    nrp_mission_npc = true,
     nrp_shop_npc = true,
     nrp_training_dummy = true,
 }

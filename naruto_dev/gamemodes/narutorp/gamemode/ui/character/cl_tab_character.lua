@@ -117,12 +117,6 @@ UI.RegisterTab("character", {
         end
         UI.KeyValue(left, "Ryo", NRP.Util.FormatNumber(data.ryo or 0), theme.Ryo)
         UI.KeyValue(left, "Points de statistiques", data.statPoints or 0)
-
-        local completed = 0
-        for _, n in pairs(data.missionData and data.missionData.completed or {}) do
-            completed = completed + (tonumber(n) or 0)
-        end
-        UI.KeyValue(left, "Missions accomplies", completed)
         UI.KeyValue(left, "Créé le", os.date("%d/%m/%Y", data.created or 0))
 
         UI.Section(left, "Affinités")

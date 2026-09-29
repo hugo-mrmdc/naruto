@@ -1,7 +1,7 @@
 --[[
     UI : menu principal (touche configurable, F3 par défaut)
 
-    PERSONNAGE | JUTSU | INVENTAIRE | MISSIONS | CLAN | STATISTIQUES (+ VILLAGE, ADMIN)
+    PERSONNAGE | JUTSU | INVENTAIRE | CLAN | STATISTIQUES (+ VILLAGE, ADMIN)
 
     Ajouter un onglet depuis n'importe quel fichier client :
         NRP.UI.RegisterTab("mon_onglet", {

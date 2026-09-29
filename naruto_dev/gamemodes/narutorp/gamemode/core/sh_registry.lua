@@ -1,7 +1,7 @@
 --[[
     Core : registres génériques
 
-    Toutes les données extensibles (jutsu, clans, objets, missions, villages, grades...) passent
+    Toutes les données extensibles (jutsu, clans, objets, villages, grades...) passent
     par un registre. Ajouter du contenu = appeler :Register(id, definition).
 
         local Items = NRP.CreateRegistry("items", {

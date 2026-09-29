@@ -3,7 +3,7 @@
 
     Champs d'un objet :
         name, description, icon, model, category, rarity, weight (kg), stack (quantité max transportable), price
-        tradeable (défaut true), droppable (défaut true), missionItem (objet de mission : non échangeable)
+        tradeable (défaut true), droppable (défaut true)
         use      = { heal, chakra, stamina, cure = { "burn" }, regen = { amount, duration },
                      buff = { duration, modifiers }, cooldown, consume (défaut true) }
         learnJutsu = "id"   -- parchemin d'apprentissage
@@ -37,8 +37,7 @@ NRP.Config.InventorySettings = {
         food = { name = "Nourriture", order = 3 },
         medicine = { name = "Médicaments", order = 4 },
         equipment = { name = "Équipement", order = 5 },
-        mission = { name = "Objets de mission", order = 6 },
-        misc = { name = "Divers", order = 7 },
+        misc = { name = "Divers", order = 6 },
     },
 
     EquipSlots = {
@@ -177,19 +176,5 @@ NRP.Config.Items = {
         description = "+10% régénération de chakra.",
         category = "equipment", rarity = "rare", weight = 0.2, stack = 1, price = 2000,
         equip = { slot = "accessory", modifiers = { chakraRegen = { mul = 0.10 } } },
-    },
-
-    ---------------------------------------------------------------- MISSIONS
-    mission_scroll = {
-        name = "Parchemin scellé",
-        description = "Document confidentiel à livrer. Ne l'ouvrez pas.",
-        category = "mission", rarity = "common", weight = 0.1, stack = 5,
-        missionItem = true,
-    },
-    mission_package = {
-        name = "Colis récupéré",
-        description = "Objet à rapporter au donneur de mission.",
-        category = "mission", rarity = "uncommon", weight = 1, stack = 5,
-        missionItem = true,
     },
 }

@@ -78,21 +78,20 @@ NRP.Config.Derived = {
 --[[
     Grades ninja, du plus bas au plus haut (order).
         minLevel        : niveau minimum pour être promu (ignoré par un admin avec forçage)
-        maxMissionRank  : rang de mission maximum accessible
         promoteUpTo     : ce grade peut promouvoir jusqu'à ce grade (dans son village)
         permissions     : permissions supplémentaires (ex : organiser des examens)
         special         : grade spécial (non atteint par progression normale)
 ]]
 NRP.Config.Ranks = {
-    { id = "academy", name = "Académicien", order = 1, minLevel = 1, maxMissionRank = "D", color = Color(180, 180, 180) },
-    { id = "genin", name = "Genin", order = 2, minLevel = 5, maxMissionRank = "C", color = Color(120, 200, 120) },
-    { id = "chunin", name = "Chūnin", order = 3, minLevel = 15, maxMissionRank = "B", color = Color(90, 160, 240) },
-    { id = "jonin", name = "Jōnin", order = 4, minLevel = 30, maxMissionRank = "A", color = Color(170, 110, 240),
+    { id = "academy", name = "Académicien", order = 1, minLevel = 1, color = Color(180, 180, 180) },
+    { id = "genin", name = "Genin", order = 2, minLevel = 5, color = Color(120, 200, 120) },
+    { id = "chunin", name = "Chūnin", order = 3, minLevel = 15, color = Color(90, 160, 240) },
+    { id = "jonin", name = "Jōnin", order = 4, minLevel = 30, color = Color(170, 110, 240),
         promoteUpTo = "genin", permissions = { ["rp.exam"] = true } },
-    { id = "anbu", name = "ANBU", order = 5, minLevel = 40, maxMissionRank = "S", color = Color(90, 90, 110) },
+    { id = "anbu", name = "ANBU", order = 5, minLevel = 40, color = Color(90, 90, 110) },
     -- Grades spéciaux
-    { id = "sannin", name = "Sannin", order = 6, minLevel = 60, maxMissionRank = "S", special = true, color = Color(240, 200, 80) },
-    { id = "kage", name = "Kage", order = 7, minLevel = 50, maxMissionRank = "S", special = true, color = Color(255, 120, 40),
+    { id = "sannin", name = "Sannin", order = 6, minLevel = 60, special = true, color = Color(240, 200, 80) },
+    { id = "kage", name = "Kage", order = 7, minLevel = 50, special = true, color = Color(255, 120, 40),
         promoteUpTo = "anbu", permissions = { ["rp.exam"] = true, ["rp.promote"] = false, ["rp.event"] = true } },
 }
 

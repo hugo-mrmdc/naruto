@@ -66,16 +66,6 @@ function Ranks.HasPermission(ply, perm)
     return rank ~= nil and rank.permissions ~= nil and rank.permissions[perm] == true
 end
 
--- Le grade peut-il accéder à une mission de ce rang ?
-function Ranks.CanAccessMissionRank(rankId, missionRank)
-    local rank = Ranks.Registry:Get(rankId)
-    if not rank then return false end
-    local ranks = NRP.Config.MissionSettings.Ranks
-    local max = ranks[rank.maxMissionRank or "D"]
-    local wanted = ranks[missionRank]
-    return max ~= nil and wanted ~= nil and wanted.order <= max.order
-end
-
 function Ranks.Sorted()
     return Ranks.Registry:Sorted("order")
 end

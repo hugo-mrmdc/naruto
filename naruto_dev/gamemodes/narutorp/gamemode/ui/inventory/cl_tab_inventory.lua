@@ -174,7 +174,6 @@ UI.RegisterTab("inventory", {
             UI.KeyValue(detail, "Quantité", entry.qty .. " / " .. def.stack)
             UI.KeyValue(detail, "Poids", string.format("%.2f kg", def.weight * entry.qty))
             if def.price > 0 then UI.KeyValue(detail, "Valeur", NRP.Util.FormatNumber(def.price) .. " Ryo", theme.Ryo) end
-            if def.missionItem then UI.KeyValue(detail, "Objet de mission", "non échangeable", theme.Warning) end
             if def.use and def.use.cooldown then UI.KeyValue(detail, "Recharge", def.use.cooldown .. " s") end
             if def.learnJutsu then
                 local j = NRP.Jutsu.Get(def.learnJutsu)

@@ -56,7 +56,6 @@ NRP.Commands.Add("inspect", {
             maxChakra = math.floor(NRP.Chakra.GetMax(target)),
             derived = target.NRPDerived,
             stats = target.NRPStats,
-            mission = NRP.Missions.GetInstance(target) and NRP.Missions.GetInstance(target).id or nil,
             dojutsu = target:GetNW2String("NRP_Dojutsu", ""),
         })
         return true
