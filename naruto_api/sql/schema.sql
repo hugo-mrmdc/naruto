@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS character_equipped (
 -- PAS liée à un personnage). Poussée en une fois par le jeu au démarrage
 -- (voir modules/api_sync/sv_api_sync.lua), pour que le site puisse afficher
 -- de vrais noms/descriptions au lieu des ids bruts stockés dans
--- character_jutsu / character_loadout.
+-- character_jutsu.
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS jutsu_definitions (
     jutsu_id    VARCHAR(64)  NOT NULL,
