@@ -12,10 +12,9 @@ NRP.Config.Progression = {
     -- Multiplicateur global (les événements s'y ajoutent)
     XPMultiplier = 1,
 
+    -- Points de statistiques gagnés par niveau (servent aussi à débloquer
+    -- l'arbre de clan, voir modules/clans/)
     StatPointsPerLevel = 3,
-    -- 1 point de clan tous les N niveaux (+ ClanPointsStart au niveau 1)
-    ClanPointsEvery = 5,
-    ClanPointsStart = 1,
 
     -- Sources d'XP
     XP = {

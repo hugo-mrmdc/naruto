@@ -50,7 +50,6 @@ CREATE TABLE IF NOT EXISTS characters (
     xp             BIGINT        NOT NULL DEFAULT 0,
     ryo            BIGINT        NOT NULL DEFAULT 0,
     stat_points    INT           NOT NULL DEFAULT 0,
-    clan_points    INT           NOT NULL DEFAULT 0,
     deserter       TINYINT(1)    NOT NULL DEFAULT 0,
     origin_village VARCHAR(32)   NOT NULL DEFAULT '',
     playtime       INT UNSIGNED  NOT NULL DEFAULT 0,

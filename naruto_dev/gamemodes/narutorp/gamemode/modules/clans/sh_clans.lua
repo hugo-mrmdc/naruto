@@ -30,7 +30,6 @@ Clans.Registry = NRP.CreateRegistry("clans", {
 Clans.Registry:RegisterAll(NRP.Config.Clans)
 
 Char.RegisterField("clan", { type = "string", default = "", nw = "String", nwKey = "NRP_Clan" })
-Char.RegisterField("clanPoints", { type = "int", default = 0 })
 Char.RegisterField("clanTree", { type = "json", default = {} })
 
 function Clans.Get(id)
@@ -111,8 +110,8 @@ function Clans.CanUnlockNode(data, nodeId)
         end
     end
 
-    if (data.clanPoints or 0) < node.cost then
-        return false, "Points de clan insuffisants (" .. node.cost .. ")."
+    if (data.statPoints or 0) < node.cost then
+        return false, "Points de statistiques insuffisants (" .. node.cost .. ")."
     end
     return true
 end

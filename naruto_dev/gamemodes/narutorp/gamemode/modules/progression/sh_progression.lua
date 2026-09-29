@@ -27,10 +27,6 @@ function Prog.StatPointsForLevel(level)
     return (math.max(1, level) - 1) * Cfg().StatPointsPerLevel
 end
 
-function Prog.ClanPointsForLevel(level)
-    return (Cfg().ClanPointsStart or 0) + math.floor(math.max(1, level) / math.max(1, Cfg().ClanPointsEvery))
-end
-
 ---------------------------------------------------------------------------
 -- Grades
 ---------------------------------------------------------------------------

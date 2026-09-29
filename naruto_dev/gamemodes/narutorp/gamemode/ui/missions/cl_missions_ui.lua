@@ -12,7 +12,6 @@ local function RewardsText(rewards)
     if rewards.ryo then parts[#parts + 1] = NRP.Util.FormatNumber(rewards.ryo) .. " Ryo" end
     if rewards.reputation then parts[#parts + 1] = "+" .. rewards.reputation .. " réputation" end
     if rewards.statPoints then parts[#parts + 1] = rewards.statPoints .. " pt(s) de stats" end
-    if rewards.clanPoints then parts[#parts + 1] = rewards.clanPoints .. " pt(s) de clan" end
     for id, qty in pairs(rewards.items or {}) do
         local def = NRP.Inventory.Items:Get(id)
         parts[#parts + 1] = qty .. " x " .. (def and def.name or id)

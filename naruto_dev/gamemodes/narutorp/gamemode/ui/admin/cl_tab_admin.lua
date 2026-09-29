@@ -123,7 +123,6 @@ local function PlayerActions(panel, target)
         { "Attribuer un clan", "admin.clan", function()
             PickAndRun("Clan", RegistryChoices(NRP.Clans.Registry, { { "Aucun clan", "none" } }), "setclan", target)
         end },
-        { "Points de clan", "admin.clan", function() AskAndRun("Points de clan", "Points à ajouter", "clanpoints", target, "1") end },
         { "Ajouter une affinité", "admin.affinity", function()
             PickAndRun("Affinité", RegistryChoices(NRP.Elements), "addaffinity", target)
         end },

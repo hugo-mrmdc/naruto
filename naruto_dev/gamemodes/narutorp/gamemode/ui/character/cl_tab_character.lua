@@ -117,7 +117,6 @@ UI.RegisterTab("character", {
         end
         UI.KeyValue(left, "Ryo", NRP.Util.FormatNumber(data.ryo or 0), theme.Ryo)
         UI.KeyValue(left, "Points de statistiques", data.statPoints or 0)
-        UI.KeyValue(left, "Points de clan", data.clanPoints or 0)
 
         local completed = 0
         for _, n in pairs(data.missionData and data.missionData.completed or {}) do

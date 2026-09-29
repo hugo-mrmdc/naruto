@@ -13,7 +13,7 @@
         villages      : villages pouvant la recevoir (nil = tous, "nukenin" pour les déserteurs)
         minLevel, minRank, party = { min, max }
         timeLimit (s), cooldown (s, par joueur)
-        rewards = { xp, ryo, reputation, items = { id = qte }, statPoints, clanPoints,
+        rewards = { xp, ryo, reputation, items = { id = qte }, statPoints,
                     custom = function(ply, instance) end }
 ]]
 
@@ -136,7 +136,7 @@ NRP.Config.Missions = {
         rank = "A", type = "eliminate", minLevel = 30,
         params = { point = "rogues", enemy = "rogue_ninja", count = 8 },
         timeLimit = 1200, cooldown = 2400, party = { 2, 5 },
-        rewards = { xp = 1500, ryo = 3000, reputation = 25, clanPoints = 1 },
+        rewards = { xp = 1500, ryo = 3000, reputation = 25, statPoints = 1 },
     },
 
     ---------------------------------------------------------------- RANG S

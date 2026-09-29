@@ -15,7 +15,7 @@ final class CharactersController
 {
     private const KNOWN_COLUMNS = [
         'firstname', 'lastname', 'gender', 'village', 'clan', 'rank',
-        'level', 'xp', 'ryo', 'stat_points', 'clan_points', 'deserter', 'origin_village', 'playtime',
+        'level', 'xp', 'ryo', 'stat_points', 'deserter', 'origin_village', 'playtime',
     ];
 
     private const SORTABLE = ['level', 'xp', 'ryo', 'playtime', 'updated_at', 'firstname'];

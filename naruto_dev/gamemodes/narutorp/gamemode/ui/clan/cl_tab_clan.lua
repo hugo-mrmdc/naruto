@@ -101,7 +101,7 @@ local function BuildTree(parent, clan, data)
                 NRP.NotifyLocal(reason, NRP.NOTIFY_ERROR, 2)
                 return
             end
-            UI.Confirm("Débloquer " .. node.name, node.description .. "\nCoût : " .. node.cost .. " point(s) de clan.", function()
+            UI.Confirm("Débloquer " .. node.name, node.description .. "\nCoût : " .. node.cost .. " point(s) de statistiques.", function()
                 Clans.RequestUnlock(node.id)
             end, nil, nil, "Débloquer", "Annuler")
         end
@@ -148,7 +148,7 @@ end
 UI.RegisterTab("clan", {
     name = "CLAN",
     order = 5,
-    refreshOn = { clan = true, clanTree = true, clanPoints = true, level = true, dojutsu = true, flags = true, jutsus = true },
+    refreshOn = { clan = true, clanTree = true, statPoints = true, level = true, dojutsu = true, flags = true, jutsus = true },
     build = function(parent)
         local theme = UI.Theme()
         local data = UI.Local()
@@ -184,7 +184,7 @@ UI.RegisterTab("clan", {
         end
 
         if #clan.tree > 0 then
-            UI.Section(scroll, "Arbre du clan  —  " .. (data.clanPoints or 0) .. " point(s) disponible(s)")
+            UI.Section(scroll, "Arbre du clan  —  " .. (data.statPoints or 0) .. " point(s) disponible(s)")
             BuildTree(scroll, clan, data)
         end
 

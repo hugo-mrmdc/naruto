@@ -262,7 +262,6 @@ function Missions.GiveRewards(ply, inst)
         NRP.Inventory.Give(ply, id, qty)
     end
     if r.statPoints then NRP.Progression.AddStatPoints(ply, r.statPoints) end
-    if r.clanPoints then NRP.Clans.AddPoints(ply, r.clanPoints) end
     if r.custom then pcall(r.custom, ply, inst) end
 end
 
