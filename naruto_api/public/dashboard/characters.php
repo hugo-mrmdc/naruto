@@ -19,7 +19,7 @@ $rows = db_try(static function (PDO $db) use ($sort, $order, $village, $clan): a
     if ($village !== '') { $where[] = 'village = :village'; $params['village'] = $village; }
     if ($clan !== '') { $where[] = 'clan = :clan'; $params['clan'] = $clan; }
 
-    $sql = 'SELECT steamid, firstname, lastname, village, clan, rank, level, xp, ryo, playtime FROM characters';
+    $sql = 'SELECT id, steamid, firstname, lastname, village, clan, rank, level, xp, ryo, playtime FROM characters';
     if ($where !== []) $sql .= ' WHERE ' . implode(' AND ', $where);
     $sql .= " ORDER BY {$sort} {$order} LIMIT 200";
 
@@ -81,7 +81,7 @@ page_start('Personnages');
         <tbody>
         <?php foreach ($rows as $c): ?>
             <tr>
-                <td data-label="Personnage"><a href="character.php?steamid=<?= urlencode($c['steamid']) ?>"><?= h(trim($c['firstname'] . ' ' . $c['lastname'])) ?: h($c['steamid']) ?></a></td>
+                <td data-label="Personnage"><a href="character.php?id=<?= (int) $c['id'] ?>"><?= h(trim($c['firstname'] . ' ' . $c['lastname'])) ?: '#' . h($c['id']) ?></a></td>
                 <td data-label="Village"><?= h($c['village'] ?: '—') ?></td>
                 <td data-label="Clan"><?= h($c['clan'] ?: '—') ?></td>
                 <td data-label="Grade"><?= h($c['rank'] ?: '—') ?></td>

@@ -72,9 +72,9 @@ partagée, appel serveur-à-serveur uniquement — jamais depuis le client GMod)
 | Méthode | Route | Description |
 |---|---|---|
 | GET | `/health` | ping, sans authentification |
-| POST | `/characters/sync` | crée/met à jour une fiche personnage (upsert par `steamid`) |
-| GET | `/characters?sort=level\|xp\|ryo\|playtime&order=desc&village=&clan=&rank=&limit=&offset=` | liste / classement |
-| GET | `/characters/{steamid}` | une fiche complète |
+| POST | `/characters/sync` | crée/met à jour une fiche personnage (voir "Identifiant de personnage" plus bas) |
+| GET | `/characters?sort=level\|xp\|ryo\|playtime&order=desc&village=&clan=&rank=&steamid=&limit=&offset=` | liste / classement |
+| GET | `/characters/{id}` | une fiche complète, par son identifiant de personnage |
 | POST | `/sessions/start` `{steamid, steam_name}` | ouvre une session |
 | POST | `/sessions/end` `{steamid}` | ferme la session ouverte la plus récente |
 | GET | `/sessions?steamid=&limit=` | historique des sessions |
@@ -93,6 +93,21 @@ partagée, appel serveur-à-serveur uniquement — jamais depuis le client GMod)
 
 Toutes les réponses sont au format `{"success": true, "data": ...}` ou
 `{"success": false, "error": "..."}`.
+
+### Identifiant de personnage (`id`) vs `steamid`
+
+`characters.id` identifie le **personnage**, `steamid` identifie juste son
+**propriétaire** — un même joueur pourra un jour avoir plusieurs personnages,
+donc `steamid` n'est pas unique dans cette table (contrairement à `players`,
+qui identifie bien un compte Steam).
+
+Aujourd'hui le gamemode n'envoie encore qu'un personnage par steamid (pas
+d'identifiant de personnage côté Lua) : `POST /characters/sync` met donc à
+jour la première fiche trouvée pour ce steamid, ou en crée une nouvelle s'il
+n'y en a aucune, et renvoie toujours l'`id` de la fiche concernée
+(`{"synced": true, "id": 4}`). Le jour où le jeu gérera plusieurs personnages
+par joueur, il suffira qu'il envoie aussi un identifiant de personnage dans
+le payload pour que chacun soit synchronisé sur sa propre ligne.
 
 ### Notes sur `/bans`
 

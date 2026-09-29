@@ -33,12 +33,15 @@ CREATE TABLE IF NOT EXISTS sessions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ------------------------------------------------------------
--- Fiches personnage (une par steamid dans ce gamemode)
+-- Fiches personnage. "id" est l'identifiant du PERSONNAGE (un joueur peut en
+-- avoir plusieurs) ; "steamid" identifie juste son propriétaire et n'est donc
+-- PAS unique ici (voir "players" pour le compte Steam lui-même).
 -- Colonnes typées pour ce qui sert aux classements/filtres du site ;
 -- "raw_data" garde l'intégralité de ce qu'envoie le jeu (y compris les
 -- champs ajoutés plus tard côté Lua sans toucher à ce schéma).
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS characters (
+    id             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     steamid        VARCHAR(32)   NOT NULL,
     firstname      VARCHAR(64)   NOT NULL DEFAULT '',
     lastname       VARCHAR(64)   NOT NULL DEFAULT '',
@@ -57,7 +60,8 @@ CREATE TABLE IF NOT EXISTS characters (
     game_last_seen INT UNSIGNED  NOT NULL DEFAULT 0, -- horodatage Unix envoyé par le jeu (data.lastSeen)
     raw_data       MEDIUMTEXT    NULL,               -- JSON complet envoyé par /characters/sync
     updated_at     DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (steamid),
+    PRIMARY KEY (id),
+    KEY idx_characters_steamid (steamid),
     KEY idx_characters_village (village),
     KEY idx_characters_clan (clan),
     KEY idx_characters_level (level),

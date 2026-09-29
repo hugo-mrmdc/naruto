@@ -3,9 +3,15 @@
 declare(strict_types=1);
 
 /**
- * POST /characters/sync        -> upsert complet d'une fiche personnage
- * GET  /characters              -> liste / classement (filtres + tri)
- * GET  /characters/{steamid}    -> une fiche (raw_data décodé)
+ * POST /characters/sync            -> upsert d'une fiche personnage (identifiée par "steamid")
+ * GET  /characters                 -> liste / classement (filtres, dont ?steamid=, + tri)
+ * GET  /characters/{id}             -> une fiche par son identifiant de PERSONNAGE (raw_data décodé)
+ *
+ * "id" identifie le personnage, "steamid" identifie juste son propriétaire :
+ * un même steamid peut correspondre à plusieurs lignes (plusieurs personnages).
+ * Le jeu n'envoie aujourd'hui qu'un steamid (pas d'identifiant de personnage) :
+ * tant qu'il n'en enverra pas un, /characters/sync met à jour la première
+ * fiche trouvée pour ce steamid, ou en crée une nouvelle s'il n'y en a aucune.
  *
  * Colonnes connues (typées, indexées) mappées explicitement ; tout le payload
  * est en plus conservé tel quel dans "raw_data" (JSON), pour ne rien perdre
@@ -59,30 +65,44 @@ final class CharactersController
         $columns['raw_data'] = json_encode($data, JSON_UNESCAPED_UNICODE);
 
         $db = Database::connection();
+
+        // "steamid" n'est plus unique (un joueur peut avoir plusieurs personnages) :
+        // on cherche une fiche existante pour ce steamid, sinon on en crée une.
+        $find = $db->prepare('SELECT id FROM characters WHERE steamid = :steamid ORDER BY id ASC LIMIT 1');
+        $find->execute(['steamid' => $columns['steamid']]);
+        $existingId = $find->fetchColumn();
+
+        if ($existingId !== false) {
+            $set = array_map(static fn ($c) => "{$c} = :{$c}", array_keys($columns));
+            $stmt = $db->prepare('UPDATE characters SET ' . implode(', ', $set) . ' WHERE id = :id');
+            foreach ($columns as $key => $value) {
+                $stmt->bindValue(":{$key}", $value);
+            }
+            $stmt->bindValue(':id', $existingId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            Response::ok(['synced' => true, 'id' => (int) $existingId]);
+        }
+
         $cols = array_keys($columns);
         $placeholders = array_map(static fn ($c) => ':' . $c, $cols);
-        $updates = array_map(static fn ($c) => "{$c} = VALUES({$c})", array_filter($cols, static fn ($c) => $c !== 'steamid'));
-
-        $sql = sprintf(
-            'INSERT INTO characters (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s',
-            implode(', ', $cols),
-            implode(', ', $placeholders),
-            implode(', ', $updates)
-        );
-
-        $stmt = $db->prepare($sql);
+        $stmt = $db->prepare('INSERT INTO characters (' . implode(', ', $cols) . ') VALUES (' . implode(', ', $placeholders) . ')');
         foreach ($columns as $key => $value) {
             $stmt->bindValue(":{$key}", $value);
         }
         $stmt->execute();
 
-        Response::ok(['synced' => true]);
+        Response::ok(['synced' => true, 'id' => (int) $db->lastInsertId()], 201);
     }
 
-    private static function show(string $steamid): void
+    private static function show(string $id): void
     {
-        $stmt = Database::connection()->prepare('SELECT * FROM characters WHERE steamid = :steamid');
-        $stmt->execute(['steamid' => $steamid]);
+        if (!ctype_digit($id)) {
+            Response::error('Identifiant de personnage invalide.', 422);
+        }
+
+        $stmt = Database::connection()->prepare('SELECT * FROM characters WHERE id = :id');
+        $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
 
         if (!$row) {
@@ -104,7 +124,7 @@ final class CharactersController
 
         $where = [];
         $params = [];
-        foreach (['village', 'clan', 'rank'] as $filter) {
+        foreach (['village', 'clan', 'rank', 'steamid'] as $filter) {
             $value = Request::query($filter);
             if ($value !== null) {
                 $where[] = "{$filter} = :{$filter}";

@@ -4,20 +4,37 @@ declare(strict_types=1);
 
 require __DIR__ . '/_bootstrap.php';
 
-$steamid = trim((string) ($_GET['steamid'] ?? ''));
+// Deux façons d'arriver ici : un id de personnage précis (depuis le classement),
+// ou un steamid (depuis les primes/le journal, qui ne connaissent que le joueur
+// visé — un même steamid pouvant correspondre à plusieurs personnages).
+$id = trim((string) ($_GET['id'] ?? ''));
+$steamidParam = trim((string) ($_GET['steamid'] ?? ''));
 
-$char = db_try(static function (PDO $db) use ($steamid): array {
-    if ($steamid === '') return [];
-    $stmt = $db->prepare('SELECT * FROM characters WHERE steamid = :steamid');
-    $stmt->execute(['steamid' => $steamid]);
-    $row = $stmt->fetch();
-    return $row ?: [];
-});
+$char = [];
+$candidates = [];
 
-$player = db_try(static function (PDO $db) use ($steamid): array {
-    if ($steamid === '') return [];
+if ($id !== '' && ctype_digit($id)) {
+    $char = db_try(static function (PDO $db) use ($id): array {
+        $stmt = $db->prepare('SELECT * FROM characters WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch() ?: [];
+    });
+} elseif ($steamidParam !== '') {
+    $candidates = db_try(static function (PDO $db) use ($steamidParam): array {
+        $stmt = $db->prepare('SELECT * FROM characters WHERE steamid = :steamid ORDER BY id ASC');
+        $stmt->execute(['steamid' => $steamidParam]);
+        return $stmt->fetchAll();
+    });
+    if (count($candidates) === 1) {
+        $char = $candidates[0];
+    }
+}
+
+$playerSteamid = $char['steamid'] ?? $steamidParam;
+$player = db_try(static function (PDO $db) use ($playerSteamid): array {
+    if ($playerSteamid === '') return [];
     $stmt = $db->prepare('SELECT * FROM players WHERE steamid = :steamid');
-    $stmt->execute(['steamid' => $steamid]);
+    $stmt->execute(['steamid' => $playerSteamid]);
     return $stmt->fetch() ?: [];
 });
 
@@ -84,13 +101,30 @@ page_start('Fiche personnage');
 
 <a class="back-link" href="characters.php">&larr; Retour au classement</a>
 
-<?php if ($char === []): ?>
-    <div class="card"><p class="empty">Personnage introuvable (<?= h($steamid ?: 'aucun identifiant fourni') ?>).</p></div>
+<?php if ($char === [] && count($candidates) > 1): ?>
+    <div class="card">
+        <h2>Plusieurs personnages pour ce joueur</h2>
+        <table>
+            <thead><tr><th>Personnage</th><th>Village</th><th>Clan</th><th class="num">Niveau</th></tr></thead>
+            <tbody>
+            <?php foreach ($candidates as $c): ?>
+                <tr>
+                    <td data-label="Personnage"><a href="character.php?id=<?= (int) $c['id'] ?>"><?= h(trim($c['firstname'] . ' ' . $c['lastname'])) ?: '#' . $c['id'] ?></a></td>
+                    <td data-label="Village"><?= h($c['village'] ?: '—') ?></td>
+                    <td data-label="Clan"><?= h($c['clan'] ?: '—') ?></td>
+                    <td data-label="Niveau" class="num"><?= h($c['level']) ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php elseif ($char === []): ?>
+    <div class="card"><p class="empty">Personnage introuvable (<?= h($id !== '' ? "id {$id}" : ($steamidParam ?: 'aucun identifiant fourni')) ?>).</p></div>
 <?php else: ?>
 
     <div class="card">
-        <h2><?= h(trim($char['firstname'] . ' ' . $char['lastname'])) ?: h($char['steamid']) ?>
-            <small><?= h($char['steamid']) ?></small>
+        <h2><?= h(trim($char['firstname'] . ' ' . $char['lastname'])) ?: '#' . h($char['id']) ?>
+            <small>#<?= h($char['id']) ?> — <?= h($char['steamid']) ?></small>
         </h2>
         <div class="kv">
             <div><span class="k">Village</span><span class="v"><?= h($char['village'] ?: '—') ?></span></div>

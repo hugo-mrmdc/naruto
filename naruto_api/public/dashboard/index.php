@@ -14,7 +14,7 @@ $stats = db_try(static function (PDO $db): array {
 });
 
 $top = db_try(static function (PDO $db): array {
-    return $db->query('SELECT steamid, firstname, lastname, village, clan, level, xp FROM characters ORDER BY level DESC, xp DESC LIMIT 5')->fetchAll();
+    return $db->query('SELECT id, steamid, firstname, lastname, village, clan, level, xp FROM characters ORDER BY level DESC, xp DESC LIMIT 5')->fetchAll();
 });
 
 $recentLogs = db_try(static function (PDO $db): array {
@@ -42,7 +42,7 @@ page_start('Tableau de bord');
         <?php foreach ($top as $i => $c): ?>
             <tr>
                 <td data-label="#"><?= $i + 1 ?></td>
-                <td data-label="Personnage"><a href="character.php?steamid=<?= urlencode($c['steamid']) ?>"><?= h(trim($c['firstname'] . ' ' . $c['lastname'])) ?: h($c['steamid']) ?></a></td>
+                <td data-label="Personnage"><a href="character.php?id=<?= (int) $c['id'] ?>"><?= h(trim($c['firstname'] . ' ' . $c['lastname'])) ?: '#' . h($c['id']) ?></a></td>
                 <td data-label="Village"><?= h($c['village'] ?: '—') ?></td>
                 <td data-label="Clan"><?= h($c['clan'] ?: '—') ?></td>
                 <td data-label="Niveau" class="num"><?= h($c['level']) ?></td>
