@@ -5,6 +5,13 @@
 -- joueur qui l'a (NW2Bool "NA_SenjuErmite", sv_senju_ermite.lua) : tout le monde les voit.
 --========================================================
 
+
+local MARQUE_PATCH_VERSION = "V7.8-progressive-load"
+if NA_SenjuFlexLoader then NA_SenjuFlexLoader.ClosePending() end
+local FaceShellFlex = include("autorun/client/senju/face_shell_flex.lua")
+NA_SenjuFlexLoader = FaceShellFlex
+print("[MarquePatch] chargé", MARQUE_PATCH_VERSION)
+
 --========================================================
 -- RÉGLAGES
 --========================================================
@@ -119,6 +126,642 @@ local REF_X, REF_Y = 1019, 1213
 
 local debuts = {}   -- joueur -> moment où l'ermite est devenu actif (pour le fondu)
 local apercu = false   -- true tant que le menu de réglage est ouvert : la marque s'affiche sur toi sans avoir à lancer la technique
+local testRougeDirect = false -- diagnostic V6 : force toute la texture FACE en rouge via le même chemin de mutation
+
+--========================================================
+-- TATOUAGE DIRECTEMENT DANS LA TEXTURE DE PEAU
+--
+-- Le visage "atg/face/face" est une texture blanche 512x512. On fabrique donc une
+-- nouvelle texture 512x512 : fond blanc + les 3 morceaux noirs de la marque, placés
+-- dans l'UV REEL de models/head/face_N.mdl. Cette texture devient le $basetexture
+-- d'un VertexLitGeneric teinté avec la couleur de peau du personnage.
+--
+-- Résultat : aucune plaque 3D. Le tattoo est réellement échantillonné par les UV du
+-- mesh du visage : nez/joues/front, animation, profil et éclairage suivent naturellement.
+--========================================================
+local AFFICHER_MARQUE_PEAU = true
+local RT_TAILLE = 512
+local RT_MARQUE = GetRenderTarget("na_senju_ermite_face_512", RT_TAILLE, RT_TAILLE)
+local RT_PRET = false
+local RT_SALE = true
+
+-- Placement dans l'UV 512x512 du mesh face_N.
+-- Ces valeurs ont été obtenues à partir de l'UV réel de face_1.mdl : les deux grandes
+-- formes entourent les îlots des yeux et le symbole central tombe sur le front.
+-- { x, y, largeur, hauteur, source={xmin,xmax,ymin,ymax dans la texture 2048} }
+local UV_MORCEAUX = {
+    { x = 120, y = 210, w = 100, h = 185, source = { 335, 833, 836, 1605 } },   -- côté gauche de la texture
+    { x = 292, y = 210, w = 100, h = 185, source = { 1189, 1720, 813, 1600 } }, -- côté droit
+    { x = 220, y = 105, w = 72,  h = 130, source = { 865, 1154, 90, 609 } },    -- front
+}
+
+local function GenererTexturePeauErmite()
+    if not RT_SALE then return end
+
+    render.PushRenderTarget(RT_MARQUE)
+    render.Clear(255, 255, 255, 255)
+    cam.Start2D()
+        surface.SetMaterial(MARQUE)
+        surface.SetDrawColor(0, 0, 0, 255)
+
+        for _, m in ipairs(UV_MORCEAUX) do
+            local src = m.source
+            surface.DrawTexturedRectUV(
+                m.x, m.y, m.w, m.h,
+                src[1] / 2048, src[3] / 2048,
+                src[2] / 2048, src[4] / 2048
+            )
+        end
+    cam.End2D()
+    render.PopRenderTarget()
+
+    RT_PRET = true
+    RT_SALE = false
+end
+
+-- Les appels de rendu vers un RT doivent être faits pendant une vraie phase de rendu.
+hook.Add("PostRender", "NA_SenjuErmite_GenererPeau", function()
+    if RT_SALE then GenererTexturePeauErmite() end
+end)
+
+local MATS_PEAU_ERMITE = {}
+local function CleCouleur(c)
+    return string.format("%d_%d_%d", c[1] or 255, c[2] or 255, c[3] or 255)
+end
+local function TeintePeau(c)
+    return string.format("[%.3f %.3f %.3f]", (c[1] or 255) / 255, (c[2] or 255) / 255, (c[3] or 255) / 255)
+end
+
+local function MateriauPeauErmite(p)
+    local cle = CleCouleur(p.peau)
+    if not MATS_PEAU_ERMITE[cle] then
+        local nom = "na_senju_ermite_peau_" .. cle
+
+        -- Ne passe pas le nom du RenderTarget directement dans les KeyValues.
+        -- Sur certains builds/addons Source, le parseur peut traiter la valeur comme
+        -- une chaîne de matériau au lieu d'une ITexture. On crée donc le matériau
+        -- avec une texture valide puis on injecte explicitement l'ITexture du RT.
+        local mat = CreateMaterial(nom, "VertexLitGeneric", {
+            ["$basetexture"] = "atg/face/face",
+            ["$lightwarptexture"] = "atg/shared/toon",
+            ["$color2"] = TeintePeau(p.peau),
+            ["$model"] = "1",
+        })
+        mat:SetTexture("$basetexture", RT_MARQUE)
+        MATS_PEAU_ERMITE[cle] = mat
+    else
+        -- Sécurité après un hot-reload : le matériau peut survivre alors que le RT
+        -- a été recréé. On réinjecte donc toujours l'ITexture courante.
+        MATS_PEAU_ERMITE[cle]:SetTexture("$basetexture", RT_MARQUE)
+    end
+    return MATS_PEAU_ERMITE[cle]
+end
+
+local function TrouverSlotFace(tete)
+    if tete.NA_FaceSubIndex ~= nil then return tete.NA_FaceSubIndex end
+    for i, chemin in ipairs(tete:GetMaterials()) do
+        local nom = string.lower(string.match(chemin, "[^/\\]+$") or "")
+        if nom == "face" then
+            tete.NA_FaceSubIndex = i - 1
+            return i - 1
+        end
+    end
+end
+
+-- V7 : le shell skinné remplace la mutation du matériau.
+-- Retire aussi l'ancien hook lorsqu'on recharge le fichier après une V6.
+hook.Remove("NA_GetFaceDrawMutation", "NA_SenjuErmite_TatouagePeau")
+
+-- Quand la marque n'est plus active, le matériau source est déjà restauré immédiatement après
+-- chaque DrawModel par NA_DrawModelAvecFaceMutation ; aucun SetSubMaterial n'est nécessaire.
+hook.Add("NA_PostDrawTetePerso", "NA_SenjuErmite_EtatMutation", function(ply, tete)
+    if not IsValid(tete) then return end
+    if not (AFFICHER_MARQUE_PEAU and IsValid(ply) and (Porte(ply) or (apercu and ply == LocalPlayer()))) then
+        tete.NA_SenjuTattooActif = nil
+    end
+end)
+
+
+
+--========================================================
+-- V7 : SECONDE PEAU SKINNEE SUR LE VRAI MESH "face"
+--
+-- Les overrides de matériau du modèle sont neutralisés dans ce projet. On récupère donc
+-- les vrais triangles du mesh atg/face/face via util.GetModelMeshes, on conserve leurs UV,
+-- et on les reskinne chaque frame avec les matrices d'os de la tête visible.
+-- Seuls les triangles dont les UV croisent les zones de marque sont gardés.
+-- Le shell est décalé de 0.018 unité le long de la normale de chaque triangle pour éviter
+-- le z-fighting. Le fond de la texture est transparent : seule la marque noire est rendue.
+--========================================================
+local RT_OVERLAY = GetRenderTargetEx("na_senju_ermite_overlay_v73", RT_TAILLE, RT_TAILLE,
+    RT_SIZE_NO_CHANGE, MATERIAL_RT_DEPTH_NONE, 0, 0, IMAGE_FORMAT_RGBA8888)
+local RT_OVERLAY_PRET = false
+local RT_OVERLAY_SALE = true
+-- La marque noire est un découpage : les pixels transparents ne doivent pas
+-- participer au test de profondeur ni montrer les faces internes du visage.
+local MAT_OVERLAY = CreateMaterial("na_senju_ermite_overlay_mat_v74", "UnlitGeneric", {
+    ["$basetexture"] = "vgui/white",
+    ["$alphatest"] = "1",
+    ["$alphatestreference"] = "0.5",
+    ["$vertexcolor"] = "1",
+    ["$nocull"] = "0",
+})
+MAT_OVERLAY:SetTexture("$basetexture", RT_OVERLAY)
+-- L'affichage 2D du diagnostic conserve la transparence progressive du RT.
+local MAT_OVERLAY_PREVIEW = CreateMaterial("na_senju_overlay_preview_v74", "UnlitGeneric", {
+    ["$basetexture"] = "vgui/white",
+    ["$translucent"] = "1",
+    ["$vertexcolor"] = "1",
+    ["$vertexalpha"] = "1",
+})
+MAT_OVERLAY_PREVIEW:SetTexture("$basetexture", RT_OVERLAY)
+
+local function GenererOverlayTattoo()
+    if not RT_OVERLAY_SALE then return end
+    render.PushRenderTarget(RT_OVERLAY)
+    local clipping = DisableClipping(true)
+    render.OverrideAlphaWriteEnable(true, true)
+    render.SetWriteDepthToDestAlpha(false)
+    render.OverrideBlend(true, BLEND_SRC_ALPHA, BLEND_ONE_MINUS_SRC_ALPHA, BLENDFUNC_ADD,
+        BLEND_ONE, BLEND_ONE_MINUS_SRC_ALPHA, BLENDFUNC_ADD)
+    render.Clear(0, 0, 0, 0)
+    cam.Start2D()
+        surface.SetMaterial(MARQUE)
+        surface.SetDrawColor(0, 0, 0, 255)
+        for _, m in ipairs(UV_MORCEAUX) do
+            local src = m.source
+            surface.DrawTexturedRectUV(
+                m.x, m.y, m.w, m.h,
+                src[1] / 2048, src[3] / 2048,
+                src[2] / 2048, src[4] / 2048
+            )
+        end
+    cam.End2D()
+    render.OverrideBlend(false)
+    render.SetWriteDepthToDestAlpha(true)
+    render.OverrideAlphaWriteEnable(false)
+    DisableClipping(clipping)
+    render.PopRenderTarget()
+    MAT_OVERLAY:SetTexture("$basetexture", RT_OVERLAY)
+    RT_OVERLAY_PRET = true
+    RT_OVERLAY_SALE = false
+end
+
+hook.Add("PostRender", "NA_SenjuErmite_GenererOverlayV7", function()
+    if RT_OVERLAY_SALE then GenererOverlayTattoo() end
+end)
+
+local FACE_SHELL_CACHE = {}
+-- Libère les ressources GPU aussi au rechargement du fichier.
+for _, cached in pairs(NA_SenjuShellMeshes or {}) do
+    if cached.mesh then cached.mesh:Destroy() end
+end
+NA_SenjuShellMeshes = {}
+local shellMeshes = NA_SenjuShellMeshes
+hook.Add("EntityRemoved", "NA_SenjuShellMeshCleanup", function(ent)
+    local cached = shellMeshes[ent]
+    if cached and cached.mesh then cached.mesh:Destroy() end
+    shellMeshes[ent] = nil
+end)
+local SHELL_EPSILON = 0.018
+local shellDebug = false
+local MAT_SHELL_DEBUG = CreateMaterial("na_senju_shell_debug", "UnlitGeneric", {
+    ["$basetexture"] = "vgui/white",
+    ["$vertexcolor"] = "1",
+    ["$nocull"] = "1",
+})
+
+local function UVIntersectsTattoo(a, b, c)
+    local minU = math.min(a.u or 0, b.u or 0, c.u or 0)
+    local maxU = math.max(a.u or 0, b.u or 0, c.u or 0)
+    local minV = math.min(a.v or 0, b.v or 0, c.v or 0)
+    local maxV = math.max(a.v or 0, b.v or 0, c.v or 0)
+    for _, r in ipairs(UV_MORCEAUX) do
+        local u0, v0 = r.x / RT_TAILLE, r.y / RT_TAILLE
+        local u1, v1 = (r.x + r.w) / RT_TAILLE, (r.y + r.h) / RT_TAILLE
+        if maxU >= u0 and minU <= u1 and maxV >= v0 and minV <= v1 then
+            return true
+        end
+    end
+    return false
+end
+
+local function BuildFaceShellData(model)
+    model = string.lower(model or "")
+    if model == "" then return end
+    if FACE_SHELL_CACHE[model] ~= nil then return FACE_SHELL_CACHE[model] or nil end
+
+    local meshes, bind = util.GetModelMeshes(model, 0, 0, 0)
+    if not meshes or not bind then
+        FACE_SHELL_CACHE[model] = false
+        return
+    end
+
+    local tris = {}
+    for _, md in ipairs(meshes) do
+        local mat = string.lower(md.material or "")
+        local leaf = string.match(mat, "[^/\\]+$") or mat
+        if leaf == "face" then
+            local t = md.triangles or {}
+            for i = 1, #t - 2, 3 do
+                if i % 192 == 1 then coroutine.yield() end
+                local a, b, c = t[i], t[i + 1], t[i + 2]
+                if a and b and c and UVIntersectsTattoo(a, b, c) then
+                    tris[#tris + 1] = { a, b, c }
+                end
+            end
+        end
+    end
+
+    local invBind = {}
+    for bone, bp in pairs(bind) do
+        if bp and bp.matrix then invBind[bone] = bp.matrix:GetInverse() end
+    end
+
+    -- studiohdr_t / mstudiobone_t : poseToBone est déjà la transformation
+    -- modèle -> os. La lire directement évite d'inverser un repère ambigu.
+    local bindSource = "util inverse"
+    local mdl = file.Open(model, "rb", "GAME")
+    if mdl then
+        local signature = mdl:Read(4)
+        local version = mdl:ReadLong()
+        if signature == "IDST" and version >= 44 and version <= 49 and mdl:Size() >= 164 then
+            mdl:Seek(156)
+            local count, offset = mdl:ReadLong(), mdl:ReadLong()
+            if count > 0 and count <= 256 and offset >= 0 and offset + count * 216 <= mdl:Size() then
+                for bone = 0, count - 1 do
+                    mdl:Seek(offset + bone * 216 + 96)
+                    local rows = {}
+                    for row = 1, 3 do
+                        rows[row] = { mdl:ReadFloat(), mdl:ReadFloat(), mdl:ReadFloat(), mdl:ReadFloat() }
+                    end
+                    rows[4] = { 0, 0, 0, 1 }
+                    invBind[bone] = Matrix(rows)
+                end
+                bindSource = "MDL poseToBone"
+            end
+        end
+        mdl:Close()
+    end
+
+    local flexData, flexError = FaceShellFlex.Load(model, coroutine.yield)
+    local flexMatched = 0
+    if flexData then
+        for ti, tri in ipairs(tris) do
+            if ti % 64 == 0 then coroutine.yield() end
+            for _, v in ipairs(tri) do
+                v.naFlex = flexData.vertices[FaceShellFlex.Key(v)]
+                if v.naFlex then flexMatched = flexMatched + 1 end
+            end
+        end
+    else
+        ErrorNoHalt("[MarqueV7] flex load: " .. tostring(flexError) .. "\n")
+    end
+    local rigidBone, rigid = nil, true
+    for _, tri in ipairs(tris) do
+        for _, v in ipairs(tri) do
+            local w = v.weights
+            if not w or #w ~= 1 or math.abs(w[1].weight - 1) > 0.00001 then
+                rigid = false
+            elseif rigidBone == nil then rigidBone = w[1].bone
+            elseif rigidBone ~= w[1].bone then rigid = false end
+        end
+    end
+    local data = { triangles = tris, invBind = invBind, bind = bind, bindSource = bindSource,
+        rigidBone = rigid and rigidBone or nil,
+        flexData = flexData, flexError = flexError, flexMatched = flexMatched }
+    FACE_SHELL_CACHE[model] = data
+    print("[MarqueV7] shell", model, "triangles:", #tris, "bones:", table.Count(invBind))
+    return data
+end
+
+-- Le rendu ne lit plus les fichiers MDL/VVD : il demande une préparation.
+local pendingShells = {}
+local preparePeakMS = 0
+local function GetFaceShellData(model)
+    model = string.lower(model or "")
+    if model == "" then return end
+    if FACE_SHELL_CACHE[model] ~= nil then return FACE_SHELL_CACHE[model] or nil end
+    if not pendingShells[model] then
+        pendingShells[model] = coroutine.create(function() BuildFaceShellData(model) end)
+    end
+end
+
+hook.Add("Think", "NA_SenjuShellPrepare", function()
+    -- Budget coopératif : les boucles Lua rendent la main par petits lots.
+    -- GetModelMeshes reste un appel moteur indivisible.
+    local deadline = SysTime() + 0.001
+    for model, task in pairs(pendingShells) do
+        repeat
+            local started = SysTime()
+            local ok, err = coroutine.resume(task)
+            preparePeakMS = math.max(preparePeakMS, (SysTime() - started) * 1000)
+            if not ok then
+                FACE_SHELL_CACHE[model] = false
+                ErrorNoHalt("[MarqueV7] preparation: " .. tostring(err) .. "\n")
+            end
+            if not ok or coroutine.status(task) == "dead" then
+                pendingShells[model] = nil
+                break
+            end
+        until SysTime() >= deadline
+        if SysTime() >= deadline then break end
+    end
+end)
+
+timer.Create("NA_SenjuShellPrewarm", 1, 0, function()
+    local ply = LocalPlayer()
+    if not IsValid(ply) then return end
+    local head = NA_GetTeteRendue and NA_GetTeteRendue(ply)
+    if IsValid(head) then GetFaceShellData(head:GetModel()) end
+end)
+
+local function SkinVertex(ent, v, transforms, normalProbe)
+    local pos = normalProbe and (v.pos + v.normal) or v.pos
+    local weights = v.weights
+    if not weights or #weights == 0 then
+        -- Les positions extraites sont dans le repère du modèle, pas de Head1.
+        return ent:LocalToWorld(pos)
+    end
+
+    local out = Vector(0, 0, 0)
+    local total = 0
+    for _, bw in ipairs(weights) do
+        local w = bw.weight or 0
+        local bone = bw.bone
+        if w > 0 and bone ~= nil then
+            local transform = transforms[bone]
+            if transform then
+                local p = transform * pos
+                out.x = out.x + p.x * w
+                out.y = out.y + p.y * w
+                out.z = out.z + p.z * w
+                total = total + w
+            end
+        end
+    end
+    if total <= 0 then return ent:LocalToWorld(pos) end
+    if math.abs(total - 1) > 0.001 then out:Mul(1 / total) end
+    return out
+end
+
+local function DeformVertex(v, flexWeights)
+    if v.naFlex and flexWeights then
+        local pos = Vector(v.pos.x, v.pos.y, v.pos.z)
+        local normal = v.normal and Vector(v.normal.x, v.normal.y, v.normal.z)
+        for _, delta in ipairs(v.naFlex) do
+            local w = flexWeights[delta.flex] or 0
+            if w ~= 0 then
+                pos:Add(delta.pos * w)
+                if normal then normal:Add(delta.normal * w) end
+            end
+        end
+        if normal then normal:Normalize() end
+        v = { pos = pos, normal = normal, weights = v.weights }
+    end
+    return v
+end
+
+local function ShellPosition(ent, v, transforms)
+    local p = SkinVertex(ent, v, transforms)
+    if v.normal then
+        local n = SkinVertex(ent, v, transforms, true) - p
+        n:Normalize()
+        return p + n * SHELL_EPSILON
+    end
+    return p
+end
+
+local function DrawSkinnedFaceTattoo(ply, tete)
+    if not AFFICHER_MARQUE_PEAU or not RT_OVERLAY_PRET then return end
+    if not IsValid(ply) or not IsValid(tete) then return end
+    if not (Porte(ply) or (apercu and ply == LocalPlayer())) then return end
+
+    local data = GetFaceShellData(tete:GetModel())
+    if not data or #data.triangles == 0 then return end
+
+    local started = SysTime()
+    -- Un produit de matrices par os, pas deux par sommet et par influence.
+    local transforms = {}
+    for bone, inverse in pairs(data.invBind) do
+        if data.rigidBone == nil or bone == data.rigidBone then
+            local current = tete:GetBoneMatrix(bone)
+            if current then transforms[bone] = current * inverse end
+        end
+    end
+    local cache = shellMeshes[tete]
+    if not cache or cache.data ~= data then
+        if cache and cache.mesh then cache.mesh:Destroy() end
+        cache = { data = data, vertices = {}, weights = {} }
+        shellMeshes[tete] = cache
+    end
+    local flexWeights = data.flexData and FaceShellFlex.Weights(tete, data.flexData) or {}
+    local changed = false
+    for i, weight in ipairs(flexWeights) do
+        if cache.weights[i] ~= weight then changed = true break end
+    end
+    if changed then cache.vertices = {}; cache.meshDirty = true end
+    cache.weights = flexWeights
+    local rigidTransform = data.rigidBone and transforms[data.rigidBone]
+    local scale = rigidTransform and rigidTransform:GetScale()
+    if scale and math.abs(scale.x - 1) < 0.00001 and math.abs(scale.y - 1) < 0.00001
+        and math.abs(scale.z - 1) < 0.00001 then
+        if cache.meshDirty or not cache.mesh or cache.debug ~= shellDebug then
+            if cache.mesh then cache.mesh:Destroy() end
+            local verts = {}
+            for _, tri in ipairs(data.triangles) do
+                for _, v in ipairs(tri) do
+                    local d = cache.vertices[v]
+                    if not d then d = DeformVertex(v, flexWeights); cache.vertices[v] = d end
+                    local pos = d.pos + (d.normal or vector_origin) * SHELL_EPSILON
+                    verts[#verts + 1] = { pos = pos, normal = d.normal, u = v.u, v = v.v,
+                        color = shellDebug and Color(0, 255, 255) or color_white }
+                end
+            end
+            cache.mesh = Mesh()
+            cache.mesh:BuildFromTriangles(verts)
+            cache.sample = verts[1].pos
+            cache.debug = shellDebug
+            cache.meshDirty = false
+        end
+        render.SetMaterial(shellDebug and MAT_SHELL_DEBUG or MAT_OVERLAY)
+        cam.PushModelMatrix(rigidTransform)
+        cache.mesh:Draw()
+        cam.PopModelMatrix()
+        tete.NA_SenjuShellSample = rigidTransform * cache.sample
+        tete.NA_SenjuShellFrame = FrameNumber()
+        tete.NA_SenjuShellTriangles = #data.triangles
+        tete.NA_SenjuShellPath = "cached rigid mesh"
+        local elapsed = (SysTime() - started) * 1000
+        tete.NA_SenjuShellMS = tete.NA_SenjuShellMS and (tete.NA_SenjuShellMS * 0.9 + elapsed * 0.1) or elapsed
+        return
+    end
+    tete.NA_SenjuShellPath = "dynamic skinning"
+    local positions = {}
+    local function Position(v)
+        if not positions[v] then
+            if not cache.vertices[v] then cache.vertices[v] = DeformVertex(v, flexWeights) end
+            positions[v] = ShellPosition(tete, cache.vertices[v], transforms)
+        end
+        return positions[v]
+    end
+    tete.NA_SenjuShellSample = Position(data.triangles[1][1])
+
+    render.SetMaterial(shellDebug and MAT_SHELL_DEBUG or MAT_OVERLAY)
+    -- Le mesh est dynamique car les vertices suivent les os du visage.
+    mesh.Begin(MATERIAL_TRIANGLES, #data.triangles)
+    for _, tri in ipairs(data.triangles) do
+        local a, b, c = tri[1], tri[2], tri[3]
+        local pa = Position(a)
+        local pb = Position(b)
+        local pc = Position(c)
+        local red = shellDebug and 0 or 255
+        mesh.Position(pa); mesh.TexCoord(0, a.u or 0, a.v or 0); mesh.Color(red,255,255,255); mesh.AdvanceVertex()
+        mesh.Position(pb); mesh.TexCoord(0, b.u or 0, b.v or 0); mesh.Color(red,255,255,255); mesh.AdvanceVertex()
+        mesh.Position(pc); mesh.TexCoord(0, c.u or 0, c.v or 0); mesh.Color(red,255,255,255); mesh.AdvanceVertex()
+    end
+    mesh.End()
+
+    tete.NA_SenjuShellFrame = FrameNumber()
+    tete.NA_SenjuShellTriangles = #data.triangles
+    local elapsed = (SysTime() - started) * 1000
+    tete.NA_SenjuShellMS = tete.NA_SenjuShellMS and (tete.NA_SenjuShellMS * 0.9 + elapsed * 0.1) or elapsed
+end
+
+hook.Add("NA_PostDrawTetePerso", "NA_SenjuErmite_FaceShellV7", function(ply, tete)
+    DrawSkinnedFaceTattoo(ply, tete)
+end)
+
+concommand.Add("na_marque_v7_diag", function()
+    local ply = LocalPlayer()
+    local tete = NA_GetTeteRendue and NA_GetTeteRendue(ply) or NULL
+    print("[MarqueV7] version:", MARQUE_PATCH_VERSION)
+    print("[MarqueV7] preparation pending:", table.Count(pendingShells), "largest step ms:", preparePeakMS)
+    print("[MarqueV7] preview:", apercu, "solid debug:", shellDebug, "source error:", MARQUE:IsError())
+    print("[MarqueV7] overlay ready:", RT_OVERLAY_PRET, "texture:", RT_OVERLAY:GetName())
+    print("[MarqueV7] head:", tete, IsValid(tete) and tete:GetModel() or "invalid")
+    if IsValid(tete) then
+        local d = GetFaceShellData(tete:GetModel())
+        print("[MarqueV7] face triangles selected:", d and #d.triangles or 0)
+        print("[MarqueV7] bind source:", d and d.bindSource)
+        print("[MarqueV7] flexes:", d and d.flexData and #d.flexData.flexes or 0,
+            "matched corners:", d and d.flexMatched or 0, "error:", d and d.flexError or "none")
+        print("[MarqueV7] last shell frame:", tostring(tete.NA_SenjuShellFrame), "current:", FrameNumber())
+        print("[MarqueV7] last shell triangles:", tostring(tete.NA_SenjuShellTriangles))
+        print("[MarqueV7] shell CPU ms (average):", tete.NA_SenjuShellMS or 0)
+        print("[MarqueV7] render path:", tete.NA_SenjuShellPath or "not drawn")
+        print("[MarqueV7] sample world:", tostring(tete.NA_SenjuShellSample), "head origin:", tete:GetPos())
+    end
+end)
+
+concommand.Add("na_marque_v7_shelltest", function(_, _, args)
+    shellDebug = args[1] ~= "0"
+    apercu = true
+    print("[MarqueV7] aperçu ON, couche cyan:", shellDebug)
+end)
+
+-- Le panneau 2D ne dépend pas du hook de dessin de la tête : il permet de
+-- distinguer un hook absent, une texture vide et un mesh mal placé.
+hook.Add("HUDPaint", "NA_SenjuErmite_VisibilityDiagnostic", function()
+    if not shellDebug then return end
+    local ply = LocalPlayer()
+    local tete = NA_GetTeteRendue and NA_GetTeteRendue(ply)
+    surface.SetDrawColor(25, 25, 25, 240)
+    surface.DrawRect(16, 16, 560, 340)
+    draw.SimpleText(MARQUE_PATCH_VERSION, "DermaDefault", 26, 24, color_white)
+    local age = IsValid(tete) and tete.NA_SenjuShellFrame
+    draw.SimpleText("Dernier dessin : " .. (age and (FrameNumber() - age .. " frames") or "JAMAIS"),
+        "DermaDefault", 26, 44, color_white)
+    draw.SimpleText("Source (gauche) / texture tatouage (droite)", "DermaDefault", 26, 64, color_white)
+    surface.SetDrawColor(240, 240, 240, 255)
+    surface.DrawRect(26, 90, 256, 256)
+    surface.DrawRect(300, 90, 256, 256)
+    surface.SetMaterial(MARQUE)
+    surface.SetDrawColor(0, 0, 0, 255)
+    surface.DrawTexturedRect(26, 90, 256, 256)
+    surface.SetMaterial(MAT_OVERLAY_PREVIEW)
+    surface.SetDrawColor(255, 255, 255, 255)
+    surface.DrawTexturedRect(300, 90, 256, 256)
+    if IsValid(tete) and tete.NA_SenjuShellSample then
+        local screen = tete.NA_SenjuShellSample:ToScreen()
+        if screen.visible then
+            draw.SimpleText("+ sommet tattoo", "DermaDefault", screen.x, screen.y, Color(0, 255, 255))
+        end
+    end
+end)
+
+concommand.Add("na_marque_v7_loaded", function()
+    print("[MarquePatch] V7 autorun chargé OK")
+    print("[MarquePatch] util.GetModelMeshes:", tostring(isfunction(util.GetModelMeshes)))
+    print("[MarquePatch] overlay RT:", RT_OVERLAY:GetName())
+end)
+
+-- Petit test sans lancer la technique : ouvre/ferme l'aperçu de la texture tatouée.
+-- Le menu na_marque_menu active aussi "apercu", donc la vraie peau tatouée y apparaît.
+local function DiagnosticMarque(prefix)
+    prefix = prefix or "[MarqueDiag]"
+    local ply = LocalPlayer()
+    print(prefix, "version:", MARQUE_PATCH_VERSION)
+    print(prefix, "RT name:", RT_MARQUE and RT_MARQUE:GetName() or "nil")
+    print(prefix, "RT ready:", RT_PRET, "dirty:", RT_SALE)
+    print(prefix, "preview:", apercu, "AFFICHER_MARQUE_PEAU:", AFFICHER_MARQUE_PEAU)
+    if not IsValid(ply) then
+        print(prefix, "LocalPlayer invalide")
+        return
+    end
+
+    local teteServeur = ply:GetNW2Entity("NA_TeteEnt")
+    local tete = NA_GetTeteRendue and NA_GetTeteRendue(ply) or teteServeur
+    print(prefix, "server head:", teteServeur, IsValid(teteServeur) and teteServeur:GetModel() or "invalid", IsValid(teteServeur) and teteServeur:GetNoDraw() or "-")
+    print(prefix, "render head:", tete, IsValid(tete) and tete:GetModel() or "invalid")
+    print(prefix, "NA_Perso:", ply:GetNW2String("NA_Perso", ""))
+
+    if not IsValid(tete) then return end
+    local mats = tete:GetMaterials()
+    print(prefix, "materials count:", #mats)
+    for i, chemin in ipairs(mats) do
+        print(prefix, "slot", i - 1, chemin)
+    end
+
+    local idx = TrouverSlotFace(tete)
+    print(prefix, "face slot:", idx)
+    if idx ~= nil then
+        print(prefix, "current submaterial:", tete:GetSubMaterial(idx))
+    end
+
+    local p = NA_PERSO.Decoder(ply:GetNW2String("NA_Perso", ""))
+    print(prefix, "visage:", p.visage, "peau:", p.peau and table.concat(p.peau, ",") or "nil")
+    local ref = MateriauPeauErmite(p)
+    local mat = MATS_PEAU_ERMITE[CleCouleur(p.peau)]
+    local tex = mat and mat:GetTexture("$basetexture")
+    print(prefix, "dynamic material:", ref)
+    print(prefix, "basetexture:", tex and tex:GetName() or "nil")
+    local mutation = hook.Run("NA_GetFaceDrawMutation", ply, tete)
+    print(prefix, "draw mutation:", mutation and "YES" or "NO")
+    print(prefix, "mutation texture:", mutation and mutation.texture and mutation.texture:GetName() or "nil")
+    print(prefix, "tattoo flag on head:", tostring(tete.NA_SenjuTattooActif))
+    print(prefix, "mutation frame:", tostring(tete.NA_SenjuMutationFrame), "current frame:", FrameNumber())
+    local direct = Material("atg/face/face")
+    local directTex = direct and not direct:IsError() and direct:GetTexture("$basetexture") or nil
+    print(prefix, "direct face material:", direct and direct:GetName() or "nil")
+    print(prefix, "direct face base now:", directTex and directTex:GetName() or "nil")
+end
+
+concommand.Add("na_marque_peau_preview", function()
+    apercu = not apercu
+    chat.AddText(Color(220, 180, 80), "[Marque] ", color_white,
+        "aperçu peau tatouée : " .. (apercu and "ON" or "OFF") .. " [" .. MARQUE_PATCH_VERSION .. "]")
+    timer.Simple(0, function() DiagnosticMarque("[MarquePreview]") end)
+end)
+
+concommand.Add("na_marque_diag", function() DiagnosticMarque("[MarqueDiag]") end)
+concommand.Add("na_marque_v3_diag", function() DiagnosticMarque("[MarqueV3]") end)
+concommand.Add("na_marque_v6_diag", function() DiagnosticMarque("[MarqueV6]") end)
+concommand.Add("na_marque_v6_redtest", function()
+    testRougeDirect = not testRougeDirect
+    chat.AddText(Color(255, 80, 80), "[MarqueV6] ", color_white,
+        "test FACE rouge : " .. (testRougeDirect and "ON" or "OFF"))
+end)
 
 -- Axe (avant, droite, haut, ou leur opposé) du repère "ang" le plus proche de la direction "cible"
 -- Quel axe (avant, droite, haut, ou leur opposé) de "ang" pointe le plus vers "cible" : renvoie
@@ -474,7 +1117,7 @@ local function Ouvrir()
             titre.Paint = function(_, w, h) draw.SimpleText(section, "NA.Marque.Section", 0, h - 4, C_SECTION, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM) end
         end
 
-        local s = vgui.Create("DNumSlider", toile)
+        local s = vgui.Create("NA_NumSlider", toile)
         s:Dock(TOP)
         s:SetTall(44)
         s:SetText(nom)
@@ -498,19 +1141,17 @@ end
 concommand.Add("na_marque_menu", Ouvrir, nil, "Ouvre un panneau pour régler en direct la position de la marque d'ermite sur le visage.")
 
 ----------------------------------------------------------
--- Vraie texture de peau tatouée : PISTE ABANDONNÉE (pour l'instant).
---
--- Diagnostiqué : SetSubMaterial, RenderOverride (render.MaterialOverrideByIndex) et un SetNoDraw
--- posé une seule fois sont tous les trois sans effet sur "tete" (l'entité prop_dynamic créée par le
--- serveur, fusionnée au squelette). Un SetNoDraw(true) reposé à CHAQUE image, lui, marche (comme
--- cl_perso.lua le fait pour sa copie "recul" : quelque chose d'autre remet NoDraw à false à chaque
--- tick, un seul appel se fait donc toujours écraser) -- ce qui permet de cacher "tete" et de dessiner
--- à la place une copie ClientsideModel (SetSubMaterial y marche très bien, confirmé via
--- cl_playerskin.lua qui l'utilise déjà pour le corps après la mort), habillée comme l'originale
--- (NA_HabillerVisage) avec en plus son sous-matériau "face" mélangé à la texture de tatouage via
--- $detail ($detailblendmode "2", en supposant son UV alignée sur atg/face/face car même famille de
--- modèles "atg"). Essayé en branchant ça sur la copie que cl_perso.lua dessine déjà (recul ≠ 0) via
--- un hook NA_TeteCopiePrete -- mais rien ne s'affiche : soit le detail blend mode n'est pas supporté
--- par VertexLitGeneric sur un modèle (probablement réservé à LightmappedGeneric), soit l'UV n'est
--- pas alignée comme supposé. Non concluant, et cl_perso.lua a été remis à l'identique.
+-- La piste "texture de peau" n'est plus abandonnée : elle est implémentée plus haut
+-- avec un RenderTarget 512x512 appliqué au slot "face" de la tête réellement dessinée.
+-- Les anciennes plaques 3D restent dans ce fichier comme outil de comparaison/réglage,
+-- mais AFFICHER_MARQUE=false les garde désactivées.
 ----------------------------------------------------------
+
+print("[MarquePatch] chargé V6-direct-face-material")
+concommand.Add("na_marque_v6_loaded", function()
+    local ht = hook.GetTable()
+    print("[MarquePatch] V6 autorun chargé OK")
+    print("[MarquePatch] draw mutation hook:", tostring(ht["NA_GetFaceDrawMutation"] ~= nil))
+    print("[MarquePatch] draw helper:", tostring(isfunction(NA_DrawModelAvecFaceMutation)))
+    print("[MarquePatch] direct face material:", tostring(Material("atg/face/face")))
+end)

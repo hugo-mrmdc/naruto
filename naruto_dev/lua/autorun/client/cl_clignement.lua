@@ -106,7 +106,18 @@ hook.Add("Think", "NA_Clignement", function()
                 local et = etat[self]
                 if et and et.flex then self:SetFlexWeight(et.flex, et.ferme or 0) end
                 if et and et.face then NA_PoserFormes(self, et.ferme or 0) end
-                self:DrawModel(flags)
+                -- Même point d'extension que pour la copie reculée : ainsi un système de
+                -- tatouage n'a jamais besoin de remplacer RenderOverride et ne casse pas le blink.
+                local ply = self:GetOwner()
+                hook.Run("NA_PreDrawTetePerso", IsValid(ply) and ply or NULL, self, self)
+
+                if NA_DrawModelAvecFaceMutation then
+                    NA_DrawModelAvecFaceMutation(self, flags, IsValid(ply) and ply or NULL)
+                else
+                    self:DrawModel(flags)
+                end
+
+                hook.Run("NA_PostDrawTetePerso", IsValid(ply) and ply or NULL, self, self)
             end
         end
     end

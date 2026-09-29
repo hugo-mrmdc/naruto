@@ -22,6 +22,7 @@ if SERVER then
     AddCSLuaFile("autorun/client/senju/cl_senju_pied.lua")
     include("autorun/server/senju/sv_senju_pied.lua")
 
+    AddCSLuaFile("autorun/client/senju/face_shell_flex.lua")
     AddCSLuaFile("autorun/client/senju/cl_senju_ermite.lua")
     include("autorun/server/senju/sv_senju_ermite.lua")
 end

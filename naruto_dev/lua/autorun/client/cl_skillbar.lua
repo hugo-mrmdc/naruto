@@ -202,14 +202,17 @@ end)
 ----------------------------------------------------------
 
 -- secteur circulaire plein (pour le temps de recharge)
+local secteurPoints = {}
+for i = 1, 34 do secteurPoints[i] = { x = 0, y = 0 } end
 local function Secteur(cx, cy, r, frac)
     if frac <= 0 then return end
-    local pts = { { x = cx, y = cy } }
+    local pts = secteurPoints
+    pts[1].x, pts[1].y = cx, cy
     local seg = 32
     local fin = frac * 360
     for i = 0, seg do
         local a = math.rad(-90 + fin * (i / seg))
-        pts[#pts + 1] = { x = cx + math.cos(a) * r, y = cy + math.sin(a) * r }
+        pts[i + 2].x, pts[i + 2].y = cx + math.cos(a) * r, cy + math.sin(a) * r
     end
     draw.NoTexture()
     surface.DrawPoly(pts)

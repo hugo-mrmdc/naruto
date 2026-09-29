@@ -76,9 +76,30 @@ function NA_HabillerVisage(ent, p, yeuxSpeciaux)
     if not IsValid(ent) then return end
 
     -- l'ordre des matériaux change selon le visage : on cherche par nom
+    -- On mémorise aussi le slot + le matériau normal de la peau : les effets temporaires
+    -- (tatouage Senju, marques, etc.) peuvent ainsi remplacer UNIQUEMENT le visage puis le
+    -- restaurer sans rappeler NA_HabillerVisage et sans toucher aux yeux/sourcils/barbe.
     for i, chemin in ipairs(ent:GetMaterials()) do
-        local fabrique = FABRIQUES[string.lower(string.match(chemin, "[^/\\]+$") or "")]
-        if fabrique then ent:SetSubMaterial(i - 1, fabrique(p, yeuxSpeciaux)) end
+        local nom = string.lower(string.match(chemin, "[^/\\]+$") or "")
+        local fabrique = FABRIQUES[nom]
+        if fabrique then
+            local mat = fabrique(p, yeuxSpeciaux)
+
+            -- Point d'extension pour remplacer proprement le matériau FACE via le même
+            -- chemin que la custom normale. C'est volontairement AVANT SetSubMaterial :
+            -- le tattoo devient donc le matériau officiel du slot face, au lieu d'être
+            -- un override de rendu ajouté après coup.
+            if nom == "face" then
+                local remplacement = hook.Run("NA_GetFaceMaterial", ent, p, mat, yeuxSpeciaux)
+                if remplacement ~= nil then mat = remplacement end
+            end
+
+            ent:SetSubMaterial(i - 1, mat)
+            if nom == "face" then
+                ent.NA_FaceSubIndex = i - 1
+                ent.NA_FaceBaseMaterial = mat
+            end
+        end
     end
 
     ent:SetBodygroup(1, p.barbe)   -- bodygroup "beard" : 0 = aucune
@@ -106,8 +127,14 @@ local function Contient(nom, motifs)
 end
 
 local function Texture(mat, cle)
+    if not mat or mat:IsError() then return nil end
     local t = mat:GetTexture(cle)
     return t and t:GetName()
+end
+
+local function MateriauSourceValide(chemin)
+    if not isstring(chemin) or chemin == "" or chemin == "0" then return false end
+    return true
 end
 
 function NA_TeinterCheveux(ent, p)
@@ -127,17 +154,17 @@ function NA_TeinterCheveux(ent, p)
         -- textures de l'addon (materials/atg/hair/) : celles des packs d'origine peuvent manquer et
         -- s'affichent alors en rose. Jamais teintée par la couleur du bandeau.
         if Contient(nom, LOGOS_PLAQUE) then
-            local orig = Material(chemin)
+            local orig = MateriauSourceValide(chemin) and Material(chemin) or nil
             local texture = NA_PERSO.LOGOS[math.max(p.logo, 1)][2]
             ent:SetSubMaterial(i - 1, Mat("plaque_" .. string.gsub(chemin, "[^%w]", "_") .. "_" .. p.logo, "VertexLitGeneric", {
                 ["$basetexture"] = texture,
-                ["$lightwarptexture"] = not orig:IsError() and Texture(orig, "$lightwarptexture") or nil,
+                ["$lightwarptexture"] = orig and not orig:IsError() and Texture(orig, "$lightwarptexture") or nil,
                 ["$phong"] = 1, ["$phongexponent"] = 40, ["$phongboost"] = 4,
                 ["$phongfresnelranges"] = "[0.4 1 2]",
             }))
         end
 
-        local orig = teintable and Material(chemin)
+        local orig = teintable and MateriauSourceValide(chemin) and Material(chemin) or nil
         if orig and not orig:IsError() and Texture(orig, "$basetexture") then
             local params = {
                 ["$basetexture"] = Texture(orig, "$basetexture"),
@@ -196,7 +223,11 @@ function NA_PoserFormes(ent, ferme)
 end
 
 -- Têtes des joueurs (créées par le serveur) : on pose leurs matériaux quand le choix change
+local prochaineVerificationApparence = 0
 hook.Add("Think", "NA_Perso_Tetes", function()
+    local now = CurTime()
+    if now < prochaineVerificationApparence then return end
+    prochaineVerificationApparence = now + 0.1
     for _, ply in ipairs(player.GetAll()) do
         -- peau du corps : refaite quand le choix ou la tenue change
         local cle = ply:GetNW2String("NA_Perso", "") .. "|" .. ply:GetModel()
@@ -239,31 +270,79 @@ end)
 --   final(v) = tête(animée) * inverse(tête à la pose de référence) * Tr(0, recul, 0) * v
 -- (les modèles regardent vers -Y à la pose de référence : reculer = +Y)
 --========================================================
--- Os de tête à la pose de référence (repère du modèle) de chaque famille de modèles : ce sont
--- ces matrices qui placent le modèle quand il est fusionné au squelette.
-local function Repere(m) return Matrix(m) end
-local REPERES = {
-    visage = Repere({   -- models/head/face_N.mdl
+-- Repère commun du recul : models/head/face_N.mdl. Les cheveux conservent
+-- leur pose propre, mais suivent le même axe de déplacement que le visage.
+local REPERE_RECUL = Matrix({
         { 0.000026, 0.000002, -1.0, 0.000054 }, { -0.246546, 0.969131, -0.000004, 0.604915 },
-        { 0.969131, 0.246546, 0.000026, 63.517941 }, { 0, 0, 0, 1 } }),
-    fichiers = Repere({   -- models/haire/*/*.mdl
-        { 0.000025, 0.000002, -1.0, 0.000103 }, { -0.246551, 0.96913, -0.000004, 0.572451 },
-        { 0.96913, 0.246551, 0.000025, 60.115409 }, { 0, 0, 0, 1 } }),
-    classique = Repere({   -- models/hairs1_head.mdl et hairs1_face.mdl
-        { 0.0, 0.000003, -1.0, 0.000012 }, { -0.171921, 0.985111, 0.000003, -0.414001 },
-        { 0.985111, 0.171921, 0.000001, 64.119721 }, { 0, 0, 0, 1 } }),
-}
-local REPERES_INV = {}
-for nom, m in pairs(REPERES) do REPERES_INV[nom] = m:GetInverse() end
-
-local function Famille(modele)
-    modele = string.lower(modele or "")
-    if string.find(modele, "^models/head/") then return "visage" end
-    if string.find(modele, "^models/haire/") then return "fichiers" end
-    return "classique"
-end
+        { 0.969131, 0.246546, 0.000026, 63.517941 }, { 0, 0, 0, 1 } })
+local REPERE_RECUL_INV = REPERE_RECUL:GetInverse()
 
 local translation = Matrix()
+
+-- Dessine un modèle en permettant à un effet d'apparence de modifier TEMPORAIREMENT
+-- le matériau source "face" lui-même. C'est le dernier recours quand SetSubMaterial et
+-- render.MaterialOverrideByIndex sont neutralisés par le pipeline du modèle : le .mdl continue
+-- d'utiliser son matériau d'origine, mais sa $basetexture/$color2 sont changées uniquement pendant
+-- CE DrawModel puis restaurées immédiatement après. Les yeux/sourcils/barbe ont d'autres IMaterial,
+-- ils ne sont donc jamais touchés.
+local function MateriauFaceDirect(ent)
+    if not IsValid(ent) then return end
+    if ent.NA_FaceDirectMaterial and not ent.NA_FaceDirectMaterial:IsError() then
+        return ent.NA_FaceDirectMaterial
+    end
+
+    for _, chemin in ipairs(ent:GetMaterials()) do
+        local nom = string.lower(string.match(chemin, "[^/\\]+$") or "")
+        if nom == "face" and chemin ~= "" and chemin ~= "0" then
+            local mat = Material(chemin)
+            if mat and not mat:IsError() then
+                ent.NA_FaceDirectMaterial = mat
+                ent.NA_FaceDirectPath = chemin
+                return mat
+            end
+        end
+    end
+end
+
+function NA_DrawModelAvecFaceMutation(ent, flags, ply)
+    if not IsValid(ent) then return end
+
+    local mutation = hook.Run("NA_GetFaceDrawMutation", IsValid(ply) and ply or NULL, ent)
+    if not mutation then
+        ent:DrawModel(flags)
+        return
+    end
+
+    local face = MateriauFaceDirect(ent)
+    if not face then
+        ent:DrawModel(flags)
+        return
+    end
+
+    local ancienneTexture = face:GetTexture("$basetexture")
+    local ancienneCouleur = face:GetVector("$color2")
+
+    local ok, err = xpcall(function()
+        -- SetVector ne force pas forcément un snapshot ; on pose la couleur d'abord puis
+        -- SetTexture, qui appelle Recompute, pour que les deux changements soient pris ensemble.
+        if mutation.color then
+            face:SetVector("$color2", mutation.color)
+        end
+        if mutation.texture then
+            face:SetTexture("$basetexture", mutation.texture)
+        end
+        ent:DrawModel(flags)
+    end, debug.traceback)
+
+    -- IMPORTANT : IMaterial est global. On restaure toujours l'état d'origine immédiatement
+    -- afin que les autres joueurs/portraits utilisant atg/face/face ne récupèrent pas ce tattoo.
+    if ancienneCouleur then face:SetVector("$color2", ancienneCouleur) end
+    if ancienneTexture then face:SetTexture("$basetexture", ancienneTexture) end
+
+    if not ok then
+        ErrorNoHalt("[NA FaceMutation] " .. tostring(err) .. "\\n")
+    end
+end
 
 -- Dessine cs (ClientsideModel NON fusionné : tête ou cheveux) sur la tête de ent, reculé de recul/10.
 -- Équivalent d'une fusion de squelette, plus un décalage :
@@ -276,8 +355,14 @@ function NA_DessinerRecul(cs, ent, recul)
     local tete = os and ent:GetBoneMatrix(os)
     if not tete then return end
 
-    local famille = cs.NA_Famille or Famille(cs:GetModel())
-    cs.NA_Famille = famille
+    -- Les deux pièces doivent subir exactement le même déplacement dans le
+    -- repère de la tête du joueur, quelle que soit la famille de cheveux.
+    -- La pose propre à chaque modèle reste compensée par NA_PoseInv.
+    local modele = cs:GetModel()
+    if cs.NA_PoseModele ~= modele then
+        cs.NA_PoseInv = nil
+        cs.NA_PoseModele = modele
+    end
 
     if not cs.NA_PoseInv then   -- pose réelle de l'os de tête du modèle, mesurée à l'origine
         cs:SetPlaybackRate(0)
@@ -291,14 +376,29 @@ function NA_DessinerRecul(cs, ent, recul)
     end
 
     translation:SetTranslation(Vector(0, recul / 10, 0))
-    local placement = tete * REPERES_INV[famille] * translation * REPERES[famille] * cs.NA_PoseInv
+    local placement = tete * REPERE_RECUL_INV * translation * REPERE_RECUL * cs.NA_PoseInv
     cs:SetPos(placement:GetTranslation())
     cs:SetAngles(placement:GetAngles())
     cs:SetupBones()
-    cs:DrawModel()
+
+    -- Dessin centralisé : les effets de visage peuvent muter temporairement le matériau
+    -- atg/face/face sans dépendre des submaterials/overrides par index.
+    NA_DrawModelAvecFaceMutation(cs, nil, cs.NA_Owner)
 end
 
 local copies = {}   -- joueur -> { tete = ClientsideModel, cheveux = ClientsideModel }
+
+-- Renvoie la tête réellement visible côté client.
+-- Avec recul > 0, NA_TeteEnt est volontairement masquée et remplacée par copies[ply].tete.
+-- Les systèmes d'apparence (tatouages, marques, overrides de matériau...) doivent cibler
+-- cette fonction plutôt que ply:GetNW2Entity("NA_TeteEnt") directement.
+function NA_GetTeteRendue(ply)
+    if not IsValid(ply) then return end
+    local c = copies[ply]
+    if c and IsValid(c.tete) then return c.tete end
+    local tete = ply:GetNW2Entity("NA_TeteEnt")
+    if IsValid(tete) then return tete end
+end
 
 local function Vider(ply)
     local c = copies[ply]
@@ -351,12 +451,19 @@ hook.Add("PostPlayerDraw", "NA_Perso_Recul", function(ply)
 
     local ct = Copie(c, "tete", tete)
     if ct then
-        if ct.NA_Json ~= json then
-            ct.NA_Json = json
+        ct.NA_Owner = ply
+        local faceKey = hook.Run("NA_GetFaceMaterialCacheKey", ply) or ""
+        local jsonFace = json .. "|facefx:" .. tostring(faceKey)
+        if ct.NA_Json ~= jsonFace then
+            ct.NA_Json = jsonFace
             NA_HabillerVisage(ct, p, yeux)
         end
         NA_PoserFormes(ct, NA_YeuxFermes and NA_YeuxFermes(tete) or 0)   -- clignement
+        -- Point d'extension unique pour tout ce qui doit modifier la tête VISIBLE juste
+        -- avant son dessin (tatouages, material override, debug...).
+        hook.Run("NA_PreDrawTetePerso", ply, ct, tete)
         NA_DessinerRecul(ct, ply, p.recul)
+        hook.Run("NA_PostDrawTetePerso", ply, ct, tete)
     end
 
     if IsValid(cheveux) then

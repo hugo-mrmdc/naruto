@@ -346,7 +346,7 @@ local function CreerDetails(parent)
     y = y + Grille(toile, y, { Choix("bouche", 1, "Celle du visage"), Choix("bouche", 0, "Neutre") }, 4, 136, 28)
 
     Section("Recul du visage")
-    local recul = vgui.Create("DNumSlider", toile)
+    local recul = vgui.Create("NA_NumSlider", toile)
     recul:SetPos(0, y)
     recul:SetSize(560, 28)
     recul:SetText("Recul (masque, col de la tenue)")

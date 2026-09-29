@@ -94,11 +94,16 @@ end
 
 -- Disque (pour découper le portrait en rond avec le stencil)
 -- (sommets dans le sens des aiguilles d'une montre, sinon DrawPoly ne dessine rien)
+local disqueCache = {}
+local disqueX, disqueY, disqueR
 local function Disque(cx, cy, r)
-    local poly = {}
-    for i = 0, 47 do
-        local a = math.rad(i / 48 * -360)
-        poly[#poly + 1] = { x = cx + math.sin(a) * r, y = cy + math.cos(a) * r }
+    local poly = disqueCache
+    if cx ~= disqueX or cy ~= disqueY or r ~= disqueR then
+        for i = 0, 47 do
+            local a = math.rad(i / 48 * -360)
+            poly[i + 1] = { x = cx + math.sin(a) * r, y = cy + math.cos(a) * r }
+        end
+        disqueX, disqueY, disqueR = cx, cy, r
     end
     draw.NoTexture()
     surface.SetDrawColor(255, 255, 255, 255)
@@ -230,11 +235,16 @@ local function ConstruirePortrait(ply)
     end
 end
 
+local prochaineSignature = 0
 local function DessinerPortrait(ply, x, y, taille)
-    local sig = Signature(ply)
-    if sig ~= signature or not IsValid(panneau) then
-        signature = sig
-        ConstruirePortrait(ply)
+    local now = RealTime()
+    if now >= prochaineSignature or not IsValid(panneau) then
+        prochaineSignature = now + 0.1
+        local sig = Signature(ply)
+        if sig ~= signature or not IsValid(panneau) then
+            signature = sig
+            ConstruirePortrait(ply)
+        end
     end
 
     -- fond et cadre (le panneau du buste s'affiche par-dessus)

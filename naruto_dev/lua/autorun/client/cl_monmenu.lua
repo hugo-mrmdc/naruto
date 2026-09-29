@@ -837,7 +837,7 @@ local function OuvrirEditeur(slot)
     end
 
     local function Curseur(cle, texte, mini, maxi, decimales, valeur, surChange)
-        local c = vgui.Create("DNumSlider", corps)
+        local c = vgui.Create("NA_NumSlider", corps)
         c:Dock(TOP)
         c:DockMargin(4, 0, 4, 0)
         c:SetTall(26)
