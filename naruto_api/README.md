@@ -31,8 +31,9 @@ quel hébergement mutualisé.
 `public/dashboard/` est un site en lecture seule (PHP classique, pas de JS,
 pas de framework) qui affiche les données déjà en base : `dashboard/index.php`
 (résumé + activité récente), `characters.php` (classement filtrable/triable),
-`character.php?steamid=...` (fiche complète, décode `raw_data`), `bounties.php`
-(Bingo Book) et `logs.php` (journal filtrable).
+`character.php?id=...` (fiche complète : stats, affinités, jutsu, inventaire,
+Kekkei Genkai, dōjutsu, arbre de clan...), `bounties.php` (Bingo Book) et
+`logs.php` (journal filtrable).
 
 Il lit la base **directement** (`Database::connection()`), pas via les routes
 JSON `/characters`, `/bounties`... donc **pas besoin de la clé `X-Api-Key`**
@@ -109,19 +110,40 @@ n'y en a aucune, et renvoie toujours l'`id` de la fiche concernée
 par joueur, il suffira qu'il envoie aussi un identifiant de personnage dans
 le payload pour que chacun soit synchronisé sur sa propre ligne.
 
-### Kekkei Genkai (`character_kekei`)
+### Les listes (`character_*`) plutôt que `raw_data`
 
-Table dédiée pour les Kekkei Genkai débloqués par personnage (mokuton,
-hyoton, jinton, yoton, shakuton, futton, jiton, shoton, meiton, bakuton,
-kiminari...), pour pouvoir filtrer/lister par kekkei genkai depuis le site
-sans avoir à parser `raw_data`.
+Chaque liste de personnage a sa propre table, liée par `character_id`, au lieu
+d'être enterrée dans du JSON — pour pouvoir filtrer/lister/joindre depuis le
+site ("qui a tel jutsu", "qui possède tel objet"...) sans parser `raw_data` :
 
-Se remplit via `POST /characters/sync` en ajoutant un champ `kekkei` au
-payload : `"kekkei": [{"id": "mokuton", "level": 3}, {"id": "hyoton"}]`
-(`level` optionnel, défaut 1). Un sync qui n'inclut pas du tout la clé
-`kekkei` ne touche pas aux lignes existantes (sync partiel) ; l'envoyer à
-`[]` les efface toutes. `GET /characters/{id}` renvoie la liste sous
-`data.kekei`.
+| Table | Colonnes | Clé du payload `/characters/sync` |
+|---|---|---|
+| `character_stats` | `stat_id, value` | `stats` : `{"strength": 12, ...}` |
+| `character_affinities` | `element_id` | `affinities` : `["katon", "raiton"]` |
+| `character_kekkei` | `kekkei_id, level` | `kekkei` : `[{"id": "mokuton", "level": 3}]` |
+| `character_dojutsu` | `dojutsu_id, stage` | `dojutsu` : `{"sharingan": 2}` |
+| `character_jutsu` | `jutsu_id` | `jutsus` : `["katon_goukakyu", ...]` |
+| `character_loadout` | `slot, jutsu_id` | `loadout` : `{"1": "katon_goukakyu"}` |
+| `character_clan_tree` | `node_id` | `clan_tree` : `{"uchiha_sharingan_1": true}` |
+| `character_inventory` | `item_id, quantity` | `inventory.items` : `{"kunai": 5}` |
+| `character_equipped` | `slot, item_id` | `inventory.equipped` : `{"tool": "kunai"}` |
+
+Chaque champ accepte indifféremment une liste de scalaires, une liste
+d'objets `{id, level}` (ou `stage`/`value`/`qty`), ou une table clé/valeur —
+selon ce qui est le plus naturel à envoyer côté Lua pour ce champ.
+
+Une clé **absente** du payload laisse la table correspondante inchangée
+(sync partiel) ; l'envoyer à `[]` ou `{}` la vide entièrement. `GET
+/characters/{id}` renvoie chaque liste sous le même nom
+(`data.stats`, `data.affinities`, `data.kekkei`, ...).
+
+`gender`, `model`, `skin` sont des colonnes de `characters` ; `bodygroups`,
+`color` et `flags` (fourre-tout générique, ex : `bonusStatPoints`) sont des
+colonnes `JSON` de `characters`, décodées automatiquement dans les réponses.
+
+`characters.raw_data` garde quand même le JSON complet envoyé à chaque sync,
+en garde-fou : si un nouveau champ apparaît plus tard côté Lua sans avoir sa
+place ici, rien n'est perdu, il est juste noyé dans `raw_data` en attendant.
 
 ### Notes sur `/bans`
 
@@ -131,11 +153,3 @@ addon admin GMod, ULX/SAM...). Si tu veux un jour bloquer la connexion
 directement depuis cette table, il suffira d'appeler `GET /bans?steamid=...&active=1`
 dans le hook `CheckPassword` ou `PlayerAuthed` du serveur GMod.
 
-### `raw_data`
-
-`characters.raw_data` contient l'intégralité du JSON envoyé par le jeu à
-chaque sync (inventaire, jutsu, stats, affinités...). Les colonnes dédiées
-(`level`, `xp`, `ryo`, `village`, `clan`...) ne servent qu'aux tris/filtres
-rapides du site ; si un module Lua ajoute un nouveau champ de personnage
-plus tard, il apparaît automatiquement dans `raw_data` sans toucher à cette
-API.

@@ -38,23 +38,63 @@ $player = db_try(static function (PDO $db) use ($playerSteamid): array {
     return $stmt->fetch() ?: [];
 });
 
-$kekei = db_try(static function (PDO $db) use ($char): array {
+// Ce qui a sa propre table character_* : id, libellé pour l'affichage, et nom
+// de la colonne "valeur" quand il y en a une (niveau, stade...).
+const LIST_SECTIONS = [
+    ['label' => 'Statistiques allouées', 'table' => 'character_stats', 'id' => 'stat_id', 'value' => 'value', 'suffix' => 'pt(s)'],
+    ['label' => 'Affinités', 'table' => 'character_affinities', 'id' => 'element_id', 'value' => null],
+    ['label' => 'Kekkei Genkai', 'table' => 'character_kekkei', 'id' => 'kekkei_id', 'value' => 'level', 'suffix' => 'niv.'],
+    ['label' => 'Dōjutsu', 'table' => 'character_dojutsu', 'id' => 'dojutsu_id', 'value' => 'stage', 'suffix' => 'stade'],
+    ['label' => 'Jutsu connus', 'table' => 'character_jutsu', 'id' => 'jutsu_id', 'value' => null],
+    ['label' => 'Arbre de clan débloqué', 'table' => 'character_clan_tree', 'id' => 'node_id', 'value' => null],
+];
+
+$lists = [];
+foreach (LIST_SECTIONS as $section) {
+    $lists[$section['table']] = db_try(static function (PDO $db) use ($char, $section): array {
+        if (!isset($char['id'])) return [];
+        $cols = $section['value'] ? "{$section['id']}, {$section['value']}" : $section['id'];
+        $stmt = $db->prepare("SELECT {$cols} FROM {$section['table']} WHERE character_id = :id ORDER BY {$section['id']}");
+        $stmt->execute(['id' => $char['id']]);
+        return $stmt->fetchAll();
+    });
+}
+
+$inventory = db_try(static function (PDO $db) use ($char): array {
     if (!isset($char['id'])) return [];
-    $stmt = $db->prepare('SELECT kekei_id, level FROM character_kekei WHERE character_id = :id ORDER BY kekei_id');
+    $stmt = $db->prepare('SELECT item_id, quantity FROM character_inventory WHERE character_id = :id ORDER BY item_id');
     $stmt->execute(['id' => $char['id']]);
     return $stmt->fetchAll();
 });
+$equipped = db_try(static function (PDO $db) use ($char): array {
+    if (!isset($char['id'])) return [];
+    $stmt = $db->prepare('SELECT slot, item_id FROM character_equipped WHERE character_id = :id ORDER BY slot');
+    $stmt->execute(['id' => $char['id']]);
+    return $stmt->fetchAll();
+});
+$loadout = db_try(static function (PDO $db) use ($char): array {
+    if (!isset($char['id'])) return [];
+    $stmt = $db->prepare('SELECT slot, jutsu_id FROM character_loadout WHERE character_id = :id ORDER BY slot');
+    $stmt->execute(['id' => $char['id']]);
+    return $stmt->fetchAll();
+});
+
+$bodygroups = (isset($char['bodygroups']) && is_string($char['bodygroups'])) ? (json_decode($char['bodygroups'], true) ?: []) : [];
+$color = (isset($char['color']) && is_string($char['color'])) ? (json_decode($char['color'], true) ?: []) : [];
+$flags = (isset($char['flags']) && is_string($char['flags'])) ? (json_decode($char['flags'], true) ?: []) : [];
 
 $raw = [];
 if (isset($char['raw_data']) && is_string($char['raw_data'])) {
     $raw = json_decode($char['raw_data'], true) ?: [];
 }
 
-// Champs déjà affichés dans l'en-tête : pas la peine de les répéter plus bas.
+// Champs déjà affichés ailleurs sur la page : pas la peine de les répéter dans
+// le bloc générique plus bas (qui ne sert plus qu'aux champs pas encore prévus).
 $HEADER_KEYS = [
     'steamid', 'firstname', 'lastname', 'village', 'clan', 'rank', 'level', 'xp',
     'ryo', 'stat_points', 'deserter', 'origin_village', 'playtime', 'created', 'last_seen',
-    'kekkei', // affiché séparément via la table dédiée character_kekei
+    'model', 'skin', 'bodygroups', 'color', 'flags', 'inventory',
+    'stats', 'affinities', 'kekkei', 'dojutsu', 'jutsus', 'clan_tree', 'loadout',
 ];
 
 /** Rend n'importe quelle valeur JSON (scalaire, liste, ou table clé/valeur) de façon lisible. */
@@ -149,6 +189,9 @@ page_start('Fiche personnage');
             </span></div>
             <div><span class="k">Créé le (jeu)</span><span class="v"><?= $char['game_created'] ? h(date('d/m/Y', (int) $char['game_created'])) : '—' ?></span></div>
             <div><span class="k">Dernière sync</span><span class="v"><?= h(fmt_date($char['updated_at'])) ?></span></div>
+            <?php if ($char['model']): ?>
+                <div><span class="k">Modèle</span><span class="v"><?= h($char['model']) ?><?= $char['skin'] ? ' (skin ' . h($char['skin']) . ')' : '' ?></span></div>
+            <?php endif; ?>
             <?php if ($player !== []): ?>
                 <div><span class="k">Pseudo Steam</span><span class="v"><?= h($player['steam_name'] ?: '—') ?></span></div>
                 <div><span class="k">Sessions</span><span class="v"><?= h($player['session_count']) ?></span></div>
@@ -156,14 +199,68 @@ page_start('Fiche personnage');
         </div>
     </div>
 
-    <?php if ($kekei !== []): ?>
+    <?php foreach (LIST_SECTIONS as $section): ?>
+        <?php $rows = $lists[$section['table']]; if ($rows === []) continue; ?>
         <div class="card">
-            <h2>Kekkei Genkai</h2>
+            <h2><?= h($section['label']) ?></h2>
             <div class="pill-row">
-                <?php foreach ($kekei as $k): ?>
-                    <span class="badge accent"><?= h(ucfirst($k['kekei_id'])) ?> — niv. <?= h($k['level']) ?></span>
+                <?php foreach ($rows as $row): ?>
+                    <?php if ($section['value']): ?>
+                        <span class="badge accent"><?= h(ucfirst((string) $row[$section['id']])) ?> — <?= h($section['suffix'] ?? '') ?> <?= h($row[$section['value']]) ?></span>
+                    <?php else: ?>
+                        <span class="badge"><?= h($row[$section['id']]) ?></span>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             </div>
+        </div>
+    <?php endforeach; ?>
+
+    <?php if ($inventory !== [] || $equipped !== []): ?>
+        <div class="card">
+            <h2>Inventaire</h2>
+            <?php if ($equipped !== []): ?>
+                <p><strong>Équipé :</strong></p>
+                <div class="pill-row">
+                    <?php foreach ($equipped as $e): ?>
+                        <span class="badge accent"><?= h($e['slot']) ?> : <?= h($e['item_id']) ?></span>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+            <?php if ($inventory !== []): ?>
+                <table>
+                    <thead><tr><th>Objet</th><th class="num">Quantité</th></tr></thead>
+                    <tbody>
+                    <?php foreach ($inventory as $item): ?>
+                        <tr><td data-label="Objet"><?= h($item['item_id']) ?></td><td data-label="Quantité" class="num"><?= fmt_num($item['quantity']) ?></td></tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($loadout !== []): ?>
+        <div class="card">
+            <h2>Emplacements de jutsu (barre de raccourcis)</h2>
+            <div class="pill-row">
+                <?php foreach ($loadout as $l): ?>
+                    <span class="badge"><?= h($l['slot']) ?> : <?= h($l['jutsu_id']) ?></span>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($bodygroups !== [] || $color !== []): ?>
+        <div class="card">
+            <h2>Apparence</h2>
+            <?= render_value(array_filter(['bodygroups' => $bodygroups ?: null, 'color' => $color ?: null])) ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($flags !== []): ?>
+        <div class="card">
+            <h2>Flags</h2>
+            <?= render_value($flags) ?>
         </div>
     <?php endif; ?>
 

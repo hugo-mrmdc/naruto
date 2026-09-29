@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * POST /characters/sync            -> upsert d'une fiche personnage (identifiée par "steamid")
  * GET  /characters                 -> liste / classement (filtres, dont ?steamid=, + tri)
- * GET  /characters/{id}             -> une fiche par son identifiant de PERSONNAGE (raw_data décodé)
+ * GET  /characters/{id}             -> une fiche par son identifiant de PERSONNAGE (avec ses listes)
  *
  * "id" identifie le personnage, "steamid" identifie juste son propriétaire :
  * un même steamid peut correspondre à plusieurs lignes (plusieurs personnages).
@@ -13,15 +13,31 @@ declare(strict_types=1);
  * tant qu'il n'en enverra pas un, /characters/sync met à jour la première
  * fiche trouvée pour ce steamid, ou en crée une nouvelle s'il n'y en a aucune.
  *
- * Colonnes connues (typées, indexées) mappées explicitement ; tout le payload
- * est en plus conservé tel quel dans "raw_data" (JSON), pour ne rien perdre
- * même si de nouveaux champs sont ajoutés côté Lua sans toucher à cette API.
+ * Colonnes scalaires connues mappées explicitement sur "characters". Les listes
+ * (stats, affinités, jutsu, inventaire, arbre de clan, dōjutsu, kekkei genkai...)
+ * ont chacune leur table dédiée (character_*), remplacée en entier à chaque sync
+ * si la clé correspondante est présente dans le payload (absente = inchangée,
+ * [] ou {} = vidée). "raw_data" garde le JSON complet en plus, en garde-fou pour
+ * tout ce qui n'a pas encore sa place ici.
  */
 final class CharactersController
 {
     private const KNOWN_COLUMNS = [
-        'firstname', 'lastname', 'gender', 'village', 'clan', 'rank',
+        'firstname', 'lastname', 'gender', 'model', 'skin', 'village', 'clan', 'rank',
         'level', 'xp', 'ryo', 'stat_points', 'deserter', 'origin_village', 'playtime',
+    ];
+
+    private const JSON_COLUMNS = ['bodygroups', 'color', 'flags'];
+
+    /** payload key => [table, colonne id, colonne valeur ou null si simple ensemble] */
+    private const LIST_TABLES = [
+        'stats'      => ['character_stats', 'stat_id', 'value'],
+        'affinities' => ['character_affinities', 'element_id', null],
+        'kekkei'     => ['character_kekkei', 'kekkei_id', 'level'],
+        'dojutsu'    => ['character_dojutsu', 'dojutsu_id', 'stage'],
+        'jutsus'     => ['character_jutsu', 'jutsu_id', null],
+        'loadout'    => ['character_loadout', 'slot', 'jutsu_id'],
+        'clan_tree'  => ['character_clan_tree', 'node_id', null],
     ];
 
     private const SORTABLE = ['level', 'xp', 'ryo', 'playtime', 'updated_at', 'firstname'];
@@ -55,6 +71,11 @@ final class CharactersController
                 $columns[$col] = is_bool($value) ? (int) $value : $value;
             }
         }
+        foreach (self::JSON_COLUMNS as $col) {
+            if (array_key_exists($col, $data)) {
+                $columns[$col] = json_encode($data[$col], JSON_UNESCAPED_UNICODE);
+            }
+        }
         // Champs envoyés par le jeu sous un autre nom (data.created / data.lastSeen côté Lua).
         if (array_key_exists('created', $data)) {
             $columns['game_created'] = (int) $data['created'];
@@ -81,8 +102,9 @@ final class CharactersController
             $stmt->bindValue(':id', $existingId, PDO::PARAM_INT);
             $stmt->execute();
 
-            self::syncKekei($db, (int) $existingId, $data);
-            Response::ok(['synced' => true, 'id' => (int) $existingId]);
+            $characterId = (int) $existingId;
+            self::syncLists($db, $characterId, $data);
+            Response::ok(['synced' => true, 'id' => $characterId]);
         }
 
         $cols = array_keys($columns);
@@ -93,38 +115,106 @@ final class CharactersController
         }
         $stmt->execute();
 
-        $newId = (int) $db->lastInsertId();
-        self::syncKekei($db, $newId, $data);
-        Response::ok(['synced' => true, 'id' => $newId], 201);
+        $characterId = (int) $db->lastInsertId();
+        self::syncLists($db, $characterId, $data);
+        Response::ok(['synced' => true, 'id' => $characterId], 201);
+    }
+
+    /** Synchronise toutes les tables "liste" déclarées dans LIST_TABLES, plus l'inventaire (2 tables). */
+    private static function syncLists(PDO $db, int $characterId, array $data): void
+    {
+        foreach (self::LIST_TABLES as $key => [$table, $idCol, $valueCol]) {
+            if (!array_key_exists($key, $data)) {
+                continue;
+            }
+            self::replaceListTable($db, $table, $idCol, $valueCol, $characterId, $data[$key]);
+        }
+
+        $inventory = $data['inventory'] ?? null;
+        if (is_array($inventory)) {
+            if (array_key_exists('items', $inventory)) {
+                self::replaceListTable($db, 'character_inventory', 'item_id', 'quantity', $characterId, $inventory['items']);
+            }
+            if (array_key_exists('equipped', $inventory)) {
+                self::replaceListTable($db, 'character_equipped', 'slot', 'item_id', $characterId, $inventory['equipped']);
+            }
+        }
     }
 
     /**
-     * Remplace entièrement les Kekkei Genkai débloqués d'un personnage à partir
-     * de data.kekkei = [ {id, level?}, ... ] (ou [ {kekei_id, level?}, ... ]).
-     * N'y touche pas si le payload n'a pas de clé "kekkei" du tout (sync partiel).
+     * Remplace entièrement une table character_* par le contenu envoyé.
+     * $valueCol === null : simple ensemble d'identifiants (affinités, jutsu, arbre de clan).
+     * $valueCol fourni    : paire identifiant/valeur (stats, kekkei genkai, dōjutsu, inventaire,
+     *                       emplacements équipés/loadout - valeur numérique ou texte selon la table).
+     * Accepte aussi bien une liste (["katon", ...] ou [{id, level}, ...]) qu'une table
+     * clé/valeur ({"katon": true, ...} ou {"strength": 12, ...}), pour coller à ce que
+     * Lua envoie naturellement selon le champ.
      */
-    private static function syncKekei(PDO $db, int $characterId, array $data): void
+    private static function replaceListTable(PDO $db, string $table, string $idCol, ?string $valueCol, int $characterId, mixed $raw): void
     {
-        if (!array_key_exists('kekkei', $data) || !is_array($data['kekkei'])) {
+        $db->prepare("DELETE FROM {$table} WHERE character_id = :id")->execute(['id' => $characterId]);
+
+        if (!is_array($raw) || $raw === []) {
             return;
         }
 
-        $db->prepare('DELETE FROM character_kekei WHERE character_id = :id')->execute(['id' => $characterId]);
+        $pairs = self::extractPairs($raw);
+        if ($pairs === []) {
+            return;
+        }
 
-        $stmt = $db->prepare(
-            'INSERT INTO character_kekei (character_id, kekei_id, level) VALUES (:character_id, :kekei_id, :level)'
-        );
-        foreach ($data['kekkei'] as $entry) {
-            $keiId = is_array($entry) ? (string) ($entry['id'] ?? $entry['kekei_id'] ?? '') : (string) $entry;
-            if ($keiId === '') {
+        if ($valueCol === null) {
+            $stmt = $db->prepare("INSERT IGNORE INTO {$table} (character_id, {$idCol}) VALUES (:cid, :val)");
+            foreach (array_keys($pairs) as $id) {
+                $stmt->execute(['cid' => $characterId, 'val' => $id]);
+            }
+            return;
+        }
+
+        $stmt = $db->prepare("INSERT INTO {$table} (character_id, {$idCol}, {$valueCol}) VALUES (:cid, :k, :v)");
+        foreach ($pairs as $id => $value) {
+            $stmt->execute(['cid' => $characterId, 'k' => $id, 'v' => $value]);
+        }
+    }
+
+    /**
+     * Ramène n'importe quelle forme envoyée à une table [identifiant => valeur] :
+     *   ["katon", "raiton"]                    -> ["katon" => 1, "raiton" => 1]
+     *   [{"id":"mokuton","level":3}, ...]       -> ["mokuton" => 3, ...]
+     *   {"strength": 12, "uchiha_x": true}      -> ["strength" => 12, "uchiha_x" => 1]
+     *   {"1": "kunai", "2": "shuriken"}         -> ["1" => "kunai", "2" => "shuriken"] (emplacements)
+     */
+    private static function extractPairs(array $raw): array
+    {
+        $isList = array_keys($raw) === range(0, count($raw) - 1);
+        $out = [];
+
+        if (!$isList) {
+            foreach ($raw as $key => $value) {
+                $out[(string) $key] = self::scalarValue($value);
+            }
+            return $out;
+        }
+
+        foreach ($raw as $item) {
+            if (is_scalar($item)) {
+                $out[(string) $item] = 1;
                 continue;
             }
-            $stmt->execute([
-                'character_id' => $characterId,
-                'kekei_id'     => $keiId,
-                'level'        => is_array($entry) ? (int) ($entry['level'] ?? 1) : 1,
-            ]);
+            if (is_array($item)) {
+                $id = (string) ($item['id'] ?? '');
+                if ($id === '') continue;
+                $out[$id] = self::scalarValue($item['level'] ?? $item['stage'] ?? $item['value'] ?? $item['qty'] ?? 1);
+            }
         }
+        return $out;
+    }
+
+    private static function scalarValue(mixed $value): int|string
+    {
+        if (is_bool($value)) return $value ? 1 : 0;
+        if (is_array($value)) return $value['level'] ?? $value['stage'] ?? $value['value'] ?? 1;
+        return $value;
     }
 
     private static function show(string $id): void
@@ -142,11 +232,7 @@ final class CharactersController
             Response::error('Personnage introuvable.', 404);
         }
 
-        $kekei = $db->prepare('SELECT kekei_id, level, unlocked_at FROM character_kekei WHERE character_id = :id ORDER BY kekei_id');
-        $kekei->execute(['id' => $id]);
-        $row['kekei'] = $kekei->fetchAll();
-
-        Response::ok(self::decorate($row));
+        Response::ok(self::decorate($db, $row));
     }
 
     private static function list(): void
@@ -184,13 +270,43 @@ final class CharactersController
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
 
-        Response::ok(array_map([self::class, 'decorate'], $stmt->fetchAll()));
+        // Liste : pas de sous-tables ici (coûteux en N+1), juste la fiche de base.
+        Response::ok(array_map(static fn ($row) => self::decodeJson($row), $stmt->fetchAll()));
     }
 
-    private static function decorate(array $row): array
+    /** Fiche complète : colonnes JSON décodées + toutes les listes character_*. */
+    private static function decorate(PDO $db, array $row): array
     {
-        if (isset($row['raw_data']) && is_string($row['raw_data'])) {
-            $row['raw_data'] = json_decode($row['raw_data'], true);
+        $row = self::decodeJson($row);
+        $id = $row['id'];
+
+        foreach (self::LIST_TABLES as $key => [$table, $idCol, $valueCol]) {
+            $cols = $valueCol === null ? $idCol : "{$idCol}, {$valueCol}";
+            $stmt = $db->prepare("SELECT {$cols} FROM {$table} WHERE character_id = :id ORDER BY {$idCol}");
+            $stmt->execute(['id' => $id]);
+            $row[$key] = $valueCol === null
+                ? $stmt->fetchAll(PDO::FETCH_COLUMN)
+                : $stmt->fetchAll();
+        }
+
+        $items = $db->prepare('SELECT item_id, quantity FROM character_inventory WHERE character_id = :id ORDER BY item_id');
+        $items->execute(['id' => $id]);
+        $equipped = $db->prepare('SELECT slot, item_id FROM character_equipped WHERE character_id = :id ORDER BY slot');
+        $equipped->execute(['id' => $id]);
+        $row['inventory'] = [
+            'items'    => $items->fetchAll(),
+            'equipped' => $equipped->fetchAll(),
+        ];
+
+        return $row;
+    }
+
+    private static function decodeJson(array $row): array
+    {
+        foreach (['raw_data', 'bodygroups', 'color', 'flags'] as $col) {
+            if (isset($row[$col]) && is_string($row[$col])) {
+                $row[$col] = json_decode($row[$col], true);
+            }
         }
         return $row;
     }

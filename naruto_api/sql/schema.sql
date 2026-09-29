@@ -46,6 +46,11 @@ CREATE TABLE IF NOT EXISTS characters (
     firstname      VARCHAR(64)   NOT NULL DEFAULT '',
     lastname       VARCHAR(64)   NOT NULL DEFAULT '',
     gender         VARCHAR(16)   NOT NULL DEFAULT '',
+    model          VARCHAR(255)  NOT NULL DEFAULT '',
+    skin           INT UNSIGNED  NOT NULL DEFAULT 0,
+    bodygroups     JSON          NULL,               -- {id_bodygroup: valeur}
+    color          JSON          NULL,               -- [r, g, b]
+    flags          JSON          NULL,               -- fourre-tout générique (bonusStatPoints, dojutsuPref...)
     village        VARCHAR(32)   NOT NULL DEFAULT '',
     clan           VARCHAR(32)   NOT NULL DEFAULT '',
     rank           VARCHAR(32)   NOT NULL DEFAULT '',
@@ -58,7 +63,7 @@ CREATE TABLE IF NOT EXISTS characters (
     playtime       INT UNSIGNED  NOT NULL DEFAULT 0,
     game_created   INT UNSIGNED  NOT NULL DEFAULT 0, -- horodatage Unix envoyé par le jeu (data.created)
     game_last_seen INT UNSIGNED  NOT NULL DEFAULT 0, -- horodatage Unix envoyé par le jeu (data.lastSeen)
-    raw_data       MEDIUMTEXT    NULL,               -- JSON complet envoyé par /characters/sync
+    raw_data       MEDIUMTEXT    NULL,               -- JSON complet envoyé (garde-fou pour tout champ pas encore prévu ici)
     updated_at     DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     KEY idx_characters_steamid (steamid),
@@ -70,20 +75,79 @@ CREATE TABLE IF NOT EXISTS characters (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ------------------------------------------------------------
--- Kekkei Genkai débloqués par personnage (mokuton, jinton, hyoton, yoton,
--- shakuton, futton, jiton, shoton, meiton, bakuton, kiminari...). Table
--- dédiée (plutôt que noyé dans raw_data) pour pouvoir filtrer/lister par
--- kekkei genkai depuis le site.
+-- Ce qui était noyé dans "raw_data" (JSON) a chacun sa table : plus facile à
+-- filtrer/lister/joindre depuis le site ("qui a tel jutsu", "qui possède tel
+-- objet"...). Toutes ont la même forme (character_id + identifiant [+valeur]).
 -- ------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS character_kekei (
-    id            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    character_id  BIGINT UNSIGNED NOT NULL,   -- characters.id
-    kekei_id      VARCHAR(32)     NOT NULL,   -- ex : mokuton, hyoton, jinton...
-    level         INT             NOT NULL DEFAULT 1,
-    unlocked_at   DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    UNIQUE KEY uniq_character_kekei (character_id, kekei_id),
-    KEY idx_kekei_character (character_id)
+
+-- Statistiques allouées (force, vitesse, chakra...)
+CREATE TABLE IF NOT EXISTS character_stats (
+    character_id BIGINT UNSIGNED NOT NULL,
+    stat_id      VARCHAR(32)     NOT NULL,
+    value        INT             NOT NULL DEFAULT 0,
+    PRIMARY KEY (character_id, stat_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Affinités élémentaires (katon, suiton, raiton, doton, fuuton)
+CREATE TABLE IF NOT EXISTS character_affinities (
+    character_id BIGINT UNSIGNED NOT NULL,
+    element_id   VARCHAR(32)     NOT NULL,
+    PRIMARY KEY (character_id, element_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Kekkei Genkai débloqués (mokuton, hyoton, jinton, yoton, shakuton, futton,
+-- jiton, shoton, meiton, bakuton, kiminari...)
+CREATE TABLE IF NOT EXISTS character_kekkei (
+    character_id BIGINT UNSIGNED NOT NULL,
+    kekkei_id    VARCHAR(32)     NOT NULL,
+    level        INT             NOT NULL DEFAULT 1,
+    PRIMARY KEY (character_id, kekkei_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Dōjutsu possédés (Sharingan, Byakugan...) et leur stade
+CREATE TABLE IF NOT EXISTS character_dojutsu (
+    character_id BIGINT UNSIGNED NOT NULL,
+    dojutsu_id   VARCHAR(32)     NOT NULL,
+    stage        INT             NOT NULL DEFAULT 1,
+    PRIMARY KEY (character_id, dojutsu_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Jutsu débloqués
+CREATE TABLE IF NOT EXISTS character_jutsu (
+    character_id BIGINT UNSIGNED NOT NULL,
+    jutsu_id     VARCHAR(64)     NOT NULL,
+    PRIMARY KEY (character_id, jutsu_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Jutsu placés sur la barre de raccourcis (emplacement -> jutsu)
+CREATE TABLE IF NOT EXISTS character_loadout (
+    character_id BIGINT UNSIGNED NOT NULL,
+    slot         VARCHAR(16)     NOT NULL,
+    jutsu_id     VARCHAR(64)     NOT NULL,
+    PRIMARY KEY (character_id, slot)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Nœuds débloqués dans l'arbre de clan
+CREATE TABLE IF NOT EXISTS character_clan_tree (
+    character_id BIGINT UNSIGNED NOT NULL,
+    node_id      VARCHAR(64)     NOT NULL,
+    PRIMARY KEY (character_id, node_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Inventaire (objet -> quantité)
+CREATE TABLE IF NOT EXISTS character_inventory (
+    character_id BIGINT UNSIGNED NOT NULL,
+    item_id      VARCHAR(64)     NOT NULL,
+    quantity     INT UNSIGNED    NOT NULL DEFAULT 0,
+    PRIMARY KEY (character_id, item_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Objets équipés (emplacement -> objet)
+CREATE TABLE IF NOT EXISTS character_equipped (
+    character_id BIGINT UNSIGNED NOT NULL,
+    slot         VARCHAR(16)     NOT NULL,
+    item_id      VARCHAR(64)     NOT NULL,
+    PRIMARY KEY (character_id, slot)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ------------------------------------------------------------
