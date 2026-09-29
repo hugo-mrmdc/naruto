@@ -26,7 +26,27 @@ quel hébergement mutualisé.
    quand même via `index.php/characters/...` (PATH_INFO).
 6. Teste : `curl https://tonsite/naruto_api/public/health` doit répondre `{"success":true,...}`.
 
-## Côté serveur GMod
+## Dashboard visuel
+
+`public/dashboard/` est un site en lecture seule (PHP classique, pas de JS,
+pas de framework) qui affiche les données déjà en base : `dashboard/index.php`
+(résumé + activité récente), `characters.php` (classement filtrable/triable),
+`character.php?steamid=...` (fiche complète, décode `raw_data`), `bounties.php`
+(Bingo Book) et `logs.php` (journal filtrable).
+
+Il lit la base **directement** (`Database::connection()`), pas via les routes
+JSON `/characters`, `/bounties`... donc **pas besoin de la clé `X-Api-Key`**
+pour le consulter — cette clé ne doit de toute façon jamais arriver dans un
+navigateur. Il n'écrit jamais dans la base.
+
+Il est indépendant du serveur GMod : dès que `sql/schema.sql` est importé, il
+tourne et affiche des pages vides (avec un message clair) même sans aucune
+synchronisation Lua active. Il se remplit tout seul dès que le jeu commence à
+pousser des données (voir plus bas), sans rien à reconfigurer.
+
+Accès : `https://tonsite/naruto_api/public/dashboard/`
+
+## Côté serveur GMod (optionnel, à activer quand tu es prêt)
 
 Dans `naruto_dev/gamemodes/narutorp/gamemode/config/sv_api.lua` :
 - `Enabled = true`
