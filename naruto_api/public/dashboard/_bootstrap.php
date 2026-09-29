@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * Bootstrap du dashboard : pages PHP classiques (HTML, pas de JSON), rendues
  * côté serveur. Elles lisent la base MySQL directement via Database::connection(),
- * SANS passer par les routes /characters, /bounties... de l'API (donc sans
+ * SANS passer par les routes /characters, /logs... de l'API (donc sans
  * jamais avoir besoin de la clé X-Api-Key ici). C'est volontaire : la clé API
  * sert au serveur GMod, elle ne doit jamais atteindre un navigateur.
  *
@@ -69,7 +69,6 @@ function db_try(callable $query): array
 $NAV = [
     'index.php'      => 'Accueil',
     'characters.php' => 'Personnages',
-    'bounties.php'   => 'Bingo Book',
     'logs.php'       => 'Journal',
 ];
 

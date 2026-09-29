@@ -7,7 +7,6 @@ require __DIR__ . '/_bootstrap.php';
 $stats = db_try(static function (PDO $db): array {
     return [
         'characters'  => (int) $db->query('SELECT COUNT(*) FROM characters')->fetchColumn(),
-        'bounties'    => (int) $db->query('SELECT COUNT(*) FROM bounties WHERE active = 1')->fetchColumn(),
         'sessions'    => (int) $db->query('SELECT COUNT(*) FROM sessions WHERE disconnected_at IS NULL')->fetchColumn(),
         'playtime'    => (int) $db->query('SELECT COALESCE(SUM(playtime), 0) FROM characters')->fetchColumn(),
     ];
@@ -26,7 +25,6 @@ page_start('Tableau de bord');
 
 <div class="grid">
     <div class="stat-card"><div class="value"><?= fmt_num($stats['characters'] ?? 0) ?></div><div class="label">Personnages</div></div>
-    <div class="stat-card"><div class="value"><?= fmt_num($stats['bounties'] ?? 0) ?></div><div class="label">Primes actives</div></div>
     <div class="stat-card"><div class="value"><?= fmt_num($stats['sessions'] ?? 0) ?></div><div class="label">Joueurs en ligne</div></div>
     <div class="stat-card"><div class="value"><?= fmt_playtime((int) ($stats['playtime'] ?? 0)) ?></div><div class="label">Temps de jeu cumulé</div></div>
 </div>

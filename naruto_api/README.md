@@ -32,11 +32,10 @@ quel hébergement mutualisé.
 pas de framework) qui affiche les données déjà en base : `dashboard/index.php`
 (résumé + activité récente), `characters.php` (classement filtrable/triable),
 `character.php?id=...` (fiche complète : stats, affinités, jutsu, inventaire,
-Kekkei Genkai, dōjutsu, arbre de clan...), `bounties.php` (Bingo Book) et
-`logs.php` (journal filtrable).
+Kekkei Genkai, dōjutsu, arbre de clan...) et `logs.php` (journal filtrable).
 
 Il lit la base **directement** (`Database::connection()`), pas via les routes
-JSON `/characters`, `/bounties`... donc **pas besoin de la clé `X-Api-Key`**
+JSON `/characters`, `/logs`... donc **pas besoin de la clé `X-Api-Key`**
 pour le consulter — cette clé ne doit de toute façon jamais arriver dans un
 navigateur. Il n'écrit jamais dans la base.
 
@@ -57,8 +56,8 @@ Dans `naruto_dev/gamemodes/narutorp/gamemode/config/sv_api.lua` :
 Une fois activé, `modules/api_sync/sv_api_sync.lua` pousse automatiquement :
 - la fiche personnage complète à chaque sauvegarde (autosave, déconnexion, arrêt serveur) ;
 - le début/fin de session de connexion ;
-- chaque entrée du journal d'actions (`NRP.LogAction`, primes, etc. l'utilisent déjà) ;
-- les primes actives et les relations entre villages, toutes les `SyncInterval` secondes.
+- chaque entrée du journal d'actions (`NRP.LogAction`) ;
+- les relations entre villages, toutes les `SyncInterval` secondes.
 
 Tout est best-effort : si l'API est injoignable, le jeu continue de fonctionner
 normalement (aucune de ces requêtes ne bloque une action du joueur).
@@ -82,8 +81,6 @@ partagée, appel serveur-à-serveur uniquement — jamais depuis le client GMod)
 | GET / POST | `/players`, `/players/{steamid}` | comptes (steamid, dernière connexion...) |
 | POST | `/logs` `{category, actor_steamid?, actor_name?, target_steamid?, message}` | ajoute une entrée au journal |
 | GET | `/logs?category=&actor_steamid=&target_steamid=&limit=&offset=` | consulte le journal |
-| POST | `/bounties/sync` `{bounties: [...]}` | remplace la liste des primes actives |
-| GET | `/bounties?all=1` | primes actives (ou tout l'historique) |
 | POST | `/villages/relations/sync` `{relations: [...]}` | met à jour les relations entre villages |
 | GET | `/villages/relations` | toutes les relations |
 | POST | `/bans` `{steamid, reason, admin_steamid?, admin_name?, expires_at?}` | archive un ban (registre web) |

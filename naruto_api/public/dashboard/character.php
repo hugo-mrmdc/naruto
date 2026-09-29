@@ -5,7 +5,7 @@ declare(strict_types=1);
 require __DIR__ . '/_bootstrap.php';
 
 // Deux façons d'arriver ici : un id de personnage précis (depuis le classement),
-// ou un steamid (depuis les primes/le journal, qui ne connaissent que le joueur
+// ou un steamid (depuis le journal, qui ne connaît que le joueur
 // visé — un même steamid pouvant correspondre à plusieurs personnages).
 $id = trim((string) ($_GET['id'] ?? ''));
 $steamidParam = trim((string) ($_GET['steamid'] ?? ''));

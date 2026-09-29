@@ -3,7 +3,7 @@
 
     Sert à synchroniser le serveur GMod avec le site web (naruto_api/, PHP + MySQL,
     base séparée de celle du jeu) : fiches personnage, sessions de connexion,
-    journal d'actions, primes, relations entre villages.
+    journal d'actions, relations entre villages.
     Voir modules/api_sync/sv_api_sync.lua pour l'utilisation, et naruto_api/README.md
     pour l'installation du côté PHP.
 ]]
@@ -21,8 +21,8 @@ NRP.Config.Api = {
 
     Timeout = 5,   -- secondes avant d'abandonner une requête HTTP
 
-    -- Intervalle (s) auquel les primes et les relations entre villages sont
-    -- renvoyées en entier (plus simple/robuste qu'un suivi coup par coup).
+    -- Intervalle (s) auquel les relations entre villages sont renvoyées en
+    -- entier (plus simple/robuste qu'un suivi coup par coup).
     SyncInterval = 60,
 
     -- Affiche les erreurs de requête dans la console serveur.

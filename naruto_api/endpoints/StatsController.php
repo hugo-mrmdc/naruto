@@ -37,13 +37,11 @@ final class StatsController
 
         if (($segments[0] ?? '') === 'summary') {
             $characters = (int) $db->query('SELECT COUNT(*) FROM characters')->fetchColumn();
-            $activeBounties = (int) $db->query('SELECT COUNT(*) FROM bounties WHERE active = 1')->fetchColumn();
             $onlineSessions = (int) $db->query('SELECT COUNT(*) FROM sessions WHERE disconnected_at IS NULL')->fetchColumn();
             $totalPlaytime = (int) $db->query('SELECT COALESCE(SUM(playtime), 0) FROM characters')->fetchColumn();
 
             Response::ok([
                 'characters'      => $characters,
-                'active_bounties' => $activeBounties,
                 'open_sessions'   => $onlineSessions,
                 'total_playtime_seconds' => $totalPlaytime,
             ]);

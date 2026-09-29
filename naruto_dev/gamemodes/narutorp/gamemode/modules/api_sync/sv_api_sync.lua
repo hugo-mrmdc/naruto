@@ -8,7 +8,6 @@
         - Fiche personnage complète  -> POST /characters/sync   (à chaque sauvegarde)
         - Connexion / déconnexion    -> POST /sessions/start|end
         - Actions journalisées       -> POST /logs               (miroir de NRP.LogAction)
-        - Primes actives             -> POST /bounties/sync      (resync périodique)
         - Relations entre villages   -> POST /villages/relations/sync (resync périodique)
 ]]
 
@@ -144,30 +143,9 @@ function NRP.LogAction(category, actor, target, message)
 end
 
 ---------------------------------------------------------------------------
--- Primes et relations entre villages : resync périodique complet (plus
--- simple et plus robuste qu'un suivi coup par coup, ces listes sont petites).
+-- Relations entre villages : resync périodique complet (plus simple et
+-- plus robuste qu'un suivi coup par coup, cette liste est petite).
 ---------------------------------------------------------------------------
-
-local function SyncBounties()
-    local Villages = NRP.Villages
-    if not Villages or not Villages.Bounties then return end
-
-    local list = {}
-    for _, b in pairs(Villages.Bounties) do
-        list[#list + 1] = {
-            target = b.target,
-            target_name = b.targetName,
-            amount = b.amount,
-            reason = b.reason,
-            issuer = b.issuer,
-            issuer_name = b.issuerName,
-            village = b.village,
-            created = b.created,
-        }
-    end
-
-    NRP.Api.Request("POST", "/bounties/sync", { bounties = list })
-end
 
 local function SyncVillageRelations()
     local Villages = NRP.Villages
@@ -186,6 +164,5 @@ end
 
 timer.Create("NRP.Api.PeriodicSync", math.max(Cfg().SyncInterval or 60, 15), 0, function()
     if not Cfg().Enabled then return end
-    SyncBounties()
     SyncVillageRelations()
 end)

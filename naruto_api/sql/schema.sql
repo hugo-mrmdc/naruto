@@ -168,26 +168,6 @@ CREATE TABLE IF NOT EXISTS logs (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ------------------------------------------------------------
--- Primes / Bingo Book (miroir plein-remplacement à chaque sync)
--- ------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS bounties (
-    id             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    target_steamid VARCHAR(32)  NOT NULL DEFAULT '',
-    target_name    VARCHAR(64)  NOT NULL DEFAULT '',
-    amount         BIGINT       NOT NULL DEFAULT 0,
-    reason         VARCHAR(160) NOT NULL DEFAULT '',
-    issuer_steamid VARCHAR(32)  NOT NULL DEFAULT '',
-    issuer_name    VARCHAR(64)  NOT NULL DEFAULT '',
-    village        VARCHAR(32)  NOT NULL DEFAULT '',
-    game_created   INT UNSIGNED NOT NULL DEFAULT 0,
-    active         TINYINT(1)   NOT NULL DEFAULT 1,
-    synced_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    KEY idx_bounties_target (target_steamid),
-    KEY idx_bounties_active (active)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ------------------------------------------------------------
 -- Relations diplomatiques entre villages (petite table, resync périodique)
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS village_relations (

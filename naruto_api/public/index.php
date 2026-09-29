@@ -22,7 +22,6 @@ require __DIR__ . '/../endpoints/PlayersController.php';
 require __DIR__ . '/../endpoints/SessionsController.php';
 require __DIR__ . '/../endpoints/CharactersController.php';
 require __DIR__ . '/../endpoints/LogsController.php';
-require __DIR__ . '/../endpoints/BountiesController.php';
 require __DIR__ . '/../endpoints/VillagesController.php';
 require __DIR__ . '/../endpoints/BansController.php';
 require __DIR__ . '/../endpoints/StatsController.php';
@@ -62,7 +61,6 @@ try {
         'sessions' => SessionsController::handle($method, $rest),
         'characters' => CharactersController::handle($method, $rest),
         'logs' => LogsController::handle($method, $rest),
-        'bounties' => BountiesController::handle($method, $rest),
         'villages' => VillagesController::handle($method, $rest),
         'bans' => BansController::handle($method, $rest),
         'stats' => StatsController::handle($method, $rest),
