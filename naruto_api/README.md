@@ -19,10 +19,6 @@ quel hébergement mutualisé.
    ```
    php -r "echo bin2hex(random_bytes(32));"
    ```
-   Et un mot de passe pour le dashboard (`DASHBOARD_PASSWORD_HASH`) :
-   ```
-   php -r "echo password_hash('ton_mot_de_passe', PASSWORD_DEFAULT);"
-   ```
 4. Pointe le vhost / sous-domaine sur le dossier `public/` (c'est le seul dossier
    à exposer publiquement — jamais `src/`, `endpoints/`, `sql/`, `.env` ni
    `naruto_api/index.php`, voir "Organisation des fichiers" plus bas).
@@ -30,6 +26,8 @@ quel hébergement mutualisé.
    route tout vers `index.php`). Sans Apache/mod_rewrite, l'API fonctionne
    quand même via `index.php/characters/...` (PATH_INFO).
 6. Teste : `curl https://tonsite/naruto_api/public/health` doit répondre `{"success":true,...}`.
+7. Ouvre `public/dashboard/register.php` et crée ton premier compte : il
+   devient automatiquement super admin actif (voir "Dashboard visuel" plus bas).
 
 ## Organisation des fichiers
 
@@ -55,13 +53,29 @@ JSON `/characters`, `/logs`... donc **pas besoin de la clé `X-Api-Key`**
 pour le consulter — cette clé ne doit de toute façon jamais arriver dans un
 navigateur. Il n'écrit jamais dans la base.
 
-**Protégé par mot de passe** (`DASHBOARD_PASSWORD_HASH` dans `.env`, voir
-Installation) : toute page du dossier redirige vers `login.php` tant que le
-navigateur n'est pas authentifié (session PHP, cookie `httponly`). Tant que
-ce mot de passe n'est pas configuré, le dashboard refuse tout le monde plutôt
-que de rester ouvert par erreur. `logout.php` termine la session. C'est un
-mot de passe unique partagé (pas de comptes par utilisateur) : pensé pour un
-accès staff/admin, pas pour des comptes joueurs.
+**Comptes par utilisateur, avec approbation** (table `dashboard_users`, voir
+`sql/schema.sql`) : toute page du dossier redirige vers `login.php` tant que
+le navigateur n'est pas authentifié (session PHP, cookie `httponly`). N'importe
+qui peut créer un compte via `register.php`, mais un compte fraîchement créé
+reste `pending` (aucun accès, message d'attente à la connexion) tant qu'un
+super admin ne l'active pas. **Exception d'amorçage** : le tout premier compte
+créé sur une base vide devient automatiquement `superadmin` et `active`, pour
+ne pas avoir besoin de configuration manuelle ou d'accès direct à la base.
+
+Deux rôles : `admin` (accès normal en lecture au dashboard) et `superadmin`
+(accès normal + page `users.php`, visible uniquement pour eux dans la nav).
+Depuis `users.php`, un super admin peut activer un compte en attente, le
+désactiver, ou changer son rôle (`promote`/`demote`). Un compte ne peut pas
+se modifier lui-même depuis cette page, et il est impossible de désactiver ou
+rétrograder le dernier super admin actif restant. Le rôle et le statut sont
+revérifiés en base à chaque requête (pas seulement à la connexion) : un compte
+désactivé perd l'accès immédiatement, sans attendre une déconnexion. Les
+actions qui modifient un compte (`users.php` en POST) sont protégées par un
+jeton CSRF. `logout.php` termine la session.
+
+Ce système de comptes est totalement séparé de la clé `X-Api-Key` de l'API
+JSON (qui sert au serveur GMod, jamais à un navigateur) et des comptes
+joueurs du jeu.
 
 Il est indépendant du serveur GMod : dès que `sql/schema.sql` est importé, il
 tourne et affiche des pages vides (avec un message clair) même sans aucune

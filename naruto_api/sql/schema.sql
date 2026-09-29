@@ -8,6 +8,26 @@
 SET NAMES utf8mb4;
 
 -- ------------------------------------------------------------
+-- Comptes du DASHBOARD (staff/admin) — rien à voir avec les joueurs du jeu.
+-- N'importe qui peut créer un compte (register.php), mais il reste en
+-- "pending" tant qu'un superadmin ne l'active pas depuis users.php.
+-- Exception : le tout premier compte créé (table vide) devient
+-- automatiquement superadmin + actif, pour amorcer le système.
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS dashboard_users (
+    id            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    username      VARCHAR(32)  NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role          VARCHAR(16)  NOT NULL DEFAULT 'admin',   -- admin | superadmin
+    status        VARCHAR(16)  NOT NULL DEFAULT 'pending', -- pending | active | disabled
+    created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    approved_at   DATETIME     NULL,
+    approved_by   VARCHAR(32)  NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uniq_dashboard_username (username)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ------------------------------------------------------------
 -- Comptes (identité Steam, indépendante du personnage RP)
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS players (
