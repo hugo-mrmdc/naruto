@@ -123,7 +123,6 @@ local function PlayerActions(panel, target)
         { "Attribuer un clan", "admin.clan", function()
             PickAndRun("Clan", RegistryChoices(NRP.Clans.Registry, { { "Aucun clan", "none" } }), "setclan", target)
         end },
-        { "Points de clan", "admin.clan", function() AskAndRun("Points de clan", "Points à ajouter", "clanpoints", target, "1") end },
         { "Ajouter une affinité", "admin.affinity", function()
             PickAndRun("Affinité", RegistryChoices(NRP.Elements), "addaffinity", target)
         end },
@@ -161,13 +160,8 @@ local function PlayerActions(panel, target)
         end },
     })
 
-    UI.Section(panel, "Missions et divers")
+    UI.Section(panel, "Divers")
     ButtonGrid(panel, {
-        { "Lancer une mission", "admin.mission", function()
-            PickAndRun("Mission", RegistryChoices(NRP.Missions.Registry), "startmission", target)
-        end },
-        { "Réussir sa mission", "admin.mission", function() Admin.Run("endmission", target, 1) end },
-        { "Annuler sa mission", "admin.mission", function() Admin.Run("endmission", target, 0) end },
         { "Consulter la fiche", "admin.inspect", function() Admin.Run("inspect", target) end },
         { "Réanimer / soigner", "admin.character", function() Admin.Run("revive", target) end },
         { "Renommer", "admin.character", function()
@@ -249,17 +243,8 @@ local function WorldActions(panel)
 
     UI.Section(panel, "Carte (" .. game.GetMap() .. ")")
     ButtonGrid(panel, {
-        { "Point de mission (ici)", "admin.world", function()
-            UI.RequestText("Point de mission", "Tag (delivery, retrieve, recon, bandits, escort, protect, defend, rogues, boss)", "delivery", function(value)
-                Admin.Run("mpoint", nil, "add", value)
-            end)
-        end },
-        { "Lister les points proches", "admin.world", function() Admin.Run("mpoint", nil, "near") end },
         { "Spawn de village (ici)", "admin.world", function()
             PickAndRun("Point d'apparition", RegistryChoices(Villages), "spawn", nil, nil, nil, "add")
-        end },
-        { "Donneur de mission (visé)", "admin.world", function()
-            PickAndRun("Donneur de mission", RegistryChoices(Villages, { { "Tous villages", "all" } }), "missionnpc", nil)
         end },
         { "Marchand (visé)", "admin.world", function()
             PickAndRun("Marchand", RegistryChoices(NRP.Inventory.Shops), "shopnpc", nil)

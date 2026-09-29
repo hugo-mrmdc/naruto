@@ -50,7 +50,6 @@ NRP.ModuleOrder = {
     "clans",
     "dojutsu",
     "inventory",
-    "missions",
     "villages",
     "admin",
 }

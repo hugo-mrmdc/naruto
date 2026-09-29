@@ -1,7 +1,7 @@
 --[[
     Module : progression (serveur) - XP, niveaux, points de statistiques
 
-        NRP.Progression.AddXP(ply, 100, "mission")
+        NRP.Progression.AddXP(ply, 100, "event")
         NRP.Progression.AddTrainingXP(ply, 2)     -- plafonné par heure
         NRP.Progression.SetLevel(ply, 20)
         NRP.Progression.AddStatPoints(ply, 3)     -- points bonus (conservés lors d'un reset)

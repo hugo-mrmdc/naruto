@@ -2,8 +2,7 @@
     Module : clans (serveur)
 
         NRP.Clans.SetClan(ply, "hyuga", admin)     -- "" pour retirer
-        NRP.Clans.UnlockNode(ply, "hyuga_juken")
-        NRP.Clans.AddPoints(ply, 2)
+        NRP.Clans.UnlockNode(ply, "hyuga_juken")   -- coûte des points de statistiques (NRP.Progression.AddStatPoints)
 
     Hooks : "NRP.ClanChanged"(ply, new, old), "NRP.ClanNodeUnlocked"(ply, nodeId)
 ]]
@@ -14,22 +13,6 @@ local Prog = NRP.Progression
 local Passives = NRP.Passives
 
 Clans.Counts = Clans.Counts or {}
-
-local function SpentPoints(data)
-    local def = Clans.Registry:Get(data.clan)
-    local spent = 0
-    if def then
-        for nodeId in pairs(data.clanTree) do
-            local node = def.nodes[nodeId]
-            spent = spent + (node and node.cost or 0)
-        end
-    end
-    return spent
-end
-
-local function TotalPoints(ply, data)
-    return Prog.ClanPointsForLevel(data.level) + Char.GetFlag(ply, "bonusClanPoints", 0)
-end
 
 -- Applique bonus, passifs et affinité du clan
 function Clans.Apply(ply)
@@ -54,7 +37,6 @@ end
 hook.Add("NRP.InitCharacter", "NRP.Clans.Init", function(ply, data, req)
     data.clan = (req.clan and Clans.Registry:Exists(req.clan)) and req.clan or ""
     data.clanTree = {}
-    data.clanPoints = Prog.ClanPointsForLevel(data.level or 1)
 
     if data.clan ~= "" and not data.isBot then
         Clans.Counts[data.clan] = (Clans.Counts[data.clan] or 0) + 1
@@ -86,19 +68,6 @@ hook.Add("NRP.CharacterUnloaded", "NRP.Clans.Unload", function(ply)
     ply.NRPPassives = nil
 end)
 
-hook.Add("NRP.LevelUp", "NRP.Clans.Points", function(ply, newLevel, oldLevel)
-    local gained = Prog.ClanPointsForLevel(newLevel) - Prog.ClanPointsForLevel(oldLevel)
-    if gained > 0 then
-        Char.Set(ply, "clanPoints", ply.NRPChar.clanPoints + gained)
-        NRP.Notify(ply, "+" .. gained .. " point(s) de clan", NRP.NOTIFY_SUCCESS)
-    end
-end)
-
-hook.Add("NRP.LevelSet", "NRP.Clans.Points", function(ply)
-    local data = ply.NRPChar
-    Char.Set(ply, "clanPoints", math.max(0, TotalPoints(ply, data) - SpentPoints(data)))
-end)
-
 ---------------------------------------------------------------------------
 -- Actions
 ---------------------------------------------------------------------------
@@ -128,9 +97,21 @@ function Clans.SetClan(ply, clanId, actor)
         Clans.Counts[clanId] = (Clans.Counts[clanId] or 0) + 1
     end
 
+    -- Rembourse les points de statistiques dépensés dans l'arbre de l'ancien clan
+    local oldDef = Clans.Registry:Get(old)
+    if oldDef then
+        local refund = 0
+        for nodeId in pairs(data.clanTree) do
+            local node = oldDef.nodes[nodeId]
+            refund = refund + (node and node.cost or 0)
+        end
+        if refund > 0 then
+            Prog.AddStatPoints(ply, refund)
+        end
+    end
+
     data.clanTree = {}
     Char.Touch(ply, "clanTree")
-    Char.Set(ply, "clanPoints", TotalPoints(ply, data))
     Char.Set(ply, "clan", clanId)
 
     Clans.Apply(ply)
@@ -139,12 +120,6 @@ function Clans.SetClan(ply, clanId, actor)
     NRP.LogAction("clan", actor, ply, (old ~= "" and old or "aucun") .. " -> " .. (clanId ~= "" and clanId or "aucun"))
     NRP.Announce("Clan", "Vous appartenez désormais au clan " .. Clans.GetName(clanId), (Clans.Get(clanId) or {}).color, 5, ply)
     return true
-end
-
-function Clans.AddPoints(ply, amount)
-    if not ply.NRPChar then return end
-    Char.SetFlag(ply, "bonusClanPoints", Char.GetFlag(ply, "bonusClanPoints", 0) + amount)
-    Char.Set(ply, "clanPoints", math.max(0, ply.NRPChar.clanPoints + amount))
 end
 
 function Clans.UnlockNode(ply, nodeId)
@@ -157,7 +132,7 @@ function Clans.UnlockNode(ply, nodeId)
 
     data.clanTree[nodeId] = true
     Char.Touch(ply, "clanTree")
-    Char.Set(ply, "clanPoints", data.clanPoints - node.cost)
+    Char.Set(ply, "statPoints", data.statPoints - node.cost)
 
     local rewards = node.rewards
     if rewards.jutsu then
@@ -210,17 +185,6 @@ NRP.Commands.Add("setclan", {
         local ok, err = Clans.SetClan(target, clanId, caller)
         if not ok then return false, err end
         return true, target:Nick() .. " -> " .. Clans.GetName(clanId)
-    end,
-})
-
-NRP.Commands.Add("clanpoints", {
-    perm = "admin.clan", usage = "clanpoints <joueur> <points>", description = "Donner des points de clan",
-    args = { "player", "number" },
-    run = function(caller, target, amount)
-        if not target.NRPChar then return false, "Ce joueur n'a pas de personnage." end
-        Clans.AddPoints(target, math.floor(amount))
-        NRP.LogAction("admin", caller, target, "points de clan " .. amount)
-        return true, amount .. " point(s) de clan donnés à " .. target:Nick()
     end,
 })
 

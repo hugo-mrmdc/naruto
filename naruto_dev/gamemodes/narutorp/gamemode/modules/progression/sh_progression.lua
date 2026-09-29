@@ -27,10 +27,6 @@ function Prog.StatPointsForLevel(level)
     return (math.max(1, level) - 1) * Cfg().StatPointsPerLevel
 end
 
-function Prog.ClanPointsForLevel(level)
-    return (Cfg().ClanPointsStart or 0) + math.floor(math.max(1, level) / math.max(1, Cfg().ClanPointsEvery))
-end
-
 ---------------------------------------------------------------------------
 -- Grades
 ---------------------------------------------------------------------------
@@ -68,16 +64,6 @@ end
 function Ranks.HasPermission(ply, perm)
     local rank = Ranks.GetPlayerRank(ply)
     return rank ~= nil and rank.permissions ~= nil and rank.permissions[perm] == true
-end
-
--- Le grade peut-il accéder à une mission de ce rang ?
-function Ranks.CanAccessMissionRank(rankId, missionRank)
-    local rank = Ranks.Registry:Get(rankId)
-    if not rank then return false end
-    local ranks = NRP.Config.MissionSettings.Ranks
-    local max = ranks[rank.maxMissionRank or "D"]
-    local wanted = ranks[missionRank]
-    return max ~= nil and wanted ~= nil and wanted.order <= max.order
 end
 
 function Ranks.Sorted()

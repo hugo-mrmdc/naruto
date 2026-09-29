@@ -5,7 +5,6 @@
         NRP.Inventory.Take(ply, "kunai", 1)      -> bool (tout ou rien)
         NRP.Inventory.Has(ply, "kunai", 3)
         NRP.Inventory.Use / Equip / Unequip / Drop
-        NRP.Inventory.RemoveMissionItems(ply)
 
     Toutes les actions client passent par "NRP.ItemAction" et sont revalidées ici.
 ]]
@@ -85,16 +84,6 @@ function Inv.Take(ply, id, qty)
     return true
 end
 
-function Inv.RemoveMissionItems(ply, onlyId)
-    local inv = Data(ply)
-    if not inv then return end
-    for id, qty in pairs(table.Copy(inv.items)) do
-        local def = Inv.Items:Get(id)
-        if def and def.missionItem and (not onlyId or onlyId == id) then
-            Inv.Take(ply, id, qty)
-        end
-    end
-end
 
 ---------------------------------------------------------------------------
 -- Équipement et poids
@@ -351,7 +340,7 @@ function Inv.Sell(ply, npc, itemId, qty)
 
     local shop = Inv.Shops:Get(npc:GetShopId())
     local def = Inv.Items:Get(itemId)
-    if not shop or not def or shop.sellRatio <= 0 or def.missionItem then return false, "Ce marchand n'achète pas cet objet." end
+    if not shop or not def or shop.sellRatio <= 0 then return false, "Ce marchand n'achète pas cet objet." end
 
     qty = math.Clamp(math.floor(qty), 1, Inv.Count(ply, itemId))
     if qty <= 0 or not Inv.Take(ply, itemId, qty) then return false end

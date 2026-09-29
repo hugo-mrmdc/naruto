@@ -1,6 +1,5 @@
 --[[
-    HUD : suivi de mission (objectif, progression, temps, balises) et bannière d'événement
-    + fenêtres d'invitation (mission, échange)
+    HUD : bannière d'événement (avec balise) + fenêtre d'invitation d'échange
 ]]
 
 local UI = NRP.UI
@@ -59,51 +58,11 @@ hook.Add("HUDPaint", "NRP.UI.Tracker", function()
             DrawWaypoint(ev.pos, ev.name, theme.Warning)
         end
     end
-
-    -- Mission
-    local m = NRP.Missions.Current
-    if not m then return end
-
-    local def = m.def
-    local rank = def and NRP.Missions.GetRank(def.rank)
-    local h = S(112)
-    UI.Box(x, y, w, h, UI.Alpha(theme.Background, 220), S(8))
-    draw.RoundedBoxEx(S(8), x, y, S(4), h, rank and rank.color or theme.Accent, true, false, true, false)
-
-    UI.Text((rank and rank.name or "") .. (m.state == "forming" and "  •  en préparation" or ""), "NRP.Tiny",
-        x + S(14), y + S(8), rank and rank.color or theme.TextDim)
-    UI.Text(def and def.name or m.id, "NRP.BodyBold", x + S(14), y + S(22), theme.Text)
-
-    UI.Text(UI.Ellipsis(m.objective or "", "NRP.Small", w - S(28)), "NRP.Small", x + S(14), y + S(46), theme.TextDim)
-
-    if (m.max or 0) > 0 then
-        UI.Bar(x + S(14), y + S(72), w - S(28), S(10), (m.cur or 0) / m.max, theme.Accent, (m.cur or 0) .. " / " .. m.max)
-    end
-
-    local left = (m.endTime or 0) - CurTime()
-    UI.Text(NRP.Util.FormatTime(left), "NRP.SmallBold", x + w - S(14), y + S(8),
-        left < 60 and theme.Error or theme.Text, TEXT_ALIGN_RIGHT)
-    UI.Text(#(m.members or {}) .. " membre(s)", "NRP.Tiny", x + S(14), y + h - S(18), theme.TextDim)
-
-    for _, wp in ipairs(m.waypoints or {}) do
-        if isvector(wp.pos) then
-            DrawWaypoint(wp.pos, wp.label or "", NRP.Config.MissionSettings.WaypointColor)
-        end
-    end
 end)
 
 ---------------------------------------------------------------------------
 -- Invitations
 ---------------------------------------------------------------------------
-
-hook.Add("NRP.MissionInvite", "NRP.UI.MissionInvite", function(from, missionId)
-    local def = NRP.Missions.Registry:Get(missionId)
-    UI.Confirm("Invitation de mission",
-        from:Nick() .. " vous invite à rejoindre la mission « " .. (def and def.name or missionId) .. " ».",
-        function() NRP.Missions.ReplyInvite(true) end,
-        function() NRP.Missions.ReplyInvite(false) end,
-        NRP.Config.MissionSettings.InviteTimeout)
-end)
 
 hook.Add("NRP.TradePrompt", "NRP.UI.TradePrompt", function(from)
     UI.Confirm("Demande d'échange", from:Nick() .. " souhaite faire un échange avec vous.",
