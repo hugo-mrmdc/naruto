@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Laisse passer les vrais fichiers (rien d'autre que index.php ici normalement)
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Tout le reste part dans index.php, en PATH_INFO
+RewriteRule ^(.*)$ index.php/$1 [L]
