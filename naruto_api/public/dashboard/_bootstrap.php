@@ -18,7 +18,7 @@ require __DIR__ . '/../../src/DashboardAuth.php';
 
 date_default_timezone_set(Config::get('APP_TIMEZONE', 'UTC'));
 
-// Toutes les pages qui chargent ce bootstrap sont protégées par mot de passe
+// Toutes les pages qui chargent ce bootstrap exigent un compte actif
 // (login.php et logout.php ne le chargent pas, pour ne pas boucler).
 DashboardAuth::requireLogin();
 
@@ -82,6 +82,11 @@ function page_start(string $title): void
 {
     global $NAV;
     $current = basename($_SERVER['SCRIPT_NAME'] ?? '');
+    $me = DashboardAuth::currentUser();
+    $nav = $NAV;
+    if (DashboardAuth::isSuperAdmin()) {
+        $nav['users.php'] = 'Utilisateurs';
+    }
     ?>
 <!doctype html>
 <html lang="fr">
@@ -96,11 +101,16 @@ function page_start(string $title): void
     <div class="topbar-inner">
         <a class="brand" href="index.php">Naruto RP</a>
         <nav>
-            <?php foreach ($NAV as $href => $label): ?>
+            <?php foreach ($nav as $href => $label): ?>
                 <a href="<?= h($href) ?>" class="<?= $href === $current ? 'active' : '' ?>"><?= h($label) ?></a>
             <?php endforeach; ?>
-            <a href="logout.php">Déconnexion</a>
         </nav>
+        <?php if ($me): ?>
+            <span style="color:var(--text-dim);font-size:.85rem;margin-left:auto">
+                <?= h($me['username']) ?> <span class="badge <?= $me['role'] === 'superadmin' ? 'accent' : '' ?>"><?= h($me['role']) ?></span>
+            </span>
+            <a href="logout.php">Déconnexion</a>
+        <?php endif; ?>
     </div>
 </header>
 <main class="container">

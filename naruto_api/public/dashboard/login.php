@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require __DIR__ . '/../../src/Config.php';
+require __DIR__ . '/../../src/Database.php';
 require __DIR__ . '/../../src/DashboardAuth.php';
 
 function h(mixed $value): string
@@ -24,13 +25,13 @@ if (DashboardAuth::isLoggedIn()) {
 
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $password = (string) ($_POST['password'] ?? '');
-    if (DashboardAuth::attempt($password)) {
+    [$ok, $message] = DashboardAuth::attempt((string) ($_POST['username'] ?? ''), (string) ($_POST['password'] ?? ''));
+    if ($ok) {
         header('Location: ' . $redirect);
         exit;
     }
     sleep(1); // ralentit un peu le bruteforce, sans dépendance externe
-    $error = 'Mot de passe incorrect.';
+    $error = $message;
 }
 ?>
 <!doctype html>
@@ -51,14 +52,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="post">
             <input type="hidden" name="redirect" value="<?= h($redirect) ?>">
             <label style="display:block;margin-bottom:14px">
+                <span style="display:block;color:var(--text-dim);font-size:.85rem;margin-bottom:6px">Nom d'utilisateur</span>
+                <input type="text" name="username" autofocus required
+                       style="width:100%;background:var(--panel-light);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:6px">
+            </label>
+            <label style="display:block;margin-bottom:14px">
                 <span style="display:block;color:var(--text-dim);font-size:.85rem;margin-bottom:6px">Mot de passe</span>
-                <input type="password" name="password" autofocus required
+                <input type="password" name="password" required
                        style="width:100%;background:var(--panel-light);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:6px">
             </label>
             <button type="submit" style="width:100%;background:var(--accent);color:#1a0f05;border:none;padding:10px;border-radius:6px;font-weight:600;cursor:pointer">
                 Se connecter
             </button>
         </form>
+        <p style="text-align:center;margin-bottom:0;margin-top:16px;color:var(--text-dim);font-size:.85rem">
+            Pas de compte ? <a href="register.php">En créer un</a>
+        </p>
     </div>
 </main>
 </body>
