@@ -2,8 +2,8 @@
 -- Inventaire et équipement (CLIENT)
 -- Ouvre avec F4, ou la commande console : mon_menu
 --
---   Gauche : onglets (Inventaire, Boutique, Hôtel de vente)
---   Centre : les objets, avec recherche
+--   Gauche : filtres, recherche et grille de cinq colonnes
+--   Textures : ui/newUi/optimized (sources conservées dans newUi)
 --   Droite : l'équipement autour de l'aperçu 3D du personnage
 --
 -- Équiper : clic droit ou double-clic sur un objet.
@@ -22,16 +22,8 @@
 --========================================================
 -- RÉGLAGES
 --========================================================
-local FOND      = "ui/inventory/back_ame.png"   -- ou back_konoah.png / back_suna.png
-local NB_CASES  = 40
-local COLONNES  = 8
-local TOUCHE    = KEY_F4
-
--- Taille à l'écran
-local LARGEUR_ECRAN = 0.80   -- part de la largeur de l'écran occupée par le menu
-local HAUTEUR_MAX   = 0.75   -- hauteur maximale (part de la hauteur de l'écran)
-local ETIREMENT_MAX = 1.30   -- étirement vertical permis du fond (1 = proportions d'origine)
---========================================================
+local NB_CASES = 40
+local TOUCHE = KEY_F4
 
 -- Couleurs accordées au parchemin
 local C_TEXTE      = Color(74, 52, 40)
@@ -83,9 +75,27 @@ end
 local Inventaire = {}
 local SlotsEquipement = {}
 
+-- Rareté visuelle de l'objet, conservée lors des échanges d'équipement.
+-- Couleur de rareté dessinée en Lua à l'intérieur des cases d'origine.
+local RARETES = {
+    commun = { rang = 1, nom = "Commun", couleur = Color(205, 205, 205), fond = Color(30, 36, 43, 235) },
+    rare = { rang = 2, nom = "Rare", couleur = Color(90, 175, 255), fond = Color(27, 92, 150, 235) },
+    epique = { rang = 3, nom = "Épique", couleur = Color(195, 115, 255), fond = Color(101, 45, 145, 235) },
+    legendaire = { rang = 4, nom = "Légendaire", couleur = Color(255, 216, 75), fond = Color(163, 133, 12, 245) },
+}
+local ALIAS_RARETES = { common = "commun", epic = "epique", legendary = "legendaire", ["épique"] = "epique", ["légendaire"] = "legendaire" }
+local function NormaliserRarete(valeur)
+    local cle = string.Trim(string.lower(tostring(valeur or "commun")))
+    cle = ALIAS_RARETES[cle] or cle
+    return RARETES[cle] and cle or "commun"
+end
+local function Rarete(it)
+    return RARETES[NormaliserRarete(it.rarete or it.rarity)]
+end
+
 -- "defaut" = placement d'origine de l'objet (bouton Réinitialiser de l'éditeur)
 -- "classe" = classe de l'arme (épées) donnée au joueur quand elle est équipée
-local CHAMPS = { "item", "image", "type", "sousType", "modelPath", "boneName", "posOffset", "angOffset", "scale", "defaut", "classe" }
+local CHAMPS = { "item", "image", "type", "sousType", "modelPath", "boneName", "posOffset", "angOffset", "scale", "defaut", "classe", "rarete", "rarity" }
 
 local function Vider(i)
     Inventaire[i] = { quantite = 0 }
@@ -105,11 +115,11 @@ local function RafraichirUI()
     if IsValid(frame) and frame.Reconstruire then frame.Reconstruire() end
 end
 
-function AjouterItem(slot, nomItem, quantite, imagePath, itemType, sousType, modelPath, boneName, posOffset, angOffset, scale)
+function AjouterItem(slot, nomItem, quantite, imagePath, itemType, sousType, modelPath, boneName, posOffset, angOffset, scale, rarete)
     if slot < 1 or slot > NB_CASES then return end
     Inventaire[slot] = {
         item = nomItem, quantite = quantite or 1, image = imagePath,
-        type = itemType, sousType = sousType, modelPath = modelPath,
+        type = itemType, sousType = sousType, modelPath = modelPath, rarete = NormaliserRarete(rarete),
         boneName = boneName, posOffset = posOffset, angOffset = angOffset, scale = scale,
         defaut = {
             pos = posOffset and Vector(posOffset) or Vector(0, 0, 0),
@@ -118,6 +128,15 @@ function AjouterItem(slot, nomItem, quantite, imagePath, itemType, sousType, mod
         },
     }
     RafraichirUI()
+end
+
+-- API pour attribuer une rareté à un objet déjà présent.
+function DefinirRareteItem(slot, rarete)
+    local it = Inventaire[slot]
+    if not it or not it.item then return false end
+    it.rarete = NormaliserRarete(rarete)
+    RafraichirUI()
+    return true
 end
 
 ----------------------------------------------------------
@@ -309,7 +328,7 @@ local function EpeesDisponibles()
         local classe = w.ClassName
         local def = classe and weapons.Get(classe)
         if def and def.NA_Arme and def.Spawnable and classe ~= "naruto_poings" then
-            liste[#liste + 1] = { classe = classe, nom = def.PrintName or classe, modele = def.WorldModel }
+            liste[#liste + 1] = { classe = classe, nom = def.PrintName or classe, modele = def.WorldModel, rarete = def.Rarete or def.Rarity }
         end
     end
     table.sort(liste, function(a, b) return a.nom < b.nom end)
@@ -354,7 +373,7 @@ function AjouterEpee(recherche)
     local libre = CaseLibre()
     if not libre then return Refus("Inventaire plein.") end
 
-    AjouterItem(libre, e.nom, 1, nil, "arme", nil, e.modele)
+    AjouterItem(libre, e.nom, 1, nil, "arme", nil, e.modele, nil, nil, nil, nil, e.rarete)
     Inventaire[libre].classe = e.classe
     notification.AddLegacy(e.nom .. " ajoutée à l'inventaire (F4 pour l'équiper).", NOTIFY_GENERIC, 3)
     surface.PlaySound("physics/cardboard/cardboard_box_impact_soft1.wav")
@@ -470,9 +489,7 @@ local function CreerIconeTenue(parent, it, marge, taille)
     mp:SetSize(taille - marge * 2, taille - marge * 2)
     mp:SetMouseInputEnabled(false)
     mp:SetModel(it.modelPath)
-    mp:SetFOV(48)
-    mp:SetCamPos(Vector(86, 30, 46))   -- assez loin et haut pour que les cheveux ne soient pas coupés
-    mp:SetLookAt(Vector(0, 0, 40))
+    mp:SetFOV(36)
     mp:SetColor(IsValid(ply) and ply:GetColor() or color_white)
     mp:SetDirectionalLight(BOX_TOP, Color(255, 245, 230))
     mp:SetAmbientLight(Color(90, 80, 70))
@@ -485,9 +502,44 @@ local function CreerIconeTenue(parent, it, marge, taille)
 
     mp.Extras = Fusionner(ent, ElementsDuJoueur(EXCLURE_ICONE))
 
+    -- Cadre propre à chaque tenue, calculé une seule fois à la création.
+    -- Inclure la tête et les cheveux dans les limites du personnage composé.
+    ent:SetAngles(angle_zero)
+    ent:SetCycle(0)
+    ent:SetupBones()
+    local mini, maxi = ent:GetRenderBounds()
+    mini, maxi = Vector(mini), Vector(maxi)
+    for _, extra in ipairs(mp.Extras) do
+        if IsValid(extra) then
+            extra:SetupBones()
+            local bas, haut = extra:GetRenderBounds()
+            mini.x, mini.y, mini.z = math.min(mini.x, bas.x), math.min(mini.y, bas.y), math.min(mini.z, bas.z)
+            maxi.x, maxi.y, maxi.z = math.max(maxi.x, haut.x), math.max(maxi.y, haut.y), math.max(maxi.z, haut.z)
+        end
+    end
+    local centre = (mini + maxi) * 0.5
+    local direction = Vector(1, 0.18, 0.04):GetNormalized()
+    local vue = (-direction):Angle()
+    local droite, haut = vue:Right(), vue:Up()
+    local tangente = math.tan(math.rad(mp:GetFOV() * 0.5))
+    local distance = 1
+    -- Projeter les huit coins : pieds et cheveux gardent une marge de 10 %.
+    for x = 0, 1 do
+        for y = 0, 1 do
+            for z = 0, 1 do
+                local coin = Vector(x == 0 and mini.x or maxi.x, y == 0 and mini.y or maxi.y, z == 0 and mini.z or maxi.z) - centre
+                local largeur = math.max(math.abs(coin:Dot(droite)), math.abs(coin:Dot(haut)))
+                distance = math.max(distance, coin:Dot(direction) + largeur / (tangente * 0.9))
+            end
+        end
+    end
+    mp:SetLookAt(centre)
+    mp:SetCamPos(centre + direction * distance)
+
     function mp:LayoutEntity(e)
-        e:SetAngles(Angle(0, 0, 0))
-        self:RunAnimation()
+        -- Miniature stable ; le grand aperçu conserve son animation.
+        e:SetAngles(angle_zero)
+        e:SetCycle(0)
     end
     function mp:PostDrawModel()
         DessinerExtras(self.Extras, self:GetEntity())
@@ -503,7 +555,8 @@ end
 -- Icône d'un objet : image si elle existe, sinon icône du modèle 3D
 ----------------------------------------------------------
 local function CreerIcone(parent, it, taille)
-    local marge = math.floor(taille * 0.12)
+    -- Réserver une marge autour du modèle dans le fond coloré.
+    local marge = math.ceil(taille * 0.21)
 
     -- tenue : rendu 3D avec la tête et les cheveux du joueur
     if it.type == "armure" and it.modelPath and not it.image then
@@ -939,368 +992,237 @@ concommand.Add("ajuster_accessoire", function(_, _, args)
 end)
 
 local function OuvrirMenu()
-    if NA_FermerAutresMenus then NA_FermerAutresMenus("inventaire") end   -- un seul menu à la fois
-
-    -- Taille : presque toute la largeur de l'écran. L'image de fond (1578 x 573)
-    -- est très allongée : on l'étire un peu en hauteur (ETIREMENT_MAX) pour que
-    -- le menu ne soit pas un simple bandeau, sans dépasser HAUTEUR_MAX de l'écran.
-    local W = ScrW() * LARGEUR_ECRAN
-    local H = math.min(W * 573 / 1578 * ETIREMENT_MAX, ScrH() * HAUTEUR_MAX)
-    local SX, SY = W / 1578, H / 573
-    local S = SX
-
-    -- textes à la taille du menu
-    CreerPolices(H / 566)
-
-    -- position des 3 panneaux, mesurée dans l'image de fond
-    local function Zone(x1, y1, x2, y2)
-        return x1 * SX, y1 * SY, (x2 - x1) * SX, (y2 - y1) * SY
+    if NA_FermerAutresMenus then NA_FermerAutresMenus("inventaire") end
+    local W, H = ScrW(), ScrH()
+    local S = math.min(W / 1920, H / 1080)
+    CreerPolices(math.Clamp(S, 0.7, 1.5))
+    local blanc, doux = Color(239, 236, 230), Color(155, 155, 163)
+    local ornement = Color(235, 180, 88)
+    local chemin = "ui/newUi/optimized/"
+    local function Texture(nom, x, y, w, h, alpha)
+        surface.SetMaterial(M(chemin .. nom .. ".png"))
+        surface.SetDrawColor(255, 255, 255, alpha or 255)
+        surface.DrawTexturedRect(x, y, w, h)
     end
-    local gX, gY, gW, gH = Zone(12, 46, 321, 525)     -- panneau gauche
-    local cX, cY, cW, cH = Zone(325, 46, 1081, 525)   -- panneau central
-    local dX, dY, dW, dH = Zone(1085, 46, 1565, 525)  -- panneau droit
-
+    local reflet = Color(255, 255, 255, 20)
+    local function DessinerCase(w, h, it, survol, choisi, equipement)
+        Texture(equipement and "equipecase" or "caseEmpty", 0, 0, w, h)
+        -- Garder les ornements visibles ; seule la zone intérieure est teintée.
+        local x, y = w * 0.20, h * 0.20
+        local cw, ch = w * 0.60, h * 0.60
+        local rarete = it and it.item and Rarete(it)
+        if rarete and rarete.rang > 1 then
+            draw.RoundedBox(4, x, y, cw, ch, rarete.fond)
+        end
+        if survol or choisi then draw.RoundedBox(4, x, y, cw, ch, reflet) end
+    end
     frame = vgui.Create("DPanel")
     frame:SetSize(W, H)
-    frame:Center()
+    frame:SetPos(0, 0)
     frame:MakePopup()
-    -- le clavier reste au jeu : on peut bouger (ZQSD, saut...) avec le menu ouvert.
-    -- Il n'est repris que pendant qu'on écrit dans la recherche.
     frame:SetKeyboardInputEnabled(false)
-
-    frame.Paint = function(pan, w, h)
-        surface.SetMaterial(M(FOND))
-        surface.SetDrawColor(255, 255, 255, 255)
-        surface.DrawTexturedRect(0, 0, w, h)
+    frame.Paint = function(_, w, h)
+        -- Cover preserves the background proportions on ultrawide displays.
+        local scale = math.max(w / 1672, h / 941)
+        Texture("fond_v2", (w - 1672 * scale) / 2, (h - 941 * scale) / 2, 1672 * scale, 941 * scale)
+        draw.SimpleText("INVENTAIRE", "NA.Inv.Titre", W * 0.075, H * 0.065, blanc)
+        draw.SimpleText("F4 / ÉCHAP  ·  Fermer", "NA.Inv.Petit", W * 0.925, H * 0.075, doux, TEXT_ALIGN_RIGHT)
     end
-
-    -- Échap ferme (sans ouvrir le menu du jeu) ; F4 est déjà géré par le Think
-    -- en bas du fichier (le gérer ici aussi fermait puis rouvrait le menu)
     frame.Think = function()
-        if input.IsKeyDown(KEY_ESCAPE) then
-            FermerMenu()
-            gui.HideGameUI()
-        end
+        if input.IsKeyDown(KEY_ESCAPE) then FermerMenu() gui.HideGameUI() end
     end
-
-    -- fermer
-    local fermer = vgui.Create("DButton", frame)
-    fermer:SetText("")
-    fermer:SetSize(34 * S * 1.4, 34 * S * 1.4)
-    fermer:SetPos(W - fermer:GetWide() - 8, 4)
-    fermer.Paint = function(pan, w, h)
-        draw.SimpleText("X", "NA.Inv.Onglet", w / 2, h / 2,
-            pan:IsHovered() and Color(255, 220, 200) or Color(235, 215, 190), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
-    fermer.DoClick = FermerMenu
-
-    ------------------------------------------------------
-    -- Panneau gauche : onglets
-    ------------------------------------------------------
-    local gauche = vgui.Create("DPanel", frame)
-    gauche:SetPos(gX, gY)
-    gauche:SetSize(gW, gH)
-    gauche.Paint = function(pan, w, h)
-        draw.SimpleText("Inventaire", "NA.Inv.Titre", w * 0.12, h * 0.07, C_TEXTE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-        surface.SetMaterial(M("ui/inventory/left_vector.png"))
-        surface.SetDrawColor(255, 255, 255, 255)
-        surface.DrawTexturedRect(w * 0.06, h * 0.13, w * 0.88, 2)
-    end
-
-    local function Onglet(y, icone, texte, actif)
-        local b = vgui.Create("DButton", gauche)
-        b:SetText("")
-        b:SetPos(gW * 0.08, gH * y)
-        b:SetSize(gW * 0.84, gH * 0.22)
-        b.Paint = function(pan, w, h)
-            local a = actif and 255 or 120
-            local t = h * 0.72
-            surface.SetMaterial(M(icone))
-            surface.SetDrawColor(255, 255, 255, a)
-            surface.DrawTexturedRect(w / 2 - t * 0.55, 0, t * 1.1, t)
-            draw.SimpleText(texte, "NA.Inv.Onglet", w / 2, h * 0.86,
-                Color(C_TEXTE.r, C_TEXTE.g, C_TEXTE.b, a), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            if actif then
-                surface.SetDrawColor(C_ROUGE)
-                surface.DrawRect(w * 0.2, h - 2, w * 0.6, 2)
-            end
+    local function Bouton(parent, texte, x, y, w, h, action)
+        local b = vgui.Create("DButton", parent)
+        b:SetText("") b:SetPos(x, y) b:SetSize(w, h)
+        b.Paint = function(p, bw, bh)
+            draw.SimpleText(texte, "NA.Inv.Onglet", bw / 2, bh / 2, p:IsHovered() and ornement or blanc, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
-        if not actif then
-            b:SetTooltip("Bientôt disponible")
-            b.DoClick = function() surface.PlaySound("buttons/button10.wav") end
-        end
+        b.DoClick = action
         return b
     end
-
-    -- l'inventaire est l'onglet actif ; boutique et hôtel de vente arrivent plus tard
-    local ongletInv = vgui.Create("DButton", gauche)
-    ongletInv:SetText("")
-    ongletInv:SetPos(gW * 0.08, gH * 0.17)
-    ongletInv:SetSize(gW * 0.84, gH * 0.09)
-    ongletInv.Paint = function(pan, w, h)
-        surface.SetMaterial(M("ui/inventory/btn_inventory.png"))
+    local fermer = vgui.Create("DButton", frame)
+    fermer:SetText("")
+    fermer:SetSize(78 * S, 78 * S)
+    fermer:SetPos(W - 94 * S, 16 * S)
+    fermer:SetTooltip("Fermer")
+    fermer.Paint = function(pan, w, h)
+        local m = pan:IsHovered() and 0 or 4 * S
+        surface.SetMaterial(M("ui/main_menu/btn_base_close.png"))
         surface.SetDrawColor(255, 255, 255, 255)
-        surface.DrawTexturedRect(0, 0, w, h)
-        draw.SimpleText("Mes objets", "NA.Inv.Onglet", w / 2, h / 2, C_ROUGE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        surface.DrawTexturedRect(m, m, w - m * 2, h - m * 2)
     end
-
-    Onglet(0.32, "ui/inventory/icon_boutique.png", "BOUTIQUE", false)
-    Onglet(0.58, "ui/inventory/icon_hdv.png", "HÔTEL DE VENTE", false)
-
-    ------------------------------------------------------
-    -- Panneau central : recherche + grille d'objets
-    ------------------------------------------------------
-    local centre = vgui.Create("DPanel", frame)
-    centre:SetPos(cX, cY)
-    centre:SetSize(cW, cH)
-    centre.Paint = function() end
-
-    local pad = cW * 0.03
-    local recherche = ""
-
-    local barre = vgui.Create("DPanel", centre)
-    barre:SetPos(pad, pad * 0.8)
-    barre:SetSize(cW - pad * 2, 36 * math.max(SY, 0.8))
-    barre.Paint = function(pan, w, h)
-        local nb = 0
-        for i = 1, NB_CASES do if Inventaire[i].item then nb = nb + 1 end end
-        draw.SimpleText(nb .. " / " .. NB_CASES .. " objets", "NA.Inv.Texte", w, h / 2, C_TEXTE_DOUX, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+    fermer.DoClick = function()
+        surface.PlaySound("ui/buttonclick.wav")
+        FermerMenu()
     end
-
-    local champ = vgui.Create("DTextEntry", barre)
-    champ:SetSize(barre:GetWide() * 0.5, barre:GetTall())
-    champ:SetPos(0, 0)
-    champ:SetFont("NA.Inv.Texte")
-    champ:SetPlaceholderText("Rechercher un objet...")
-    champ:SetUpdateOnType(true)
-    champ:SetTextColor(C_TEXTE)
-    champ.Paint = function(pan, w, h)
-        surface.SetMaterial(M("ui/inventory/search.png"))
-        surface.SetDrawColor(255, 255, 255, 255)
-        surface.DrawTexturedRect(0, 0, w, h)
-        pan:DrawTextEntryText(C_TEXTE, C_ROUGE, C_TEXTE)
-        if pan:GetValue() == "" and not pan:HasFocus() then
-            draw.SimpleText("Rechercher un objet...", "NA.Inv.Texte", 12, h / 2, C_TEXTE_DOUX, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-        end
-    end
-    champ:SetTextInset(12, 0)
-
-    -- clavier pris seulement pendant la saisie, rendu au jeu ensuite (Entrée ou clic ailleurs)
-    champ.OnGetFocus = function(pan)
-        if IsValid(frame) then frame:SetKeyboardInputEnabled(true) end
-        hook.Run("OnTextEntryGetFocus", pan)
-    end
-    champ.OnLoseFocus = function(pan)
-        if IsValid(frame) then frame:SetKeyboardInputEnabled(false) end
-        hook.Run("OnTextEntryLoseFocus", pan)
-        pan:UpdateConvarValue()
-    end
-    champ.OnEnter = function(pan) pan:KillFocus() end
-
-    local defil = vgui.Create("DScrollPanel", centre)
-    local haut = pad * 0.8 + barre:GetTall() + pad * 0.6
-    defil:SetPos(pad, haut)
-    defil:SetSize(cW - pad * 2, cH - haut - pad * 0.6)
-
-    local vbar = defil:GetVBar()
-    vbar:SetWide(6)
-    vbar.Paint = function() end
-    vbar.btnUp.Paint = function() end
-    vbar.btnDown.Paint = function() end
-    vbar.btnGrip.Paint = function(pan, w, h) draw.RoundedBox(3, 0, 0, w, h, Color(120, 90, 70, 160)) end
-
-    local ecart = math.max(4, math.floor(8 * S))
-    local tailleCase = math.floor((defil:GetWide() - 10 - ecart * (COLONNES - 1)) / COLONNES)
-
-    local grille = defil:Add("DIconLayout")   -- dans la zone qui défile
-    grille:Dock(FILL)
-    grille:SetSpaceX(ecart)
-    grille:SetSpaceY(ecart)
-
-    local survol -- objet sous la souris (pour l'infobulle)
-
-    local function ConstruireGrille()
-        grille:Clear()
-        local filtre = string.lower(recherche)
-
-        for i = 1, NB_CASES do
-            local it = Inventaire[i]
-            local correspond = filtre == "" or (it.item and string.find(string.lower(it.item), filtre, 1, true))
-            if filtre ~= "" and not correspond then continue end
-
-            local case = grille:Add("DButton")
-            case:SetText("")
-            case:SetSize(tailleCase, tailleCase)
-
-            case.Paint = function(pan, w, h)
-                surface.SetMaterial(M("ui/inventory/case/case.png"))
-                surface.SetDrawColor(255, 255, 255, 255)
-                surface.DrawTexturedRect(0, 0, w, h)
-
-                if it.item then
-                    -- liseré de couleur selon le type d'objet
-                    local t = TYPES[it.type or "objet"] or TYPES.objet
-                    surface.SetDrawColor(t.couleur.r, t.couleur.g, t.couleur.b, 150)
-                    surface.DrawRect(4, h - 5, w - 8, 2)
-                end
-                if pan:IsHovered() then
-                    draw.RoundedBox(6, 2, 2, w - 4, h - 4, C_SURVOL)
-                end
-            end
-
-            case.PaintOver = function(pan, w, h)
-                if it.item and (it.quantite or 0) > 1 then
-                    draw.SimpleText("x" .. it.quantite, "NA.Inv.Qte", w - 6, h - 6, C_TEXTE, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
-                end
-            end
-
-            if it.item then CreerIcone(case, it, tailleCase) end
-
-            case.OnCursorEntered = function() survol = it.item and it or nil end
-            case.OnCursorExited = function() if survol == it then survol = nil end end
-            case.DoRightClick = function() if it.item then Equiper(i) end end
-            case.DoDoubleClick = function() if it.item then Equiper(i) end end
-        end
-    end
-
-    champ.OnValueChange = function(pan, val)
-        recherche = val or ""
+    local gauche = vgui.Create("DPanel", frame)
+    gauche:SetPos(W * 0.075, H * 0.14)
+    gauche:SetSize(W * 0.405, H * 0.78)
+    gauche.Paint = function() end
+    local gw, gh = gauche:GetWide(), gauche:GetTall()
+    local recherche, categorie, famille, tri = "", "tous", "objets", false
+    local selection, selectionSlot, selectionEquip
+    local ConstruireGrille, ConstruireEquipement, ActualiserDetails
+    local function Filtrer()
+        selection, selectionSlot, selectionEquip = nil, nil, nil
         ConstruireGrille()
+        ActualiserDetails()
     end
-
-    ------------------------------------------------------
-    -- Panneau droit : équipement + aperçu du personnage
-    ------------------------------------------------------
+    local tabs = { { "TOUT", "tous" }, { "MATÉRIAUX", "materiaux" }, { "ÉQUIPEMENTS", "equipements" } }
+    for n, t in ipairs(tabs) do
+        local b = Bouton(gauche, t[1], (n - 1) * gw / 3, 0, gw / 3, 42 * S, function() categorie = t[2] Filtrer() end)
+        b.Paint = function(p, w, h)
+            draw.SimpleText(t[1], "NA.Inv.Onglet", w / 2, h / 2, categorie == t[2] and blanc or doux, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            if categorie == t[2] then
+                surface.SetDrawColor(ornement) surface.DrawRect(w * 0.15, h - 2, w * 0.7, 2)
+            end
+        end
+    end
+    local champ = vgui.Create("DTextEntry", gauche)
+    champ:SetPos(0, 56 * S) champ:SetSize(gw * 0.55, 32 * S)
+    champ:SetFont("NA.Inv.Petit") champ:SetUpdateOnType(true) champ:SetTextInset(10, 0)
+    champ.Paint = function(p, w, h)
+        draw.RoundedBox(3, 0, 0, w, h, Color(24, 30, 39, 210))
+        p:DrawTextEntryText(blanc, ornement, blanc)
+        if p:GetValue() == "" and not p:HasFocus() then draw.SimpleText("Rechercher un objet…", "NA.Inv.Petit", 10, h / 2, doux, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
+    end
+    champ.OnGetFocus = function(p) frame:SetKeyboardInputEnabled(true) hook.Run("OnTextEntryGetFocus", p) end
+    champ.OnLoseFocus = function(p)
+        if IsValid(frame) then frame:SetKeyboardInputEnabled(false) end
+        hook.Run("OnTextEntryLoseFocus", p) p:UpdateConvarValue()
+    end
+    champ.OnEnter = function(p) p:KillFocus() end
+    champ.OnValueChange = function(_, v) recherche = string.lower(v or "") Filtrer() end
+    local trier = Bouton(gauche, "", gw * 0.58, 56 * S, gw * 0.42, 32 * S, function() tri = not tri ConstruireGrille() end)
+    trier.Paint = function(_, w, h)
+        draw.SimpleText((tri and "☑" or "□") .. " Trier par rareté", "NA.Inv.Petit", w, h / 2, tri and ornement or doux, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+    end
+    local capacite = vgui.Create("DPanel", gauche)
+    capacite:SetPos(0, 100 * S) capacite:SetSize(gw, 30 * S)
+    capacite.Paint = function(_, w, h)
+        local nb = 0
+        for _, it in ipairs(Inventaire) do if it.item then nb = nb + 1 end end
+        draw.RoundedBox(2, 0, 0, w, h, Color(29, 33, 41, 240))
+        surface.SetDrawColor(47, 64, 84, 210) surface.DrawRect(0, 0, w * nb / NB_CASES, h)
+        draw.SimpleText("Emplacements occupés", "NA.Inv.Petit", 10, h / 2, blanc, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText(nb .. " / " .. NB_CASES, "NA.Inv.Petit", w - 10, h / 2, blanc, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+    end
+    local defil = vgui.Create("DScrollPanel", gauche)
+    defil:SetPos(0, 152 * S) defil:SetSize(gw, gh - 208 * S)
+    local vbar = defil:GetVBar()
+    vbar:SetWide(5 * S) vbar:SetHideButtons(true)
+    vbar.Paint = function() end
+    vbar.btnGrip.Paint = function(_, w, h) draw.RoundedBox(2, 0, 0, w, h, Color(120, 102, 76, 180)) end
+    local ecart = 14 * S
+    local taille = math.floor((gw - 10 * S - ecart * 4) / 5)
+    local grille = defil:Add("DIconLayout")
+    grille:Dock(TOP) grille:SetSpaceX(ecart) grille:SetSpaceY(ecart)
+    ConstruireGrille = function()
+        grille:Clear()
+        local liste = {}
+        for i, it in ipairs(Inventaire) do
+            local cosmetique = it.type == "accessoire"
+            local ok = not it.item or ((famille == "cosmetiques") == cosmetique)
+            if categorie == "materiaux" then ok = ok and not Cible(it) end
+            if categorie == "equipements" then ok = ok and Cible(it) ~= nil end
+            if recherche ~= "" then ok = ok and it.item and string.find(string.lower(it.item), recherche, 1, true) end
+            if ok then liste[#liste + 1] = i end
+        end
+        if tri then table.sort(liste, function(a, b)
+            local ia, ib = Inventaire[a], Inventaire[b]
+            local ra, rb = ia.item and Rarete(ia).rang or 0, ib.item and Rarete(ib).rang or 0
+            if ra == rb then return a < b end
+            return ra > rb
+        end) end
+        for _, i in ipairs(liste) do
+            local it = Inventaire[i]
+            local b = grille:Add("DButton") b:SetText("") b:SetSize(taille, taille)
+            b.Paint = function(p, w, h)
+                DessinerCase(w, h, it, p:IsHovered(), selectionSlot == i)
+            end
+            b.PaintOver = function(_, w, h)
+                if it.item and (it.quantite or 0) > 1 then draw.SimpleText("x" .. it.quantite, "NA.Inv.Qte", w * 0.83, h * 0.13, blanc, TEXT_ALIGN_RIGHT) end
+            end
+            if it.item then CreerIcone(b, it, taille) b:SetTooltip(it.item .. " · " .. Rarete(it).nom) end
+            b.DoClick = function() selection, selectionSlot, selectionEquip = it.item and it or nil, i, nil ActualiserDetails() end
+            b.DoRightClick = function() if it.item then Equiper(i) end end
+            b.DoDoubleClick = b.DoRightClick
+        end
+    end
+    for n, t in ipairs({ { "OBJETS", "objets" }, { "COSMÉTIQUES", "cosmetiques" } }) do
+        local b = Bouton(gauche, t[1], (n - 1) * gw / 2, gh - 44 * S, gw / 2, 42 * S, function() famille = t[2] Filtrer() end)
+        b.Paint = function(_, w, h) draw.SimpleText(t[1], "NA.Inv.Onglet", w / 2, h / 2, famille == t[2] and blanc or doux, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+    end
     local droite = vgui.Create("DPanel", frame)
-    droite:SetPos(dX, dY)
-    droite:SetSize(dW, dH)
-    droite.Paint = function(pan, w, h)
-        draw.SimpleText(LocalPlayer():Nick(), "NA.Inv.Texte", w / 2, h * 0.05, C_TEXTE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
-
-    local tailleEquip = math.floor(tailleCase * 1.1)
-
-    local function ConstruireEquipement()
+    droite:SetPos(W * 0.54, H * 0.13) droite:SetSize(W * 0.40, H * 0.77)
+    droite.Paint = function() end
+    local dw, dh = droite:GetWide(), droite:GetTall()
+    local equipSize = math.min(dw * 0.23, dh * 0.23)
+    ConstruireEquipement = function()
         droite:Clear()
-
-        -- aperçu au centre
-        local apW = dW * 0.5
         local ap = CreerApercu(droite)
-        ap:SetPos(dW / 2 - apW / 2, dH * 0.09)
-        ap:SetSize(apW, dH * 0.9)
-
-        -- emplacements de part et d'autre
+        ap:SetPos(dw * 0.19, 0) ap:SetSize(dw * 0.62, dh)
         local rang = { gauche = 0, droite = 0 }
         for _, e in ipairs(EMPLACEMENTS) do
-            local n = rang[e.cote]
-            rang[e.cote] = n + 1
-
-            local x = (e.cote == "gauche") and (dW * 0.25 - tailleEquip / 2 - dW * 0.06) or (dW * 0.75 - tailleEquip / 2 + dW * 0.06)
-            local y = dH * 0.18 + n * (tailleEquip + dH * 0.1)
-
-            local slot = vgui.Create("DButton", droite)
-            slot:SetText("")
-            slot:SetPos(x, y)
-            slot:SetSize(tailleEquip, tailleEquip)
-
+            local n = rang[e.cote] rang[e.cote] = n + 1
+            local x = e.cote == "gauche" and 0 or dw - equipSize
+            local y = dh * 0.13 + n * dh * 0.43
             local it = SlotsEquipement[e.id]
-
-            slot.Paint = function(pan, w, h)
-                surface.SetMaterial(M("ui/inventory/case/case.png"))
-                surface.SetDrawColor(255, 255, 255, 255)
-                surface.DrawTexturedRect(0, 0, w, h)
-
-                if not it then
-                    -- silhouette de l'emplacement vide
-                    local t = w * 0.62
-                    surface.SetMaterial(M(e.icone))
-                    surface.SetDrawColor(255, 255, 255, 90)
-                    surface.DrawTexturedRect(w / 2 - t / 2, h / 2 - t / 2, t, t)
-                end
-                if pan:IsHovered() then
-                    draw.RoundedBox(6, 2, 2, w - 4, h - 4, C_SURVOL)
-                end
-            end
-
-            -- nom de l'emplacement sous la case (un panneau ne peut pas dessiner
-            -- hors de ses bords : il faut un libellé à part)
             local nom = vgui.Create("DLabel", droite)
-            nom:SetFont("NA.Inv.Petit")
-            nom:SetTextColor(C_TEXTE_DOUX)
-            nom:SetText(e.nom)
-            nom:SizeToContents()
-            nom:SetPos(x + tailleEquip / 2 - nom:GetWide() / 2, y + tailleEquip + 3)
-
-            -- masque / accessoire équipé : bouton pour régler son placement
-            if it and (e.id == "masque" or e.id == "accessoire" or (e.id == "arme" and it.classe)) then
-                local aj = vgui.Create("DButton", droite)
-                aj:SetText("")
-                aj:SetSize(tailleEquip, 22)
-                aj:SetPos(x, y + tailleEquip + 3 + nom:GetTall() + 2)
-                aj.Paint = function(pan, w, h)
-                    draw.RoundedBox(4, 0, 0, w, h, pan:IsHovered() and C_ROUGE or Color(C_ROUGE.r, C_ROUGE.g, C_ROUGE.b, 190))
-                    draw.SimpleText("Ajuster", "NA.Inv.Petit", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            nom:SetFont("NA.Inv.Petit") nom:SetTextColor(doux) nom:SetText(e.nom) nom:SizeToContents()
+            nom:SetPos(x + (equipSize - nom:GetWide()) / 2, y - 25 * S)
+            local b = Bouton(droite, "", x, y, equipSize, equipSize, function()
+                selection, selectionSlot, selectionEquip = it, nil, e.id ActualiserDetails()
+            end)
+            b.Paint = function(p, w, h)
+                DessinerCase(w, h, it, p:IsHovered(), selectionEquip == e.id, true)
+                if not it then
+                    surface.SetMaterial(M(e.icone)) surface.SetDrawColor(180, 185, 194, 65)
+                    surface.DrawTexturedRect(w * 0.27, h * 0.27, w * 0.46, h * 0.46)
                 end
-                aj.DoClick = function() OuvrirEditeur(e.id) end
-                slot.DoMiddleClick = function() OuvrirEditeur(e.id) end
             end
-
-            if it then CreerIcone(slot, it, tailleEquip) end
-
-            slot.OnCursorEntered = function() survol = it and it or nil end
-            slot.OnCursorExited = function() if survol == it then survol = nil end end
-            slot.DoRightClick = function() Desequiper(e.id) end
-            slot.DoDoubleClick = function() Desequiper(e.id) end
+            if it then CreerIcone(b, it, equipSize) b:SetTooltip(it.item .. " · " .. Rarete(it).nom) end
+            b.DoRightClick = function() Desequiper(e.id) end b.DoDoubleClick = b.DoRightClick
+            if it and (e.id == "masque" or e.id == "accessoire" or (e.id == "arme" and it.classe)) then
+                local ajuster = Bouton(droite, "Ajuster", x, y + equipSize, equipSize, 28 * S, function() OuvrirEditeur(e.id) end)
+                ajuster:SetFont("NA.Inv.Petit")
+                b.DoMiddleClick = ajuster.DoClick
+            end
         end
     end
-
-    ------------------------------------------------------
-    -- Infobulle
-    ------------------------------------------------------
-    frame.PaintOver = function(pan, w, h)
-        if not survol or not survol.item then return end
-
-        local mx, my = pan:CursorPos()
-        local t = TYPES[survol.type or "objet"] or TYPES.objet
-        local equipe = false
-        for _, v in pairs(SlotsEquipement) do if v == survol then equipe = true end end
-
-        local ligne1 = survol.item
-        local ligne2 = t.nom .. (survol.sousType and (" · " .. survol.sousType) or "")
-        local ligne3 = equipe and "Clic droit : retirer" or (Cible(survol) and "Clic droit : équiper" or "")
-        if equipe and survol.type == "accessoire" then
-            ligne3 = "Clic droit : retirer  •  molette : ajuster"
-        end
-
-        surface.SetFont("NA.Inv.Texte")
-        local w1 = surface.GetTextSize(ligne1)
-        surface.SetFont("NA.Inv.Petit")
-        local w2 = surface.GetTextSize(ligne2)
-        local w3 = surface.GetTextSize(ligne3)
-        local bw = math.max(w1, w2, w3) + 24
-        local bh = ligne3 ~= "" and 72 or 52
-
-        local bx = math.min(mx + 16, w - bw - 4)
-        local by = math.max(my - bh - 6, 4)
-
-        draw.RoundedBox(6, bx, by, bw, bh, Color(90, 60, 45, 255))
-        draw.RoundedBox(6, bx + 1, by + 1, bw - 2, bh - 2, C_INFOBULLE)
-        surface.SetDrawColor(t.couleur)
-        surface.DrawRect(bx + 1, by + 6, 3, bh - 12)
-
-        draw.SimpleText(ligne1, "NA.Inv.Texte", bx + 12, by + 8, C_TEXTE)
-        draw.SimpleText(ligne2, "NA.Inv.Petit", bx + 12, by + 30, t.couleur)
-        if ligne3 ~= "" then
-            draw.SimpleText(ligne3, "NA.Inv.Petit", bx + 12, by + 50, C_TEXTE_DOUX)
+    local details = vgui.Create("DPanel", frame)
+    details:SetPos(W * 0.635, H * 0.76) details:SetSize(W * 0.21, H * 0.18)
+    details:SetVisible(false)
+    details.Paint = function(_, w, h)
+        draw.RoundedBox(6, 0, 0, w, h, Color(10, 14, 20, 238))
+    end
+    ActualiserDetails = function()
+        details:Clear() details:SetVisible(selection ~= nil)
+        if not selection then return end
+        local titre = vgui.Create("DLabel", details)
+        titre:SetPos(12 * S, 8 * S) titre:SetSize(details:GetWide() - 24 * S, 48 * S)
+        titre:SetFont("NA.Inv.Texte") titre:SetTextColor(blanc) titre:SetWrap(true) titre:SetText(selection.item)
+        local typeObjet = TYPES[selection.type or "objet"] or TYPES.objet
+        local label = vgui.Create("DLabel", details)
+        label:SetPos(12 * S, 58 * S) label:SetSize(details:GetWide() - 24 * S, 24 * S)
+        local rarete = Rarete(selection)
+        label:SetFont("NA.Inv.Petit") label:SetTextColor(rarete.couleur)
+        label:SetText(typeObjet.nom .. " · " .. rarete.nom)
+        local actif = selectionEquip ~= nil or Cible(selection) ~= nil
+        local texte = selectionEquip and "RETIRER" or (actif and "ÉQUIPER" or "Aucune action disponible")
+        local b = Bouton(details, texte, 8 * S, 88 * S, details:GetWide() - 16 * S, 55 * S, function()
+            if selectionEquip then Desequiper(selectionEquip) elseif selectionSlot and actif then Equiper(selectionSlot) end
+        end)
+        b:SetEnabled(actif)
+        b.Paint = function(p, w, h)
+            Texture("utiliser", 0, 0, w, h, actif and (p:IsHovered() and 255 or 205) or 65)
+            draw.SimpleText(texte, "NA.Inv.Petit", w / 2, h / 2, actif and blanc or doux, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
     end
-
     frame.Reconstruire = function()
-        survol = nil
-        ConstruireGrille()
-        ConstruireEquipement()
+        selection, selectionSlot, selectionEquip = nil, nil, nil
+        ConstruireGrille() ConstruireEquipement() ActualiserDetails()
     end
-
     frame.Reconstruire()
 end
 
@@ -1351,6 +1273,11 @@ concommand.Add("test_items", function()
     AjouterItem(7, "Bois ancestral", 12, "ui/inventory/bois_ancestral.png", "objet")
     AjouterItem(8, "Soie céleste", 4, "ui/inventory/soie_celeste.png", "objet")
     AjouterItem(9, "Minerai de fer brut", 20, "ui/inventory/minerai_fer_brut.png", "objet")
+
+    -- Exemples explicites ; aucun niveau n'est déduit du nom de l'objet.
+    for slot, rarete in pairs({ [2] = "legendaire", [3] = "rare", [5] = "epique", [6] = "rare", [7] = "rare", [8] = "epique", [10] = "epique" }) do
+        DefinirRareteItem(slot, rarete)
+    end
 
     print("[Inventaire] Objets de test ajoutés - F4 pour ouvrir")
 end)
