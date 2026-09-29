@@ -969,13 +969,13 @@ NA_NIV_TECH.senju_pied = {
     [5] = { degats = 180, chakra = 35, recharge = 5, projection = 600 },
 }
 
--- Ermite naturel (sv_senju_ermite.lua) : buff à durée fixe ; chakra = coût au lancement (une fois),
---   duree = secondes d'effet, bonus_degats / reduction / bonus_vitesse = en %, regen_vie = PV par seconde,
---   recharge = secondes avant de pouvoir la relancer (après la fin)
+-- Ermite naturel (sv_senju_ermite.lua) : à activer / désactiver ; chakra = PAR SECONDE, chakra_mini = requis pour l'activer,
+--   bonus_degats / reduction / bonus_vitesse = en %, regen_vie = PV par seconde,
+--   recharge = secondes avant de pouvoir la réactiver (après l'arrêt)
 NA_NIV_TECH.senju_ermite = {
-    [1] = { chakra = 50, recharge = 1, duree = 20, duree_mudra = 1, bonus_degats = 20, reduction = 15, bonus_vitesse = 10, regen_vie = 3 },
-    [2] = { bonus_degats = 23, duree = 22 },
-    [3] = { chakra = 45, duree = 25, reduction = 18, regen_vie = 4 },
-    [4] = { bonus_degats = 27, duree = 28 },
-    [5] = { chakra = 40, recharge = 1, duree = 40, bonus_degats = 32, reduction = 22, bonus_vitesse = 14, regen_vie = 6 },
+    [1] = { chakra = 4, chakra_mini = 30, recharge = 5, duree_mudra = 1, bonus_degats = 20, reduction = 15, bonus_vitesse = 10, regen_vie = 3 },
+    [2] = { bonus_degats = 23 },
+    [3] = { chakra = 3.5, reduction = 18, regen_vie = 4 },
+    [4] = { bonus_degats = 27 },
+    [5] = { chakra = 3, bonus_degats = 32, reduction = 22, bonus_vitesse = 14, regen_vie = 6 },
 }

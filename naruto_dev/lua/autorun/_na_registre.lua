@@ -100,6 +100,7 @@ NA_BASCULES = NA_BASCULES or {}
 NA_BASCULES.chinoike_ketsuryugan = "NA_Ketsuryugan"   -- sv_chinoike_ketsuryugan.lua
 NA_BASCULES.kaguya_armure = "NA_ArmureOs"             -- sv_kaguya_armure.lua
 NA_BASCULES.senju_renfo = "NA_SenjuRenfo"              -- server/senju/sv_senju_renfo.lua
+NA_BASCULES.senju_ermite = "NA_SenjuErmite"            -- server/senju/sv_senju_ermite.lua
 NA_BASCULES.hyuga_byakugan = "NA_Byakugan"            -- server/hyuga/sv_hyuga_byakugan.lua
 NA_BASCULES.mokuton_golem = "NA_Golem"                -- server/mokuton/mokuton_golem_sv.lua (rappuyer redonne l'apparence normale)
 

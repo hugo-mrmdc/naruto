@@ -20,7 +20,7 @@ local function Half(n)
     return sign * (1 + fraction / 1024) * 2 ^ (exponent - 15)
 end
 
-function M.Load(model, yieldWork)
+function M.Load(model, yieldWork, wantedVertices)
     -- Ces modèles ont un seul LOD sans fixups et des deltas float16.
     if not string.match(model, "^models/head/face_%d+%.mdl$") then return nil, "unsupported model" end
     local mdl = file.Open(model, "rb", "GAME")
@@ -75,7 +75,8 @@ function M.Load(model, yieldWork)
                     At(vvd, offset + 16, 32)
                     local pos = Vector(vvd:ReadFloat(), vvd:ReadFloat(), vvd:ReadFloat())
                     At(vvd, offset + 40, 8)
-                    keys[vi] = M.Key({ pos = pos, u = vvd:ReadFloat(), v = vvd:ReadFloat() })
+                    local key = M.Key({ pos = pos, u = vvd:ReadFloat(), v = vvd:ReadFloat() })
+                    keys[vi] = (not wantedVertices or wantedVertices[key]) and key or false
                 end
                 local flexBase = meshOffset + Int(meshOffset + 20)
                 for fi = 0, Int(meshOffset + 16) - 1 do
@@ -96,12 +97,15 @@ function M.Load(model, yieldWork)
                         if yieldWork and di % 64 == 0 then yieldWork() end
                         At(mdl, deltas + di * 16, 16)
                         local vi = mdl:ReadUShort()
-                        mdl:ReadByte() -- speed (la forme courante est appliquée sans retard)
-                        mdl:ReadByte() -- side (pas de flexpair sur ces modèles)
-                        local dp = Vector(Half(mdl:ReadUShort()), Half(mdl:ReadUShort()), Half(mdl:ReadUShort()))
-                        local dn = Vector(Half(mdl:ReadUShort()), Half(mdl:ReadUShort()), Half(mdl:ReadUShort()))
-                        local key = assert(keys[vi], "invalid flex vertex")
-                        if not seen[key] then
+                        local key = keys[vi]
+                        assert(key ~= nil, "invalid flex vertex")
+                        -- Le prochain At saute directement au delta suivant : aucune
+                        -- conversion float16 ni allocation pour le reste du visage.
+                        if key and not seen[key] then
+                            mdl:ReadByte() -- speed (la forme courante est appliquée sans retard)
+                            mdl:ReadByte() -- side (pas de flexpair sur ces modèles)
+                            local dp = Vector(Half(mdl:ReadUShort()), Half(mdl:ReadUShort()), Half(mdl:ReadUShort()))
+                            local dn = Vector(Half(mdl:ReadUShort()), Half(mdl:ReadUShort()), Half(mdl:ReadUShort()))
                             seen[key] = true
                             data.vertices[key] = data.vertices[key] or {}
                             table.insert(data.vertices[key], { flex = flexIndex, pos = dp, normal = dn })

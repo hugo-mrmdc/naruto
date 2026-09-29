@@ -6,7 +6,7 @@
 --========================================================
 
 
-local MARQUE_PATCH_VERSION = "V7.8-progressive-load"
+local MARQUE_PATCH_VERSION = "V7.9-targeted-flex-load"
 if NA_SenjuFlexLoader then NA_SenjuFlexLoader.ClosePending() end
 local FaceShellFlex = include("autorun/client/senju/face_shell_flex.lua")
 NA_SenjuFlexLoader = FaceShellFlex
@@ -404,7 +404,14 @@ local function BuildFaceShellData(model)
         mdl:Close()
     end
 
-    local flexData, flexError = FaceShellFlex.Load(model, coroutine.yield)
+    local wantedVertices = {}
+    for ti, tri in ipairs(tris) do
+        if ti % 64 == 0 then coroutine.yield() end
+        for _, v in ipairs(tri) do
+            wantedVertices[FaceShellFlex.Key(v)] = true
+        end
+    end
+    local flexData, flexError = FaceShellFlex.Load(model, coroutine.yield, wantedVertices)
     local flexMatched = 0
     if flexData then
         for ti, tri in ipairs(tris) do
@@ -474,6 +481,15 @@ timer.Create("NA_SenjuShellPrewarm", 1, 0, function()
     if not IsValid(ply) then return end
     local head = NA_GetTeteRendue and NA_GetTeteRendue(ply)
     if IsValid(head) then GetFaceShellData(head:GetModel()) end
+    -- Un cache par modèle, partagé entre joueurs. Prépare seulement les
+    -- têtes présentes et visibles, jamais l'ensemble des modèles du serveur.
+    for _, other in ipairs(player.GetAll()) do
+        if other ~= ply and not other:IsDormant() and other:Alive()
+            and not other:GetNWBool("IsInvisible", false) then
+            local otherHead = NA_GetTeteRendue and NA_GetTeteRendue(other)
+            if IsValid(otherHead) then GetFaceShellData(otherHead:GetModel()) end
+        end
+    end
 end)
 
 local function SkinVertex(ent, v, transforms, normalProbe)

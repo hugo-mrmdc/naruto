@@ -192,9 +192,9 @@ local TECHNIQUES = {
     { cat = "Senju", name = "Coup de pied céleste", key = "", id = "senju_pied", rang = "A", icone = "ui/icon/senju_choc_sismique.png", court = "Pied", cooldown = 20,
       desc = "Tu sautes puis fonces dans la direction où tu regardes. À l'atterrissage, une énorme onde de choc blesse et projette tous les ennemis proches. Coûte 45 de chakra.",
       dmg = "60 de dégâts + projection" },
-    { cat = "Senju", name = "Ermite naturel", key = "", id = "senju_ermite", rang = "S", icone = "ui/icon/senju_ermite_naturel.png", court = "Ermite", cooldown = 45,
-      desc = "Tu puises dans l'énergie de la nature pendant 20 secondes : tu infliges 20 % de dégâts en plus, tu subis 15 % de dégâts en moins, tu cours 10 % plus vite et ta vie se régénère de 3 points par seconde. Coûte 50 de chakra, une seule fois.",
-      dmg = "+20 % de dégâts, -15 % de dégâts subis, +10 % de vitesse pendant 20 s" },
+    { cat = "Senju", name = "Ermite naturel", key = "", id = "senju_ermite", rang = "S", icone = "ui/icon/senju_ermite_naturel.png", court = "Ermite", cooldown = 5,
+      desc = "Active l'Ermite naturel (rappuie pour le couper) : tu infliges 20 % de dégâts en plus, tu subis 15 % de dégâts en moins, tu cours 10 % plus vite et ta vie se régénère de 3 points par seconde. Consomme 4 de chakra par seconde (tu peux recharger avec R en même temps) ; elle s'éteint quand le chakra est vide. Il faut 30 de chakra pour l'activer.",
+      dmg = "+20 % de dégâts, -15 % de dégâts subis, +10 % de vitesse tant qu'elle est active" },
 
     -- ===== CHINOIKE =====
     { cat = "Chinoike", name = "Ketsuryugan", key = "", id = "chinoike_ketsuryugan", rang = "C", icone = "ui/icon/chinoike_ketsuryugan.png", court = "Ketsu", cooldown = 5,
@@ -753,7 +753,7 @@ local function Open()
     vbar.btnDown.Paint = function() end
     vbar.btnGrip.Paint = function(pan, w, h) draw.RoundedBox(3, 0, 0, w, h, Color(232, 196, 120, 120)) end
 
-    local tailleCase = math.floor(cW * 0.062)
+    local tailleCase = math.floor(cW * 0.075)
     local ecart = math.floor(cW * 0.014)
 
     -- Une technique dans la grille

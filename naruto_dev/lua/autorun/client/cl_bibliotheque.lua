@@ -300,11 +300,12 @@ local function Ouvrir()
         end
     end
 
-    -- croix de fermeture, coin haut droit de la scène
+    -- Croix de fermeture sur le bandeau supérieur, à gauche de la lanterne.
     local fermer = vgui.Create("DButton", frame)
     fermer:SetText("")
-    fermer:SetSize(50 * S, 50 * S)
-    fermer:SetPos(sX + sW - 64 * S, sY + 14 * S)
+    fermer:SetSize(68 * S, 68 * S)
+    fermer:SetPos(sX + sW - 10 * S, 44 * S)
+    fermer:SetTooltip("Fermer")
     fermer.Paint = function(pan, w, h)
         local m = pan:IsHovered() and 0 or 3 * S
         Image(DOSSIER .. "btn_base_close.png", m, m, w - m * 2, h - m * 2)

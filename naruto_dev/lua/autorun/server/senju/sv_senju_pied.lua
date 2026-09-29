@@ -40,7 +40,7 @@ local VICTIME_SOL    = { "m_beaten_downtofloor", "nrp_beaten_aerial_downtofloor_
 local ANIM_FIN       = "nrp_ninjutsu_heal_heavenkickpain_attack_end"
 
 local PARTICULE      = "solve_doton_pics_floor"   -- particles/solve_doton.pcf
-local NB_PARTICULES  = 5      -- une au centre + le reste en cercle
+local NB_PARTICULES  = 3      -- une au centre + le reste en cercle (chaque système de particules coûte cher au client)
 local ROCHER_ECHELLE = 5.5    -- la roche de la Frappe terrestre est à 2.2
 local ROCHER_DUREE   = 3
 local SON            = "physics/concrete/concrete_break3.wav"
@@ -212,7 +212,8 @@ hook.Add("Think", "SenjuPied_Suivi", function()
         if not IsValid(ply) or not ply:Alive() then
             Terminer(ply)
         elseif a.plonge then
-            NA_Mudra(ply, 0.3)   -- pas de coups pendant le plongeon
+            -- pas de coups pendant le plongeon : renouvelé seulement quand il s'épuise (évite un envoi réseau à chaque tick)
+            if ply:GetNW2Float("NA_MudraFin", 0) - CurTime() < 0.2 then NA_Mudra(ply, 0.5) end
             Boucler(ply, a)
 
             local t = CurTime() - a.debutPlonge

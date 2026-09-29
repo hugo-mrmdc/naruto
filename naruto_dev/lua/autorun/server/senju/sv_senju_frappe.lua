@@ -69,7 +69,12 @@ hook.Add("Think", "SenjuFrappe_Roches", function()
         else
             -- monte en 0.2 s, reste posée, redescend en 0.4 s
             local haut = t < 0.2 and t / 0.2 or (t < r.duree and 1 or 1 - (t - r.duree) / 0.4)
-            r.ent:SetPos(r.pos + Vector(0, 0, r.bas + (r.haut - r.bas) * math.Clamp(haut, 0, 1)))
+            haut = math.Clamp(haut, 0, 1)
+            -- pendant qu'elle reste posée, on ne redéplace pas (grosse entité : chaque SetPos est renvoyé aux clients)
+            if haut ~= r.dernier then
+                r.dernier = haut
+                r.ent:SetPos(r.pos + Vector(0, 0, r.bas + (r.haut - r.bas) * haut))
+            end
         end
     end
 end)

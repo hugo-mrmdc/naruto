@@ -1,4 +1,4 @@
-<--========================================================
+--========================================================
 -- Hyuga : 32 Points du Hakke (SERVEUR)
 --
 -- Frappe instantanée : même zone rectangulaire devant le lanceur que la
@@ -189,6 +189,7 @@ net.Receive("hyuga_32points_cast", function(_, ply)
     ply:SetNW2Bool("NA_Canalise", true)   -- pas d'autre jutsu tant que ça dure (_na_registre.lua)
     ply:Freeze(true)   -- immobilisé pendant toute la technique (au sol comme en l'air, ne retombe pas)
     ply:SetGravity(0)  -- coupe aussi la gravité (en plus du repositionnement) : plus aucun affaissement
+    ply:SetMoveType(MOVETYPE_NONE)   -- plus aucun déplacement physique, même en l'air (la gravité ne s'applique plus du tout)
 
     -- la rafale part TOUT DE SUITE (en même temps que l'animation), pas après :
     -- sinon les dégâts n'arrivent qu'une fois les coups déjà terminés à l'écran.
@@ -216,6 +217,7 @@ net.Receive("hyuga_32points_cast", function(_, ply)
             ply:SetNW2Bool("NA_Canalise", false)
             ply:Freeze(false)
             ply:SetGravity(1)
+            ply:SetMoveType(MOVETYPE_WALK)
         end
     end)
 end)
@@ -252,6 +254,7 @@ hook.Add("PlayerDeath", "HyugaHakke32_Mort", function(ply)
     ply:SetNW2Bool("NA_Canalise", false)
     ply:Freeze(false)
     ply:SetGravity(1)
+    ply:SetMoveType(MOVETYPE_WALK)
 end)
 
 hook.Add("PlayerDisconnected", "HyugaHakke32_Nettoyage", function(ply)

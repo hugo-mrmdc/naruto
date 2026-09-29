@@ -185,7 +185,7 @@ local function MettreAJour(ply, now, dt)
     -- sv_kaguya_armure.lua)
     if CHAKRA_REGEN <= 0 then return end
     if (nextRegen[ply] or 0) > now then return end
-    if ply:GetNW2Bool("NA_Ketsuryugan", false) or ply:GetNW2Bool("NA_ArmureOs", false) then return end
+    if ply:GetNW2Bool("NA_Ketsuryugan", false) or ply:GetNW2Bool("NA_ArmureOs", false) or ply:GetNW2Bool("NA_SenjuErmite", false) then return end
     local cur = GetChakra(ply)
     if cur < CHAKRA_MAX then
         SetChakra(ply, cur + CHAKRA_REGEN * dt)
