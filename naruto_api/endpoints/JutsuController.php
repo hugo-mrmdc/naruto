@@ -7,13 +7,11 @@ declare(strict_types=1);
  * pas de données par personnage — voir character_jutsu / character_loadout
  * pour ce qu'un personnage a débloqué/équipé).
  *
- * POST /jutsu/sync   { jutsu: [ {id, name, description?, category?, element?,
- *                                archetype?, chakra?, cooldown?, cast_time?,
- *                                damage?, range?, unlock?, requirements?}, ... ] }
+ * POST /jutsu/sync   { jutsu: [ {id, name, description?}, ... ] }
  *   -> remplace tout le catalogue (le jeu est la source de vérité, envoyée
  *      en une fois au démarrage du serveur).
- * GET  /jutsu?category=&element=   -> liste du catalogue
- * GET  /jutsu/{id}                  -> un jutsu
+ * GET  /jutsu         -> liste du catalogue
+ * GET  /jutsu/{id}     -> un jutsu
  */
 final class JutsuController
 {
@@ -47,30 +45,16 @@ final class JutsuController
         try {
             $db->exec('DELETE FROM jutsu_definitions');
 
-            $stmt = $db->prepare(
-                'INSERT INTO jutsu_definitions
-                    (jutsu_id, name, description, category, element, archetype, chakra, cooldown, cast_time, damage, range_units, unlock, requirements)
-                 VALUES (:id, :name, :description, :category, :element, :archetype, :chakra, :cooldown, :cast_time, :damage, :range_units, :unlock, :requirements)'
-            );
+            $stmt = $db->prepare('INSERT INTO jutsu_definitions (jutsu_id, name, description) VALUES (:id, :name, :description)');
             foreach ($list as $j) {
                 $id = (string) ($j['id'] ?? $j['jutsu_id'] ?? '');
                 if ($id === '') {
                     continue;
                 }
                 $stmt->execute([
-                    'id'           => $id,
-                    'name'         => (string) ($j['name'] ?? $id),
-                    'description'  => (string) ($j['description'] ?? ''),
-                    'category'     => (string) ($j['category'] ?? ''),
-                    'element'      => (string) ($j['element'] ?? ''),
-                    'archetype'    => (string) ($j['archetype'] ?? ''),
-                    'chakra'       => (int) ($j['chakra'] ?? 0),
-                    'cooldown'     => (float) ($j['cooldown'] ?? 0),
-                    'cast_time'    => (float) ($j['cast_time'] ?? $j['castTime'] ?? 0),
-                    'damage'       => (int) ($j['damage'] ?? 0),
-                    'range_units'  => (int) ($j['range'] ?? $j['range_units'] ?? 0),
-                    'unlock'       => (string) ($j['unlock'] ?? 'auto'),
-                    'requirements' => json_encode($j['requirements'] ?? new stdClass(), JSON_UNESCAPED_UNICODE),
+                    'id'          => $id,
+                    'name'        => (string) ($j['name'] ?? $id),
+                    'description' => (string) ($j['description'] ?? ''),
                 ]);
             }
             $db->commit();
@@ -84,27 +68,7 @@ final class JutsuController
 
     private static function list(): void
     {
-        $where = [];
-        $params = [];
-        foreach (['category', 'element'] as $filter) {
-            $value = Request::query($filter);
-            if ($value !== null) {
-                $where[] = "{$filter} = :{$filter}";
-                $params[$filter] = $value;
-            }
-        }
-
-        $sql = 'SELECT * FROM jutsu_definitions';
-        if ($where !== []) {
-            $sql .= ' WHERE ' . implode(' AND ', $where);
-        }
-        $sql .= ' ORDER BY category, name';
-
-        $db = Database::connection();
-        $stmt = $db->prepare($sql);
-        $stmt->execute($params);
-
-        Response::ok(array_map([self::class, 'decorate'], $stmt->fetchAll()));
+        Response::ok(Database::connection()->query('SELECT * FROM jutsu_definitions ORDER BY name')->fetchAll());
     }
 
     private static function show(string $id): void
@@ -117,14 +81,6 @@ final class JutsuController
             Response::error('Jutsu introuvable.', 404);
         }
 
-        Response::ok(self::decorate($row));
-    }
-
-    private static function decorate(array $row): array
-    {
-        if (isset($row['requirements']) && is_string($row['requirements'])) {
-            $row['requirements'] = json_decode($row['requirements'], true);
-        }
-        return $row;
+        Response::ok($row);
     }
 }

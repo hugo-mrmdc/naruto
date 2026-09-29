@@ -186,16 +186,6 @@ hook.Add("NRP.Loaded", "NRP.Api.SyncJutsuCatalog", function()
             id = id,
             name = def.name,
             description = def.description,
-            category = def.category,
-            element = def.element,
-            archetype = def.archetype,
-            chakra = def.chakra,
-            cooldown = def.cooldown,
-            cast_time = def.castTime,
-            damage = def.damage,
-            range = def.range,
-            unlock = def.unlock,
-            requirements = def.requirements,
         }
     end
 

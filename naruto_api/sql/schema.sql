@@ -158,23 +158,11 @@ CREATE TABLE IF NOT EXISTS character_equipped (
 -- character_jutsu / character_loadout.
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS jutsu_definitions (
-    jutsu_id     VARCHAR(64)  NOT NULL,
-    name         VARCHAR(128) NOT NULL DEFAULT '',
-    description  TEXT         NULL,
-    category     VARCHAR(32)  NOT NULL DEFAULT '',
-    element      VARCHAR(32)  NOT NULL DEFAULT '',
-    archetype    VARCHAR(32)  NOT NULL DEFAULT '',
-    chakra       INT UNSIGNED NOT NULL DEFAULT 0,
-    cooldown     FLOAT        NOT NULL DEFAULT 0,
-    cast_time    FLOAT        NOT NULL DEFAULT 0,
-    damage       INT          NOT NULL DEFAULT 0,
-    range_units  INT          NOT NULL DEFAULT 0,   -- "range" est réservé en SQL
-    unlock       VARCHAR(16)  NOT NULL DEFAULT 'auto',
-    requirements JSON         NULL,   -- {level, rank, affinity, clan, stats, dojutsu}
-    updated_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (jutsu_id),
-    KEY idx_jutsu_category (category),
-    KEY idx_jutsu_element (element)
+    jutsu_id    VARCHAR(64)  NOT NULL,
+    name        VARCHAR(128) NOT NULL DEFAULT '',
+    description TEXT         NULL,
+    updated_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (jutsu_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ------------------------------------------------------------
