@@ -109,6 +109,20 @@ n'y en a aucune, et renvoie toujours l'`id` de la fiche concernée
 par joueur, il suffira qu'il envoie aussi un identifiant de personnage dans
 le payload pour que chacun soit synchronisé sur sa propre ligne.
 
+### Kekkei Genkai (`character_kekei`)
+
+Table dédiée pour les Kekkei Genkai débloqués par personnage (mokuton,
+hyoton, jinton, yoton, shakuton, futton, jiton, shoton, meiton, bakuton,
+kiminari...), pour pouvoir filtrer/lister par kekkei genkai depuis le site
+sans avoir à parser `raw_data`.
+
+Se remplit via `POST /characters/sync` en ajoutant un champ `kekkei` au
+payload : `"kekkei": [{"id": "mokuton", "level": 3}, {"id": "hyoton"}]`
+(`level` optionnel, défaut 1). Un sync qui n'inclut pas du tout la clé
+`kekkei` ne touche pas aux lignes existantes (sync partiel) ; l'envoyer à
+`[]` les efface toutes. `GET /characters/{id}` renvoie la liste sous
+`data.kekei`.
+
 ### Notes sur `/bans`
 
 Ce registre est pensé pour un historique/modération **côté site web** : il

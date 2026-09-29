@@ -81,6 +81,7 @@ final class CharactersController
             $stmt->bindValue(':id', $existingId, PDO::PARAM_INT);
             $stmt->execute();
 
+            self::syncKekei($db, (int) $existingId, $data);
             Response::ok(['synced' => true, 'id' => (int) $existingId]);
         }
 
@@ -92,7 +93,38 @@ final class CharactersController
         }
         $stmt->execute();
 
-        Response::ok(['synced' => true, 'id' => (int) $db->lastInsertId()], 201);
+        $newId = (int) $db->lastInsertId();
+        self::syncKekei($db, $newId, $data);
+        Response::ok(['synced' => true, 'id' => $newId], 201);
+    }
+
+    /**
+     * Remplace entièrement les Kekkei Genkai débloqués d'un personnage à partir
+     * de data.kekkei = [ {id, level?}, ... ] (ou [ {kekei_id, level?}, ... ]).
+     * N'y touche pas si le payload n'a pas de clé "kekkei" du tout (sync partiel).
+     */
+    private static function syncKekei(PDO $db, int $characterId, array $data): void
+    {
+        if (!array_key_exists('kekkei', $data) || !is_array($data['kekkei'])) {
+            return;
+        }
+
+        $db->prepare('DELETE FROM character_kekei WHERE character_id = :id')->execute(['id' => $characterId]);
+
+        $stmt = $db->prepare(
+            'INSERT INTO character_kekei (character_id, kekei_id, level) VALUES (:character_id, :kekei_id, :level)'
+        );
+        foreach ($data['kekkei'] as $entry) {
+            $keiId = is_array($entry) ? (string) ($entry['id'] ?? $entry['kekei_id'] ?? '') : (string) $entry;
+            if ($keiId === '') {
+                continue;
+            }
+            $stmt->execute([
+                'character_id' => $characterId,
+                'kekei_id'     => $keiId,
+                'level'        => is_array($entry) ? (int) ($entry['level'] ?? 1) : 1,
+            ]);
+        }
     }
 
     private static function show(string $id): void
@@ -101,13 +133,18 @@ final class CharactersController
             Response::error('Identifiant de personnage invalide.', 422);
         }
 
-        $stmt = Database::connection()->prepare('SELECT * FROM characters WHERE id = :id');
+        $db = Database::connection();
+        $stmt = $db->prepare('SELECT * FROM characters WHERE id = :id');
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
 
         if (!$row) {
             Response::error('Personnage introuvable.', 404);
         }
+
+        $kekei = $db->prepare('SELECT kekei_id, level, unlocked_at FROM character_kekei WHERE character_id = :id ORDER BY kekei_id');
+        $kekei->execute(['id' => $id]);
+        $row['kekei'] = $kekei->fetchAll();
 
         Response::ok(self::decorate($row));
     }

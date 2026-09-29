@@ -70,6 +70,23 @@ CREATE TABLE IF NOT EXISTS characters (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ------------------------------------------------------------
+-- Kekkei Genkai débloqués par personnage (mokuton, jinton, hyoton, yoton,
+-- shakuton, futton, jiton, shoton, meiton, bakuton, kiminari...). Table
+-- dédiée (plutôt que noyé dans raw_data) pour pouvoir filtrer/lister par
+-- kekkei genkai depuis le site.
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS character_kekei (
+    id            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    character_id  BIGINT UNSIGNED NOT NULL,   -- characters.id
+    kekei_id      VARCHAR(32)     NOT NULL,   -- ex : mokuton, hyoton, jinton...
+    level         INT             NOT NULL DEFAULT 1,
+    unlocked_at   DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uniq_character_kekei (character_id, kekei_id),
+    KEY idx_kekei_character (character_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ------------------------------------------------------------
 -- Journal d'actions (miroir de la table "logs" du jeu, pour affichage web)
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS logs (

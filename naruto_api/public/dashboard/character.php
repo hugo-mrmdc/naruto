@@ -38,6 +38,13 @@ $player = db_try(static function (PDO $db) use ($playerSteamid): array {
     return $stmt->fetch() ?: [];
 });
 
+$kekei = db_try(static function (PDO $db) use ($char): array {
+    if (!isset($char['id'])) return [];
+    $stmt = $db->prepare('SELECT kekei_id, level FROM character_kekei WHERE character_id = :id ORDER BY kekei_id');
+    $stmt->execute(['id' => $char['id']]);
+    return $stmt->fetchAll();
+});
+
 $raw = [];
 if (isset($char['raw_data']) && is_string($char['raw_data'])) {
     $raw = json_decode($char['raw_data'], true) ?: [];
@@ -47,6 +54,7 @@ if (isset($char['raw_data']) && is_string($char['raw_data'])) {
 $HEADER_KEYS = [
     'steamid', 'firstname', 'lastname', 'village', 'clan', 'rank', 'level', 'xp',
     'ryo', 'stat_points', 'deserter', 'origin_village', 'playtime', 'created', 'last_seen',
+    'kekkei', // affiché séparément via la table dédiée character_kekei
 ];
 
 /** Rend n'importe quelle valeur JSON (scalaire, liste, ou table clé/valeur) de façon lisible. */
@@ -147,6 +155,17 @@ page_start('Fiche personnage');
             <?php endif; ?>
         </div>
     </div>
+
+    <?php if ($kekei !== []): ?>
+        <div class="card">
+            <h2>Kekkei Genkai</h2>
+            <div class="pill-row">
+                <?php foreach ($kekei as $k): ?>
+                    <span class="badge accent"><?= h(ucfirst($k['kekei_id'])) ?> — niv. <?= h($k['level']) ?></span>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    <?php endif; ?>
 
     <?php foreach ($raw as $key => $value): ?>
         <?php if (in_array($key, $HEADER_KEYS, true)) continue; ?>
