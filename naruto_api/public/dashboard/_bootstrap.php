@@ -69,6 +69,7 @@ function db_try(callable $query): array
 $NAV = [
     'index.php'      => 'Accueil',
     'characters.php' => 'Personnages',
+    'jutsu.php'      => 'Jutsu',
     'logs.php'       => 'Journal',
 ];
 

@@ -32,7 +32,8 @@ quel hébergement mutualisé.
 pas de framework) qui affiche les données déjà en base : `dashboard/index.php`
 (résumé + activité récente), `characters.php` (classement filtrable/triable),
 `character.php?id=...` (fiche complète : stats, affinités, jutsu, inventaire,
-Kekkei Genkai, dōjutsu, arbre de clan...) et `logs.php` (journal filtrable).
+Kekkei Genkai, dōjutsu, arbre de clan...), `jutsu.php` (catalogue des jutsu,
+filtrable par catégorie/élément) et `logs.php` (journal filtrable).
 
 Il lit la base **directement** (`Database::connection()`), pas via les routes
 JSON `/characters`, `/logs`... donc **pas besoin de la clé `X-Api-Key`**
@@ -75,6 +76,9 @@ partagée, appel serveur-à-serveur uniquement — jamais depuis le client GMod)
 | POST | `/characters/sync` | crée/met à jour une fiche personnage (voir "Identifiant de personnage" plus bas) |
 | GET | `/characters?sort=level\|xp\|ryo\|playtime&order=desc&village=&clan=&rank=&steamid=&limit=&offset=` | liste / classement |
 | GET | `/characters/{id}` | une fiche complète, par son identifiant de personnage |
+| POST | `/jutsu/sync` `{jutsu: [...]}` | remplace le catalogue de référence des jutsu |
+| GET | `/jutsu?category=&element=` | catalogue des jutsu |
+| GET | `/jutsu/{id}` | un jutsu |
 | POST | `/sessions/start` `{steamid, steam_name}` | ouvre une session |
 | POST | `/sessions/end` `{steamid}` | ferme la session ouverte la plus récente |
 | GET | `/sessions?steamid=&limit=` | historique des sessions |
@@ -141,6 +145,21 @@ colonnes `JSON` de `characters`, décodées automatiquement dans les réponses.
 `characters.raw_data` garde quand même le JSON complet envoyé à chaque sync,
 en garde-fou : si un nouveau champ apparaît plus tard côté Lua sans avoir sa
 place ici, rien n'est perdu, il est juste noyé dans `raw_data` en attendant.
+
+### Catalogue des jutsu (`jutsu_definitions`)
+
+Contrairement à `character_jutsu` (juste les ids débloqués par personnage),
+`jutsu_definitions` est un miroir de `config/jutsu.lua` : nom, description,
+catégorie, élément, chakra, cooldown, dégâts, prérequis... Ce n'est **pas**
+une donnée par personnage — c'est le catalogue complet, poussé **en une
+fois** par `modules/api_sync/sv_api_sync.lua` au démarrage du serveur GMod
+(hook `NRP.Loaded`), puisqu'il ne change pas en cours de partie.
+
+Ça sert à deux choses : une page catalogue (`dashboard/jutsu.php`) et à
+afficher de vrais noms sur la fiche personnage (jointure automatique entre
+`character_jutsu`/`character_loadout` et `jutsu_definitions`) au lieu des
+ids bruts type `katon_fireball` — avec repli propre sur l'id si le
+catalogue n'a pas encore été synchronisé.
 
 ### Notes sur `/bans`
 

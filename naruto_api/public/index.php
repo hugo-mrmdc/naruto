@@ -21,6 +21,7 @@ set_exception_handler(static function (Throwable $e): void {
 require __DIR__ . '/../endpoints/PlayersController.php';
 require __DIR__ . '/../endpoints/SessionsController.php';
 require __DIR__ . '/../endpoints/CharactersController.php';
+require __DIR__ . '/../endpoints/JutsuController.php';
 require __DIR__ . '/../endpoints/LogsController.php';
 require __DIR__ . '/../endpoints/VillagesController.php';
 require __DIR__ . '/../endpoints/BansController.php';
@@ -60,6 +61,7 @@ try {
         'players'  => PlayersController::handle($method, $rest),
         'sessions' => SessionsController::handle($method, $rest),
         'characters' => CharactersController::handle($method, $rest),
+        'jutsu' => JutsuController::handle($method, $rest),
         'logs' => LogsController::handle($method, $rest),
         'villages' => VillagesController::handle($method, $rest),
         'bans' => BansController::handle($method, $rest),

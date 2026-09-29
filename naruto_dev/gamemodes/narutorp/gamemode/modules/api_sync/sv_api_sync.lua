@@ -9,6 +9,7 @@
         - Connexion / déconnexion    -> POST /sessions/start|end
         - Actions journalisées       -> POST /logs               (miroir de NRP.LogAction)
         - Relations entre villages   -> POST /villages/relations/sync (resync périodique)
+        - Catalogue des jutsu        -> POST /jutsu/sync         (une fois, au démarrage)
 ]]
 
 NRP.Api = NRP.Api or {}
@@ -165,4 +166,38 @@ end
 timer.Create("NRP.Api.PeriodicSync", math.max(Cfg().SyncInterval or 60, 15), 0, function()
     if not Cfg().Enabled then return end
     SyncVillageRelations()
+end)
+
+---------------------------------------------------------------------------
+-- Catalogue des jutsu : référence STATIQUE (config/jutsu.lua), pas propre à
+-- un joueur -> poussée une seule fois, au chargement du gamemode, pas de
+-- resync périodique (le catalogue ne change pas en cours de partie).
+---------------------------------------------------------------------------
+
+hook.Add("NRP.Loaded", "NRP.Api.SyncJutsuCatalog", function()
+    if not Cfg().Enabled or not SERVER then return end
+
+    local Jutsu = NRP.Jutsu
+    if not Jutsu or not Jutsu.Registry then return end
+
+    local list = {}
+    for id, def in Jutsu.Registry:Iterate() do
+        list[#list + 1] = {
+            id = id,
+            name = def.name,
+            description = def.description,
+            category = def.category,
+            element = def.element,
+            archetype = def.archetype,
+            chakra = def.chakra,
+            cooldown = def.cooldown,
+            cast_time = def.castTime,
+            damage = def.damage,
+            range = def.range,
+            unlock = def.unlock,
+            requirements = def.requirements,
+        }
+    end
+
+    NRP.Api.Request("POST", "/jutsu/sync", { jutsu = list })
 end)
