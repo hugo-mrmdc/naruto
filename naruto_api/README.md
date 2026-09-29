@@ -24,11 +24,22 @@ quel hébergement mutualisé.
    php -r "echo password_hash('ton_mot_de_passe', PASSWORD_DEFAULT);"
    ```
 4. Pointe le vhost / sous-domaine sur le dossier `public/` (c'est le seul dossier
-   à exposer publiquement — jamais `src/`, `endpoints/`, `sql/` ni `.env`).
+   à exposer publiquement — jamais `src/`, `endpoints/`, `sql/`, `.env` ni
+   `naruto_api/index.php`, voir "Organisation des fichiers" plus bas).
 5. Vérifie que `mod_rewrite` est actif (le `.htaccess` fourni dans `public/`
    route tout vers `index.php`). Sans Apache/mod_rewrite, l'API fonctionne
    quand même via `index.php/characters/...` (PATH_INFO).
 6. Teste : `curl https://tonsite/naruto_api/public/health` doit répondre `{"success":true,...}`.
+
+## Organisation des fichiers
+
+`public/index.php` est le seul fichier que le serveur web exécute pour
+l'API — il ne fait qu'inclure `naruto_api/index.php`, qui contient tout le
+routage et la logique. Le code applicatif vit donc juste à côté de `src/`,
+`endpoints/` et `sql/`, sans dupliquer la logique ni changer ce qui doit être
+exposé au web : `public/` reste le seul dossier pointé par le vhost.
+Pour changer le comportement de l'API, c'est **`naruto_api/index.php`** qu'il
+faut modifier, pas `public/index.php`.
 
 ## Dashboard visuel
 
