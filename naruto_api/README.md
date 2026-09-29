@@ -19,6 +19,10 @@ quel hébergement mutualisé.
    ```
    php -r "echo bin2hex(random_bytes(32));"
    ```
+   Et un mot de passe pour le dashboard (`DASHBOARD_PASSWORD_HASH`) :
+   ```
+   php -r "echo password_hash('ton_mot_de_passe', PASSWORD_DEFAULT);"
+   ```
 4. Pointe le vhost / sous-domaine sur le dossier `public/` (c'est le seul dossier
    à exposer publiquement — jamais `src/`, `endpoints/`, `sql/` ni `.env`).
 5. Vérifie que `mod_rewrite` est actif (le `.htaccess` fourni dans `public/`
@@ -39,6 +43,14 @@ Il lit la base **directement** (`Database::connection()`), pas via les routes
 JSON `/characters`, `/logs`... donc **pas besoin de la clé `X-Api-Key`**
 pour le consulter — cette clé ne doit de toute façon jamais arriver dans un
 navigateur. Il n'écrit jamais dans la base.
+
+**Protégé par mot de passe** (`DASHBOARD_PASSWORD_HASH` dans `.env`, voir
+Installation) : toute page du dossier redirige vers `login.php` tant que le
+navigateur n'est pas authentifié (session PHP, cookie `httponly`). Tant que
+ce mot de passe n'est pas configuré, le dashboard refuse tout le monde plutôt
+que de rester ouvert par erreur. `logout.php` termine la session. C'est un
+mot de passe unique partagé (pas de comptes par utilisateur) : pensé pour un
+accès staff/admin, pas pour des comptes joueurs.
 
 Il est indépendant du serveur GMod : dès que `sql/schema.sql` est importé, il
 tourne et affiche des pages vides (avec un message clair) même sans aucune

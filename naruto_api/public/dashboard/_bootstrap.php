@@ -14,8 +14,13 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../src/Config.php';
 require __DIR__ . '/../../src/Database.php';
+require __DIR__ . '/../../src/DashboardAuth.php';
 
 date_default_timezone_set(Config::get('APP_TIMEZONE', 'UTC'));
+
+// Toutes les pages qui chargent ce bootstrap sont protégées par mot de passe
+// (login.php et logout.php ne le chargent pas, pour ne pas boucler).
+DashboardAuth::requireLogin();
 
 set_exception_handler(static function (Throwable $e): void {
     error_log('[naruto_api dashboard] ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
@@ -94,6 +99,7 @@ function page_start(string $title): void
             <?php foreach ($NAV as $href => $label): ?>
                 <a href="<?= h($href) ?>" class="<?= $href === $current ? 'active' : '' ?>"><?= h($label) ?></a>
             <?php endforeach; ?>
+            <a href="logout.php">Déconnexion</a>
         </nav>
     </div>
 </header>
