@@ -18,18 +18,26 @@ final class Config
         }
         self::$loaded = true;
 
+        // ".env" en priorité ; "config.env" en secours (certains hébergeurs/clients FTP refusent les fichiers en ".")
         $path = __DIR__ . '/../.env';
+        if (!is_file($path)) {
+            $path = __DIR__ . '/../config.env';
+        }
         if (!is_file($path)) {
             return; // en prod, les valeurs peuvent venir des variables d'environnement du serveur web
         }
 
         foreach (file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
-            $line = trim($line);
+            $line = trim(preg_replace('/^ï»¿/', '', $line)); // BOM UTF-8 éventuel
             if ($line === '' || str_starts_with($line, '#') || !str_contains($line, '=')) {
                 continue;
             }
             [$key, $value] = explode('=', $line, 2);
-            self::$values[trim($key)] = trim($value);
+            $value = trim($value);
+            if (strlen($value) >= 2 && ($value[0] === '"' || $value[0] === "'") && $value[-1] === $value[0]) {
+                $value = substr($value, 1, -1);
+            }
+            self::$values[trim($key)] = $value;
         }
     }
 

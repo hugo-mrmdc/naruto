@@ -43,32 +43,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="container" style="max-width:380px;padding-top:80px">
-    <div class="card">
-        <h1 class="page-title" style="margin-bottom:18px">Connexion</h1>
+<div class="auth-wrap">
+    <div class="card auth-card">
+        <div class="logo"></div>
+        <h1 class="page-title">Connexion</h1>
         <?php if ($error): ?>
-            <p style="color:var(--danger);margin-top:0"><?= h($error) ?></p>
+            <p class="msg-error"><?= h($error) ?></p>
         <?php endif; ?>
         <form method="post">
             <input type="hidden" name="redirect" value="<?= h($redirect) ?>">
-            <label style="display:block;margin-bottom:14px">
-                <span style="display:block;color:var(--text-dim);font-size:.85rem;margin-bottom:6px">Nom d'utilisateur</span>
-                <input type="text" name="username" autofocus required
-                       style="width:100%;background:var(--panel-light);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:6px">
+            <label class="field">
+                <span>Nom d'utilisateur</span>
+                <input type="text" name="username" autofocus required>
             </label>
-            <label style="display:block;margin-bottom:14px">
-                <span style="display:block;color:var(--text-dim);font-size:.85rem;margin-bottom:6px">Mot de passe</span>
-                <input type="password" name="password" required
-                       style="width:100%;background:var(--panel-light);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:6px">
+            <label class="field">
+                <span>Mot de passe</span>
+                <input type="password" name="password" required>
             </label>
-            <button type="submit" style="width:100%;background:var(--accent);color:#1a0f05;border:none;padding:10px;border-radius:6px;font-weight:600;cursor:pointer">
-                Se connecter
-            </button>
+            <button type="submit" class="btn">Se connecter</button>
         </form>
-        <p style="text-align:center;margin-bottom:0;margin-top:16px;color:var(--text-dim);font-size:.85rem">
-            Pas de compte ? <a href="register.php">En créer un</a>
-        </p>
+        <p class="auth-foot">Pas de compte ? <a href="register.php">En créer un</a></p>
     </div>
-</main>
+</div>
 </body>
 </html>

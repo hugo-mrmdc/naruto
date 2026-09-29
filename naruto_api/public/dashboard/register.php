@@ -46,46 +46,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="container" style="max-width:380px;padding-top:80px">
-    <div class="card">
-        <h1 class="page-title" style="margin-bottom:18px">Créer un compte</h1>
+<div class="auth-wrap">
+    <div class="card auth-card">
+        <div class="logo"></div>
+        <h1 class="page-title">Créer un compte</h1>
         <?php if ($error): ?>
-            <p style="color:var(--danger);margin-top:0"><?= h($error) ?></p>
+            <p class="msg-error"><?= h($error) ?></p>
         <?php endif; ?>
         <?php if ($success): ?>
-            <p style="color:var(--success);margin-top:0"><?= h($success) ?></p>
-            <p><a href="login.php">Aller à la connexion</a></p>
+            <p class="msg-success"><?= h($success) ?></p>
+            <p class="auth-foot"><a href="login.php">Aller à la connexion</a></p>
         <?php else: ?>
         <form method="post">
-            <label style="display:block;margin-bottom:14px">
-                <span style="display:block;color:var(--text-dim);font-size:.85rem;margin-bottom:6px">Nom d'utilisateur</span>
+            <label class="field">
+                <span>Nom d'utilisateur</span>
                 <input type="text" name="username" autofocus required minlength="3" maxlength="32" pattern="[a-zA-Z0-9_-]+"
-                       value="<?= h($_POST['username'] ?? '') ?>"
-                       style="width:100%;background:var(--panel-light);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:6px">
+                       value="<?= h($_POST['username'] ?? '') ?>">
             </label>
-            <label style="display:block;margin-bottom:14px">
-                <span style="display:block;color:var(--text-dim);font-size:.85rem;margin-bottom:6px">Mot de passe (8 caractères min.)</span>
-                <input type="password" name="password" required minlength="8"
-                       style="width:100%;background:var(--panel-light);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:6px">
+            <label class="field">
+                <span>Mot de passe (8 caractères min.)</span>
+                <input type="password" name="password" required minlength="8">
             </label>
-            <label style="display:block;margin-bottom:14px">
-                <span style="display:block;color:var(--text-dim);font-size:.85rem;margin-bottom:6px">Confirme le mot de passe</span>
-                <input type="password" name="password_confirm" required minlength="8"
-                       style="width:100%;background:var(--panel-light);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:6px">
+            <label class="field">
+                <span>Confirme le mot de passe</span>
+                <input type="password" name="password_confirm" required minlength="8">
             </label>
-            <button type="submit" style="width:100%;background:var(--accent);color:#1a0f05;border:none;padding:10px;border-radius:6px;font-weight:600;cursor:pointer">
-                Créer le compte
-            </button>
+            <button type="submit" class="btn">Créer le compte</button>
         </form>
-        <p style="color:var(--text-dim);font-size:.8rem;margin-top:14px">
+        <p class="auth-foot">
             Le compte reste inactif tant qu'un super admin ne l'a pas approuvé
             (sauf s'il s'agit du tout premier compte créé sur ce dashboard).
         </p>
         <?php endif; ?>
-        <p style="text-align:center;margin-bottom:0;margin-top:16px;color:var(--text-dim);font-size:.85rem">
-            Déjà un compte ? <a href="login.php">Se connecter</a>
-        </p>
+        <p class="auth-foot">Déjà un compte ? <a href="login.php">Se connecter</a></p>
     </div>
-</main>
+</div>
 </body>
 </html>

@@ -9,7 +9,8 @@ declare(strict_types=1);
  * jamais avoir besoin de la clé X-Api-Key ici). C'est volontaire : la clé API
  * sert au serveur GMod, elle ne doit jamais atteindre un navigateur.
  *
- * Lecture seule : ce dashboard n'écrit jamais dans la base.
+ * Lecture seule pour les admins ; les super admins peuvent en plus modifier/supprimer
+ * (character.php, logs.php, users.php), toujours avec un jeton CSRF.
  */
 
 require __DIR__ . '/../../src/Config.php';
@@ -106,7 +107,7 @@ function page_start(string $title): void
             <?php endforeach; ?>
         </nav>
         <?php if ($me): ?>
-            <span style="color:var(--text-dim);font-size:.85rem;margin-left:auto">
+            <span class="userchip">
                 <?= h($me['username']) ?> <span class="badge <?= $me['role'] === 'superadmin' ? 'accent' : '' ?>"><?= h($me['role']) ?></span>
             </span>
             <a href="logout.php">Déconnexion</a>

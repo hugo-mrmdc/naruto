@@ -47,6 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $db->prepare("UPDATE dashboard_users SET role = 'admin' WHERE id = :id")->execute(['id' => $targetId]);
                 $flash = ['success', "{$target['username']} n'est plus super admin."];
             }
+        } elseif ($action === 'delete') {
+            $activeSuperadmins = (int) $db->query("SELECT COUNT(*) FROM dashboard_users WHERE role = 'superadmin' AND status = 'active'")->fetchColumn();
+            if ($target['role'] === 'superadmin' && $target['status'] === 'active' && $activeSuperadmins <= 1) {
+                $flash = ['error', 'Impossible : ce serait le dernier super admin actif.'];
+            } else {
+                $db->prepare('DELETE FROM dashboard_users WHERE id = :id')->execute(['id' => $targetId]);
+                $flash = ['success', "Compte de {$target['username']} supprimé."];
+            }
         } else {
             $flash = ['error', 'Action inconnue.'];
         }
@@ -59,7 +67,7 @@ page_start('Comptes du dashboard');
 ?>
 
 <?php if (isset($flash)): ?>
-    <p style="color:<?= $flash[0] === 'success' ? 'var(--success)' : 'var(--danger)' ?>"><?= h($flash[1]) ?></p>
+    <p class="<?= $flash[0] === 'success' ? 'msg-success' : 'msg-error' ?>"><?= h($flash[1]) ?></p>
 <?php endif; ?>
 
 <div class="card">
@@ -113,6 +121,12 @@ page_start('Comptes du dashboard');
                                 <button type="submit" class="badge" style="border:none;cursor:pointer">Repasser admin</button>
                             </form>
                         <?php endif; ?>
+                        <form method="post" style="display:inline" onsubmit="return confirm('Supprimer ce compte définitivement ?')">
+                            <input type="hidden" name="csrf" value="<?= h(DashboardAuth::csrfToken()) ?>">
+                            <input type="hidden" name="user_id" value="<?= (int) $u['id'] ?>">
+                            <input type="hidden" name="action" value="delete">
+                            <button type="submit" class="badge danger" style="border:none;cursor:pointer">Supprimer</button>
+                        </form>
                     <?php endif; ?>
                 </td>
             </tr>
