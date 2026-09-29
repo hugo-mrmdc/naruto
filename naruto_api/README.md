@@ -31,8 +31,8 @@ quel hébergement mutualisé.
 `public/dashboard/` est un site en lecture seule (PHP classique, pas de JS,
 pas de framework) qui affiche les données déjà en base : `dashboard/index.php`
 (résumé + activité récente), `characters.php` (classement filtrable/triable),
-`character.php?id=...` (fiche complète : stats, affinités, jutsu, inventaire,
-Kekkei Genkai, dōjutsu, arbre de clan...), `jutsu.php` (catalogue des jutsu :
+`character.php?id=...` (fiche complète : stats, affinités, jutsu (avec
+niveau), inventaire, Kekkei Genkai, arbre de clan...), `jutsu.php` (catalogue des jutsu :
 nom et description) et `logs.php` (journal filtrable).
 
 Il lit la base **directement** (`Database::connection()`), pas via les routes
@@ -122,9 +122,7 @@ site ("qui a tel jutsu", "qui possède tel objet"...) sans parser `raw_data` :
 | `character_stats` | `stat_id, value` | `stats` : `{"strength": 12, ...}` |
 | `character_affinities` | `element_id` | `affinities` : `["katon", "raiton"]` |
 | `character_kekkei` | `kekkei_id, level` | `kekkei` : `[{"id": "mokuton", "level": 3}]` |
-| `character_dojutsu` | `dojutsu_id, stage` | `dojutsu` : `{"sharingan": 2}` |
-| `character_jutsu` | `jutsu_id` | `jutsus` : `["katon_goukakyu", ...]` |
-| `character_loadout` | `slot, jutsu_id` | `loadout` : `{"1": "katon_goukakyu"}` |
+| `character_jutsu` | `jutsu_id, level` | `jutsus` : `[{"id": "katon_goukakyu", "level": 2}]` |
 | `character_clan_tree` | `node_id` | `clan_tree` : `{"uchiha_sharingan_1": true}` |
 | `character_inventory` | `item_id, quantity` | `inventory.items` : `{"kunai": 5}` |
 | `character_equipped` | `slot, item_id` | `inventory.equipped` : `{"tool": "kunai"}` |
@@ -159,9 +157,9 @@ cours de partie.
 
 Ça sert à deux choses : une page catalogue (`dashboard/jutsu.php`) et à
 afficher de vrais noms sur la fiche personnage (jointure automatique entre
-`character_jutsu`/`character_loadout` et `jutsu_definitions`) au lieu des
-ids bruts type `katon_fireball` — avec repli propre sur l'id si le
-catalogue n'a pas encore été synchronisé.
+`character_jutsu` et `jutsu_definitions`) au lieu des ids bruts type
+`katon_fireball` — avec repli propre sur l'id si le catalogue n'a pas
+encore été synchronisé.
 
 ### Notes sur `/bans`
 

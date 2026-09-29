@@ -14,7 +14,7 @@ declare(strict_types=1);
  * fiche trouvée pour ce steamid, ou en crée une nouvelle s'il n'y en a aucune.
  *
  * Colonnes scalaires connues mappées explicitement sur "characters". Les listes
- * (stats, affinités, jutsu, inventaire, arbre de clan, dōjutsu, kekkei genkai...)
+ * (stats, affinités, jutsu, inventaire, arbre de clan, kekkei genkai...)
  * ont chacune leur table dédiée (character_*), remplacée en entier à chaque sync
  * si la clé correspondante est présente dans le payload (absente = inchangée,
  * [] ou {} = vidée). "raw_data" garde le JSON complet en plus, en garde-fou pour
@@ -34,9 +34,7 @@ final class CharactersController
         'stats'      => ['character_stats', 'stat_id', 'value'],
         'affinities' => ['character_affinities', 'element_id', null],
         'kekkei'     => ['character_kekkei', 'kekkei_id', 'level'],
-        'dojutsu'    => ['character_dojutsu', 'dojutsu_id', 'stage'],
-        'jutsus'     => ['character_jutsu', 'jutsu_id', null],
-        'loadout'    => ['character_loadout', 'slot', 'jutsu_id'],
+        'jutsus'     => ['character_jutsu', 'jutsu_id', 'level'],
         'clan_tree'  => ['character_clan_tree', 'node_id', null],
     ];
 
@@ -143,9 +141,9 @@ final class CharactersController
 
     /**
      * Remplace entièrement une table character_* par le contenu envoyé.
-     * $valueCol === null : simple ensemble d'identifiants (affinités, jutsu, arbre de clan).
-     * $valueCol fourni    : paire identifiant/valeur (stats, kekkei genkai, dōjutsu, inventaire,
-     *                       emplacements équipés/loadout - valeur numérique ou texte selon la table).
+     * $valueCol === null : simple ensemble d'identifiants (affinités, arbre de clan).
+     * $valueCol fourni    : paire identifiant/valeur (stats, kekkei genkai, jutsu + niveau,
+     *                       inventaire, emplacements équipés - valeur numérique ou texte selon la table).
      * Accepte aussi bien une liste (["katon", ...] ou [{id, level}, ...]) qu'une table
      * clé/valeur ({"katon": true, ...} ou {"strength": 12, ...}), pour coller à ce que
      * Lua envoie naturellement selon le champ.

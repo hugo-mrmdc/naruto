@@ -44,8 +44,7 @@ const LIST_SECTIONS = [
     ['label' => 'Statistiques allouées', 'table' => 'character_stats', 'id' => 'stat_id', 'value' => 'value', 'suffix' => 'pt(s)'],
     ['label' => 'Affinités', 'table' => 'character_affinities', 'id' => 'element_id', 'value' => null],
     ['label' => 'Kekkei Genkai', 'table' => 'character_kekkei', 'id' => 'kekkei_id', 'value' => 'level', 'suffix' => 'niv.'],
-    ['label' => 'Dōjutsu', 'table' => 'character_dojutsu', 'id' => 'dojutsu_id', 'value' => 'stage', 'suffix' => 'stade'],
-    ['label' => 'Jutsu connus', 'table' => 'character_jutsu', 'id' => 'jutsu_id', 'value' => null, 'joinJutsu' => true],
+    ['label' => 'Jutsu connus', 'table' => 'character_jutsu', 'id' => 'jutsu_id', 'value' => 'level', 'suffix' => 'niv.', 'joinJutsu' => true],
     ['label' => 'Arbre de clan débloqué', 'table' => 'character_clan_tree', 'id' => 'node_id', 'value' => null],
 ];
 
@@ -54,8 +53,9 @@ foreach (LIST_SECTIONS as $section) {
     $lists[$section['table']] = db_try(static function (PDO $db) use ($char, $section): array {
         if (!isset($char['id'])) return [];
         if (!empty($section['joinJutsu'])) {
+            $valueCol = $section['value'] ? ", t.{$section['value']} AS jlevel" : '';
             $stmt = $db->prepare(
-                "SELECT t.{$section['id']} AS jid, jd.name AS jname
+                "SELECT t.{$section['id']} AS jid{$valueCol}, jd.name AS jname
                  FROM {$section['table']} t LEFT JOIN jutsu_definitions jd ON jd.jutsu_id = t.{$section['id']}
                  WHERE t.character_id = :id ORDER BY t.{$section['id']}"
             );
@@ -81,17 +81,6 @@ $equipped = db_try(static function (PDO $db) use ($char): array {
     $stmt->execute(['id' => $char['id']]);
     return $stmt->fetchAll();
 });
-$loadout = db_try(static function (PDO $db) use ($char): array {
-    if (!isset($char['id'])) return [];
-    $stmt = $db->prepare(
-        'SELECT cl.slot, cl.jutsu_id, jd.name AS jutsu_name
-         FROM character_loadout cl LEFT JOIN jutsu_definitions jd ON jd.jutsu_id = cl.jutsu_id
-         WHERE cl.character_id = :id ORDER BY cl.slot'
-    );
-    $stmt->execute(['id' => $char['id']]);
-    return $stmt->fetchAll();
-});
-
 $bodygroups = (isset($char['bodygroups']) && is_string($char['bodygroups'])) ? (json_decode($char['bodygroups'], true) ?: []) : [];
 $color = (isset($char['color']) && is_string($char['color'])) ? (json_decode($char['color'], true) ?: []) : [];
 $flags = (isset($char['flags']) && is_string($char['flags'])) ? (json_decode($char['flags'], true) ?: []) : [];
@@ -150,8 +139,8 @@ function pretty_label(string $key): string
     $labels = [
         'gender' => 'Genre', 'model' => 'Modèle', 'skin' => 'Skin', 'bodygroups' => 'Bodygroups',
         'color' => 'Couleur', 'affinities' => 'Affinités', 'flags' => 'Flags',
-        'clan_tree' => 'Arbre de clan débloqué', 'dojutsu' => 'Dōjutsu', 'inventory' => 'Inventaire',
-        'jutsus' => 'Jutsu connus', 'loadout' => 'Emplacements de jutsu', 'reputation' => 'Réputation',
+        'clan_tree' => 'Arbre de clan débloqué', 'inventory' => 'Inventaire',
+        'jutsus' => 'Jutsu connus', 'reputation' => 'Réputation',
         'stats' => 'Statistiques allouées',
     ];
     return $labels[$key] ?? ucfirst(str_replace('_', ' ', $key));
@@ -218,10 +207,10 @@ page_start('Fiche personnage');
             <h2><?= h($section['label']) ?></h2>
             <div class="pill-row">
                 <?php foreach ($rows as $row): ?>
-                    <?php if ($section['value']): ?>
+                    <?php if (!empty($section['joinJutsu'])): ?>
+                        <span class="badge accent" <?= $row['jname'] ? 'title="' . h($row['jid']) . '"' : '' ?>><?= h($row['jname'] ?: $row['jid']) ?><?php if ($section['value']): ?> — <?= h($section['suffix'] ?? '') ?> <?= h($row['jlevel']) ?><?php endif; ?></span>
+                    <?php elseif ($section['value']): ?>
                         <span class="badge accent"><?= h(ucfirst((string) $row[$section['id']])) ?> — <?= h($section['suffix'] ?? '') ?> <?= h($row[$section['value']]) ?></span>
-                    <?php elseif (!empty($section['joinJutsu'])): ?>
-                        <span class="badge" <?= $row['jname'] ? 'title="' . h($row['jid']) . '"' : '' ?>><?= h($row['jname'] ?: $row['jid']) ?></span>
                     <?php else: ?>
                         <span class="badge"><?= h($row[$section['id']]) ?></span>
                     <?php endif; ?>
@@ -251,17 +240,6 @@ page_start('Fiche personnage');
                     </tbody>
                 </table>
             <?php endif; ?>
-        </div>
-    <?php endif; ?>
-
-    <?php if ($loadout !== []): ?>
-        <div class="card">
-            <h2>Emplacements de jutsu (barre de raccourcis)</h2>
-            <div class="pill-row">
-                <?php foreach ($loadout as $l): ?>
-                    <span class="badge"><?= h($l['slot']) ?> : <?= h($l['jutsu_name'] ?: $l['jutsu_id']) ?></span>
-                <?php endforeach; ?>
-            </div>
         </div>
     <?php endif; ?>
 

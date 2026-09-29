@@ -104,27 +104,12 @@ CREATE TABLE IF NOT EXISTS character_kekkei (
     PRIMARY KEY (character_id, kekkei_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dōjutsu possédés (Sharingan, Byakugan...) et leur stade
-CREATE TABLE IF NOT EXISTS character_dojutsu (
-    character_id BIGINT UNSIGNED NOT NULL,
-    dojutsu_id   VARCHAR(32)     NOT NULL,
-    stage        INT             NOT NULL DEFAULT 1,
-    PRIMARY KEY (character_id, dojutsu_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- Jutsu débloqués
+-- Jutsu débloqués et leur niveau
 CREATE TABLE IF NOT EXISTS character_jutsu (
     character_id BIGINT UNSIGNED NOT NULL,
     jutsu_id     VARCHAR(64)     NOT NULL,
+    level        INT             NOT NULL DEFAULT 1,
     PRIMARY KEY (character_id, jutsu_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- Jutsu placés sur la barre de raccourcis (emplacement -> jutsu)
-CREATE TABLE IF NOT EXISTS character_loadout (
-    character_id BIGINT UNSIGNED NOT NULL,
-    slot         VARCHAR(16)     NOT NULL,
-    jutsu_id     VARCHAR(64)     NOT NULL,
-    PRIMARY KEY (character_id, slot)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Nœuds débloqués dans l'arbre de clan
