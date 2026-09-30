@@ -19,6 +19,16 @@ if SERVER then
     include("autorun/server/uchiha/sv_uchiha_boule_saut.lua")
     AddCSLuaFile("autorun/client/uchiha/cl_uchiha_dragons.lua")
     include("autorun/server/uchiha/sv_uchiha_dragons.lua")
+    AddCSLuaFile("autorun/client/uchiha/cl_uchiha_genjutsu.lua")
+    include("autorun/server/uchiha/sv_uchiha_genjutsu.lua")
+    for _, ext in ipairs({ "mdl", "vvd", "dx90.vtx" }) do
+        resource.AddFile("models/clan/konoha/uchiha/nr_sharingan_genjutsu1." .. ext)
+    end
+    for i = 1, 4 do
+        resource.AddFile("materials/yugen/models/naruto/jutsu/sharingan/nr_sharingan_genjutsu1_" .. i .. ".vmt")
+        resource.AddFile("materials/yugen/models/naruto/jutsu/sharingan/nr_sharingan_genjutsu1_" .. i .. ".vtf")
+    end
+    resource.AddFile("sound/genjutsu/sharingan_deploy.wav")
     resource.AddFile("particles/atg_reworkpvp.pcf")
     resource.AddFile("particles/argano3.pcf")
     for _, ext in ipairs({ "mdl", "vvd", "dx90.vtx" }) do
@@ -30,4 +40,5 @@ if CLIENT then
     include("autorun/client/uchiha/cl_uchiha_sharingan.lua")
     include("autorun/client/uchiha/cl_uchiha_boule_saut.lua")
     include("autorun/client/uchiha/cl_uchiha_dragons.lua")
+    include("autorun/client/uchiha/cl_uchiha_genjutsu.lua")
 end

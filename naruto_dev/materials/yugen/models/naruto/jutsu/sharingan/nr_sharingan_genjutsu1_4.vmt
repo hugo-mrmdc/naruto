@@ -1,0 +1,9 @@
+VertexLitGeneric
+{
+	$basetexture "yugen/models/naruto/jutsu/sharingan/nr_sharingan_genjutsu1_4"
+
+	$lightwarptexture "yugen/models/naruto/toon/toon"
+
+	$selfillum 1
+	$selfillummask "yugen/models/naruto/jutsu/doton/light_fix"
+}

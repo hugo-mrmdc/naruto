@@ -997,6 +997,15 @@ NA_NIV_TECH.katon_dragons = {
     [5] = { degats = 15, rayon = 330, duree = 8, recharge = 12, brulure_duree = 4, brulure_dps = 5 },
 }
 
+-- Genjutsu du Sharingan (server/uchiha/sv_uchiha_genjutsu.lua) : stun pur, duree = secondes d'étourdissement
+NA_NIV_TECH.uchiha_genjutsu = {
+    [1] = { chakra = 30, recharge = 20, duree = 3, portee = 800, hitbox = 20, duree_mudra = 0.5 },
+    [2] = { duree = 3.5 },
+    [3] = { duree = 4, hitbox = 24, chakra = 26 },
+    [4] = { duree = 4.5, recharge = 17 },
+    [5] = { duree = 5, chakra = 22, recharge = 15, portee = 1000 },
+}
+
 -- Sharingan (server/uchiha/sv_uchiha_sharingan.lua) : à activer / désactiver
 --   tomoe = 1 à 3 (niveaux 1-2 : 1 tomoe, niveau 3 : 2 tomoe, niveaux 4-5 : 3 tomoe),
 --   chakra = PAR SECONDE, chakra_mini = requis pour l'activer,

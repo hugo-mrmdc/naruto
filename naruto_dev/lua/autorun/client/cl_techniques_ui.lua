@@ -41,6 +41,9 @@ local TECHNIQUES = {
     { cat = "Uchiha", name = "Dragons de feu", key = KEY_COMMA, id = "katon_dragons", rang = "B", icone = "ui/icon/uchiha_flamme_infernal.png", court = "Dragons", cooldown = 15,
       desc = "Une zone de flammes s'ouvre au sol là où tu regardes : des dragons de feu en jaillissent pendant 6 secondes, blessent et brûlent tous les ennemis dans la zone.",
       dmg = "8 par tick (toutes les 0,5 s) + brûlure" },
+    { cat = "Uchiha", name = "Genjutsu du Sharingan", key = KEY_PERIOD, id = "uchiha_genjutsu", rang = "B", icone = "ui/icon/uchiha_illusion_terrible.png", court = "Genjutsu", cooldown = 20,
+      desc = "Croise le regard d'un ennemi visé (800 unités max) : il est piégé dans un genjutsu et étourdi pendant 3 secondes, immobile et incapable de lancer une technique. Il voit l'illusion autour de lui. Coûte 30 de chakra.",
+      dmg = "Aucun dégât : étourdissement de 3 s" },
 
     -- ===== SUITON =====
     { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "", court = "Requin", cooldown = 5, cd = 5.3,
