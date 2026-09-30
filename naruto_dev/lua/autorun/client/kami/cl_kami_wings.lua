@@ -25,13 +25,18 @@ local function CV(nom)
     return cv and cv:GetFloat() or 0
 end
 
-local function AfficherAiles(self, flags)
+-- Les ailes sont dessinées JUSTE APRÈS le joueur (PostPlayerDraw) : elles lisent alors l'os du
+-- squelette exact qui vient d'être affiché, sans aucun retard (même à 700 u/s, même en tournant).
+-- RenderOverride ne sert que dans les cas où le joueur n'est pas dessiné (vue à la 1re personne).
+local function AfficherAiles(self, flags, dejaDessine)
     local ply = self:GetParent()
-    if IsValid(ply) then
+    if not IsValid(ply) then return end
+    if not dejaDessine then
+        if ply ~= LocalPlayer() or ply:ShouldDrawLocalPlayer() then return end   -- dessinées par PostPlayerDraw
         KamiWings.AppliquerCap(ply)
         ply:SetupBones()   -- squelette de CETTE image, pas de la précédente
     end
-    local os = IsValid(ply) and ply:LookupBone(OS_DOS)
+    local os = ply:LookupBone(OS_DOS)
     local m = os and ply:GetBoneMatrix(os)
 
     if m then
@@ -46,6 +51,10 @@ local function AfficherAiles(self, flags)
     local echelle = CV("echelle")
     if echelle > 0 and self:GetModelScale() ~= echelle then self:SetModelScale(echelle, 0) end
 
+    -- squelette des ailes refait à CETTE position : sans ça, s'il a déjà été calculé plus tôt dans
+    -- l'image (à l'ancienne position de l'entité), les ailes s'affichent en retard quand on tourne
+    self:InvalidateBoneCache()
+    self:SetupBones()
     self:DrawModel(flags)
 
     -- Position réelle des os À L'ENDROIT OÙ LES AILES SONT AFFICHÉES (décalage compris) :
@@ -55,7 +64,24 @@ local function AfficherAiles(self, flags)
         pos[i] = self:GetBonePosition(i)
     end
     self.PosOs = pos
+
+    -- tourbillons des ailes recalés TOUT DE SUITE sur ces positions (sinon ils lisent celles de
+    -- l'image précédente et traînent derrière quand on se déplace vite)
+    if KamiWings.RecalerTourbillons then KamiWings.RecalerTourbillons(ply) end
 end
+
+local entAiles = setmetatable({}, { __mode = "k" })   -- entités ailes connues
+
+hook.Add("PostPlayerDraw", "NA_Wings_Dessin", function(ply, flags)
+    for ent in pairs(entAiles) do
+        if IsValid(ent) and ent:GetParent() == ply then
+            -- DrawModel repasse par RenderOverride : on le prévient que c'est le dessin voulu
+            ent.NA_Direct = true
+            ent:DrawModel(flags)
+            ent.NA_Direct = nil
+        end
+    end
+end)
 
 -- Les props attachés au joueur n'avancent pas toujours leur animation tout seuls :
 -- on demande au client de faire tourner leurs images.
@@ -68,7 +94,8 @@ hook.Add("NetworkEntityCreated", "NA_Wings_Anim", function(ent)
 
         ent.AutomaticFrameAdvance = true
         ent:SetPlaybackRate(1)
-        ent.RenderOverride = AfficherAiles   -- placement réglable (convars kami_aile_*)
+        ent.RenderOverride = function(self, flags) AfficherAiles(self, flags, self.NA_Direct) end   -- placement réglable (convars kami_aile_*)
+        entAiles[ent] = true
 
         local seq = ent:LookupSequence(SEQ_AILES)
         if seq and seq >= 0 and ent:GetSequence() ~= seq then
@@ -213,6 +240,23 @@ local function ArreterFxVol(ply)
     fxVol[ply] = nil
 end
 
+-- recale chaque tourbillon d'aile sur son os
+function KamiWings.RecalerTourbillons(ply)
+    local etat = fxVol[ply]
+    if not etat or not IsValid(etat.ent) then return end
+
+    local posOs = etat.ent.PosOs or {}   -- remplies à l'affichage (AfficherAiles)
+    for i, fx in ipairs(etat.ailes) do
+        -- centre de l'aile = moyenne des positions de tous ses os
+        local somme, n = Vector(0, 0, 0), 0
+        for _, os in ipairs(AILES_OS[i]) do
+            local opos = posOs[os]
+            if opos then somme = somme + opos; n = n + 1 end
+        end
+        if n > 0 then Placer(fx, somme / n + Vector(0, 0, HAUTEUR_AILES)) end
+    end
+end
+
 hook.Add("Think", "NA_Wings_Particules", function()
     for _, ply in ipairs(player.GetAll()) do
         local etat = fxVol[ply]
@@ -248,19 +292,7 @@ hook.Add("Think", "NA_Wings_Particules", function()
             end
         end
 
-        -- recale chaque tourbillon d'aile sur son os
-        if IsValid(etat.ent) then
-            local posOs = etat.ent.PosOs or {}   -- remplies à l'affichage (AfficherAiles)
-            for i, fx in ipairs(etat.ailes) do
-                -- centre de l'aile = moyenne des positions de tous ses os
-                local somme, n = Vector(0, 0, 0), 0
-                for _, os in ipairs(AILES_OS[i]) do
-                    local opos = posOs[os]
-                    if opos then somme = somme + opos; n = n + 1 end
-                end
-                if n > 0 then Placer(fx, somme / n + Vector(0, 0, HAUTEUR_AILES)) end
-            end
-        end
+        KamiWings.RecalerTourbillons(ply)   -- aussi rappelé à chaque affichage des ailes
     end
 
     -- joueurs partis

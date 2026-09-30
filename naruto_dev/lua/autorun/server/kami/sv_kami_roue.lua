@@ -44,8 +44,8 @@ PrecacheParticleSystem("kami_03_solve_geams_bone")
 PrecacheParticleSystem("kami_03_solve_geams_trace_v2")
 PrecacheParticleSystem("kami_03_solve_geams_add_trail")
 PrecacheParticleSystem("kami_02_solve_geams_weapon")
-for _, nom in ipairs({ "", "_add", "_add_1", "_add_2", "_add_3", "_add_4", "_add_5" }) do
-    PrecacheParticleSystem("kami_02_impact_ground" .. nom)
+for _, nom in ipairs({ "", "_add", "_add_1", "_add_3", "_add_4", "_add_6", "_add_blood", "_add_blood_02" }) do
+    PrecacheParticleSystem("kami_02_solve_geams_impact_hit" .. nom)
 end
 
 -- téléchargement pour les joueurs qui n'ont pas le contenu

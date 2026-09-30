@@ -72,28 +72,31 @@ hook.Add("Move", "KamiWings_Move", function(ply, mv)
     -- moteur, donc prédite elle aussi)
     local vel = LerpVector(math.Clamp(KamiWings.INERTIE * dt, 0, 1), mv:GetVelocity(), voulu)
 
-    local from = mv:GetOrigin()
-    local to = from + vel * dt
+    local to = mv:GetOrigin()
+    local reste = dt
 
-    -- on s'arrête sur les murs au lieu de les traverser
-    local tr = util.TraceHull({
-        start = from,
-        endpos = to,
-        mins = ply:OBBMins(),
-        maxs = ply:OBBMaxs(),
-        filter = ply,
-        mask = MASK_PLAYERSOLID,
-    })
+    -- on s'arrête sur les murs/sol au lieu de les traverser, mais on GLISSE dans la
+    -- même frame (sinon posé au sol, la descente bloque tout le déplacement horizontal)
+    for _ = 1, 3 do
+        local tr = util.TraceHull({
+            start = to,
+            endpos = to + vel * reste,
+            mins = ply:OBBMins(),
+            maxs = ply:OBBMaxs(),
+            filter = ply,
+            mask = MASK_PLAYERSOLID,
+        })
 
-    if tr.StartSolid then
-        -- coincé dans quelque chose : on ne bouge pas plutôt que de s'enfoncer
-        mv:SetVelocity(Vector(0, 0, 0))
-        return true
-    end
+        if tr.StartSolid then
+            -- coincé dans quelque chose : on ne bouge pas plutôt que de s'enfoncer
+            mv:SetVelocity(Vector(0, 0, 0))
+            return true
+        end
 
-    if tr.Hit then
         to = tr.HitPos
-        -- on glisse le long de la surface au lieu de rester collé
+        if not tr.Hit then break end
+
+        reste = reste * (1 - tr.Fraction)
         vel = vel - tr.HitNormal * vel:Dot(tr.HitNormal)
     end
 

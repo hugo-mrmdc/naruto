@@ -94,12 +94,12 @@ hook.Add("Think", "KamiRoue_Mains", function()
 end)
 
 ----------------------------------------------------------
--- Impact au sol (kami_02_impact_ground) : jouée à chaque touche et contre un mur
+-- Impact (kami_02_solve_geams_impact_hit) : jouée à chaque touche et contre un mur
 ----------------------------------------------------------
-for _, nom in ipairs({ "", "_add", "_add_1", "_add_2", "_add_3", "_add_4", "_add_5" }) do
-    PrecacheParticleSystem("kami_02_impact_ground" .. nom)
+for _, nom in ipairs({ "", "_add", "_add_1", "_add_3", "_add_4", "_add_6", "_add_blood", "_add_blood_02" }) do
+    PrecacheParticleSystem("kami_02_solve_geams_impact_hit" .. nom)
 end
 
 net.Receive("kami_roue_impact", function()
-    ParticleEffect("kami_02_impact_ground", net.ReadVector(), Angle(0, 0, 0))
+    ParticleEffect("kami_02_solve_geams_impact_hit", net.ReadVector(), Angle(0, 0, 0))
 end)

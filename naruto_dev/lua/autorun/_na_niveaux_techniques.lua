@@ -591,7 +591,7 @@ NA_NIV_TECH.kami_bouclier = {
 NA_NIV_TECH.kami_roue = {
     [1] = {
         degats = 30, chakra = 30, recharge = 10,
-        vitesse = 1500, duree_vie = 1, echelle = 0.3, ecart = 28, devant = 50,
+        vitesse = 1500, duree_vie = 1, echelle = 0.5, ecart = 28, devant = 50,
         intervalle = 0.6, poussee = 350, soulevement = 200,
         duree_mudra = 0.0, delai_roues = 0.8,
     },
@@ -717,7 +717,7 @@ NA_NIV_TECH.chinoike_genjutsu = {
 NA_NIV_TECH.chinoike_pluie = {
     [1] = {
         degats = 30, chakra = 35, recharge = 22,
-        portee = 800, hauteur = 300, rayon = 300, ralenti = 0.75, intervalle = 0.5,
+        portee = 1000, hauteur = 600, rayon = 700, ralenti = 0.75, intervalle = 0.5,
         duree = 8, duree_mudra = 0.5,
     },
     [2] = { degats = 33 },
@@ -1004,6 +1004,18 @@ NA_NIV_TECH.uchiha_genjutsu = {
     [3] = { duree = 4, hitbox = 24, chakra = 26 },
     [4] = { duree = 4.5, recharge = 17 },
     [5] = { duree = 5, chakra = 22, recharge = 15, portee = 1000 },
+}
+
+-- Shuriken géant (server/uchiha/sv_uchiha_shuriken.lua) : projectile enflammé, brûlure à l'impact
+NA_NIV_TECH.uchiha_shuriken = {
+    [1] = {
+        degats = 50, chakra = 25, recharge = 8, vitesse = 1800, duree_vie = 3, echelle = 1.5,
+        brulure_duree = 4, brulure_dps = 4, duree_mudra = 0.5,
+    },
+    [2] = { degats = 56 },
+    [3] = { degats = 63, chakra = 22, brulure_dps = 5 },
+    [4] = { degats = 70, recharge = 7 },
+    [5] = { degats = 80, chakra = 20, recharge = 6, echelle = 1.8, brulure_duree = 5, brulure_dps = 6 },
 }
 
 -- Sharingan (server/uchiha/sv_uchiha_sharingan.lua) : à activer / désactiver

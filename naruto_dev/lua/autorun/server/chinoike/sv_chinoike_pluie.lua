@@ -19,9 +19,9 @@ util.AddNetworkString("chinoike_pluie_zone")
 local DUREE        = 8      -- secondes de pluie
 local INTERVALLE   = 0.5    -- secondes entre deux ticks
 
-local PORTEE       = 800    -- distance max où on peut poser la zone
-local RAYON        = 300    -- rayon de la zone qui touche (developer 1 pour la voir)
-local HAUTEUR      = 300    -- hauteur de la zone au-dessus du sol
+local PORTEE       = 1000   -- distance max où on peut poser la zone
+local RAYON        = 700    -- rayon de la zone qui touche (developer 1 pour la voir)
+local HAUTEUR      = 600    -- hauteur de la zone au-dessus du sol
 
 local DEGATS       = 30      -- dégâts par tick et par ennemi
 local RALENTI      = 0.75   -- vitesse des ennemis sous la pluie (1 = pas de ralenti)

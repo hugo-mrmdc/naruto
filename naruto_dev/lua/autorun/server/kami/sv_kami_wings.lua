@@ -243,8 +243,18 @@ local function Decoller(ply)
     ply:SetVelocity(-ply:GetVelocity())   -- on part de l'arrêt
     ply:SetNW2Bool("NA_Wings", true)
 
+    -- en vol : toujours les poings (combo aérien), plus de changement d'arme (hook plus bas)
+    if not ply:HasWeapon("naruto_poings") then ply:Give("naruto_poings") end
+    ply:SelectWeapon("naruto_poings")
+
     ply:EmitSound("ambient/wind/wind_snippet3.wav", 70, 100, 0.6)
 end
+
+hook.Add("PlayerSwitchWeapon", "NA_Wings_Poings", function(ply, _, newWep)
+    if ply:GetNW2Bool("NA_Wings", false) and IsValid(newWep) and newWep:GetClass() ~= "naruto_poings" then
+        return true
+    end
+end)
 
 ----------------------------------------------------------
 -- Touche

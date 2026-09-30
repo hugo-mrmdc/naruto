@@ -116,6 +116,45 @@ SWEP.Special = nil
 if SERVER then
     util.AddNetworkString("NA_Arme_Anim")
     util.AddNetworkString("NA_Arme_Slash")   -- effet de slash (cl_slash_arme.lua)
+    util.AddNetworkString("NA_Arme_Effet")   -- particule d'un coup (coup.effet)
+    util.AddNetworkString("NA_Arme_Impact")  -- particule sur l'ennemi touché (coup.impact)
+else
+    game.AddParticles("particles/solve_kami_geams.pcf")
+    PrecacheParticleSystem("kami_04_solve_slash")
+    -- l'impact est composé de sous-effets : il faut tous les précharger, sinon il reste invisible
+    for _, suffixe in ipairs({ "", "_add", "_add_1", "_add_2", "_add_3", "_add_4", "_add_5" }) do
+        PrecacheParticleSystem("kami_02_impact_ground" .. suffixe)
+    end
+
+    net.Receive("NA_Arme_Impact", function()
+        ParticleEffect(net.ReadString(), net.ReadVector(), angle_zero)
+    end)
+
+    net.Receive("NA_Arme_Effet", function()
+        local ply, nom, roulis = net.ReadEntity(), net.ReadString(), net.ReadFloat()
+        if not IsValid(ply) then return end
+        -- le slash suit le joueur (position et visée) pendant sa durée
+        local function Place()
+            local ang = ply:EyeAngles()
+            ang.r = roulis
+            return ply:GetShootPos() + ply:GetAimVector() * 40 - Vector(0, 0, 10), ang
+        end
+        local pos, ang = Place()
+        local fx = CreateParticleSystemNoEntity(nom, pos, ang)
+        if not fx then return end
+
+        local id, fin = "NA_Effet_" .. SysTime(), CurTime() + 0.6
+        hook.Add("Think", id, function()
+            if CurTime() > fin or not IsValid(ply) or not fx:IsValid() then
+                if fx:IsValid() then fx:StopEmission() end
+                hook.Remove("Think", id)
+                return
+            end
+            local p, a = Place()
+            fx:SetControlPoint(0, p)
+            fx:SetControlPointOrientation(0, a:Forward(), a:Right(), a:Up())
+        end)
+    end)
 end
 
 -- Particules communes aux attaques spéciales
@@ -202,7 +241,8 @@ function SWEP:PrimaryAttack()
     local now = CurTime()
     if now < self:GetOccupe() then return end
 
-    local combo = self.Combo
+    -- ailes de papier Kami : combo aérien de l'arme s'il existe (SWEP.ComboAiles)
+    local combo = owner:GetNW2Bool("NA_Wings", false) and self.ComboAiles or self.Combo
     local index = self:GetCombo() + 1
     if now - self:GetDernierCoup() > self.ComboReset or index > #combo then
         index = 1
@@ -220,6 +260,15 @@ function SWEP:PrimaryAttack()
     if NA_StopChakraRun then NA_StopChakraRun(owner) end
 
     JouerAnim(owner, coup.anim, coup.vitesseAnim or coup.vitesse or self.VitesseAnim)   -- "vitesse" : ancien nom
+
+    -- effet de particule du coup (coup.effet, roulis coup.roulis) : joué par les clients
+    if coup.effet then
+        net.Start("NA_Arme_Effet")
+            net.WriteEntity(owner)
+            net.WriteString(coup.effet)
+            net.WriteFloat(coup.roulis or 0)
+        net.Broadcast()
+    end
 
     -- sons de swing (plusieurs pour les coups multiples)
     local sons = coup.sons or 1
@@ -255,6 +304,7 @@ function SWEP:PrimaryAttack()
         portee     = coup.portee,
         recul      = coup.recul,
         reculHaut  = coup.reculHaut,
+        impact     = coup.impact,
         touches    = {},
     }
 end
@@ -392,6 +442,16 @@ function SWEP:Think()
             dmg:SetDamageForce(owner:GetAimVector() * 2000)
             ent:TakeDamageInfo(dmg)
             self:CompterCoup(owner, ent)
+
+            if a.impact then
+                -- sur le sol sous l'ennemi (même s'il est en l'air)
+                local p = ent:GetPos()
+                local sol = util.TraceLine({ start = p + Vector(0, 0, 16), endpos = p - Vector(0, 0, 2000), mask = MASK_SOLID_BRUSHONLY })
+                net.Start("NA_Arme_Impact")
+                    net.WriteString(a.impact)
+                    net.WriteVector(sol.Hit and sol.HitPos or p)
+                net.Broadcast()
+            end
 
             if self.SonImpact then ent:EmitSound(self.SonImpact, 75, math.random(95, 105)) end
 

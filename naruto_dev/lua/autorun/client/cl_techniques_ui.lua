@@ -44,6 +44,9 @@ local TECHNIQUES = {
     { cat = "Uchiha", name = "Genjutsu du Sharingan", key = KEY_PERIOD, id = "uchiha_genjutsu", rang = "B", icone = "ui/icon/uchiha_illusion_terrible.png", court = "Genjutsu", cooldown = 20,
       desc = "Croise le regard d'un ennemi visé (800 unités max) : il est piégé dans un genjutsu et étourdi pendant 3 secondes, immobile et incapable de lancer une technique. Il voit l'illusion autour de lui. Coûte 30 de chakra.",
       dmg = "Aucun dégât : étourdissement de 3 s" },
+    { cat = "Uchiha", name = "Shuriken géant", key = KEY_SEMICOLON, id = "uchiha_shuriken", rang = "C", icone = "ui/icon/gigaShuriken.png", court = "Shuriken", cooldown = 8,
+      desc = "Lance un gigantesque shuriken enflammé droit devant toi : il blesse et brûle le premier ennemi touché. Coûte 25 de chakra.",
+      dmg = "50 à l'impact + brûlure" },
 
     -- ===== SUITON =====
     { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "", court = "Requin", cooldown = 5, cd = 5.3,

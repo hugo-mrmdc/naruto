@@ -43,10 +43,15 @@ SWEP.Combo = {
     { anim = "nrp2_attacks_punch2", vitesseAnim = 1.5, duree = 0.4, degats = 18 },
     { anim = "nrp2_attacks_punch3", vitesseAnim = 1.5, duree = 0.6, degats = 25, recul = 350, reculHaut = 100 },
 }
-SWEP.ComboReset = 1.5   -- secondes sans frapper avant de revenir au coup de poing
+-- Combo pendant les ailes de papier Kami (en vol) : deux coups aériens
+SWEP.ComboAiles = {
+    { anim = "kb_mha3_at011_attackair1.006", vitesseAnim = 1.5, duree = 0.4, degats = 15, effet = "kami_04_solve_slash", roulis = 0, impact = "kami_02_impact_ground" },
+    { anim = "kb_mha3_at011_attackair1.017", vitesseAnim = 1.5, duree = 0.5, degats = 20, effet = "kami_04_solve_slash", roulis = 90, impact = "kami_02_impact_ground", recul = 250, reculHaut = 80 },
+}
+SWEP.ComboReset = 1.5  -- secondes sans frapper avant de revenir au coup de poing
 
 -- Zone de frappe : plus courte et plus étroite qu'une épée
-SWEP.Frappe = { portee = 55, largeur = 25, hauteur = 35, delai = 0.07, duree = 0.25 }
+SWEP.Frappe = { portee = 220, largeur = 90, hauteur = 100, delai = 0.07, duree = 0.25 }
 
 SWEP.SonSwing   = Sound("npc/zombie/claw_miss1.wav")
 SWEP.SonImpact  = Sound("Flesh.ImpactHard")

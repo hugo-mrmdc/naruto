@@ -21,6 +21,8 @@ if SERVER then
     include("autorun/server/uchiha/sv_uchiha_dragons.lua")
     AddCSLuaFile("autorun/client/uchiha/cl_uchiha_genjutsu.lua")
     include("autorun/server/uchiha/sv_uchiha_genjutsu.lua")
+    AddCSLuaFile("autorun/client/uchiha/cl_uchiha_shuriken.lua")
+    include("autorun/server/uchiha/sv_uchiha_shuriken.lua")
     for _, ext in ipairs({ "mdl", "vvd", "dx90.vtx" }) do
         resource.AddFile("models/clan/konoha/uchiha/nr_sharingan_genjutsu1." .. ext)
     end
@@ -41,4 +43,5 @@ if CLIENT then
     include("autorun/client/uchiha/cl_uchiha_boule_saut.lua")
     include("autorun/client/uchiha/cl_uchiha_dragons.lua")
     include("autorun/client/uchiha/cl_uchiha_genjutsu.lua")
+    include("autorun/client/uchiha/cl_uchiha_shuriken.lua")
 end
