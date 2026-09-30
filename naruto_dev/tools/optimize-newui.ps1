@@ -1,10 +1,12 @@
 # Rebuild runtime textures; retain the supplied full-resolution PNG sources.
+param([string[]]$Names = @())
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 $source = Join-Path $PSScriptRoot '../materials/ui/newUi'
 $destination = Join-Path $source 'optimized'
 New-Item -ItemType Directory -Force $destination | Out-Null
 foreach ($file in Get-ChildItem -LiteralPath $source -Filter '*.png') {
+    if ($Names.Count -gt 0 -and $file.Name -notin $Names) { continue }
     $outputName = if ($file.Name -eq 'fond.png') { 'fond_v2.png' } else { $file.Name }
     $image = [System.Drawing.Image]::FromFile($file.FullName)
     try {

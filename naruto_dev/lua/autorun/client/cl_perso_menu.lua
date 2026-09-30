@@ -47,6 +47,7 @@ surface.CreateFont("NA.Perso.Petit", { font = "Roboto", size = 14, weight = 600 
 local YEUX_ORIGINE = "models/naruto_dev/yeux/normal"   -- yeux de la tête d'origine (sv_yeux.lua)
 
 local fenetre, apercu, contenu, brouillon
+local derniereCreation = -1
 
 local function Col(c) return Color(c[1], c[2], c[3]) end
 
@@ -54,7 +55,7 @@ local function Col(c) return Color(c[1], c[2], c[3]) end
 -- Aperçu 3D : corps du joueur + tête + cheveux (même principe que le menu F4)
 ----------------------------------------------------------
 local function NettoyerPieces(mp)
-    for _, cs in ipairs({ mp.Tete, mp.Cheveux }) do
+    for _, cs in ipairs({ mp.Tete or false, mp.Cheveux or false }) do
         if IsValid(cs) then cs:Remove() end
     end
     mp.Tete, mp.Cheveux, mp.CleModeles = nil, nil, nil
@@ -77,8 +78,12 @@ end
 
 -- Pose le choix p sur l'aperçu mp. Les modèles ne sont recréés que s'ils changent.
 local function Poser(mp, p)
+    if not IsValid(mp) then return end
     local ent = mp:GetEntity()
-    if not IsValid(ent) then return end
+    if not IsValid(ent) then
+        mp.ChoixEnAttente = table.Copy(p)
+        return
+    end
 
     local recul = p.visage > 0 and p.recul or 0   -- visages numérotés : tête et cheveux reculés
     local cle = P.ModeleTete(p) .. "|" .. P.ModeleCheveux(p) .. "|" .. (recul > 0 and "recul" or "fusion")
@@ -109,7 +114,6 @@ end
 -- Panneau 3D. opts : tete, cheveux (afficher ces pièces), dist (distance de la caméra)
 local function CreerApercu(parent, opts)
     local mp = vgui.Create("DModelPanel", parent)
-    mp:SetModel(LocalPlayer():GetModel())
     mp:SetFOV(30)
     mp:SetAmbientLight(Color(110, 105, 100))
     mp:SetDirectionalLight(BOX_FRONT, Color(255, 245, 235))
@@ -117,15 +121,36 @@ local function CreerApercu(parent, opts)
     mp.AvecTete, mp.AvecCheveux = opts.tete, opts.cheveux
     mp.Dist, mp.Haut, mp.Yaw = opts.dist, opts.haut or 0, 0
 
-    local ent = mp:GetEntity()
-    if IsValid(ent) then
-        local seq = ent:LookupSequence("idle_all_01")
-        if seq and seq >= 0 then ent:ResetSequence(seq) end
+    -- Attendre le premier affichage du menu, puis créer au plus un aperçu
+    -- par image. Un panneau supprimé ou masqué ne charge aucun modèle.
+    local menu = fenetre
+    local ancienThink = mp.Think
+    function mp:Think()
+        if ancienThink then ancienThink(self) end
+        if self.ModelePrepare or not self:IsVisible() or not IsValid(menu) then return end
+        local ancetre = self:GetParent()
+        while IsValid(ancetre) do
+            if not ancetre:IsVisible() then return end
+            ancetre = ancetre:GetParent()
+        end
+        local image = FrameNumber()
+        if not menu.PremiereImage or image <= menu.PremiereImage or derniereCreation == image then return end
+        derniereCreation = image
+        self.ModelePrepare = true
+        self:SetModel(LocalPlayer():GetModel())
+        local ent = self:GetEntity()
+        if IsValid(ent) then
+            local seq = ent:LookupSequence("idle_all_01")
+            if seq and seq >= 0 then ent:ResetSequence(seq) end
+            if self.ChoixEnAttente then Poser(self, self.ChoixEnAttente) end
+        end
+        self.ChoixEnAttente = nil
+        self.Think = ancienThink
     end
 
     function mp:LayoutEntity(e)
         e:SetAngles(Angle(0, self.Yaw, 0))
-        self:RunAnimation()
+        if opts.vignette then e:SetCycle(0) else self:RunAnimation() end
 
         local os = e:LookupBone("ValveBiped.Bip01_Head1")
         local tete = os and e:GetBonePosition(os)
@@ -137,7 +162,7 @@ local function CreerApercu(parent, opts)
     end
 
     function mp:PostDrawModel()
-        for _, cs in ipairs({ self.Tete, self.Cheveux }) do
+        for _, cs in ipairs({ self.Tete or false, self.Cheveux or false }) do
             if IsValid(cs) then
                 if cs.NA_Forme then NA_PoserFormes(cs, 0) end   -- bouche, yeux, nez : reposés à chaque image
                 if cs.Recul then
@@ -208,7 +233,7 @@ local function Vignette(parent, x, y, champ, id)
     p[champ] = id
     if champ == "cheveux" and not P.EstClassique(id) and p.visage == 0 then p.visage = 1 end   -- coiffure : sur un visage numéroté
 
-    local mp = CreerApercu(parent, { tete = true, cheveux = champ == "cheveux", dist = champ == "cheveux" and 46 or 34 })
+    local mp = CreerApercu(parent, { tete = true, cheveux = champ == "cheveux", dist = champ == "cheveux" and 46 or 34, vignette = true })
     mp:SetPos(x, y)
     mp:SetSize(VIGNETTE_L, VIGNETTE_H)
     Poser(mp, p)
@@ -221,6 +246,9 @@ local function Vignette(parent, x, y, champ, id)
         Rafraichir()
     end
     function mp:PaintOver(w, h)
+        if not self.ModelePrepare then
+            draw.SimpleText("Chargement…", "NA.Perso.Petit", w / 2, h / 2, C_DOUX, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
         local choisi = brouillon[champ] == id
         surface.SetDrawColor(choisi and C_ACCENT or (self:IsHovered() and C_SURVOL or C_BOUTON))
         surface.DrawOutlinedRect(0, 0, w, h, choisi and 3 or 1)
@@ -467,6 +495,7 @@ end
 -- Fenêtre
 ----------------------------------------------------------
 local function Fermer()
+    timer.Remove("NA_Perso_Maj")
     if IsValid(fenetre) then fenetre:Close() end
 end
 
@@ -494,7 +523,11 @@ local function Ouvrir()
     fenetre:SetTitle("")
     fenetre:MakePopup()
     fenetre:SetDraggable(false)
+    function fenetre:OnRemove()
+        timer.Remove("NA_Perso_Maj")
+    end
     function fenetre:Paint(w, h)
+        self.PremiereImage = self.PremiereImage or FrameNumber()
         draw.RoundedBox(8, 0, 0, w, h, C_FOND)
         draw.SimpleText("Personnalisation du personnage", "NA.Perso.Titre", 16, 20, C_TEXTE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
@@ -520,6 +553,9 @@ local function Ouvrir()
     end
     function apercu:OnMouseWheeled(d) self.Dist = math.Clamp(self.Dist - d * 4, 28, 120) end
     function apercu:PaintOver(w, h)
+        if not self.ModelePrepare then
+            draw.SimpleText("Chargement du personnage…", "NA.Perso.Petit", w / 2, h / 2, C_DOUX, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
         surface.SetDrawColor(C_BOUTON)
         surface.DrawOutlinedRect(0, 0, w, h, 1)
     end
@@ -551,15 +587,17 @@ local function Ouvrir()
     zone.Paint = function(_, w, h) draw.RoundedBox(6, 0, 0, w, h, C_PANNEAU) end
     zone:DockPadding(10, 10, 10, 10)
 
-    contenu = {
-        visage   = CreerPages(zone, "visage", P.NB_VISAGES),
-        cheveux  = CreerPages(zone, "cheveux", #P.CHEVEUX),
-        details  = CreerDetails(zone),
-        couleurs = CreerCouleurs(zone),
+    contenu = {}
+    local creerOnglet = {
+        visage = function() return CreerPages(zone, "visage", P.NB_VISAGES) end,
+        cheveux = function() return CreerPages(zone, "cheveux", #P.CHEVEUX) end,
+        details = function() return CreerDetails(zone) end,
+        couleurs = function() return CreerCouleurs(zone) end,
     }
     local actuel
     local function Montrer(id)
         actuel = id
+        if not IsValid(contenu[id]) then contenu[id] = creerOnglet[id]() end
         for nom, pan in pairs(contenu) do pan:SetVisible(nom == id) end
         if contenu[id].Afficher then contenu[id]:Afficher() end
     end

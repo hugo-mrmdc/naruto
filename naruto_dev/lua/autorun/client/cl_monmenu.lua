@@ -2,7 +2,7 @@
 -- Inventaire et équipement (CLIENT)
 -- Ouvre avec F4, ou la commande console : mon_menu
 --
---   Gauche : filtres, recherche et grille de cinq colonnes
+--   Gauche : filtres, recherche et grille de quatre colonnes
 --   Textures : ui/newUi/optimized (sources conservées dans newUi)
 --   Droite : l'équipement autour de l'aperçu 3D du personnage
 --
@@ -48,8 +48,11 @@ local EMPLACEMENTS = {
 }
 
 -- Polices recréées à l'ouverture, à la taille du menu (f = 1 pour un menu de 566 px de haut)
+local derniereEchellePolice
 local function CreerPolices(f)
     f = math.max(f or 1, 0.7)
+    if derniereEchellePolice == f then return end
+    derniereEchellePolice = f
     surface.CreateFont("NA.Inv.Titre",  { font = "Roboto", size = math.Round(30 * f), weight = 800 })
     surface.CreateFont("NA.Inv.Onglet", { font = "Roboto", size = math.Round(21 * f), weight = 800 })
     surface.CreateFont("NA.Inv.Texte",  { font = "Roboto", size = math.Round(18 * f), weight = 600 })
@@ -69,6 +72,27 @@ local function M(chemin)
     return m
 end
 
+-- Décoder une texture à la fois avant le premier F4, sans tout charger
+-- pendant la même image. Le cache est aussi utilisé par le dessin du menu.
+local texturesAPreparer = {
+    "ui/newUi/optimized/fond_v2.png", "ui/newUi/optimized/caseEmpty.png",
+    "ui/newUi/optimized/equipecase.png", "ui/newUi/optimized/comun.png",
+    "ui/newUi/optimized/rare.png", "ui/newUi/optimized/epique.png",
+    "ui/newUi/optimized/legendaire.png", "ui/newUi/optimized/utiliser.png",
+    "ui/main_menu/btn_base_close.png", "ui/inventory/icon_tenue.png",
+    "ui/inventory/icon_masque.png", "ui/inventory/icon_katana.png",
+    "ui/inventory/icon_accessoire.png",
+}
+local prochaineTexture = 1
+timer.Create("NA_Inventaire_PreparerTextures", 0.25, 0, function()
+    if not IsValid(LocalPlayer()) then return end
+    M(texturesAPreparer[prochaineTexture])
+    prochaineTexture = prochaineTexture + 1
+    if prochaineTexture > #texturesAPreparer then
+        timer.Remove("NA_Inventaire_PreparerTextures")
+    end
+end)
+
 ----------------------------------------------------------
 -- Données
 ----------------------------------------------------------
@@ -76,12 +100,20 @@ local Inventaire = {}
 local SlotsEquipement = {}
 
 -- Rareté visuelle de l'objet, conservée lors des échanges d'équipement.
--- Couleur de rareté dessinée en Lua à l'intérieur des cases d'origine.
+-- Images de rareté réduites à 256 px, partagées par la grille et l'équipement.
 local RARETES = {
-    commun = { rang = 1, nom = "Commun", couleur = Color(205, 205, 205), fond = Color(30, 36, 43, 235) },
-    rare = { rang = 2, nom = "Rare", couleur = Color(90, 175, 255), fond = Color(27, 92, 150, 235) },
-    epique = { rang = 3, nom = "Épique", couleur = Color(195, 115, 255), fond = Color(101, 45, 145, 235) },
-    legendaire = { rang = 4, nom = "Légendaire", couleur = Color(255, 216, 75), fond = Color(163, 133, 12, 245) },
+    commun = { rang = 1, nom = "Commun", couleur = Color(205, 205, 205), texture = "comun" },
+    rare = { rang = 2, nom = "Rare", couleur = Color(90, 175, 255), texture = "rare" },
+    epique = { rang = 3, nom = "Épique", couleur = Color(195, 115, 255), texture = "epique" },
+    legendaire = { rang = 4, nom = "Légendaire", couleur = Color(255, 216, 75), texture = "legendaire" },
+}
+-- Bordures rectilignes des PNG 256 px (alpha >= 200, hors pointes/halo).
+-- Comparer les cadres eux-mêmes : les ornements dépassent volontairement.
+local CADRES_RARETE = {
+    comun = { 13, 17, 230, 215 },
+    rare = { 13, 18, 231, 214 },
+    epique = { 13, 18, 230, 214 },
+    legendaire = { 13, 17, 230, 212 },
 }
 local ALIAS_RARETES = { common = "commun", epic = "epique", legendary = "legendaire", ["épique"] = "epique", ["légendaire"] = "legendaire" }
 local function NormaliserRarete(valeur)
@@ -544,8 +576,10 @@ local function CreerIconeTenue(parent, it, marge, taille)
     function mp:PostDrawModel()
         DessinerExtras(self.Extras, self:GetEntity())
     end
+    local supprimerModele = mp.OnRemove
     function mp:OnRemove()
         SupprimerExtras(self.Extras)
+        if supprimerModele then supprimerModele(self) end
     end
 
     return mp
@@ -725,10 +759,12 @@ local function CreerApercu(parent)
         if epee and IsValid(epee.cs) then DessinerEpeeDos(e, epee.cs, epee.classe, epee.cfg) end
     end
 
+    local supprimerModele = ap.OnRemove
     function ap:OnRemove()
         SupprimerExtras(self.Extras)
         for _, a in ipairs(self.Accessoires or {}) do if IsValid(a.cs) then a.cs:Remove() end end
         if self.Epee and IsValid(self.Epee.cs) then self.Epee.cs:Remove() end
+        if supprimerModele then supprimerModele(self) end
     end
 
     return ap
@@ -1005,15 +1041,37 @@ local function OuvrirMenu()
         surface.DrawTexturedRect(x, y, w, h)
     end
     local reflet = Color(255, 255, 255, 20)
+    local chargements, prochainChargement = {}, 1
+    local premiereImage
+    local function ChargerEnsuite(parent, action)
+        chargements[#chargements + 1] = { parent = parent, action = action }
+    end
+    local function IconeProgressive(parent, it, taille, zone)
+        parent.Think = function(p)
+            if zone then
+                local _, y = p:LocalToScreen(0, 0)
+                local _, haut = zone:LocalToScreen(0, 0)
+                if y + p:GetTall() <= haut or y >= haut + zone:GetTall() then return end
+            end
+            p.Think = nil
+            ChargerEnsuite(p, function() CreerIcone(p, it, taille) end)
+        end
+    end
     local function DessinerCase(w, h, it, survol, choisi, equipement)
-        Texture(equipement and "equipecase" or "caseEmpty", 0, 0, w, h)
-        -- Garder les ornements visibles ; seule la zone intérieure est teintée.
+        local rarete = it and it.item and Rarete(it)
+        if rarete then
+            local cadre = CADRES_RARETE[rarete.texture]
+            -- Bordure de caseEmpty : x=34, y=36, 188 x 176.
+            local tw, th = w * 188 / cadre[3], h * 176 / cadre[4]
+            local tx = w * 34 / 256 - tw * cadre[1] / 256
+            local ty = h * 36 / 256 - th * cadre[2] / 256
+            Texture(rarete.texture, tx, ty, tw, th)
+        else
+            Texture(equipement and "equipecase" or "caseEmpty", 0, 0, w, h)
+        end
+        -- Garder les ornements visibles lors du survol et de la sélection.
         local x, y = w * 0.20, h * 0.20
         local cw, ch = w * 0.60, h * 0.60
-        local rarete = it and it.item and Rarete(it)
-        if rarete and rarete.rang > 1 then
-            draw.RoundedBox(4, x, y, cw, ch, rarete.fond)
-        end
         if survol or choisi then draw.RoundedBox(4, x, y, cw, ch, reflet) end
     end
     frame = vgui.Create("DPanel")
@@ -1022,6 +1080,7 @@ local function OuvrirMenu()
     frame:MakePopup()
     frame:SetKeyboardInputEnabled(false)
     frame.Paint = function(_, w, h)
+        premiereImage = premiereImage or FrameNumber()
         -- Cover preserves the background proportions on ultrawide displays.
         local scale = math.max(w / 1672, h / 941)
         Texture("fond_v2", (w - 1672 * scale) / 2, (h - 941 * scale) / 2, 1672 * scale, 941 * scale)
@@ -1029,7 +1088,17 @@ local function OuvrirMenu()
         draw.SimpleText("F4 / ÉCHAP  ·  Fermer", "NA.Inv.Petit", W * 0.925, H * 0.075, doux, TEXT_ALIGN_RIGHT)
     end
     frame.Think = function()
-        if input.IsKeyDown(KEY_ESCAPE) then FermerMenu() gui.HideGameUI() end
+        if input.IsKeyDown(KEY_ESCAPE) then FermerMenu() gui.HideGameUI() return end
+        -- Afficher le cadre avant les modèles ; au plus une création par image.
+        if not premiereImage or FrameNumber() <= premiereImage then return end
+        while prochainChargement <= #chargements do
+            local travail = chargements[prochainChargement]
+            prochainChargement = prochainChargement + 1
+            if IsValid(travail.parent) then travail.action() break end
+        end
+        if prochainChargement > #chargements then
+            chargements, prochainChargement = {}, 1
+        end
     end
     local function Bouton(parent, texte, x, y, w, h, action)
         local b = vgui.Create("DButton", parent)
@@ -1114,11 +1183,15 @@ local function OuvrirMenu()
     vbar.Paint = function() end
     vbar.btnGrip.Paint = function(_, w, h) draw.RoundedBox(2, 0, 0, w, h, Color(120, 102, 76, 180)) end
     local ecart = 14 * S
-    local taille = math.floor((gw - 10 * S - ecart * 4) / 5)
-    local grille = defil:Add("DIconLayout")
-    grille:Dock(TOP) grille:SetSpaceX(ecart) grille:SetSpaceY(ecart)
+    local colonnes = 4
+    local taille = math.floor((gw - 10 * S - ecart * (colonnes - 1)) / colonnes)
+    local grille = defil:Add("DPanel")
+    grille:Dock(TOP)
+    grille.Paint = function() end
+    local casesGrille = {}
     ConstruireGrille = function()
-        grille:Clear()
+        local visibles = {}
+        local positionDefilement = vbar:GetScroll()
         local liste = {}
         for i, it in ipairs(Inventaire) do
             local cosmetique = it.type == "accessoire"
@@ -1134,20 +1207,41 @@ local function OuvrirMenu()
             if ra == rb then return a < b end
             return ra > rb
         end) end
-        for _, i in ipairs(liste) do
+        for ordre, i in ipairs(liste) do
             local it = Inventaire[i]
+            visibles[i] = true
+            local existante = casesGrille[i]
+            if IsValid(existante) and existante.Item == it then
+                existante:SetZPos(ordre)
+                if it.item then existante:SetTooltip(it.item .. " · " .. Rarete(it).nom) end
+            else
+            if IsValid(existante) then existante:Remove() end
             local b = grille:Add("DButton") b:SetText("") b:SetSize(taille, taille)
+            casesGrille[i] = b
+            b.Item = it
+            b:SetZPos(ordre)
             b.Paint = function(p, w, h)
                 DessinerCase(w, h, it, p:IsHovered(), selectionSlot == i)
             end
             b.PaintOver = function(_, w, h)
                 if it.item and (it.quantite or 0) > 1 then draw.SimpleText("x" .. it.quantite, "NA.Inv.Qte", w * 0.83, h * 0.13, blanc, TEXT_ALIGN_RIGHT) end
             end
-            if it.item then CreerIcone(b, it, taille) b:SetTooltip(it.item .. " · " .. Rarete(it).nom) end
+            if it.item then IconeProgressive(b, it, taille, defil) b:SetTooltip(it.item .. " · " .. Rarete(it).nom) end
             b.DoClick = function() selection, selectionSlot, selectionEquip = it.item and it or nil, i, nil ActualiserDetails() end
             b.DoRightClick = function() if it.item then Equiper(i) end end
             b.DoDoubleClick = b.DoRightClick
+            end
+            casesGrille[i]:SetPos(((ordre - 1) % colonnes) * (taille + ecart), math.floor((ordre - 1) / colonnes) * (taille + ecart))
         end
+        for i, b in pairs(casesGrille) do
+            if not visibles[i] then
+                if IsValid(b) then b:Remove() end
+                casesGrille[i] = nil
+            end
+        end
+        grille:SetTall(math.max(0, math.ceil(#liste / colonnes) * (taille + ecart) - ecart))
+        defil:InvalidateLayout(true)
+        vbar:SetScroll(positionDefilement)
     end
     for n, t in ipairs({ { "OBJETS", "objets" }, { "COSMÉTIQUES", "cosmetiques" } }) do
         local b = Bouton(gauche, t[1], (n - 1) * gw / 2, gh - 44 * S, gw / 2, 42 * S, function() famille = t[2] Filtrer() end)
@@ -1157,21 +1251,49 @@ local function OuvrirMenu()
     droite:SetPos(W * 0.54, H * 0.13) droite:SetSize(W * 0.40, H * 0.77)
     droite.Paint = function() end
     local dw, dh = droite:GetWide(), droite:GetTall()
-    local equipSize = math.min(dw * 0.23, dh * 0.23)
+    local equipSize = math.min(dw * 0.28, dh * 0.28)
+    local support, apercuEquipement
+    local casesEquipement = {}
     ConstruireEquipement = function()
-        droite:Clear()
-        local ap = CreerApercu(droite)
-        ap:SetPos(dw * 0.19, 0) ap:SetSize(dw * 0.62, dh)
+        if not IsValid(support) then
+        support = vgui.Create("DPanel", droite)
+        support:SetPos(dw * 0.19, 0) support:SetSize(dw * 0.62, dh)
+        support.Paint = function(_, w, h)
+            draw.SimpleText("Chargement du personnage…", "NA.Inv.Petit", w / 2, h / 2, doux, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+        ChargerEnsuite(support, function()
+            local ap = CreerApercu(support)
+            ap:Dock(FILL)
+            apercuEquipement = ap
+            support.Paint = function() end
+        end)
+        elseif IsValid(apercuEquipement) then
+            -- Remplacer l'aperçu dans la même image, sans écran de chargement.
+            local ancien = apercuEquipement
+            apercuEquipement = CreerApercu(support)
+            apercuEquipement.Lacet = ancien.Lacet
+            apercuEquipement:Dock(FILL)
+            ancien:Remove()
+        end
         local rang = { gauche = 0, droite = 0 }
         for _, e in ipairs(EMPLACEMENTS) do
             local n = rang[e.cote] rang[e.cote] = n + 1
             local x = e.cote == "gauche" and 0 or dw - equipSize
             local y = dh * 0.13 + n * dh * 0.43
             local it = SlotsEquipement[e.id]
-            local nom = vgui.Create("DLabel", droite)
+            local existante = casesEquipement[e.id]
+            if not IsValid(existante) or existante.Item ~= it then
+            if IsValid(existante) then existante:Remove() end
+            local groupe = vgui.Create("DPanel", droite)
+            groupe:SetPos(x, y - 25 * S)
+            groupe:SetSize(equipSize, equipSize + 53 * S)
+            groupe.Paint = function() end
+            groupe.Item = it
+            casesEquipement[e.id] = groupe
+            local nom = vgui.Create("DLabel", groupe)
             nom:SetFont("NA.Inv.Petit") nom:SetTextColor(doux) nom:SetText(e.nom) nom:SizeToContents()
-            nom:SetPos(x + (equipSize - nom:GetWide()) / 2, y - 25 * S)
-            local b = Bouton(droite, "", x, y, equipSize, equipSize, function()
+            nom:SetPos((equipSize - nom:GetWide()) / 2, 0)
+            local b = Bouton(groupe, "", 0, 25 * S, equipSize, equipSize, function()
                 selection, selectionSlot, selectionEquip = it, nil, e.id ActualiserDetails()
             end)
             b.Paint = function(p, w, h)
@@ -1181,12 +1303,13 @@ local function OuvrirMenu()
                     surface.DrawTexturedRect(w * 0.27, h * 0.27, w * 0.46, h * 0.46)
                 end
             end
-            if it then CreerIcone(b, it, equipSize) b:SetTooltip(it.item .. " · " .. Rarete(it).nom) end
+            if it then IconeProgressive(b, it, equipSize) b:SetTooltip(it.item .. " · " .. Rarete(it).nom) end
             b.DoRightClick = function() Desequiper(e.id) end b.DoDoubleClick = b.DoRightClick
             if it and (e.id == "masque" or e.id == "accessoire" or (e.id == "arme" and it.classe)) then
-                local ajuster = Bouton(droite, "Ajuster", x, y + equipSize, equipSize, 28 * S, function() OuvrirEditeur(e.id) end)
+                local ajuster = Bouton(groupe, "Ajuster", 0, 25 * S + equipSize, equipSize, 28 * S, function() OuvrirEditeur(e.id) end)
                 ajuster:SetFont("NA.Inv.Petit")
                 b.DoMiddleClick = ajuster.DoClick
+            end
             end
         end
     end
