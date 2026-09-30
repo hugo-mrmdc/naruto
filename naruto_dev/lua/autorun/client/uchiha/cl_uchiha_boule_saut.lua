@@ -42,36 +42,38 @@ end)
 NA_Cast = NA_Cast or {}
 NA_Cast.katon_saut = function()
     do
-        Jutsu.Play("nrp_ninjutsu_defend_dragonflamebombs_start")
+        -- 1) charge du saut au début (le saut réel part plus tard, à la fin de la charge)
+        -- (les demandes d'anim doivent être espacées de > 0.25 s : sinon le serveur, jutsu_anim_sv.lua, les ignore)
+        Jutsu.Anim._next = 0
+        Jutsu.Play("nrp_base_chakrajump_charge_loop", { cooldown = 0 })
 
         net.Start("Jutsu_PlaySound")
         net.SendToServer()
 
-        -- démarre le loop tôt
-        timer.Simple(0.5 * VITESSE, function()
-            local ply = LocalPlayer()
-            if not IsValid(ply) then return end
-            Jutsu.Play("nrp_base_chakrajump_charge_loop")
-        end)
+        local ply0 = LocalPlayer()
+        -- charge_loop dure 0.3 s (> 0.25 : anti-spam serveur), puis on décolle avec vertical_charge_loop
+        local finCharge = 0.3
 
-        -- switch très vite après (0.06–0.12 est généralement parfait)
-        timer.Simple(0.58 * VITESSE, function()
-            local ply = LocalPlayer()
-            if not IsValid(ply) then return end
-            Jutsu.Play("nrp_base_chakrajump_vertical_charge_loop", { blend = 0.15 })
-        end)
-
-
-
-        timer.Simple(1.0 * VITESSE, function()
-            Jutsu.Play("nrp_ninjutsu_defend_dragonflamebombs_end")
-        end)
-        timer.Simple(2.0 * VITESSE, function()
-            Jutsu.Play("nrp_base_dashstep_behind")
-        end)
-        timer.Simple(1.0 * VITESSE, function()
-            net.Start(NET_FIRE)
+        timer.Simple(finCharge, function()
+            net.Start(NET_FIRE)      -- le saut réel part ici : on commence à monter
             net.SendToServer()
+            Jutsu.Anim._next = 0
+            Jutsu.Play("nrp_base_chakrajump_vertical_charge_loop", { cooldown = 0 })
+        end)
+
+        -- _end démarre à la fin complète de vertical_charge_loop, jouée en entier ; le pas en arrière coupe _end 0.6 s après son début
+        local finSaut = IsValid(ply0) and ply0:SequenceDuration(ply0:LookupSequence("nrp_base_chakrajump_vertical_charge_loop")) or 0
+        if finSaut <= 0 or finSaut > 3 then finSaut = 0.3 end
+        local tEnd = finCharge + finSaut
+        local finEnd = IsValid(ply0) and ply0:SequenceDuration(ply0:LookupSequence("nrp_ninjutsu_defend_dragonflamebombs_end")) or 0
+        if finEnd <= 0 or finEnd > 3 then finEnd = 2.0 * VITESSE end
+        timer.Simple(tEnd, function()
+            Jutsu.Anim._next = 0
+            Jutsu.Play("nrp_ninjutsu_defend_dragonflamebombs_end", { cooldown = 0 })
+        end)
+        timer.Simple(tEnd + 0.6, function()   -- 0.6 s après le début de _end (> 0.25 s : anti-spam serveur)
+            Jutsu.Anim._next = 0
+            Jutsu.Play("nrp_base_dashstep_behind")
         end)
     end
 end

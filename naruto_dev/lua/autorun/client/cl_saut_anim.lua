@@ -37,6 +37,7 @@ local function AutreAnimation(ply)
     if ply:GetNW2Bool("NA_Etourdi", false) or ply:GetNW2Bool("NA_RechargeChakra", false) then return true end
     if ply:GetNW2Bool("NA_Canalise", false) or ply:GetNW2Bool("NA_Golem", false) then return true end
     if ply:GetNWBool("MokutonRide", false) then return true end
+    if ply:GetNW2Float("NA_FrappeFin", 0) > CurTime() then return true end   -- frappe terrestre Senju (cl_senju_frappe.lua)
 
     -- un coup d'arme donné en l'air a sa propre animation (naruto_arme_base.lua)
     local g = ply.NA_GesteArme

@@ -952,7 +952,7 @@ NA_NIV_TECH.senju_soin = {
 --   degats = dégâts de l'onde, rayon = taille de la zone, projection / proj_haut = force de projection,
 --   delai_impact = secondes entre le début de l'animation et le coup au sol
 NA_NIV_TECH.senju_frappe = {
-    [1] = { degats = 60, chakra = 30, recharge = 12, rayon = 200, projection = 350, proj_haut = 200, delai_impact = 0.4 },
+    [1] = { degats = 60, chakra = 30, recharge = 12, rayon = 200, projection = 350, proj_haut = 200, delai_impact = 0.6 },
     [2] = { degats = 75 },
     [3] = { degats = 83, chakra = 27, recharge = 11 },
     [4] = { degats = 95, rayon = 230 },

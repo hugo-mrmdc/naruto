@@ -19,12 +19,14 @@ local RAYON         = 200    -- rayon de la zone
 local DISTANCE      = 110    -- distance devant le lanceur où le poing frappe le sol
 local PROJECTION    = 350    -- force de projection horizontale
 local PROJ_HAUT     = 200    -- force de projection vers le haut
-local DELAI_IMPACT  = 0.1    -- secondes entre le début de l'animation et le coup au sol (à régler sur l'animation)
+local DIST_SOL      = 60     -- distance max au sol (unités) pour que la technique se lance en l'air
+local ATTENTE_SOL   = 5      -- secondes max d'attente du sol avant d'abandonner la technique
+local DELAI_IMPACT  = 0.6    -- secondes entre le début de l'animation et le coup au sol (à régler sur l'animation)
 
 local CHAKRA_COUT   = 30
 local CHAKRA_MAX    = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local RECHARGE      = 12
-local ANIM_APPEL    = "m_attack_cmb09"
+local ANIM_APPEL    = "m_attack_cmb09"   -- doit matcher ANIM de cl_senju_frappe.lua
 local ANIM_VITESSE  = 1
 
 local PARTICULE     = "solve_doton_pics_floor"   -- particles/solve_doton.pcf
@@ -145,10 +147,17 @@ local function Frapper(ply)
     end
 end
 
-net.Receive("senju_frappe_cast", function(_, ply)
+-- au sol, ou assez près du sol
+local function ProcheDuSol(ply)
+    if ply:IsOnGround() then return true end
+    local pos = ply:GetPos()
+    local tr = util.TraceLine({ start = pos, endpos = pos - Vector(0, 0, DIST_SOL), filter = ply, mask = MASK_SOLID })
+    return tr.Hit
+end
+
+-- lance vraiment la technique (chakra, recharge, animation, coup)
+local function Lancer(ply)
     if not IsValid(ply) or not ply:Alive() then return end
-    if not NA_Debloquee(ply, "senju_frappe") then return end   -- technique pas encore débloquée (F6)
-    if (pret[ply] or 0) > CurTime() then return end
 
     local cout = Niv(ply, "chakra", CHAKRA_COUT)
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
@@ -164,8 +173,44 @@ net.Receive("senju_frappe_cast", function(_, ply)
     pret[ply] = CurTime() + recharge
     if NA_CD then NA_CD.Set(ply, "senju_frappe", recharge) end   -- recharge visible dans la barre
 
-    NA_AnimJutsu(ply, ANIM_APPEL, 0, ANIM_VITESSE)   -- animation + pas de coups pendant (_na_mudra.lua)
+    -- PAS NA_AnimJutsu : son geste superposé est masqué par l'animation de saut en l'air puis coupé à l'atterrissage.
+    -- L'animation est forcée côté client sur la séquence de base (cl_senju_frappe.lua), donc jouée en entier
+    -- même si le joueur atterrit pendant ; ici on bloque juste les coups (NA_Mudra).
+    local seqId = ply:LookupSequence(ANIM_APPEL)
+    local duree = ((seqId and seqId >= 0) and ply:SequenceDuration(seqId) or 1) / ANIM_VITESSE
+    if NA_Mudra then NA_Mudra(ply, duree) end
+    ply:SetNW2Float("NA_FrappeDebut", CurTime())
+    ply:SetNW2Float("NA_FrappeFin", CurTime() + duree)
     timer.Simple(Niv(ply, "delai_impact", DELAI_IMPACT), function() Frapper(ply) end)
+end
+
+net.Receive("senju_frappe_cast", function(_, ply)
+    if not IsValid(ply) or not ply:Alive() then return end
+    if not NA_Debloquee(ply, "senju_frappe") then return end   -- technique pas encore débloquée (F6)
+    if (pret[ply] or 0) > CurTime() then return end
+    if ply._senjuFrappeAttend then return end
+
+    -- en l'air : la technique attend d'être près du sol pour se lancer vraiment (abandon après ATTENTE_SOL s)
+    if not ProcheDuSol(ply) then
+        ply._senjuFrappeAttend = true
+        local fin = CurTime() + ATTENTE_SOL
+        local nom = "SenjuFrappe_Sol_" .. ply:EntIndex()
+        timer.Create(nom, 0.05, 0, function()
+            if not IsValid(ply) or not ply:Alive() or CurTime() > fin then
+                if IsValid(ply) then ply._senjuFrappeAttend = nil end
+                timer.Remove(nom)
+                return
+            end
+            if ProcheDuSol(ply) then
+                ply._senjuFrappeAttend = nil
+                timer.Remove(nom)
+                Lancer(ply)
+            end
+        end)
+        return
+    end
+
+    Lancer(ply)
 end)
 
 hook.Add("PlayerDisconnected", "SenjuFrappe_Nettoyage", function(ply) pret[ply] = nil end)
