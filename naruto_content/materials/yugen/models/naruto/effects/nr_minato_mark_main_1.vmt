@@ -1,0 +1,8 @@
+UnlitGeneric
+{
+	$basetexture "yugen/models/naruto/effects/nr_minato_mark_main"
+
+	$vertexcolor 1
+	$vertexalpha 1
+	$ignorez 1
+}

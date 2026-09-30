@@ -984,6 +984,19 @@ NA_NIV_TECH.senju_ermite = {
 --========================================================
 -- UCHIHA
 --========================================================
+-- Dragons de feu (server/uchiha/sv_uchiha_dragons.lua) : degats = par tick, zone au sol la où tu regardes
+NA_NIV_TECH.katon_dragons = {
+    [1] = {
+        degats = 8, recharge = 15, delai = 0.9,
+        duree = 6, rayon = 250, portee = 1500, intervalle = 0.5,
+        brulure_duree = 3, brulure_dps = 3,
+    },
+    [2] = { degats = 9 },
+    [3] = { degats = 11, rayon = 290, brulure_dps = 4 },
+    [4] = { degats = 13, duree = 7 },
+    [5] = { degats = 15, rayon = 330, duree = 8, recharge = 12, brulure_duree = 4, brulure_dps = 5 },
+}
+
 -- Sharingan (server/uchiha/sv_uchiha_sharingan.lua) : à activer / désactiver
 --   tomoe = 1 à 3 (niveaux 1-2 : 1 tomoe, niveau 3 : 2 tomoe, niveaux 4-5 : 3 tomoe),
 --   chakra = PAR SECONDE, chakra_mini = requis pour l'activer,

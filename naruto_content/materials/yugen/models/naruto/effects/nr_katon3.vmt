@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	$basetexture "yugen/models/naruto/effects/nr_katon3"
+
+	$vertexalpha 1
+}

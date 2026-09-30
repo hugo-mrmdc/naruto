@@ -1,0 +1,8 @@
+UnlitGeneric
+{
+	$basetexture "yugen/models/naruto/effects/nr_thunder1"
+
+	$translucent 1
+
+	$vertexalpha 1
+}

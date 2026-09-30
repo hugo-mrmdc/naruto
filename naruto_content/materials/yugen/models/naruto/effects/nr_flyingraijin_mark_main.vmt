@@ -1,0 +1,9 @@
+UnlitGeneric
+{
+	$basetexture "yugen/models/naruto/effects/nr_FlyingRaijin_mark_main"
+
+	$nocull 1
+
+	$vertexcolor 1
+	$vertexalpha 1
+}

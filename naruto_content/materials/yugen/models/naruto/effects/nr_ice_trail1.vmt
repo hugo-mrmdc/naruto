@@ -1,0 +1,7 @@
+UnlitGeneric
+{
+	$basetexture "yugen/models/naruto/effects/nr_ice_trail1"
+
+	$vertexcolor 1
+	$vertexalpha 1
+}

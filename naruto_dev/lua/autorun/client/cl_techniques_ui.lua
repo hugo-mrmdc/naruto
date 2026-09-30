@@ -38,6 +38,9 @@ local TECHNIQUES = {
       dmg = "5 par tick (toutes les 0,25 s) + brûlure" },
      { cat = "Uchiha", name = "Boule de feu sautée", key = KEY_J, id = "katon_saut", rang = "C", icone = "ui/icon/uchiha_boule_feu_supreme.png", court = "Saut feu", cooldown = 1, cd = 2,
       desc = "Charge de chakra puis boule de feu avec un bond." },
+    { cat = "Uchiha", name = "Dragons de feu", key = KEY_COMMA, id = "katon_dragons", rang = "B", icone = "ui/icon/uchiha_flamme_infernal.png", court = "Dragons", cooldown = 15,
+      desc = "Une zone de flammes s'ouvre au sol là où tu regardes : des dragons de feu en jaillissent pendant 6 secondes, blessent et brûlent tous les ennemis dans la zone.",
+      dmg = "8 par tick (toutes les 0,5 s) + brûlure" },
 
     -- ===== SUITON =====
     { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "", court = "Requin", cooldown = 5, cd = 5.3,

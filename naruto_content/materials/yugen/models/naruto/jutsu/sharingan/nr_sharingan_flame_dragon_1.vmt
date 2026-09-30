@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	$basetexture "yugen/models/naruto/jutsu/sharingan/nr_sharingan_flame_dragon_1"
+
+	$lightwarptexture "yugen/models/naruto/toon/toon"
+}

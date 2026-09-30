@@ -1,0 +1,7 @@
+UnlitGeneric
+{
+	$basetexture "yugen/models/naruto/effects/nr_yome2"
+
+	$vertexalpha 1
+	$ignorez 1
+}

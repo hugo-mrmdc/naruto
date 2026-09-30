@@ -1,0 +1,7 @@
+UnlitGeneric
+{
+	$basetexture "yugen/models/naruto/effects/nr_yoton_decal1"
+
+	$vertexcolor 1
+	$vertexalpha 1
+}

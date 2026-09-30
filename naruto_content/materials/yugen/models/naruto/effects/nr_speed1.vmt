@@ -1,0 +1,12 @@
+"refract"
+{
+	"$normalmap" "yugen/models/naruto/effects/nr_speed1"
+	"$refractamount" "1"
+	"$forcerefract" 1
+	"$bluramount" "32"
+	"$nofog" "1"	
+	"$modulate" "1"
+	"$vertexalpha" "1"
+	"$vertexcolor" 1
+	"$translucent" "1"
+}

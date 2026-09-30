@@ -69,7 +69,7 @@ NA_NIV.LIGNEES = {
     { "chinoike_ketsuryugan", "chinoike_genjutsu", "chinoike_pluie", "chinoike_vortex" },
     { "hyuga_byakugan", "hyuga_paume", "hyuga_32points", "hyuga_64points", "hyuga_tourbillon" },
     { "senju_renfo", "senju_soin", "senju_frappe", "senju_pied", "senju_ermite" },
-    { "uchiha_sharingan", "katon_saut" },
+    { "uchiha_sharingan", "katon_saut", "katon_dragons" },
 }
 --========================================================
 

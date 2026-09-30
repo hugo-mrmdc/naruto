@@ -1,0 +1,7 @@
+UnlitGeneric
+{
+	$basetexture "yugen/models/naruto/effects/nr_Sharingan_act2"
+
+	$vertexcolor 1
+	$vertexalpha 1
+}

@@ -1,0 +1,29 @@
+VertexLitGeneric
+{
+	$basetexture "yugen/models/naruto/effects/nr_Aura1"
+
+	$detail "yugen/models/naruto/effects/nr_Aura1_a"
+	$detailscale 1
+	$detailblendfactor 0.99
+
+	$additive 1
+
+	$vertexcolor 1
+	$vertexalpha 1
+	$nofog 1
+	$nolod 1
+	$no_fullbright 1
+	$disablecsmlookup 1
+
+	$allowalphatocoverage 1
+
+	Proxies
+	{
+		TextureScroll
+		{
+			texturescrollvar "$detailtexturetransform"
+			texturescrollrate 1
+			texturescrollangle 90
+		}
+	}
+}

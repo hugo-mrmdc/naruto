@@ -1,0 +1,7 @@
+UnlitGeneric
+{
+	"$basetexture" "yugen/models/naruto/effects/nr_storm2"
+	$translucent 1
+
+	$vertexcolor 1
+}
