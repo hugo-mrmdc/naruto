@@ -1,6 +1,7 @@
 Contenu regroupé pour le serveur Naruto RP.
 
 Fichiers extraits des addons workshop suivants (crédit à leurs auteurs) :
+  - ATG - Attaque
   - Content - 11s
   - Content - 12s
   - Content - 2s
@@ -10,6 +11,7 @@ Fichiers extraits des addons workshop suivants (crédit à leurs auteurs) :
   - Content - 7s
   - Content ATG
   - FSC | Maps - Models
+  - LDT - PROPS
   - [ATG] - PlayerModel - OLDER
   - [ATG] PlayerModel
   - [ATG] RESSOURCES #3

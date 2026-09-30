@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture" "yuma/trails/default"
+	"$surfaceprop" "Default"
+	"$translucent" 1
+	"Proxies"
+}

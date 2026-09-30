@@ -1,0 +1,61 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "gluk/fireballtextures/addative2"
+                "$lightwarptexture" "gluk/fireballtextures/lightwarpshader"
+	"$nocull" 1
+	"$translucent" 1
+                "$additive" 1
+	"$nodecal" 1
+                "$alphatest" 1
+
+	"$detail" "gluk/fireballtextures/fireeffects2"	
+	"$detailscale" 1
+	"$detailblendfactor" 1
+	"$detailblendmode" 4
+
+	"$phong" "0"
+	"$phongexponent" 1
+	"$phongboost" 1
+	"$phongfresnelranges"	"[0 0 0]"
+	"$basealphaenvmapmask" 0
+ 
+	"$basemapalphaphongmask" 0
+
+	"$rimlight" 0												
+	"$rimlightexponent" 1
+	"$rimlightboost" "-50"	
+
+"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$detail"
+			"animatedtextureframenumvar" "$detailframe"
+			"animatedtextureframerate" 24
+		}
+		"Sine"
+		{
+			"sinemin" ".2"
+			"sinemax" ".6"
+			"sineperiod" "1"
+			"resultVar" "$selfillumtint[1]"
+		}
+		"Sine"
+		{
+			"sinemin" ".5"
+			"sinemax" ".2"
+			"sineperiod" "1.1"
+			"resultVar" "$selfillumtint[0]"
+		}
+		"TextureScroll"
+		{
+			"texturescrollvar" "$detailtexturetransform"
+			"texturescrollrate" 1.5
+			"texturescrollangle" 120
+		}
+	
+
+
+	}
+
+}

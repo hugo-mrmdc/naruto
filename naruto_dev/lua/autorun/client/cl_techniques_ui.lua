@@ -36,7 +36,7 @@ local TECHNIQUES = {
     { cat = "Katon", name = "Souffle katon", key = "", id = "katon_souffle", rang = "C", icone = "ui/icon/katon_souffle_feu.png", court = "Souffle", cooldown = 8,
       desc = "Souffle un jet de flammes devant toi pendant 3 secondes, dans la direction de ton regard : il blesse et brûle tous les ennemis dans le cône. Coûte 25 de chakra.",
       dmg = "5 par tick (toutes les 0,25 s) + brûlure" },
-     { cat = "Katon", name = "Boule de feu sautée", key = KEY_J, id = "katon_saut", rang = "C", icone = "", court = "Saut feu", cooldown = 1, cd = 2,
+     { cat = "Uchiha", name = "Boule de feu sautée", key = KEY_J, id = "katon_saut", rang = "C", icone = "ui/icon/uchiha_boule_feu_supreme.png", court = "Saut feu", cooldown = 1, cd = 2,
       desc = "Charge de chakra puis boule de feu avec un bond." },
 
     -- ===== SUITON =====
@@ -227,6 +227,11 @@ local TECHNIQUES = {
       desc = "Une rotation défensive de chakra autour de toi pendant 2,5 secondes : tous les ennemis proches sont blessés et repoussés à chaque impulsion. Coûte 35 de chakra.",
       dmg = "15 par impulsion (toutes les 0,5 s) + projection" },
 
+    -- ===== UCHIHA =====
+    { cat = "Uchiha", name = "Sharingan", key = "", id = "uchiha_sharingan", rang = "C", icone = "ui/icon/uchiha_sharingan.png", court = "Sharingan", cooldown = 10,
+      desc = "Active ton Sharingan (rappuie pour le couper) : tes yeux passent au rouge et tu détectes les ennemis proches à travers les murs. Les niveaux 1 et 2 donnent 1 tomoe, le niveau 3 en donne 2 et les niveaux 4 et 5 en donnent 3 : plus il y a de tomoe, plus tes dégâts, ta défense et ta vision augmentent. Consomme 1,5 de chakra par seconde (tu peux recharger avec R en même temps) ; il s'éteint quand le chakra est vide. Il faut 15 de chakra pour l'activer.",
+      dmg = "1 tomoe : +5 % de dégâts, -5 % de dégâts subis, détection (800 unités)" },
+
     -- ===== KIMINARI =====
     { cat = "Kiminari", name = "Frappe noire", key = "", id = "kiminari_frappe", rang = "C", icone = "ui/icon/kiminari_frappe_noir.png", court = "Frappe", cooldown = 18,
       desc = "Une frappe électrique tombe instantanément là où tu regardes (500 unités max) : tous les ennemis dans la zone (250 unités) sont blessés et étourdis 2 secondes. Coûte 25 de chakra.",
@@ -363,7 +368,7 @@ local ONGLETS = {
       desc = "Cette catégorie répertorie les techniques des natures du chakra" },
     { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton" },
       desc = "Cette catégorie répertorie les techniques héritées par le sang" },
-    { nom = "Clan",          icone = "clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike", "Hyuga", "Senju" },
+    { nom = "Clan",          icone = "clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike", "Hyuga", "Senju", "Uchiha" },
       desc = "Cette catégorie répertorie les techniques secrètes des clans" },
     { nom = "Arts Ninja",    icone = "kentai.png",    cats = { "Armes", "Déplacement", "Divers" },
       desc = "Cette catégorie répertorie toutes les techniques des arts ninja" },

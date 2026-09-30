@@ -1,0 +1,5 @@
+"UnlitGeneric" {
+    "$basetexture" "demonslayer/particles/jump_dash_v2"
+    "$additive" "1"
+    "$vertexalpha" "1"
+}

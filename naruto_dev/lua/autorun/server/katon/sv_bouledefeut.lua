@@ -21,7 +21,7 @@ local function Niv(ply, stat, base) return NA_Stat(ply, "katon_boule", stat, bas
 local Projectiles = {}
 local projId = 0
 
--- Brûlure maison (partagée avec sv_bouledefeuxJump.lua) : 1 tick de dégâts par seconde,
+-- Brûlure maison (partagée avec sv_uchiha_boule_saut.lua) : 1 tick de dégâts par seconde,
 -- indépendante du statut "burn" du gamemode. Les brûlures se cumulent.
 local burnId = 0
 local NET_BURN = "naruto_dev_katon_burn"

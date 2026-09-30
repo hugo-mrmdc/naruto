@@ -48,6 +48,7 @@ NA_NIV_TECH = NA_NIV_TECH or {}
 -- Nom affiché dans la bibliothèque et unité, dans l'ordre d'affichage.
 -- Une stat absente de cette liste s'affiche avec son nom en majuscules.
 NA_NIV.NOMS = {
+    { "tomoe",      "TOMOE",       "" },
     { "degats",     "DÉGÂTS",      "" },
     { "soin",       "SOIN",        "" },
     { "poison",     "POISON",      "" },
@@ -156,7 +157,7 @@ NA_NIV_TECH.katon_boule = {
     [5] = { degats = 50, recharge = 0.8, hitbox = 24, brulure_duree = 5, brulure_dps = 6 },
 }
 
--- Boule de feu sautée (sv_bouledefeuxJump.lua)
+-- Boule de feu sautée (sv_uchiha_boule_saut.lua)
 NA_NIV_TECH.katon_saut = {
     [1] = {
         degats = 35, recharge = 1, hitbox = 18,
@@ -978,4 +979,19 @@ NA_NIV_TECH.senju_ermite = {
     [3] = { chakra = 3.5, reduction = 18, regen_vie = 4 },
     [4] = { bonus_degats = 27 },
     [5] = { chakra = 3, bonus_degats = 32, reduction = 22, bonus_vitesse = 14, regen_vie = 6 },
+}
+
+--========================================================
+-- UCHIHA
+--========================================================
+-- Sharingan (server/uchiha/sv_uchiha_sharingan.lua) : à activer / désactiver
+--   tomoe = 1 à 3 (niveaux 1-2 : 1 tomoe, niveau 3 : 2 tomoe, niveaux 4-5 : 3 tomoe),
+--   chakra = PAR SECONDE, chakra_mini = requis pour l'activer,
+--   rayon = détection à travers les murs, bonus_degats / reduction = en %
+NA_NIV_TECH.uchiha_sharingan = {
+    [1] = { tomoe = 1, chakra = 1.5, chakra_mini = 15, recharge = 10, duree_mudra = 0.3, rayon = 800, bonus_degats = 5, reduction = 5 },
+    [2] = { bonus_degats = 8, reduction = 8, rayon = 950 },
+    [3] = { tomoe = 2, chakra = 2, bonus_degats = 12, reduction = 12, rayon = 1200 },
+    [4] = { tomoe = 3, chakra = 2.5, bonus_degats = 18, reduction = 16, rayon = 1500 },
+    [5] = { chakra = 3, recharge = 8, bonus_degats = 25, reduction = 20, rayon = 1800 },
 }

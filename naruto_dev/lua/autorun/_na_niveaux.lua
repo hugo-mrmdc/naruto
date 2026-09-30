@@ -53,7 +53,7 @@ NA_NIV.POINTS_PAR_KILL = 1   -- points gagnés en tuant un autre joueur
 -- débloqué celle d'avant dans la même ligne. La première est libre.
 -- Même ordre que l'affichage (rangs C, puis B, puis A : cl_techniques_ui.lua).
 NA_NIV.LIGNEES = {
-    { "katon_boule", "katon_dome", "katon_souffle","katon_saut" },
+    { "katon_boule", "katon_dome", "katon_souffle" },
     { "suiton_waterball", "suiton_prison", "suiton_bulle","suiton_requin" },
     { "futon_windslash", "futon_tornade", "futon_windball" },
     { "raiton_jugement", "raiton_cercle", "raiton_boule" },
@@ -69,6 +69,7 @@ NA_NIV.LIGNEES = {
     { "chinoike_ketsuryugan", "chinoike_genjutsu", "chinoike_pluie", "chinoike_vortex" },
     { "hyuga_byakugan", "hyuga_paume", "hyuga_32points", "hyuga_64points", "hyuga_tourbillon" },
     { "senju_renfo", "senju_soin", "senju_frappe", "senju_pied", "senju_ermite" },
+    { "uchiha_sharingan", "katon_saut" },
 }
 --========================================================
 
