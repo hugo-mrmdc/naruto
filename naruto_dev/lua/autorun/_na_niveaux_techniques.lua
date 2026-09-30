@@ -160,14 +160,14 @@ NA_NIV_TECH.katon_boule = {
 -- Boule de feu sautée (sv_uchiha_boule_saut.lua)
 NA_NIV_TECH.katon_saut = {
     [1] = {
-        degats = 35, recharge = 1, hitbox = 18,
+        degats = 35, recharge = 1, hitbox = 45,
         life = 2.5, speed = 1600,
         brulure_duree = 4, brulure_dps = 4,
     },
     [2] = { degats = 38 },
-    [3] = { degats = 42, hitbox = 21, brulure_dps = 5 },
+    [3] = { degats = 42, hitbox = 50, brulure_dps = 5 },
     [4] = { degats = 45 },
-    [5] = { degats = 50, recharge = 0.8, hitbox = 24, brulure_duree = 5, brulure_dps = 6 },
+    [5] = { degats = 50, recharge = 0.8, hitbox = 55, brulure_duree = 5, brulure_dps = 6 },
 }
 
 -- Dôme de feu (sv_katon_dome.lua)

@@ -1397,8 +1397,7 @@ concommand.Add("test_items", function()
 
     AjouterItem(6, "Masque ANBU", 1, nil, "accessoire", "masque",
         "models/accessory/mask_hanzou.mdl", "ValveBiped.Bip01_Head1", Vector(1.7, 0, 2), Angle(-90, -90, 0), 1)
-    AjouterItem(10, "Anneau de Chakra", 1, nil, "accessoire", nil,
-        "models/accessory/ring_model.mdl", "ValveBiped.Bip01_R_Hand", Vector(0, 0, 0), Angle(0, 0, 0), 0.8)
+    
 
     AjouterItem(7, "Bois ancestral", 12, "ui/inventory/bois_ancestral.png", "objet")
     AjouterItem(8, "Soie céleste", 4, "ui/inventory/soie_celeste.png", "objet")

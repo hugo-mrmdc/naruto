@@ -15,6 +15,16 @@ local SPEED       = 1600
 local LIFE        = 2.5
 local HIT_RADIUS  = 18
 
+-- durée du saut : 1 = ancien rythme, 0.5 = deux fois plus rapide
+-- (garder la même valeur que VITESSE dans client/uchiha/cl_uchiha_boule_saut.lua)
+local VITESSE     = 1
+
+-- secondes entre le saut et le départ de la boule (avant, 1 * VITESSE = 0.5 : trop tôt)
+local DELAI_TIR   = 0.85
+
+-- distance devant les yeux où la boule apparaît (avant : 40, trop près maintenant qu'elle est grosse)
+local DISTANCE_DEPART = 90
+
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
 local function Niv(ply, stat, base) return NA_Stat(ply, "katon_saut", stat, base) end
 
@@ -49,44 +59,16 @@ end)
 
 local function DoJumpBoost(ply)
     if not IsValid(ply) or not ply:Alive() then return end
-    if ply._katonFrozen then return end
 
-    -- Jump
+    -- Jump (le joueur n'est plus figé en l'air : il garde le contrôle pendant tout le saut)
     ply:SetVelocity(Vector(0, 0, 600))
-
-    local oldMove = ply:GetMoveType()
-    local oldGrav = ply:GetGravity()
 
     -- Flag anti dégâts de chute (retiré au plus tard après 5 s)
     ply._katonNoFallDamage = true
     timer.Create("KatonNoFall_" .. ply:EntIndex(), 5, 1, function()
         if IsValid(ply) then ply._katonNoFallDamage = nil end
     end)
-
-    timer.Simple(1, function()
-        if not IsValid(ply) or not ply:Alive() then return end
-
-        ply._katonFrozen = true
-
-        -- Fige en l'air
-        ply:SetGravity(0)
-        ply:SetMoveType(MOVETYPE_NONE)
-
-        timer.Simple(0.7, function()
-            if not IsValid(ply) then return end
-
-            -- Restore (MOVETYPE_WALK si l'ancien état était déjà figé)
-            if oldMove == MOVETYPE_NONE then oldMove = MOVETYPE_WALK end
-            ply:SetMoveType(oldMove)
-            ply:SetGravity(oldGrav)
-
-            -- On enlèvera le no-fall APRES l'atterrissage
-            ply._katonFrozen = false
-        end)
-    end)
 end
-
-
 
 local function SpawnProjectile(ply)
     projId = projId % 65535 + 1
@@ -94,7 +76,7 @@ local function SpawnProjectile(ply)
 
     local ang = ply:EyeAngles()
     local dir = ang:Forward()
-    local pos = ply:EyePos() + dir * 40
+    local pos = ply:EyePos() + dir * DISTANCE_DEPART
 
     Projectiles[id] = {
         owner = ply,
@@ -187,7 +169,7 @@ net.Receive(NET_FIRE, function(_, ply)
     nextUse[ply] = t + NA_Stat(ply, "katon_saut", "recharge", COOLDOWN)
     if NA_CD then NA_CD.Set(ply, "katon_saut", NA_Stat(ply, "katon_saut", "recharge", COOLDOWN)) end -- recharge visible dans la barre
     DoJumpBoost(ply)
-    timer.Simple(1, function()
+    timer.Simple(DELAI_TIR, function()
         if IsValid(ply) and ply:Alive() then
             SpawnProjectile(ply)
         end

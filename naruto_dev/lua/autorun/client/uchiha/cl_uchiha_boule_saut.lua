@@ -1,12 +1,19 @@
 local NET_FIRE = "naruto_dev_uchih1"
 local NET_POS  = "naruto_dev_uchih1_pos"
 
+-- durée de l'incantation (mudras) et du saut : 1 = ancien rythme, 0.5 = deux fois plus rapide
+-- (garder la même valeur que VITESSE dans server/uchiha/sv_uchiha_boule_saut.lua)
+local VITESSE = 0.5
+
+-- le modèle regarde vers l'arrière : demi-tour horizontal (yaw 180). Mets Angle(0, 0, 0) pour annuler.
+local CORRECTION_ANGLE = Angle(0, 180, 0)   -- rotation autour de l'axe du modèle (pitch, yaw, roll LOCAUX)
+
 local MODEL_BOULE = "models/clan/konoha/uchiha/fireball.mdl" -- la boule en vol (plus de particule de vol)
 
 print("[KATON CL] Loaded (follow fx)")
 
 local PCF_HIT = "particles/solve_new_katon.pcf"
-local FX_HIT  = "solve_katon_bigball_impact" -- explosion à l'impact
+local FX_HIT  = "solve_katon_floor_impact" -- explosion à l'impact (posée au sol)
 
 hook.Add("InitPostEntity", "uchih1_followfx_precache", function()
     game.AddParticles(PCF_HIT)
@@ -41,14 +48,14 @@ NA_Cast.katon_saut = function()
         net.SendToServer()
 
         -- démarre le loop tôt
-        timer.Simple(0.5, function()
+        timer.Simple(0.5 * VITESSE, function()
             local ply = LocalPlayer()
             if not IsValid(ply) then return end
             Jutsu.Play("nrp_base_chakrajump_charge_loop")
         end)
 
         -- switch très vite après (0.06–0.12 est généralement parfait)
-        timer.Simple(0.58, function()
+        timer.Simple(0.58 * VITESSE, function()
             local ply = LocalPlayer()
             if not IsValid(ply) then return end
             Jutsu.Play("nrp_base_chakrajump_vertical_charge_loop", { blend = 0.15 })
@@ -56,13 +63,13 @@ NA_Cast.katon_saut = function()
 
 
 
-        timer.Simple(1.0, function()
+        timer.Simple(1.0 * VITESSE, function()
             Jutsu.Play("nrp_ninjutsu_defend_dragonflamebombs_end")
         end)
-        timer.Simple(2.0, function()
+        timer.Simple(2.0 * VITESSE, function()
             Jutsu.Play("nrp_base_dashstep_behind")
         end)
-        timer.Simple(1.0, function()
+        timer.Simple(1.0 * VITESSE, function()
             net.Start(NET_FIRE)
             net.SendToServer()
         end)
@@ -79,7 +86,7 @@ local function EnsureBall(id)
     mdl:Spawn()
 
     -- SCALE DE LA BOULE : 1.0 = normal, 2.0 = 2x, 3.0 = très gros, etc.
-    mdl:SetModelScale(1, 0) -- <-- augmente ici (ex: 2.0 / 3.0)
+    mdl:SetModelScale(2.5, 0) -- <-- augmente ici (ex: 2.0 / 3.0)
 
     balls[id] = { mdl = mdl, last = CurTime() }
     return balls[id]
@@ -107,7 +114,15 @@ net.Receive(NET_POS, function()
     local ang   = net.ReadAngle()
 
     if not alive then
-        if net.ReadBool() then ParticleEffect(FX_HIT, pos, angle_zero) end
+        if net.ReadBool() then
+            -- l'explosion apparaît au sol : on projette le point d'impact vers le bas
+            local sol = util.TraceLine({
+                start  = pos + Vector(0, 0, 30),
+                endpos = pos - Vector(0, 0, 400),
+                mask   = MASK_SOLID_BRUSHONLY,
+            })
+            ParticleEffect(FX_HIT, sol.Hit and sol.HitPos or pos, angle_zero)
+        end
         local b = balls[id]
         if b and IsValid(b.mdl) then
             b.mdl:StopParticles()
@@ -122,6 +137,12 @@ net.Receive(NET_POS, function()
 
     if IsValid(b.mdl) then
         b.mdl:SetPos(pos)
-        b.mdl:SetAngles(ang)
+        -- rotation dans le repère du modèle (et pas en additionnant les angles du monde,
+        -- ce qui inversait la montée/descente quand tu visais en haut ou en bas)
+        local a = Angle(ang.p, ang.y, ang.r)
+        a:RotateAroundAxis(a:Up(),      CORRECTION_ANGLE.y)
+        a:RotateAroundAxis(a:Right(),   CORRECTION_ANGLE.p)
+        a:RotateAroundAxis(a:Forward(), CORRECTION_ANGLE.r)
+        b.mdl:SetAngles(a)
     end
 end)
