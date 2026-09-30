@@ -100,20 +100,21 @@ local Inventaire = {}
 local SlotsEquipement = {}
 
 -- Rareté visuelle de l'objet, conservée lors des échanges d'équipement.
--- Images de rareté réduites à 256 px, partagées par la grille et l'équipement.
+-- Images de rareté réduites à 256 x 256 px, partagées par la grille et l'équipement.
 local RARETES = {
     commun = { rang = 1, nom = "Commun", couleur = Color(205, 205, 205), texture = "comun" },
     rare = { rang = 2, nom = "Rare", couleur = Color(90, 175, 255), texture = "rare" },
     epique = { rang = 3, nom = "Épique", couleur = Color(195, 115, 255), texture = "epique" },
     legendaire = { rang = 4, nom = "Légendaire", couleur = Color(255, 216, 75), texture = "legendaire" },
 }
--- Bordures rectilignes des PNG 256 px (alpha >= 200, hors pointes/halo).
+-- Bordures des nouveaux cadres, coordonnées normalisées sur 256 par axe.
+-- Le PNG est vertical : conserver ses marges transparentes et son halo.
 -- Comparer les cadres eux-mêmes : les ornements dépassent volontairement.
 local CADRES_RARETE = {
-    comun = { 13, 17, 230, 215 },
-    rare = { 13, 18, 231, 214 },
-    epique = { 13, 18, 230, 214 },
-    legendaire = { 13, 17, 230, 212 },
+    comun = { 7.5, 33, 242, 175 },
+    rare = { 7.5, 33, 242, 175 },
+    epique = { 7.5, 33, 242, 175 },
+    legendaire = { 7.5, 33, 242, 175 },
 }
 local ALIAS_RARETES = { common = "commun", epic = "epique", legendary = "legendaire", ["épique"] = "epique", ["légendaire"] = "legendaire" }
 local function NormaliserRarete(valeur)
@@ -561,7 +562,7 @@ local function CreerIconeTenue(parent, it, marge, taille)
             for z = 0, 1 do
                 local coin = Vector(x == 0 and mini.x or maxi.x, y == 0 and mini.y or maxi.y, z == 0 and mini.z or maxi.z) - centre
                 local largeur = math.max(math.abs(coin:Dot(droite)), math.abs(coin:Dot(haut)))
-                distance = math.max(distance, coin:Dot(direction) + largeur / (tangente * 0.9))
+                distance = math.max(distance, coin:Dot(direction) + largeur / (tangente * 1.15))
             end
         end
     end
@@ -686,7 +687,13 @@ local function CreerApercu(parent)
     ap:SetLookAt(Vector(0, 0, 40.5))
     ap:SetColor(ply:GetColor())
     ap:SetDirectionalLight(BOX_TOP, Color(255, 245, 230))
-    ap:SetAmbientLight(Color(90, 80, 70))
+    ap:SetAmbientLight(Color(150, 140, 130))
+
+    -- Cadrer le corps sur toute la hauteur du panneau (le FOV est horizontal)
+    function ap:PerformLayout(w, h)
+        local dist = 76 / (2 * math.tan(math.rad(self:GetFOV() * 0.5)) * math.max(h / math.max(w, 1), 0.5))
+        self:SetCamPos(Vector(dist, 0, 41))
+    end
 
     local ent = ap:GetEntity()
     if not IsValid(ent) then return ap end
@@ -1059,7 +1066,7 @@ local function OuvrirMenu()
     end
     local function DessinerCase(w, h, it, survol, choisi, equipement)
         local rarete = it and it.item and Rarete(it)
-        if rarete then
+        if rarete and not M(chemin .. rarete.texture .. ".png"):IsError() then
             local cadre = CADRES_RARETE[rarete.texture]
             -- Bordure de caseEmpty : x=34, y=36, 188 x 176.
             local tw, th = w * 188 / cadre[3], h * 176 / cadre[4]
@@ -1182,7 +1189,7 @@ local function OuvrirMenu()
     vbar:SetWide(5 * S) vbar:SetHideButtons(true)
     vbar.Paint = function() end
     vbar.btnGrip.Paint = function(_, w, h) draw.RoundedBox(2, 0, 0, w, h, Color(120, 102, 76, 180)) end
-    local ecart = 14 * S
+    local ecart = 4 * S
     local colonnes = 4
     local taille = math.floor((gw - 10 * S - ecart * (colonnes - 1)) / colonnes)
     local grille = defil:Add("DPanel")

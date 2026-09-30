@@ -2,7 +2,14 @@
 
 Le menu utilise `materials/ui/newUi/optimized/`. Les PNG sources sont conservés.
 Régénération : `powershell -File tools/optimize-newui.ps1` depuis cet addon.
-Cases : 256 px ; boutons : 512 px ; panneaux : 768 px ; fond conservé.
+Cases : 256 px maximum ; boutons : 512 px ; panneaux : 768 px ; fond conservé.
+Les quatre nouvelles raretés sont exportées en 256 × 256 px sous les noms
+`comun`, `rare`, `epique` et `legendaire`, déjà utilisés par l'addon.
+Leurs marges transparentes sont conservées ; le dessin aligne les bordures
+sur les cases vides avec des coordonnées normalisées sur 256 pour chaque axe.
+Seules les versions optimisées sont distribuées. Après remplacement des PNG,
+redémarrer le jeu pour vider le cache des matériaux. Si une texture de rareté
+échoue au chargement, la case normale est utilisée à la place du damier rose.
 
 Première ouverture : les textures fixes sont préparées progressivement après
 l'arrivée du joueur (une toutes les 250 ms). Le cadre est affiché avant les

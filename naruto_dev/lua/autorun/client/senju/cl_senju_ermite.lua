@@ -6,7 +6,7 @@
 --========================================================
 
 
-local MARQUE_PATCH_VERSION = "V7.9-targeted-flex-load"
+local MARQUE_PATCH_VERSION = "V7.11-shell-correction"
 if NA_SenjuFlexLoader then NA_SenjuFlexLoader.ClosePending() end
 local FaceShellFlex = include("autorun/client/senju/face_shell_flex.lua")
 NA_SenjuFlexLoader = FaceShellFlex
@@ -73,9 +73,8 @@ local MARQUE = Material("naruto_dev/marques/ermite_naturel_visible")
 local COULEUR = Color(0, 0, 0)   -- marque noire (la texture d'origine est blanche, la couleur la teinte)
 local FONDU = 1   -- secondes pour que la marque apparaisse
 
--- Réglages de PLACEMENT : modifiables en jeu avec le menu "na_marque_menu" (ci-dessous), qui affiche
--- un aperçu en direct sur toi. Une fois satisfait, le bouton "Copier les valeurs" du menu met le
--- nouveau bloc REGL dans le presse-papiers : colle-le ici pour que ce soit le réglage par défaut.
+-- Ancien placement des quads, conservé uniquement pour comparaison.
+-- Le menu na_marque_menu règle maintenant UV_MORCEAUX, utilisé par le shell actif.
 local REGL = {
     ECHELLE = 0.0048877118644068,
     HAUT = -1.65,
@@ -150,9 +149,11 @@ local RT_SALE = true
 -- formes entourent les îlots des yeux et le symbole central tombe sur le front.
 -- { x, y, largeur, hauteur, source={xmin,xmax,ymin,ymax dans la texture 2048} }
 local UV_MORCEAUX = {
-    { x = 120, y = 210, w = 100, h = 185, source = { 335, 833, 836, 1605 } },   -- côté gauche de la texture
-    { x = 292, y = 210, w = 100, h = 185, source = { 1189, 1720, 813, 1600 } }, -- côté droit
-    { x = 220, y = 105, w = 72,  h = 130, source = { 865, 1154, 90, 609 } },    -- front
+    -- Les ouvertures des yeux sont autour de (206, 276) et (321, 276),
+    -- et l'axe du front est u=262 (pas le centre 256 de l'image).
+    { x = 153, y = 242, w = 100, h = 105, source = { 335, 833, 836, 1605 } },
+    { x = 274, y = 241, w = 100, h = 105, source = { 1189, 1720, 813, 1600 } },
+    { x = 243, y = 195, w = 38, h = 62, source = { 865, 1154, 90, 609 } },
 }
 
 local function GenererTexturePeauErmite()
@@ -228,8 +229,7 @@ local function TrouverSlotFace(tete)
     end
 end
 
--- V7 : le shell skinné remplace la mutation du matériau.
--- Retire aussi l'ancien hook lorsqu'on recharge le fichier après une V6.
+-- La marque est portée par le shell ; aucune mutation de la peau.
 hook.Remove("NA_GetFaceDrawMutation", "NA_SenjuErmite_TatouagePeau")
 
 -- Quand la marque n'est plus active, le matériau source est déjà restauré immédiatement après
@@ -246,20 +246,23 @@ end)
 --========================================================
 -- V7 : SECONDE PEAU SKINNEE SUR LE VRAI MESH "face"
 --
--- Les overrides de matériau du modèle sont neutralisés dans ce projet. On récupère donc
+-- Rendu actif : on récupère
 -- les vrais triangles du mesh atg/face/face via util.GetModelMeshes, on conserve leurs UV,
 -- et on les reskinne chaque frame avec les matrices d'os de la tête visible.
 -- Seuls les triangles dont les UV croisent les zones de marque sont gardés.
 -- Le shell est décalé de 0.018 unité le long de la normale de chaque triangle pour éviter
 -- le z-fighting. Le fond de la texture est transparent : seule la marque noire est rendue.
 --========================================================
-local RT_OVERLAY = GetRenderTargetEx("na_senju_ermite_overlay_v73", RT_TAILLE, RT_TAILLE,
+-- Les réglages restent en coordonnées 512 ; seul le rendu gagne en précision.
+local OVERLAY_RESOLUTION = 2048
+local OVERLAY_ECHELLE = OVERLAY_RESOLUTION / RT_TAILLE
+local RT_OVERLAY = GetRenderTargetEx("na_senju_ermite_overlay_v711", OVERLAY_RESOLUTION, OVERLAY_RESOLUTION,
     RT_SIZE_NO_CHANGE, MATERIAL_RT_DEPTH_NONE, 0, 0, IMAGE_FORMAT_RGBA8888)
 local RT_OVERLAY_PRET = false
 local RT_OVERLAY_SALE = true
 -- La marque noire est un découpage : les pixels transparents ne doivent pas
 -- participer au test de profondeur ni montrer les faces internes du visage.
-local MAT_OVERLAY = CreateMaterial("na_senju_ermite_overlay_mat_v74", "UnlitGeneric", {
+local MAT_OVERLAY = CreateMaterial("na_senju_ermite_overlay_mat_v711", "UnlitGeneric", {
     ["$basetexture"] = "vgui/white",
     ["$alphatest"] = "1",
     ["$alphatestreference"] = "0.5",
@@ -268,7 +271,7 @@ local MAT_OVERLAY = CreateMaterial("na_senju_ermite_overlay_mat_v74", "UnlitGene
 })
 MAT_OVERLAY:SetTexture("$basetexture", RT_OVERLAY)
 -- L'affichage 2D du diagnostic conserve la transparence progressive du RT.
-local MAT_OVERLAY_PREVIEW = CreateMaterial("na_senju_overlay_preview_v74", "UnlitGeneric", {
+local MAT_OVERLAY_PREVIEW = CreateMaterial("na_senju_overlay_preview_v711", "UnlitGeneric", {
     ["$basetexture"] = "vgui/white",
     ["$translucent"] = "1",
     ["$vertexcolor"] = "1",
@@ -291,7 +294,8 @@ local function GenererOverlayTattoo()
         for _, m in ipairs(UV_MORCEAUX) do
             local src = m.source
             surface.DrawTexturedRectUV(
-                m.x, m.y, m.w, m.h,
+                m.x * OVERLAY_ECHELLE, m.y * OVERLAY_ECHELLE,
+                m.w * OVERLAY_ECHELLE, m.h * OVERLAY_ECHELLE,
                 src[1] / 2048, src[3] / 2048,
                 src[2] / 2048, src[4] / 2048
             )
@@ -757,6 +761,7 @@ local function DiagnosticMarque(prefix)
     print(prefix, "mutation texture:", mutation and mutation.texture and mutation.texture:GetName() or "nil")
     print(prefix, "tattoo flag on head:", tostring(tete.NA_SenjuTattooActif))
     print(prefix, "mutation frame:", tostring(tete.NA_SenjuMutationFrame), "current frame:", FrameNumber())
+    print(prefix, "effective face material:", tete.NA_FaceDirectPath or "not drawn")
     local direct = Material("atg/face/face")
     local directTex = direct and not direct:IsError() and direct:GetTexture("$basetexture") or nil
     print(prefix, "direct face material:", direct and direct:GetName() or "nil")
@@ -986,68 +991,50 @@ surface.CreateFont("NA.Marque.Titre", { font = "Roboto", size = 20, weight = 800
 surface.CreateFont("NA.Marque.Texte", { font = "Roboto", size = 15, weight = 600 })
 surface.CreateFont("NA.Marque.Section", { font = "Roboto", size = 15, weight = 800 })
 
--- { section, chemin, nom, min, max, deci } : chemin = "CLE" (REGL.CLE) ou { "GROUPE", "SOUS_CLE" } (REGL.GROUPE.SOUS_CLE)
-local CHAMPS = {
-    { "Commun", "ECHELLE",    "Taille",              0.0005, 0.01, 4 },
-    { "Commun", "HAUT",       "Hauteur (repère commun)", -15, 15, 2 },
-    { "Commun", "PAD",        "Marge de la texture", 0, 80, 0 },
-
-    { "Front", "FRONT_AVANT",       "Avant / arrière",     -10, 10, 2 },
-    { "Front", "FRONT_ANGLE",       "Angle (côté)",        -60, 60, 0 },
-    { "Front", "FRONT_INCLINAISON", "Angle (haut/bas)",    -60, 60, 0 },
-    { "Front", "FRONT_ROULIS",      "Roulis",              -180, 180, 0 },
-    { "Front", "FRONT_DECALAGE_X",  "Déplacer (côté)",     -3, 3, 2 },
-    { "Front", "FRONT_DECALAGE_Y",  "Déplacer (haut/bas)", -10, 10, 2 },
-    { "Front", "FRONT_COURBURE",    "Courbure",            0, 3, 2 },
-}
-
--- les 2 yeux ont les mêmes 7 réglages, chacun dans son propre groupe (OEIL_GAUCHE / OEIL_DROIT)
-for _, oeil in ipairs({ { "Œil gauche", "OEIL_GAUCHE" }, { "Œil droit", "OEIL_DROIT" } }) do
-    local section, groupe = oeil[1], oeil[2]
-    local champs = {
-        { "AVANT",          "Avant / arrière",     -10, 10, 2 },
-        { "ANGLE",          "Angle (côté)",         -60, 60, 0 },
-        { "INCLINAISON",    "Angle (haut/bas)", -60, 60, 0 },
-        { "ROULIS",         "Roulis",               -180, 180, 0 },
-        { "DECALAGE_X",     "Déplacer (côté)",      -3, 3, 2 },
-        { "DECALAGE_Y",     "Déplacer (haut/bas)",  -10, 10, 2 },
-        { "DECALAGE_AVANT", "Déplacer (avant/arrière)", -10, 10, 2 },
-        { "COURBURE",       "Courbure",                  0, 3, 2 },
-    }
-    for _, c in ipairs(champs) do
-        CHAMPS[#CHAMPS + 1] = { section, { groupe, c[1] }, c[2], c[3], c[4], c[5] }
+-- { section, { index du morceau, propriété UV }, nom, min, max, décimales }
+-- Le menu règle le tatouage UV effectivement affiché, pas les anciens quads.
+local CHAMPS = {}
+for index, label in ipairs({ "Œil gauche (texture)", "Œil droit (texture)", "Front" }) do
+    for _, field in ipairs({
+        { "x", "Position horizontale", 0, 512 },
+        { "y", "Position verticale", 0, 512 },
+        { "w", "Largeur", 1, 256 },
+        { "h", "Hauteur", 1, 256 },
+    }) do
+        CHAMPS[#CHAMPS + 1] = { label, { index, field[1] }, field[2], field[3], field[4], 0 }
     end
 end
 
 local function LireValeur(chemin)
-    if istable(chemin) then return REGL[chemin[1]][chemin[2]] end
-    return REGL[chemin]
+    return UV_MORCEAUX[chemin[1]][chemin[2]]
 end
 local function EcrireValeur(chemin, v)
-    if istable(chemin) then REGL[chemin[1]][chemin[2]] = v else REGL[chemin] = v end
+    local region = UV_MORCEAUX[chemin[1]]
+    v = math.Round(v)
+    if region[chemin[2]] == v then return end
+    region[chemin[2]] = v
+    RT_SALE, RT_OVERLAY_SALE = true, true
+    -- La sélection des triangles dépend elle aussi des rectangles UV.
+    FACE_SHELL_CACHE = {}
+    pendingShells = {}
+    FaceShellFlex.ClosePending()
+    for ent, cached in pairs(shellMeshes) do
+        if cached.mesh then cached.mesh:Destroy() end
+        shellMeshes[ent] = nil
+    end
 end
 
 local function CopierValeurs()
-    local lignes = { "local REGL = {", "    ECHELLE = " .. tostring(REGL.ECHELLE) .. ",",
-        "    HAUT = " .. tostring(math.Round(REGL.HAUT, 2)) .. ",", "    PAD = " .. tostring(math.Round(REGL.PAD, 0)) .. "," }
-    lignes[#lignes + 1] = ""
-    lignes[#lignes + 1] = "    -- FRONT"
-    for _, cle in ipairs({ "FRONT_AVANT", "FRONT_ANGLE", "FRONT_INCLINAISON", "FRONT_ROULIS", "FRONT_DECALAGE_X", "FRONT_DECALAGE_Y", "FRONT_COURBURE" }) do
-        lignes[#lignes + 1] = string.format("    %s = %s,", cle, tostring(math.Round(REGL[cle], 2)))
-    end
-    for _, groupe in ipairs({ "OEIL_GAUCHE", "OEIL_DROIT" }) do
-        lignes[#lignes + 1] = ""
-        lignes[#lignes + 1] = "    " .. groupe .. " = {"
-        for _, sous in ipairs({ "AVANT", "ANGLE", "INCLINAISON", "ROULIS", "DECALAGE_X", "DECALAGE_Y", "DECALAGE_AVANT", "COURBURE" }) do
-            lignes[#lignes + 1] = string.format("        %s = %s,", sous, tostring(math.Round(REGL[groupe][sous], 2)))
-        end
-        lignes[#lignes + 1] = "    },"
+    local lignes = { "local UV_MORCEAUX = {" }
+    for _, r in ipairs(UV_MORCEAUX) do
+        lignes[#lignes + 1] = string.format(
+            "    { x = %d, y = %d, w = %d, h = %d, source = { %d, %d, %d, %d } },",
+            r.x, r.y, r.w, r.h, unpack(r.source))
     end
     lignes[#lignes + 1] = "}"
     local texte = table.concat(lignes, "\n")
     SetClipboardText(texte)
-    MsgC(Color(255, 200, 0), "[Marque] ", color_white, "valeurs copiées dans le presse-papiers (à coller dans cl_senju_ermite.lua) :\n")
-    print(texte)
+    print("[Marque] Placement UV copié :\n" .. texte)
 end
 
 local function Bouton(parent, texte, clic)
@@ -1066,6 +1053,18 @@ local function Fermer()
     if IsValid(NA_MarqueCapture) then NA_MarqueCapture:Remove() end
     apercu, orbite = false, false
 end
+
+-- Le popup capte le clavier : le bind F5 du jeu ne reçoit plus la touche.
+-- Lire son état permet aussi la capture quand un champ du menu a le focus.
+local captureF5Enfoncee = input.IsKeyDown(KEY_F5)
+hook.Add("Think", "NA_MarqueMenu_CaptureF5", function()
+    local enfoncee = input.IsKeyDown(KEY_F5)
+    if enfoncee and not captureF5Enfoncee
+        and IsValid(NA_MarqueMenu) and NA_MarqueMenu:IsVisible() then
+        RunConsoleCommand("jpeg")
+    end
+    captureF5Enfoncee = enfoncee
+end)
 
 local function Ouvrir()
     if IsValid(NA_MarqueMenu) then Fermer() return end
@@ -1110,7 +1109,7 @@ local function Ouvrir()
     function f:Paint(w, h)
         draw.RoundedBox(8, 0, 0, w, h, C_FOND)
         draw.SimpleText("Marque d'ermite", "NA.Marque.Titre", 16, 18, C_TEXTE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-        draw.SimpleText("clic gauche + glisser = tourner, molette = zoomer", "NA.Marque.Texte", 16, 42, C_DOUX, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Glisser : tourner · Molette : zoom · F5 : capture", "NA.Marque.Texte", 16, 42, C_DOUX, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
     NA_MarqueMenu = f
 
@@ -1155,6 +1154,7 @@ local function Ouvrir()
 end
 
 concommand.Add("na_marque_menu", Ouvrir, nil, "Ouvre un panneau pour régler en direct la position de la marque d'ermite sur le visage.")
+concommand.Add("na_men_marque", Ouvrir, nil, "Ouvre le menu du tatouage (F5 : capture d'écran).")
 
 ----------------------------------------------------------
 -- La piste "texture de peau" n'est plus abandonnée : elle est implémentée plus haut
@@ -1163,7 +1163,6 @@ concommand.Add("na_marque_menu", Ouvrir, nil, "Ouvre un panneau pour régler en 
 -- mais AFFICHER_MARQUE=false les garde désactivées.
 ----------------------------------------------------------
 
-print("[MarquePatch] chargé V6-direct-face-material")
 concommand.Add("na_marque_v6_loaded", function()
     local ht = hook.GetTable()
     print("[MarquePatch] V6 autorun chargé OK")

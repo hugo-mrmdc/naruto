@@ -8,7 +8,11 @@ function M.ClosePending()
 end
 
 function M.Key(v)
-    return string.format("%.4f/%.4f/%.4f/%.4f/%.4f", v.pos.x, v.pos.y, v.pos.z, v.u, v.v)
+    -- Aux coutures du mesh, position et UV ne suffisent pas : deux sommets
+    -- peuvent porter des normales et des deltas de flex différents.
+    local n = v.normal
+    return string.format("%.4f/%.4f/%.4f/%.4f/%.4f/%.4f/%.4f/%.4f",
+        v.pos.x, v.pos.y, v.pos.z, v.u, v.v, n.x, n.y, n.z)
 end
 
 local function Half(n)
@@ -39,11 +43,35 @@ function M.Load(model, yieldWork, wantedVertices)
             return f
         end
         local function Int(offset) return At(mdl, offset, 4):ReadLong() end
+        local function String(offset)
+            At(mdl, offset, 1)
+            local chars = {}
+            for c = 1, 256 do
+                local ch = mdl:Read(1)
+                if ch == "\0" then return table.concat(chars) end
+                assert(ch and ch ~= "", "invalid MDL name")
+                chars[#chars + 1] = ch
+            end
+            error("MDL name too long")
+        end
         assert(At(mdl, 0, 4):Read(4) == "IDST" and Int(4) == 48, "unsupported MDL")
         assert(bit.band(Int(152), 0x200000) == 0, "fixed-point flexes unsupported")
         assert(At(vvd, 0, 4):Read(4) == "IDSV", "invalid VVD")
         assert(At(vvd, 48, 4):ReadLong() == 0, "VVD fixups unsupported")
         local vertexStart = At(vvd, 56, 4):ReadLong()
+        -- L'ordre change selon la tête : le slot 2 peut être la bouche,
+        -- les sourcils ou les lignes du visage. Lire le vrai nom du matériau.
+        local faceMaterial
+        local textureCount, textures = Int(204), Int(208)
+        for ti = 0, textureCount - 1 do
+            local texture = textures + ti * 64
+            local name = string.lower(String(texture + Int(texture)))
+            if (string.match(name, "[^/\\]+$") or name) == "face" then
+                faceMaterial = ti
+                break
+            end
+        end
+        assert(faceMaterial ~= nil, "face material missing")
         local descriptorCount, descriptors = Int(260), Int(264)
         local names = {}
         for d = 0, descriptorCount - 1 do
@@ -65,8 +93,7 @@ function M.Load(model, yieldWork, wantedVertices)
         local data = { vertices = {}, flexes = {} }
         for mi = 0, Int(modelOffset + 72) - 1 do
             local meshOffset = meshes + mi * 116
-            -- Les têtes de cet addon ont le matériau face à l'index 2.
-            if Int(meshOffset) == 2 then
+            if Int(meshOffset) == faceMaterial then
                 local keys = {}
                 local vertexOffset = Int(meshOffset + 12)
                 for vi = 0, Int(meshOffset + 8) - 1 do
@@ -74,8 +101,9 @@ function M.Load(model, yieldWork, wantedVertices)
                     local offset = vertexStart + modelVertexOffset + (vertexOffset + vi) * 48
                     At(vvd, offset + 16, 32)
                     local pos = Vector(vvd:ReadFloat(), vvd:ReadFloat(), vvd:ReadFloat())
-                    At(vvd, offset + 40, 8)
-                    local key = M.Key({ pos = pos, u = vvd:ReadFloat(), v = vvd:ReadFloat() })
+                    local normal = Vector(vvd:ReadFloat(), vvd:ReadFloat(), vvd:ReadFloat())
+                    local key = M.Key({ pos = pos, normal = normal,
+                        u = vvd:ReadFloat(), v = vvd:ReadFloat() })
                     keys[vi] = (not wantedVertices or wantedVertices[key]) and key or false
                 end
                 local flexBase = meshOffset + Int(meshOffset + 20)
