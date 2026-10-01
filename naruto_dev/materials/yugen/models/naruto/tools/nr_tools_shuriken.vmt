@@ -1,0 +1,10 @@
+VertexLitGeneric
+{
+	$basetexture "yugen/models/naruto/tools/nr_tools_Shuriken"
+
+	$lightwarptexture "yugen/models/naruto/toon/toon"
+
+	$phong 1
+	$phongfresnelranges "[0.5 0.75 1]"
+	$phongexponent 5
+}

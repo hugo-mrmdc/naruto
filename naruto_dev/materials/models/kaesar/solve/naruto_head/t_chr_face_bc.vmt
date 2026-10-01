@@ -1,0 +1,9 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/kaesar/solve/naruto_head/T_CHR_Face_BC"
+	"$bumpmap" "models/kaesar/solve/naruto_head/normal"
+
+	"$lightwarptexture" "models/kaesar/solve/naruto_head/lightwarptexture"
+
+
+}

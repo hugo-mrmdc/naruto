@@ -59,13 +59,15 @@ page_start('Personnages');
         <?php endforeach; ?>
     </select>
     <button type="submit">Filtrer</button>
+    <input type="search" class="search" placeholder="Rechercher un personnage…" data-filter="#chartable">
+    <span class="count" data-count-for="#chartable"><?= count($rows) ?> personnage(s)</span>
 </form>
 
 <div class="card">
     <?php if ($rows === []): ?>
         <p class="empty">Aucun personnage pour l'instant. Ils apparaîtront ici dès que le serveur GMod synchronisera des fiches (<code>POST /characters/sync</code>).</p>
     <?php else: ?>
-    <table>
+    <table id="chartable">
         <thead>
         <tr>
             <th>Personnage</th>
@@ -81,11 +83,11 @@ page_start('Personnages');
         <tbody>
         <?php foreach ($rows as $c): ?>
             <tr>
-                <td data-label="Personnage"><a href="character.php?id=<?= (int) $c['id'] ?>"><?= h(trim($c['firstname'] . ' ' . $c['lastname'])) ?: '#' . h($c['id']) ?></a></td>
-                <td data-label="Village"><?= h($c['village'] ?: '—') ?></td>
+                <td data-label="Personnage"><?php $full = trim($c['firstname'] . ' ' . $c['lastname']); ?><a class="who-link" href="character.php?id=<?= (int) $c['id'] ?>"><?= avatar($full, (string) $c['village']) ?><?= $full !== '' ? h($full) : '#' . h($c['id']) ?></a></td>
+                <td data-label="Village"><?= village_badge((string) $c['village']) ?></td>
                 <td data-label="Clan"><?= h($c['clan'] ?: '—') ?></td>
                 <td data-label="Grade"><?= h($c['rank'] ?: '—') ?></td>
-                <td data-label="Niveau" class="num"><?= h($c['level']) ?></td>
+                <td data-label="Niveau" class="num"><span class="lvl"><?= h($c['level']) ?></span></td>
                 <td data-label="XP" class="num"><?= fmt_num($c['xp']) ?></td>
                 <td data-label="Ryo" class="num"><?= fmt_num($c['ryo']) ?></td>
                 <td data-label="Temps de jeu" class="num"><?= h(fmt_playtime((int) $c['playtime'])) ?></td>

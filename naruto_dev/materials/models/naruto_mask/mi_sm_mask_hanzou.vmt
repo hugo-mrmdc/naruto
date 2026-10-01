@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/naruto_mask/MI_SM_Mask_Hanzou"
+	"$lightwarptexture" "models/lightwarpshader"
+}

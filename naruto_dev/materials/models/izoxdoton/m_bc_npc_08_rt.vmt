@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/izoxdoton/M_BC_npc_08_RT"
+	"$lightwarptexture" "models/izoxdoton/lightwarpshader"
+}

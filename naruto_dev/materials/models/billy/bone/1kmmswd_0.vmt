@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+    "$basetexture" "models/billy/bone/1kmmswd_0"
+	"$nocull" "1"
+	"$lightwarptexture" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/lightwarptexture"
+

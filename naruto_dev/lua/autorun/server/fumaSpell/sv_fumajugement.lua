@@ -26,7 +26,7 @@ local RECHARGE      = 18     -- secondes avant de pouvoir relancer (depuis le la
 local RECHARGE_RATE = 6      -- recharge si le fil ne touche rien
 local CHAKRA_COUT   = 25     -- chakra dépensé (0 = gratuit)
 local CHAKRA_MAX    = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
-local DELAI_LANCER  = 0.3    -- délai entre l'animation et le départ du fil
+local DELAI_LANCER  = 0.6   -- délai entre l'animation et le départ du fil
 local ANIM_LANCER   = "nrp_ninjutsu_defend_d35nj2_throw"
 local SON_LANCER    = "fuma/throw_1.wav"
 --========================================================
@@ -90,9 +90,20 @@ net.Receive("fuma_jugement_cast", function(_, ply)
         fil.Vitesse = Niv(ply, "vitesse_fil", VITESSE_FIL)
         fil.Hitbox  = NA_Stat(ply, "fuma_jugement", "hitbox", HITBOX)
         fil.Accroche = Niv(ply, "etourdi", ETOURDI)
-        fil.Direction = ply:GetAimVector()
+        -- départ à la main droite, visée vers le point regardé
+        local main = ply:GetShootPos()
+        local os = ply:LookupBone("ValveBiped.Bip01_R_Hand")
+        local m = os and ply:GetBoneMatrix(os)
+        if m then main = m:GetTranslation() end
+
+        local viseur = util.TraceLine({
+            start = ply:GetShootPos(), endpos = ply:GetShootPos() + ply:GetAimVector() * fil.Portee,
+            filter = ply,
+        })
+        local dir = viseur.HitPos - main
+        fil.Direction = dir:LengthSqr() > 1 and dir:GetNormalized() or ply:GetAimVector()
         fil:SetOwner(ply)
-        fil:SetPos(ply:GetShootPos())
+        fil:SetPos(main)
         fil:Spawn()
     end)
 end)

@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/FOC/billy/saileftgod/T_CHR_Sai_Gods_M"
+	"$lightwarptexture" "models/falko_naruto_foc/lightwarpshader"
+
+	"$detail"    "models/falko_naruto_foc/noise3_foc"
+	"$detailscale" "5"
+}

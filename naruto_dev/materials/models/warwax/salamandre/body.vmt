@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/warwax/salamandre/body"
+	"$nocull" 1
+	"$lightwarptexture" "models/warwax/toon"
+}

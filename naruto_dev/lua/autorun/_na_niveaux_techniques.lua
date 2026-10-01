@@ -512,7 +512,7 @@ NA_NIV_TECH.fuma_aura = {
 NA_NIV_TECH.fuma_jugement = {
     [1] = {
         degats = 20, chakra = 25, recharge = 18, recharge_rate = 6, hitbox = 18,
-        etourdi = 2.5, delai_lancer = 0.3, portee = 1000, vitesse_fil = 3000,
+        etourdi = 2.5, delai_lancer = 0.6, portee = 1000, vitesse_fil = 3000,
     },
     [2] = { degats = 22 },
     [3] = { degats = 24, hitbox = 21 },

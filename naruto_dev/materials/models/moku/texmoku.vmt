@@ -1,0 +1,10 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/moku/texmoku"
+	"$lightwarptexture" "models/lightwarp/toon"
+	"$alphatest" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$nocull" 1
+	"$nodecal" 1
+}

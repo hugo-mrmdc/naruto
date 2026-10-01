@@ -47,19 +47,21 @@ page_start('Journal d\'actions');
         <?php endforeach; ?>
     </select>
     <button type="submit">Filtrer</button>
+    <input type="search" class="search" placeholder="Rechercher dans les entrées…" data-filter="#logtable">
+    <span class="count" data-count-for="#logtable"><?= count($rows) ?> entrée(s)</span>
 </form>
 
 <div class="card">
     <?php if ($rows === []): ?>
         <p class="empty">Aucune entrée de journal pour l'instant.</p>
     <?php else: ?>
-    <table>
+    <table id="logtable">
         <thead><tr><th>Quand</th><th>Catégorie</th><th>Acteur</th><th>Cible</th><th>Message</th><?php if ($isSuper): ?><th></th><?php endif; ?></tr></thead>
         <tbody>
         <?php foreach ($rows as $log): ?>
             <tr>
-                <td data-label="Quand"><?= h(fmt_date($log['occurred_at'])) ?></td>
-                <td data-label="Catégorie"><span class="badge accent"><?= h($log['category']) ?></span></td>
+                <td data-label="Quand"><?= h(time_ago($log['occurred_at'])) ?> <small class="dim"><?= h(fmt_date($log['occurred_at'])) ?></small></td>
+                <td data-label="Catégorie"><?= cat_badge((string) $log['category']) ?></td>
                 <td data-label="Acteur"><?= h($log['actor_name'] ?: '—') ?></td>
                 <td data-label="Cible">
                     <?php if ($log['target_steamid']): ?>

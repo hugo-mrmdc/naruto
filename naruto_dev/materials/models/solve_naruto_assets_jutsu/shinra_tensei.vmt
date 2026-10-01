@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/solve_naruto_assets_jutsu/shinra_tensei"
+	"$alphatest" 1
+	"$translucent" 1
+}
+

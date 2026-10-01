@@ -131,7 +131,7 @@ if SERVER then
             end
 
         else -- retour
-            local main = owner:GetShootPos()
+            local main = MainDroite(owner)
             local bout = self:GetBout()
             local reste = main - bout
             local pas = self.VitesseRetour * dt

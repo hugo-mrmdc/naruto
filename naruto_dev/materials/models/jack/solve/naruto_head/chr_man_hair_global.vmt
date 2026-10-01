@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/jack/solve/naruto_head/chr_man_hair_global"
+    "$bumpmap" "models/kaesar/solve/naruto_head/normal"
+
+    "$lightwarptexture" "models/kaesar/solve/naruto_head/lightwarptexture"
+                "$blendtintbybasealpha" "1" 
+                "$blendtintcoloroverbase" "0"
+    "$color2" "[0.4 0.4 0.4]"
+    "$color" "[0.3 0.3 0.3]"
+}

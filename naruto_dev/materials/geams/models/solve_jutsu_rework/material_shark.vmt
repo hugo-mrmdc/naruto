@@ -1,0 +1,19 @@
+"UnlitGeneric"
+{
+    "$basetexture" "geams/models/solve_jutsu_rework/material_shark"
+    "$nocull" "1"
+    "$translucent" "1"
+     "$alpha" 0.5
+    "$bumpmap" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/normal"
+    "$lightwarptexture" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/lightwarptexture"
+
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" -.23
+			"texturescrollangle" 100
+		}
+	}
+}

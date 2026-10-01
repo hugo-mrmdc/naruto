@@ -1,0 +1,61 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "gluk/sensoryspheretextures/solve/transparent"
+	"$translucent" 1
+                "$additive" 1
+	"$nodecal" 1
+
+	"$detail" "gluk/sensoryspheretextures/solve/water3"	
+	"$detailscale" 1
+	"$detailblendfactor" 1.2
+	"$detailblendmode" 0
+//	"$color2" "[1 1 1]"
+
+	"$phong" "1"
+	"$phongexponent" 1
+	"$phongboost" 1
+	"$phongfresnelranges"	"[1 0 10]"
+	"$basealphaenvmapmask" 1
+
+	"$basemapalphaphongmask" 1
+
+	"$rimlight" 0												
+	"$rimlightexponent" 1
+	"$rimlightboost" "-100"	
+
+"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$detail"
+			"animatedtextureframenumvar" "$detailframe"
+			"animatedtextureframerate" 24
+		}
+		"Sine"
+		{
+			"sinemin" ".2"
+			"sinemax" ".6"
+			"sineperiod" "1"
+			"resultVar" "$selfillumtint[1]"
+		}
+		"Sine"
+		{
+			"sinemin" ".5"
+			"sinemax" ".2"
+			"sineperiod" "1.1"
+			"resultVar" "$selfillumtint[0]"
+		}
+		"TextureScroll"
+		{
+			"texturescrollvar" "$detailtexturetransform"
+			"texturescrollrate" 0.05
+			"texturescrollangle" -50
+		}
+	
+
+
+	}
+
+}
+
+
