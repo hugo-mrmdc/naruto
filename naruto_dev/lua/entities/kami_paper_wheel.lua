@@ -323,7 +323,6 @@ if SERVER then
             filter = Traversable,
         })
         if tr.Hit and not tr.StartSolid then
-            ImpactSol(pos - Vector(0, 0, rayon * self.HauteurSolFraction))   -- impact au niveau du sol
             if self.Retour then
                 self:Remove()
             else

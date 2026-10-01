@@ -217,7 +217,7 @@ end)
 hook.Add("KeyPress", "JintonBouclier_ExploserE", function(ply, key)
     if key ~= IN_USE or not IsFirstTimePredicted() then return end
     if not ply:Alive() or ply:GetNW2Float("NA_BouclierMax", 0) <= 0 then return end
-    if ply:GetNWBool("MokutonRide", false) or IsValid(ply:GetParent()) then return end
+    if (ply:GetNWBool("MokutonRide", false) or ply:GetNWBool("InkutonRide", false)) or IsValid(ply:GetParent()) then return end
 
     local tr = util.TraceLine({
         start = ply:EyePos(),

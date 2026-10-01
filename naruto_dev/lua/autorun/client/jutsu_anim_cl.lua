@@ -113,19 +113,31 @@ local function playSequenceOn(ply, seqName, coupe, vitesse)
         return false
     end
 
-    ply:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, seq, 0, true)
     vitesse = vitesse or 1
+    local duree = ply:SequenceDuration(seq) / vitesse
+    if coupe and coupe > 0 then duree = math.min(duree, coupe) end
+    local jeton = (ply.NA_AnimJeton or 0) + 1
+    ply.NA_AnimJeton = jeton
+
+    -- lancé en l'air : un geste est masqué par l'animation de saut et serait coupé à l'atterrissage ;
+    -- l'animation devient donc l'animation principale (voir le hook plus bas), jouée en entier
+    if not ply:OnGround() and ply:GetMoveType() == MOVETYPE_WALK
+        and not ply:GetNW2Bool("NA_Vol", false) and not ply:GetNW2Bool("NA_Wings", false) then
+        ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
+        ply.NA_JutsuAir = { seq = seq, debut = CurTime(), duree = duree, vitesse = vitesse, jeton = jeton }
+        ply.NA_AnimFin = CurTime() + math.min(duree, 3)
+        return true
+    end
+    ply.NA_JutsuAir = nil
+
+    ply:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, seq, 0, true)
     if vitesse ~= 1 then ply:SetLayerPlaybackRate(GESTURE_SLOT_CUSTOM, vitesse) end
 
     -- fin prévue de cette animation (3 s max, comme NA_AnimJutsu) : le souffle katon
     -- (cl_katon_souffle.lua) attend ce moment pour reprendre sa propre animation
-    local duree = ply:SequenceDuration(seq) / vitesse
-    if coupe and coupe > 0 then duree = math.min(duree, coupe) end
     ply.NA_AnimFin = CurTime() + math.min(duree, 3)
 
     -- coupe l'animation après "coupe" secondes (sauf si une autre a été lancée entre-temps)
-    local jeton = (ply.NA_AnimJeton or 0) + 1
-    ply.NA_AnimJeton = jeton
     if coupe and coupe > 0 then
         timer.Simple(coupe, function()
             if IsValid(ply) and ply.NA_AnimJeton == jeton then
@@ -135,6 +147,33 @@ local function playSequenceOn(ply, seqName, coupe, vitesse)
     end
     return true
 end
+
+-- Jutsu lancé en l'air : animation principale forcée jusqu'à sa fin, même après l'atterrissage
+-- (même principe que les coups en l'air, naruto_arme_base.lua). Un autre jutsu / un coup change
+-- NA_AnimJeton, ce qui l'annule.
+function Jutsu.Anim.EnLair(ply)
+    local a = ply.NA_JutsuAir
+    if not a then return end
+    if a.jeton ~= ply.NA_AnimJeton or not ply:Alive() or CurTime() - a.debut >= a.duree then
+        ply.NA_JutsuAir = nil
+        return
+    end
+    return a
+end
+
+hook.Add("CalcMainActivity", "NA_Jutsu_EnLair", function(ply)
+    local a = Jutsu.Anim.EnLair(ply)
+    if a then return ACT_MP_JUMP, a.seq end
+end)
+
+hook.Add("UpdateAnimation", "NA_Jutsu_EnLair_Force", function(ply)
+    local a = Jutsu.Anim.EnLair(ply)
+    if not a then return end
+    if ply:GetSequence() ~= a.seq then ply:SetSequence(a.seq) end
+    ply:SetCycle(math.Clamp((CurTime() - a.debut) * a.vitesse / ply:SequenceDuration(a.seq), 0, 0.999))
+    ply:SetPlaybackRate(0)
+    return true
+end)
 
 -- Reçoit du serveur: tout le monde joue l'anim sur le joueur
 -- (coupe envoyée seulement par NA_AnimJutsu, _na_mudra.lua ; les autres envois n'en ont pas)

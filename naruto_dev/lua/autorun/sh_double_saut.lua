@@ -40,7 +40,7 @@ local function Possible(ply)
     if ply:WaterLevel() >= 2 then return false end
     if ply:InVehicle() then return false end
     if ply:GetNW2Bool("NA_Wings", false) or ply:GetNW2Bool("NA_Vol", false) then return false end   -- en vol
-    if ply:GetNWBool("MokutonRide", false) then return false end
+    if (ply:GetNWBool("MokutonRide", false) or ply:GetNWBool("InkutonRide", false)) then return false end
     if ply:GetNW2Bool("NA_Golem", false) then return false end
     if ply:GetNW2Bool("NA_Canalise", false) then return false end   -- technique canalisée en cours (32 Points, Tourbillon...)
     if SEULEMENT_EN_COURSE_CHAKRA and not ply:GetNW2Bool("NA_ChakraRun", false) then return false end

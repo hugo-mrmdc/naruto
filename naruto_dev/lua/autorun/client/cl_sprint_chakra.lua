@@ -110,7 +110,7 @@ end)
 local function EstEnCourse(ply)
     if not IsValid(ply) or not ply:Alive() then return false end
     if ply:InVehicle() or ply:GetMoveType() ~= MOVETYPE_WALK then return false end
-    if ply:GetNWBool("MokutonRide", false) then return false end
+    if (ply:GetNWBool("MokutonRide", false) or ply:GetNWBool("InkutonRide", false)) then return false end
     if not ply:GetNW2Bool("NA_Run", false) and not ply:GetNW2Bool("NA_ChakraRun", false) then return false end
     if not ply:OnGround() then return false end
     if ply:GetVelocity():Length2D() < 60 then return false end

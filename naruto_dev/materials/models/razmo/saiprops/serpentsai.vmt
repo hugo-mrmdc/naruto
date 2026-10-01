@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/debug/debugwhite"
+	"$color" "[0.92 0.92 0.92]"
+	"$lightwarptexture" "models/solve/lightwarpshader"
+	"$nocull" "1"
+}

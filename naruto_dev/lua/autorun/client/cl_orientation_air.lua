@@ -13,7 +13,7 @@ local function AutreOrientation(ply)
     if ply:InVehicle() or ply:WaterLevel() >= 2 then return true end
     if ply:GetMoveType() ~= MOVETYPE_WALK then return true end
     if ply:GetNW2Bool("NA_Vol", false) or ply:GetNW2Bool("NA_Wings", false) then return true end
-    if ply:GetNWBool("MokutonRide", false) or ply:GetNW2Bool("NA_Golem", false) then return true end
+    if (ply:GetNWBool("MokutonRide", false) or ply:GetNWBool("InkutonRide", false)) or ply:GetNW2Bool("NA_Golem", false) then return true end
     return false
 end
 

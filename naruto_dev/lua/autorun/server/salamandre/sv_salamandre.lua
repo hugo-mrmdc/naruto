@@ -57,7 +57,7 @@ hook.Add("PlayerButtonDown", "SalamandreKeyPress", function(ply, button)
     if button ~= KEY_U then return end
     if not ply:Alive() then return end
     -- sur le dragon Mokuton ou sur une monture (salamandre...) : pas d'invocation
-    if ply:GetNWBool("MokutonRide", false) then return end
+    if (ply:GetNWBool("MokutonRide", false) or ply:GetNWBool("InkutonRide", false)) then return end
     if IsValid(ply:GetParent()) then return end
     if (ply.NA_NextSalamandre or 0) > CurTime() then return end
     ply.NA_NextSalamandre = CurTime() + 1

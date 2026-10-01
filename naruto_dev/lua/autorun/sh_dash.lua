@@ -94,7 +94,7 @@ if SERVER then
         if NA_EstEtourdi and NA_EstEtourdi(ply) then return false, "étourdi" end
         if ply:GetNW2Bool("NA_Canalise", false) then return false, "technique canalisée en cours" end
         if ply:GetNW2Bool("NA_Wings", false) or ply:GetNW2Bool("NA_Vol", false) then return false, "en vol (ailes)" end
-        if ply:GetNWBool("MokutonRide", false) then return false, "sur le dragon" end
+        if (ply:GetNWBool("MokutonRide", false) or ply:GetNWBool("InkutonRide", false)) then return false, "sur le dragon" end
         if ply:GetNW2Bool("NA_Golem", false) then return false, "golem" end
         if COUT_CHAKRA > 0 and ply:GetNW2Float("NA_Chakra", CHAKRA_MAX) < COUT_CHAKRA then return false, "pas assez de chakra" end
         return true

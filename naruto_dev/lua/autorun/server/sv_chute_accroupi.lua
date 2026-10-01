@@ -40,7 +40,7 @@ hook.Add("OnPlayerHitGround", "NA_AnimAtterrissage", function(ply, dansLEau, sur
     local hauteur = vitesse * vitesse / (2 * gravite)
     if hauteur < HAUTEUR_MIN_ANIM then return end
     -- pas pendant les vols / montures qui gèrent déjà leur animation
-    if ply:GetNW2Bool("NA_Wings", false) or ply:GetNWBool("MokutonRide", false) then return end
+    if ply:GetNW2Bool("NA_Wings", false) or (ply:GetNWBool("MokutonRide", false) or ply:GetNWBool("InkutonRide", false)) then return end
     -- frappe terrestre Senju lancée en l'air : son animation ne doit pas être masquée par celle d'atterrissage
     if ply:GetNW2Float("NA_FrappeFin", 0) > CurTime() then return end
 

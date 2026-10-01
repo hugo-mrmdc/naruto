@@ -184,6 +184,13 @@ function NA_Lancer(id)
         return false
     end
 
+    -- singes d'encre accrochés (sv_inkuton_singes.lua) : pas de jutsu
+    if ply:GetNW2Bool("NA_Singes", false) then
+        NA_DernierRefus[id] = CurTime()
+        Diag(id, "des singes d'encre te tiennent")
+        return false
+    end
+
     -- technique canalisée en cours (32 Points du Hakke, Tourbillon Divin...) :
     -- pas d'autre jutsu tant qu'elle dure (NW2Bool générique, réutilisable)
     if ply:GetNW2Bool("NA_Canalise", false) then

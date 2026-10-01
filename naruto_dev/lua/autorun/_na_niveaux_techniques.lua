@@ -1030,6 +1030,60 @@ NA_NIV_TECH.inkuton_chiens = {
     [5] = { degats = 60, chakra = 20, recharge = 6, duree_vie = 1.8 },
 }
 
+-- Singes d'encre (server/inkuton/sv_inkuton_singes.lua) : singes à tête chercheuse, ralentissent
+-- la cible, la blessent chaque seconde (degats = par tick) et la marquent (marque = secondes après l'effet)
+NA_NIV_TECH.inkuton_singes = {
+    [1] = {
+        degats = 10, intervalle = 1, duree = 5, marque = 8, ralenti = 0.4,
+        chakra = 30, recharge = 14, vitesse = 420, nombre = 3, ecart = 40, devant = 60,
+        duree_mudra = 0, delai_singes = 0.6, portee = 1000,
+    },
+    [2] = { degats = 12 },
+    [3] = { degats = 14, chakra = 27, duree = 6 },
+    [4] = { degats = 16, recharge = 12, ralenti = 0.35 },
+    [5] = { degats = 20, chakra = 24, recharge = 10, duree = 7, marque = 10, ralenti = 0.3 },
+}
+
+-- Serpents d'encre (server/inkuton/sv_inkuton_serpents.lua) : rampent vers la cible, dégâts au contact
+--   rotation = degrés/s de virage (plus bas = plus facile à esquiver)
+NA_NIV_TECH.inkuton_serpents = {
+    [1] = {
+        degats = 40, chakra = 30, recharge = 12, vitesse = 700, rotation = 220, duree_vie = 3,
+        nombre = 3, decalage = 0.25, ecart = 40, devant = 60, duree_mudra = 0, delai = 0.6, portee = 1000,
+    },
+    [2] = { degats = 46 },
+    [3] = { degats = 52, chakra = 27 },
+    [4] = { degats = 58, recharge = 10, rotation = 260 },
+    [5] = { degats = 66, chakra = 24, recharge = 8, nombre = 4, rotation = 300 },
+}
+
+-- Moine d'encre (server/inkuton/sv_inkuton_moine.lua) : bouclier = % des PV max du lanceur, frappe à portée
+NA_NIV_TECH.inkuton_moine = {
+    [1] = { bouclier = 30, degats = 20, portee = 200, duree = 20, recharge = 25, chakra = 35, duree_mudra = 0, delai = 0.6 },
+    [2] = { bouclier = 35, degats = 24 },
+    [3] = { bouclier = 40, degats = 28, duree = 25, chakra = 32 },
+    [4] = { bouclier = 45, degats = 34, portee = 250, recharge = 22 },
+    [5] = { bouclier = 55, degats = 42, duree = 30, chakra = 28, recharge = 18 },
+}
+
+-- Dieux d'encre (server/inkuton/sv_inkuton_dieux.lua) : deux dieux courent tout droit et frappent au contact
+NA_NIV_TECH.inkuton_dieux = {
+    [1] = { degats = 80, chakra = 45, recharge = 20, vitesse = 1200, duree_vie = 3, etourdi = 2, ecart = 100, devant = 60, duree_mudra = 0, delai = 0.6 },
+    [2] = { degats = 95 },
+    [3] = { degats = 110, chakra = 40 },
+    [4] = { degats = 130, recharge = 17, vitesse = 1200, etourdi = 2.5 },
+    [5] = { degats = 160, chakra = 35, recharge = 14, duree_vie = 4, etourdi = 3 },
+}
+
+-- Dragon d'encre (server/inkuton/sv_inkuton_dragon.lua) : seule la durée des mudras est lue par NA_Stat
+NA_NIV_TECH.inkuton_dragon = {
+    [1] = { duree_mudra = 1 },
+    [2] = { duree_mudra = 0.9 },
+    [3] = { duree_mudra = 0.8 },
+    [4] = { duree_mudra = 0.7 },
+    [5] = { duree_mudra = 0.5 },
+}
+
 -- Sharingan (server/uchiha/sv_uchiha_sharingan.lua) : à activer / désactiver
 --   tomoe = 1 à 3 (niveaux 1-2 : 1 tomoe, niveau 3 : 2 tomoe, niveaux 4-5 : 3 tomoe),
 --   chakra = PAR SECONDE, chakra_mini = requis pour l'activer,

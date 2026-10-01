@@ -97,9 +97,20 @@ if SERVER then
             return
         end
 
-        -- reste collé au sol (marches, pentes)
-        local sol = util.TraceLine({ start = to + Vector(0, 0, 40), endpos = to - Vector(0, 0, 120), mask = MASK_SOLID_BRUSHONLY })
-        if sol.Hit then to.z = sol.HitPos.z + self.Hauteur * self.Echelle end
+        -- reste collé au sol (marches, pentes) ; au-dessus du vide ou d'un sol lointain, il tombe (gravité)
+        to.z = from.z
+        local sol = util.TraceLine({ start = to + Vector(0, 0, 40), endpos = to - Vector(0, 0, 4000), mask = MASK_SOLID_BRUSHONLY })
+        local haut = self.Hauteur * self.Echelle
+        local cible = sol.Hit and sol.HitPos.z + haut or -math.huge
+        if to.z - cible > 20 * self.Echelle then
+            local dt = FrameTime()
+            self.VZ = (self.VZ or 0) - 1500 * dt
+            to.z = math.max(from.z + self.VZ * dt, cible)
+            if to.z == cible then self.VZ = 0 end
+        else
+            to.z = cible
+            self.VZ = 0
+        end
 
         self:SetPos(to)
         self:NextThink(CurTime())
