@@ -20,7 +20,7 @@ local INTERVALLE   = 0.6    -- secondes avant qu'une même cible soit re-blessé
 local VITESSE      = 1000    -- vitesse de roulage
 local DUREE_VIE    = 1    -- secondes d'ALLER (distance = vitesse x durée) ; ensuite les roues reviennent
 local DUREE_RETOUR = 4    -- secondes maximum pour revenir (elles disparaissent en te rejoignant)
-local ECHELLE      = 0.3    -- taille des roues (1 = ~145 unités de diamètre)
+local ECHELLE      = 0.6    -- taille des roues (1 = ~145 unités de diamètre)
 local ECART        = 28     -- distance de chaque roue à l'axe du regard
 local DEVANT       = 50     -- distance de départ devant le lanceur
 local POUSSEE      = 350    -- projection de la cible vers l'avant
@@ -93,11 +93,10 @@ local function Lancer(ply)
 
     for _, cote in ipairs({ 1, -1 }) do
         local pos = base + droite * ecart * cote
-        pos.z = Sol(pos) + rayon
-
         local ent = ents.Create("kami_paper_wheel")
         if not IsValid(ent) then return end
 
+        pos.z = Sol(pos) + rayon * ent.HauteurSolFraction
         ent:SetPos(pos)
         ent:SetOwner(ply)
         ent.Direction   = avant

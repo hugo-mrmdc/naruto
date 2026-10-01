@@ -591,7 +591,7 @@ NA_NIV_TECH.kami_bouclier = {
 NA_NIV_TECH.kami_roue = {
     [1] = {
         degats = 30, chakra = 30, recharge = 10,
-        vitesse = 1500, duree_vie = 1, echelle = 0.5, ecart = 28, devant = 50,
+        vitesse = 1500, duree_vie = 1, echelle = 0.6, ecart = 28, devant = 50,
         intervalle = 0.6, poussee = 350, soulevement = 200,
         duree_mudra = 0.0, delai_roues = 0.8,
     },

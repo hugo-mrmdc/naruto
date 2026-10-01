@@ -24,6 +24,10 @@ ENT.FX_NOM    = "kami_03_solve_geams_bone"
     au centre. Elle roule donc le long de son axe +Y (la GAUCHE du modèle).
 ]]
 ENT.RayonBase = 71.5
+ENT.Largeur = 0.8   -- largeur sur l'axe X ; le diamètre reste inchangé
+-- Centre au niveau du sol : la moitié inférieure de la roue
+-- reste enterrée, à l'aller comme au retour.
+ENT.HauteurSolFraction = 0
 
 -- Valeurs par défaut ; la technique les remplace au lancement (sv_kami_roue.lua)
 ENT.Direction    = Vector(1, 0, 0)
@@ -90,7 +94,8 @@ local function BoiteRoue(ent)
     local mins, maxs = ent:GetHitBoxBounds(0, 0)
     if not mins then mins, maxs = Vector(-30.7, -73.4, -72.7), Vector(30.5, 71.9, 70.2) end
     local e = ent:GetModelScale()
-    return mins * e, maxs * e
+    return Vector(mins.x * ent.Largeur, mins.y, mins.z) * e,
+        Vector(maxs.x * ent.Largeur, maxs.y, maxs.z) * e
 end
 
 function ENT:EstChef()
@@ -309,14 +314,16 @@ if SERVER then
         -- 1) avance ; un mur arrête l'aller (la roue revient) ou le retour (elle disparaît)
         local nouvelle = pos + self.Direction * self.Vitesse * dt
         local demi = rayon * 0.4
+        -- La partie enterrée ne doit pas bloquer la trace contre le terrain.
+        local basTrace = math.max(-rayon * 0.3, 1 - rayon * self.HauteurSolFraction)
         local tr = util.TraceHull({
             start = pos, endpos = nouvelle,
-            mins = Vector(-demi, -demi, -rayon * 0.3), maxs = Vector(demi, demi, rayon * 0.3),
+            mins = Vector(-demi, -demi, basTrace), maxs = Vector(demi, demi, math.max(basTrace + 1, rayon * 0.6)),
             mask = MASK_SOLID,
             filter = Traversable,
         })
         if tr.Hit and not tr.StartSolid then
-            ImpactSol(pos - Vector(0, 0, rayon))   -- impact contre un mur, au niveau du sol
+            ImpactSol(pos - Vector(0, 0, rayon * self.HauteurSolFraction))   -- impact au niveau du sol
             if self.Retour then
                 self:Remove()
             else
@@ -334,7 +341,7 @@ if SERVER then
             filter = Traversable,
         })
         if sol.Hit and not sol.StartSolid then
-            nouvelle.z = sol.HitPos.z + rayon
+            nouvelle.z = sol.HitPos.z + rayon * self.HauteurSolFraction
         else
             nouvelle.z = pos.z
         end
@@ -349,28 +356,50 @@ if SERVER then
 end
 
 if CLIENT then
+    -- À la vitesse du jutsu, une rotation physique complète devient trop rapide
+    -- pour être lisible. On limite seulement la rotation visuelle à deux tours/s.
+    local VITESSE_ROTATION_MAX = 720
+
     function ENT:Initialize()
+        local taille = Matrix()
+        taille:Scale(Vector(self.Largeur, 1, 1))
+        self:EnableMatrix("RenderMultiply", taille)
         -- PATTACH_ABSORIGIN_FOLLOW : la particule suit la roue et lit son modèle
         -- (l'initialiseur "Position on Model Random" du .pcf)
         self.Particule = CreateParticleSystem(self, self.FX_NOM, PATTACH_ABSORIGIN_FOLLOW, 0)
         self.Rotation = 0
         self.DernierePos = self:GetPos()
+        self.DerniereRotation = CurTime()
     end
 
-    function ENT:Draw()
-        -- la roue tourne sur elle-même selon la distance parcourue (rayon réel)
+    function ENT:Think()
+        -- Mise à jour indépendante de Draw : plusieurs passes de rendu ne doivent
+        -- pas faire avancer la rotation, et les particules gardent les angles.
+        local now = CurTime()
+        local dt = math.max(now - (self.DerniereRotation or now), 0)
+        self.DerniereRotation = now
         local pos = self:GetPos()
         local rayon = math.max(self:GetRayon(), 1)
-        local parcouru = (pos - self.DernierePos):Length2D()
+        local parcouru = (pos - (self.DernierePos or pos)):Length2D()
         self.DernierePos = pos
-        self.Rotation = (self.Rotation - math.deg(parcouru / rayon)) % 360
+        local rotation = math.min(math.deg(parcouru / rayon), VITESSE_ROTATION_MAX * dt)
+        self.Rotation = ((self.Rotation or 0) - rotation) % 360
 
         local ang = self:GetAngles()
         ang:RotateAroundAxis(ang:Forward(), self.Rotation)   -- X modèle = axe de la roue
-
         self:SetRenderAngles(ang)
+        self:InvalidateBoneCache()
+        self:SetNextClientThink(CurTime())
+        return true
+    end
+
+    function ENT:Draw()
+        -- Le cache d'éclairage peut encore devenir noir quand l'origine traverse
+        -- le terrain. Le papier garde sa couleur de texture pendant tout le rendu.
+        -- La suppression ne concerne que cette roue, puis l'éclairage est rétabli.
+        render.SuppressEngineLighting(true)
         self:DrawModel()
-        self:SetRenderAngles(nil)
+        render.SuppressEngineLighting(false)
     end
 
     function ENT:OnRemove()
