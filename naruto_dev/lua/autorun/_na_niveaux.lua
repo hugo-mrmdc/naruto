@@ -70,6 +70,7 @@ NA_NIV.LIGNEES = {
     { "hyuga_byakugan", "hyuga_paume", "hyuga_32points", "hyuga_64points", "hyuga_tourbillon" },
     { "senju_renfo", "senju_soin", "senju_frappe", "senju_pied", "senju_ermite" },
     { "uchiha_sharingan", "katon_saut", "katon_dragons", "uchiha_genjutsu", "uchiha_shuriken" },
+    { "inkuton_chiens" },
 }
 --========================================================
 

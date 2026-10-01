@@ -42,6 +42,7 @@ local ONGLETS = {
         { nom = "Jiton",    embleme = LIB .. "jiton.png" },
         { nom = "Shoton",   embleme = LIB .. "shoton.png" },
         { nom = "Meiton",   embleme = LIB .. "meiton.png" },
+        { nom = "Inkuton",  embleme = LIB .. "inkuton.png" },
     } },
     { nom = "Classes", icone = "classe.png", groupes = {
         { nom = "Combattant", embleme = LIB .. "classe/combattant.png" },

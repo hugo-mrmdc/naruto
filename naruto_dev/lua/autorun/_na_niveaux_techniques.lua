@@ -1018,6 +1018,18 @@ NA_NIV_TECH.uchiha_shuriken = {
     [5] = { degats = 80, chakra = 20, recharge = 6, echelle = 1.8, brulure_duree = 5, brulure_dps = 6 },
 }
 
+-- Chiens d'encre (server/inkuton/sv_inkuton_chiens.lua) : trois chiens partent en ligne droite
+NA_NIV_TECH.inkuton_chiens = {
+    [1] = {
+        degats = 35, chakra = 25, recharge = 8, vitesse = 900, duree_vie = 1.5, echelle = 1,
+        ecart = 40, devant = 60, duree_mudra = 0, delai_chiens = 0.6,
+    },
+    [2] = { degats = 40 },
+    [3] = { degats = 46, chakra = 22 },
+    [4] = { degats = 52, recharge = 7 },
+    [5] = { degats = 60, chakra = 20, recharge = 6, duree_vie = 1.8 },
+}
+
 -- Sharingan (server/uchiha/sv_uchiha_sharingan.lua) : à activer / désactiver
 --   tomoe = 1 à 3 (niveaux 1-2 : 1 tomoe, niveau 3 : 2 tomoe, niveaux 4-5 : 3 tomoe),
 --   chakra = PAR SECONDE, chakra_mini = requis pour l'activer,

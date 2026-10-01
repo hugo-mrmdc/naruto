@@ -48,6 +48,10 @@ local TECHNIQUES = {
       desc = "Lance un gigantesque shuriken enflammé droit devant toi : il blesse et brûle le premier ennemi touché. Coûte 25 de chakra.",
       dmg = "50 à l'impact + brûlure" },
 
+    { cat = "Inkuton", name = "Chiens d'encre", key = "", id = "inkuton_chiens", rang = "C", icone = "", court = "Chiens", cooldown = 8,
+      desc = "Déroule un parchemin et lance trois chiens d'encre qui foncent tout droit devant toi : chacun blesse le premier ennemi touché. Coûte 25 de chakra.",
+      dmg = "35 par chien" },
+
     -- ===== SUITON =====
     { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "", court = "Requin", cooldown = 5, cd = 5.3,
       desc = "Envoie un requin d'eau sur la cible visée." },
@@ -375,7 +379,7 @@ local ONGLETS = {
     { nom = "Stats",         icone = "stat.png" },
     { nom = "Jutsus",        icone = "jutsu.png",       cats = { "Katon", "Suiton", "Futon", "Raiton", "Doton" },
       desc = "Cette catégorie répertorie les techniques des natures du chakra" },
-    { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton" },
+    { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton", "Inkuton" },
       desc = "Cette catégorie répertorie les techniques héritées par le sang" },
     { nom = "Clan",          icone = "clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike", "Hyuga", "Senju", "Uchiha" },
       desc = "Cette catégorie répertorie les techniques secrètes des clans" },
