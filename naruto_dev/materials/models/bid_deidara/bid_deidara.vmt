@@ -1,0 +1,10 @@
+
+"VertexlitGeneric"
+{
+    "$basetexture" "models/Bid_Deidara/Bid_Deidara"
+    "$alphatest" 1
+    "$nocull" 1
+    "$nodecal" 1
+    "$lightwarptexture" "models/Bid_Deidara/lightwarpshader"
+    "%keywords" "Bid_Deidara"
+} 

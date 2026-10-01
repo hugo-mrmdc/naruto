@@ -15,6 +15,8 @@
 -- RÉGLAGES
 --========================================================
 local NB_EMPLACEMENTS = 6
+local NB_BARRES       = 2
+local TOUCHE_BARRE    = KEY_M  -- change de barre
 local TAILLE          = 96     -- taille d'un emplacement à l'écran (px)
 local ECART           = 14     -- espace entre deux emplacements
 local MARGE_BAS       = 18     -- distance depuis le bas de l'écran
@@ -57,7 +59,9 @@ local COULEUR_DEFAUT = Color(255, 128, 32)
 NA_SkillBar = NA_SkillBar or {}
 local Bar = NA_SkillBar
 
-Bar.Slots = Bar.Slots or {}
+Bar.Barres = Bar.Barres or {}
+Bar.Active = Bar.Active or 1
+Bar.Slots = Bar.Slots or {}   -- = la barre active (Bar.Barres[Bar.Active])
 Bar.NB = NB_EMPLACEMENTS
 
 ----------------------------------------------------------
@@ -106,24 +110,25 @@ end
 -- Équipement + sauvegarde
 ----------------------------------------------------------
 local function Sauver()
-    file.Write(FICHIER, util.TableToJSON(Bar.Slots))
+    file.Write(FICHIER, util.TableToJSON({ barres = Bar.Barres }))
 end
 
 local function Charger()
     local brut = file.Read(FICHIER, "DATA")
     local data = brut and util.JSONToTable(brut)
 
-    Bar.Slots = {}
-    for i = 1, NB_EMPLACEMENTS do
-        local v
-        if data then
-            v = data[i] or data[tostring(i)]
-        else
-            v = PAR_DEFAUT[i]
+    -- ancien format : tableau plat = barre 1 seulement
+    local src = data and (data.barres or { data }) or { PAR_DEFAUT }
+    Bar.Barres = {}
+    for b = 1, NB_BARRES do
+        Bar.Barres[b] = {}
+        for i = 1, NB_EMPLACEMENTS do
+            local v = src[b] and (src[b][i] or src[b][tostring(i)])
+            if v == false or v == "" then v = nil end
+            Bar.Barres[b][i] = v
         end
-        if v == false or v == "" then v = nil end
-        Bar.Slots[i] = v
     end
+    Bar.Slots = Bar.Barres[Bar.Active]
 end
 
 function Bar.Equiper(slot, id)
@@ -135,7 +140,7 @@ function Bar.Equiper(slot, id)
         return
     end
 
-    -- une technique n'occupe qu'un seul emplacement : on la retire de l'ancien
+    -- une technique n'occupe qu'un seul emplacement PAR BARRE (elle peut être dans les deux)
     if id then
         for i = 1, NB_EMPLACEMENTS do
             if Bar.Slots[i] == id then Bar.Slots[i] = nil end
@@ -167,6 +172,28 @@ Charger()
 ----------------------------------------------------------
 Bar.Selection = Bar.Selection or nil
 
+local DELAI_BARRE = 0.1   -- secondes minimum entre deux changements de barre
+local dernierChange = 0
+
+function Bar.Changer()
+    if CurTime() - dernierChange < DELAI_BARRE then return end
+    dernierChange = CurTime()
+    Bar.Active = Bar.Active % NB_BARRES + 1
+    Bar.Slots = Bar.Barres[Bar.Active]
+    Bar.Selection = nil
+    surface.PlaySound("ui/buttonclick.wav")
+end
+
+-- M : passe à l'autre barre
+local mDown = false
+hook.Add("Think", "NA_SkillBar_Change", function()
+    local d = (NA_ToucheBas and NA_ToucheBas("barre") or input.IsKeyDown(TOUCHE_BARRE)) and not vgui.GetKeyboardFocus() and not gui.IsGameUIVisible()
+    if d and not mDown then
+        Bar.Changer()
+    end
+    mDown = d
+end)
+
 function Bar.Utiliser(slot)
     local id = Bar.Slots[slot]
     if not id then return false end
@@ -175,6 +202,14 @@ function Bar.Utiliser(slot)
     surface.PlaySound("ui/buttonclick.wav")
     return true
 end
+
+-- touches réattribuées (F1) : on lit directement la touche
+hook.Add("PlayerButtonDown", "NA_SkillBar_Touches", function(ply, key)
+    if not IsFirstTimePredicted() or not NA_Touche or vgui.GetKeyboardFocus() or ply:IsTyping() then return end
+    for n = 1, NB_EMPLACEMENTS do
+        if key ~= _G["KEY_" .. n] and key == NA_Touche("slot" .. n) then Bar.Utiliser(n) return end
+    end
+end)
 
 hook.Add("PlayerBindPress", "NA_SkillBar_Binds", function(ply, bind, pressed)
     if not pressed then return end
@@ -193,6 +228,8 @@ hook.Add("PlayerBindPress", "NA_SkillBar_Binds", function(ply, bind, pressed)
     local n = string.match(bind, "^slot(%d)$")
     n = tonumber(n)
     if not n or n < 1 or n > NB_EMPLACEMENTS then return end
+    -- emplacement réattribué à une autre touche (F1) : la touche 1-6 reprend son rôle normal
+    if NA_Touche and NA_Touche("slot" .. n) ~= _G["KEY_" .. n] then return end
 
     if Bar.Utiliser(n) then return true end
 end)
@@ -322,7 +359,7 @@ local function DessinerEmplacement(x, y, taille, slot, id, alpha)
     surface.SetMaterial(MAT_BIND)
     surface.SetDrawColor(255, 255, 255, alpha)
     surface.DrawTexturedRect(x + taille - b + 2, y + taille - b + 2, b, b)
-    draw.SimpleText(tostring(slot), "NA.Skill.Touche", x + taille - b / 2 + 2, y + taille - b / 2 + 2,
+    draw.SimpleText(NA_NomTouche and NA_NomTouche("slot" .. slot) or tostring(slot), "NA.Skill.Touche", x + taille - b / 2 + 2, y + taille - b / 2 + 2,
         Color(255, 215, 120, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 Bar.DessinerEmplacement = DessinerEmplacement
@@ -338,6 +375,8 @@ hook.Add("HUDPaint", "NA_SkillBar_HUD", function()
     for i = 1, NB_EMPLACEMENTS do
         DessinerEmplacement(x + (i - 1) * (TAILLE + ECART), y, TAILLE, i, Bar.Slots[i])
     end
+    draw.SimpleText("Barre " .. Bar.Active .. "/" .. NB_BARRES .. "  [M]", "NA.Skill.Touche",
+        ScrW() / 2, y - 4, Color(255, 215, 120, 220), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
 end)
 
 -- Hauteur occupée par la barre (pour placer les autres éléments du HUD au-dessus)

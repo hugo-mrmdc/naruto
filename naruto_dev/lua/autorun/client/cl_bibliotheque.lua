@@ -781,7 +781,7 @@ hook.Add("Think", "NA_Bibliotheque_Touche", function()
         avant = false
         return
     end
-    local bas = input.IsKeyDown(OPEN_KEY)
+    local bas = (NA_ToucheBas and NA_ToucheBas("biblio") or input.IsKeyDown(OPEN_KEY))
     if bas and not avant then
         local ply = LocalPlayer()
         if not (IsValid(ply) and ply:IsTyping()) then Ouvrir() end

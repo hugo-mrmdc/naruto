@@ -54,7 +54,7 @@ local TECHNIQUES = {
     { cat = "Inkuton", name = "Singes d'encre", key = "", id = "inkuton_singes", rang = "B", icone = "ui/icon/singeInkuton.png", court = "Singes", cooldown = 14,
       desc = "Vise un ennemi (1000 unités max) : des singes d'encre foncent sur lui et l'atteignent à coup sûr, même s'il bouge. Accrochés à lui, ils le ralentissent, le blessent chaque seconde et l'empêchent de lancer des techniques. Tant que les singes sont accrochés, tu le vois à travers les murs. Coûte 30 de chakra.",
       dmg = "10 par seconde pendant 5 s + ralentissement et marque" },
-    { cat = "Inkuton", name = "Serpents d'encre", key = "", id = "inkuton_serpents", rang = "B", icone = "ui/icon/inkuton_serpent_encre.png", court = "Serpents", cooldown = 12,
+    { cat = "Inkuton", name = "Serpents d'encre", key = "", id = "inkuton_serpents", rang = "C", icone = "ui/icon/inkuton_serpent_encre.png", court = "Serpents", cooldown = 12,
       desc = "Des serpents d'encre rampent un par un devant toi. Si tu vises un ennemi, ils le poursuivent ; sinon ils avancent tout droit et poursuivent le premier ennemi qui passe à portée, puis le mordent au contact. Ils tournent vite mais pas instantanément : une cible qui change de direction peut leur échapper. Un mur les arrête. Coûte 30 de chakra.",
       dmg = "40 par serpent qui touche" },
     { cat = "Inkuton", name = "Moine d'encre", key = "", id = "inkuton_moine", rang = "B", icone = "ui/icon/moineInkuton.png", court = "Moine", cooldown = 25,
@@ -66,6 +66,19 @@ local TECHNIQUES = {
     { cat = "Inkuton", name = "Dragon d'encre", key = "", id = "inkuton_dragon", rang = "S", icone = "ui/icon/dragonInkuton.png", court = "Dragon", cooldown = 1,
       desc = "Invoque le dragon d'encre et monte dessus. En vol, le CLIC DROIT (ou l'emplacement de la barre) lance le dragon comme un projectile dans la direction de ton regard ; E attrape ou lâche un ennemi dans sa gueule. En vol : Espace pour monter, Ctrl pour descendre. L le renvoie.",
       dmg = "40 par personne traversée" },
+
+    { cat = "Bakuton", name = "Oiseaux explosifs", key = "", id = "bakuton_oiseaux", rang = "B", icone = "", court = "Oiseaux", cooldown = 15,
+      desc = "Active le mode : un petit oiseau d'argile flotte derrière toi à gauche. Chaque CLIC GAUCHE l'envoie droit devant toi ; il explose au contact d'un ennemi ou d'un mur, puis le suivant apparaît. Tu en lances 3 : quand ils sont tous partis, la technique est en recharge. Coûte 30 de chakra.",
+      dmg = "40 par oiseau (explosion)" },
+    { cat = "Bakuton", name = "Mignons d'argile", key = "", id = "bakuton_mignons", rang = "B", icone = "", court = "Mignons", cooldown = 12,
+      desc = "Des mignons d'argile courent un par un devant toi. Si tu vises un ennemi, ils le poursuivent ; sinon ils avancent tout droit et poursuivent le premier ennemi qui passe à portée, puis explosent au contact. Ils tournent vite mais pas instantanément : une cible qui change de direction peut leur échapper. Un mur les fait exploser. Coûte 30 de chakra.",
+      dmg = "50 par mignon qui explose" },
+    { cat = "Bakuton", name = "Araignées explosives", key = "", id = "bakuton_araignees", rang = "A", icone = "", court = "Araignées", cooldown = 14,
+      desc = "Vise un ennemi (900 unités max) : des araignées d'argile sortent de toi, courent jusqu'à lui et s'accrochent. Il est étourdi 2 secondes, puis elles explosent. Coûte 35 de chakra.",
+      dmg = "15 par araignée + stun de 2 s" },
+    { cat = "Bakuton", name = "Dragon d'argile", key = "", id = "bakuton_dragon", rang = "S", icone = "", court = "Dragon", cooldown = 45,
+      desc = "Invoque un dragon d'argile et monte dessus : tu voles pendant 20 secondes. ZQSD pour avancer, Espace pour monter, Ctrl pour descendre. E (ou relancer la technique) pour en descendre. Coûte 40 de chakra.",
+      dmg = "Aucun dégât : vol" },
 
     -- ===== SUITON =====
     { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "", court = "Requin", cooldown = 5, cd = 5.3,
@@ -394,7 +407,7 @@ local ONGLETS = {
     { nom = "Stats",         icone = "stat.png" },
     { nom = "Jutsus",        icone = "jutsu.png",       cats = { "Katon", "Suiton", "Futon", "Raiton", "Doton" },
       desc = "Cette catégorie répertorie les techniques des natures du chakra" },
-    { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton", "Inkuton" },
+    { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton", "Inkuton", "Bakuton" },
       desc = "Cette catégorie répertorie les techniques héritées par le sang" },
     { nom = "Clan",          icone = "clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike", "Hyuga", "Senju", "Uchiha" },
       desc = "Cette catégorie répertorie les techniques secrètes des clans" },
@@ -893,6 +906,32 @@ local function Open()
         CadreSombre(w, h)
     end
 
+    -- flèches haut / bas : changent de barre (comme la touche M)
+    if NA_SkillBar and NA_SkillBar.Changer then
+        local matFleche = Material("ui/ramen/arrow_left.png", "smooth mips")
+        local h0 = barre:GetTall()
+        local tF = h0 * 0.34
+        local cx = barre:GetWide() * 0.06
+        for k, rot in ipairs({ -90, 90 }) do   -- -90 = vers le haut, 90 = vers le bas
+            local f = vgui.Create("DButton", barre)
+            f:SetText("")
+            f:SetSize(tF, tF)
+            f:SetPos(cx - tF / 2, k == 1 and h0 * 0.06 or h0 * 0.94 - tF)
+            f:SetTooltip("Changer de barre (M)")
+            f.Paint = function(pan, w, h)
+                local hov = pan:IsHovered()
+                surface.SetMaterial(matFleche)
+                surface.SetDrawColor(hov and 255 or C_OR.r, hov and 235 or C_OR.g, hov and 170 or C_OR.b, hov and 255 or 200)
+                local g = hov and 1.25 or 1.1
+                surface.DrawTexturedRectRotated(w / 2, h / 2, w * g, h * g, rot)
+            end
+            f.DoClick = function() NA_SkillBar.Changer() end
+        end
+        barre.PaintOver = function(pan, w, h)
+            draw.SimpleText(NA_SkillBar.Active .. " / 2", "NA.Jutsu.Texte", cx, h * 0.5, C_OR, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+    end
+
     local nb = NA_SkillBar and NA_SkillBar.NB or 6
     local tSlot = barre:GetTall() * 0.72
     local eSlot = tSlot * 0.55
@@ -1100,7 +1139,7 @@ hook.Add("Think", "NA_TechniquesUI_Key", function()
         return
     end
 
-    local down = input.IsKeyDown(OPEN_KEY)
+    local down = (NA_ToucheBas and NA_ToucheBas("techniques") or input.IsKeyDown(OPEN_KEY))
     if down and not wasDown then
         Open()
     end

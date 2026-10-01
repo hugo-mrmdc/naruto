@@ -103,7 +103,13 @@ if SERVER then
 
             -- virage à vitesse limitée vers la cible
             local voulu = vers:Angle().y
-            self.Cap = self.Cap + math.Clamp(math.AngleDifference(voulu, self.Cap), -self.Rotation * dt, self.Rotation * dt)
+            -- de près : virage immédiat, sinon son rayon de virage (vitesse / rotation) est plus grand que la
+            -- distance de contact et il tourne en rond autour de la cible
+            if plat < self.Vitesse * 0.3 then
+                self.Cap = voulu
+            else
+                self.Cap = self.Cap + math.Clamp(math.AngleDifference(voulu, self.Cap), -self.Rotation * dt, self.Rotation * dt)
+            end
         end
         local avant = Angle(0, self.Cap, 0):Forward()
         local to = from + avant * self.Vitesse * dt

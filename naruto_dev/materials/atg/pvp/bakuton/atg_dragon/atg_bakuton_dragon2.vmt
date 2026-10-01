@@ -1,0 +1,11 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "atg/pvp/bakuton/atg_dragon/atg_bakuton_dragon2"
+	"$nocull" "1"
+	"$bumpmap" "atg_props/shared/normal"
+	"$fresnelbumpstrenght" "1"
+	"$lightwarptexture" "atg_props/shared/lightwarpshader_bakuton"
+	"$selfillum" "1"
+
+        	"$blendtintbybasealpha" "1"  "$blendtintcoloroverbase" "0" 
+}

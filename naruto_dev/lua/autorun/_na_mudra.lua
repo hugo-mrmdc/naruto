@@ -36,7 +36,7 @@ end
 -- Animation de jutsu : jouée chez tout le monde (jutsu_anim_cl.lua) et, pendant
 -- sa durée (lue dans le modèle du joueur), pas de coups d'arme.
 local ANIM_DUREE_DEFAUT = 0.8   -- si la séquence est introuvable sur le modèle
-local ANIM_DUREE_MAX    = 2     -- les coups sont bloqués au plus ce temps après un jutsu (même si son animation est plus longue)
+local ANIM_DUREE_MAX    = 0.5     -- les coups sont bloqués au plus ce temps après un jutsu (même si son animation est plus longue)
 
 util.AddNetworkString("Jutsu_Anim_Play")
 

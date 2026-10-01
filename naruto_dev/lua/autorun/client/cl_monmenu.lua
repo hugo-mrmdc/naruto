@@ -1369,7 +1369,7 @@ concommand.Add("mon_menu", ToggleMenu)
 -- F4 : ouvre / ferme (sauf en écrivant dans le chat ou un champ de texte)
 local toucheAvant = false
 hook.Add("Think", "UI_F4_Toggle", function()
-    local bas = input.IsKeyDown(TOUCHE)
+    local bas = (NA_ToucheBas and NA_ToucheBas("inventaire") or input.IsKeyDown(TOUCHE))
     if bas and not toucheAvant then
         local focus = vgui.GetKeyboardFocus()
         local ecrit = IsValid(focus) and focus:GetClassName() == "TextEntry"

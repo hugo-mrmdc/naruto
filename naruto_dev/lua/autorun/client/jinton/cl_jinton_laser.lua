@@ -20,6 +20,7 @@ end
 local function EnLaser(ply)
     return IsValid(ply) and ply:Alive() and ply:GetNW2Bool("NA_Vol", false)
         and not ply:GetNW2Bool("NA_Wings", false)
+        and not ply:GetNW2Bool("NA_Dragon", false)   -- dragon Bakuton : anim des ailes
         and not ply:GetNW2Bool("NA_Flotte", false)   -- Boulets noirs Kiminari : pas la pose du laser
 end
 

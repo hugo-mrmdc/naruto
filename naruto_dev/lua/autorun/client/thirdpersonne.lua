@@ -42,7 +42,7 @@ hook.Add("Think", "NA_TPS_ToggleV", function()
         return
     end
 
-    local down = input.IsKeyDown(KEY_V)
+    local down = (NA_ToucheBas and NA_ToucheBas("camera") or input.IsKeyDown(KEY_V))
     if down and not wasDownV then
         camFront = not camFront
     end
@@ -108,7 +108,7 @@ hook.Add("CalcView", "NA_TPS_CalcView", function(ply, pos, ang, fov)
     local height = GetHeight(ply)
 
     local view = {}
-    view.fov = fov
+    view.fov = NA_FovPerso and NA_FovPerso(fov) or fov
     view.drawviewer = true
 
     local wanted

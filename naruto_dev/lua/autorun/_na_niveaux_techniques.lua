@@ -1048,13 +1048,13 @@ NA_NIV_TECH.inkuton_singes = {
 --   rotation = degrés/s de virage (plus bas = plus facile à esquiver)
 NA_NIV_TECH.inkuton_serpents = {
     [1] = {
-        degats = 40, chakra = 30, recharge = 12, vitesse = 700, rotation = 220, duree_vie = 3,
+        degats = 25, chakra = 30, recharge = 12, vitesse = 700, rotation = 220, duree_vie = 3,
         nombre = 3, decalage = 0.25, ecart = 40, devant = 60, duree_mudra = 0, delai = 0.6, portee = 1000,
     },
-    [2] = { degats = 46 },
-    [3] = { degats = 52, chakra = 27 },
-    [4] = { degats = 58, recharge = 10, rotation = 260 },
-    [5] = { degats = 66, chakra = 24, recharge = 8, nombre = 4, rotation = 300 },
+    [2] = { degats = 30 },
+    [3] = { degats = 30, chakra = 27 },
+    [4] = { degats = 35, recharge = 10, rotation = 260 },
+    [5] = { degats = 40, chakra = 24, recharge = 8, nombre = 4, rotation = 300 },
 }
 
 -- Moine d'encre (server/inkuton/sv_inkuton_moine.lua) : bouclier = % des PV max du lanceur, frappe à portée
@@ -1075,13 +1075,55 @@ NA_NIV_TECH.inkuton_dieux = {
     [5] = { degats = 160, chakra = 35, recharge = 14, duree_vie = 4, etourdi = 3 },
 }
 
--- Dragon d'encre (server/inkuton/sv_inkuton_dragon.lua) : seule la durée des mudras est lue par NA_Stat
+-- Dragon d'encre (server/inkuton/sv_inkuton_dragon.lua) : vol puis charge (clic droit)
+--   vitesse_vol = vitesse en vol, vitesse = vitesse de la charge, duree = secondes de la charge,
+--   rayon = zone qui blesse, recul / souleve = projection de la cible, recharge = secondes avant de le réinvoquer
 NA_NIV_TECH.inkuton_dragon = {
-    [1] = { duree_mudra = 1 },
-    [2] = { duree_mudra = 0.9 },
-    [3] = { duree_mudra = 0.8 },
-    [4] = { duree_mudra = 0.7 },
-    [5] = { duree_mudra = 0.5 },
+    [1] = { degats = 250, rayon = 130, vitesse = 2800, vitesse_vol = 1200, duree = 1.2, recul = 700, souleve = 250, recharge = 3, duree_mudra = 1 },
+    [2] = { degats = 300, duree_mudra = 0.9 },
+    [3] = { degats = 330, duree_mudra = 0.8, recharge = 2.5 },
+    [4] = { degats = 350, duree_mudra = 0.7, rayon = 150 },
+    [5] = { degats = 400, duree_mudra = 0.5, recharge = 2, rayon = 170, duree = 1.5 },
+}
+
+-- Oiseaux explosifs (server/bakuton/sv_bakuton_oiseaux.lua) : un oiseau visible à la fois, clic gauche pour le lancer
+--   nombre = oiseaux à lancer (le cooldown démarre quand tous sont lancés), retour = secondes avant le suivant
+NA_NIV_TECH.bakuton_oiseaux = {
+    [1] = { degats = 25, rayon = 130, vitesse = 1000, chakra = 30, nombre = 2, intervalle = 0.4, retour = 0.5, recharge = 15 },
+    [2] = { degats = 30 },
+    [3] = { degats = 30, nombre = 3, chakra = 27 },
+    [4] = { degats = 40, recharge = 13 },
+    [5] = { degats = 40, nombre = 4, chakra = 24, recharge = 10, rayon = 160 },
+}
+
+-- Mignons d'argile (server/bakuton/sv_bakuton_mignons.lua) : courent vers la cible et explosent au contact
+--   rotation = degrés/s de virage (plus bas = plus facile à esquiver)
+NA_NIV_TECH.bakuton_mignons = {
+    [1] = { degats = 50, rayon = 130, chakra = 30, recharge = 12, vitesse = 450, rotation = 220, duree_vie = 4, nombre = 3, decalage = 0.3, ecart = 40, devant = 60, duree_mudra = 0, delai = 0.6, detection = 500 },
+    [2] = { degats = 58 },
+    [3] = { degats = 66, chakra = 27 },
+    [4] = { degats = 76, recharge = 10, rotation = 260 },
+    [5] = { degats = 90, chakra = 24, recharge = 8, nombre = 4, rotation = 300 },
+}
+
+-- Araignées explosives (server/bakuton/sv_bakuton_araignees.lua) : stun de la cible visée, puis explosion
+--   duree = secondes de stun, degats = par araignée à l'explosion, nombre = araignées lancées
+NA_NIV_TECH.bakuton_araignees = {
+    [1] = { degats = 15, duree = 2, vitesse = 600, nombre = 6, decalage = 0.08, chakra = 35, recharge = 14, duree_mudra = 0, delai = 0.6, portee = 900, hitbox = 20 },
+    [2] = { degats = 18, duree = 2.3 },
+    [3] = { degats = 22, duree = 2.6, chakra = 32 },
+    [4] = { degats = 26, duree = 3, recharge = 12 },
+    [5] = { degats = 32, duree = 3.5, chakra = 28, recharge = 10, nombre = 8 },
+}
+
+-- Dragon d'argile (server/bakuton/sv_bakuton_dragon.lua) : vol sur le dragon (pilotage des ailes de papier)
+--   duree = secondes de vol (E ou relancer pour descendre avant)
+NA_NIV_TECH.bakuton_dragon = {
+    [1] = { duree = 20, chakra = 40, recharge = 45, duree_mudra = 0.6 },
+    [2] = { duree = 24 },
+    [3] = { duree = 28, chakra = 36 },
+    [4] = { duree = 32, recharge = 38 },
+    [5] = { duree = 40, chakra = 30, recharge = 1 },
 }
 
 -- Sharingan (server/uchiha/sv_uchiha_sharingan.lua) : à activer / désactiver

@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+    "$basetexture" "atg/pvp/bakuton/atg_araignee/atg_araignee_bakuton"
+    "$lightwarptexture" "atg_props/shared/lightwarpshader_bakuton"
+    "$nocull" "1"
+    "$nodecal" "1"
+}

@@ -389,12 +389,19 @@ local function Lancer(ply, st)
     local ang = Angle(math.Clamp(eye.p, -DASH_PITCH_MAX, DASH_PITCH_MAX), eye.y, 0)
     dragon:SetAngles(ang)
 
-    projectiles[dragon] = { owner = ply, dir = ang:Forward(), debut = CurTime(), fin = CurTime() + DASH_DUREE, touches = {} }
+    local function stat(k, def) return NA_Stat(ply, "inkuton_dragon", k, def) end   -- valeurs de _na_niveaux_techniques.lua
+    local duree = stat("duree", DASH_DUREE)
+    local recharge = stat("recharge", DASH_RECHARGE)
+    projectiles[dragon] = {
+        owner = ply, dir = ang:Forward(), debut = CurTime(), fin = CurTime() + duree, touches = {},
+        vitesse = stat("vitesse", DASH_SPEED), rayon = stat("rayon", DASH_RAYON), degats = stat("degats", DASH_DEGATS),
+        recul = stat("recul", DASH_RECUL), souleve = stat("souleve", DASH_SOULEVE),
+    }
     st.dragon = nil   -- il n'appartient plus au cavalier : StopRide ne le supprime pas
 
     StopRide(ply)     -- le joueur descend (position libre, pas de dégâts de chute)
-    nextRide[ply] = CurTime() + DASH_RECHARGE
-    if NA_CD then NA_CD.Set(ply, "inkuton_dragon", DASH_RECHARGE) end   -- recharge visible dans la barre
+    nextRide[ply] = CurTime() + recharge
+    if NA_CD then NA_CD.Set(ply, "inkuton_dragon", recharge) end   -- recharge visible dans la barre
 
     dragon:EmitSound("ambient/wind/wind_snippet2.wav", 95, 90)
 end
@@ -490,7 +497,7 @@ hook.Add("Think", "InkutonDragon_Move", function()
         -- Velocity
         local ang = Angle(st.pitch, st.yaw, 0)
         local fwd, up = ang:Forward(), ang:Up()   -- calculés une fois (avant : 3 fois Forward et 2 fois Up)
-        local vel = fwd * FLY_SPEED
+        local vel = fwd * NA_Stat(ply, "inkuton_dragon", "vitesse_vol", FLY_SPEED)
 
         if ply:KeyDown(IN_JUMP) then
             vel.z = vel.z + (ply:OnGround() and TAKEOFF_BOOST or FLY_UP_SPEED)
@@ -572,7 +579,7 @@ hook.Add("Think", "InkutonDragon_Projectiles", function()
         end
 
         local from = dragon:GetPos()
-        local to   = from + p.dir * DASH_SPEED * dt
+        local to   = from + p.dir * p.vitesse * dt
 
         -- Le sol ou un mur détruit le dragon DÈS QU'IL LES TOUCHE (les personnes, elles, sont traversées et blessées).
         -- Le trace est une BOÎTE à la taille du corps du dragon (avant : un simple rayon au centre, qui laissait le
@@ -603,20 +610,20 @@ hook.Add("Think", "InkutonDragon_Projectiles", function()
         dragon:SetPos(to)
 
         -- blesse chaque personne touchée, une seule fois
-        for _, ent in ipairs(ents.FindInSphere(to, DASH_RAYON)) do
+        for _, ent in ipairs(ents.FindInSphere(to, p.rayon)) do
             if ent == p.owner or ent == dragon or p.touches[ent] then continue end
             if not (ent:IsPlayer() or ent:IsNPC() or ent:IsNextBot()) or not EstVivant(ent) then continue end
             p.touches[ent] = true
 
             local dmg = DamageInfo()
-            dmg:SetDamage(DASH_DEGATS)
+            dmg:SetDamage(p.degats)
             dmg:SetDamageType(DMG_CLUB)
             dmg:SetAttacker(IsValid(p.owner) and p.owner or dragon)
             dmg:SetInflictor(dragon)
             dmg:SetDamagePosition(ent:WorldSpaceCenter())
             ent:TakeDamageInfo(dmg)
 
-            local vel = p.dir * DASH_RECUL + Vector(0, 0, DASH_SOULEVE)
+            local vel = p.dir * p.recul + Vector(0, 0, p.souleve)
             if ent.loco then
                 ent.loco:SetVelocity(ent.loco:GetVelocity() + vel)   -- NextBot
             else

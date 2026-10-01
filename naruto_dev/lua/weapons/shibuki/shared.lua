@@ -48,9 +48,9 @@ SWEP.Anims = {
 }
 
 SWEP.Combo = {
-    { anim = "nrp_sword_slashhorizon",         vitesseAnim = 3.0, duree = 0.6, degats = 40 },
-    { anim = "nrp_sword_turnslashingshoulder", vitesseAnim = 3, duree = 0.8, degats = 40 },
-    { anim = "nrp_sword_slashing",             vitesseAnim = 1.0, duree = 1.3, degats = 40 },
+    { anim = "nrp_sword_slashhorizon",         vitesseAnim = 3.0, duree = 0.6, degats = 80 },
+    { anim = "nrp_sword_turnslashingshoulder", vitesseAnim = 3, duree = 0.8, degats = 90 },
+    { anim = "nrp_sword_slashing",             vitesseAnim = 1.0, duree = 1.3, degats =100 },
 }
 SWEP.ComboReset = 2.0
 
@@ -74,7 +74,7 @@ SWEP.Explosif = {
     delai     = 1,      -- secondes avant l'explosion
     expire    = 4,      -- secondes sans le toucher avant que le compte reparte à 0
     rayon     = 130,
-    degats    = 45,
+    degats    = 130,
     recul     = 250,
     reculHaut = 150,
     particule = "ExplosionCore_MidAir",   -- explosion de bigboom.pcf

@@ -24,7 +24,7 @@ if not SERVER then return end
 -- RÉGLAGES
 --========================================================
 local MODELE      = "models/player/kleiner.mdl"
-local VIE_DEFAUT  = 1000     -- vie si on ne la précise pas
+local VIE_DEFAUT  = 4000     -- vie si on ne la précise pas
 local MAX_NOMBRE  = 20      -- faux joueurs max par commande
 local DISTANCE    = 120     -- distance devant toi (ou rayon du cercle)
 --========================================================
