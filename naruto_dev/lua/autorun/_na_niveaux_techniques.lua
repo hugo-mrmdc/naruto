@@ -1109,21 +1109,21 @@ NA_NIV_TECH.bakuton_mignons = {
 -- Araignées explosives (server/bakuton/sv_bakuton_araignees.lua) : stun de la cible visée, puis explosion
 --   duree = secondes de stun, degats = par araignée à l'explosion, nombre = araignées lancées
 NA_NIV_TECH.bakuton_araignees = {
-    [1] = { degats = 15, duree = 2, vitesse = 600, nombre = 6, decalage = 0.08, chakra = 35, recharge = 14, duree_mudra = 0, delai = 0.6, portee = 900, hitbox = 20 },
-    [2] = { degats = 18, duree = 2.3 },
-    [3] = { degats = 22, duree = 2.6, chakra = 32 },
-    [4] = { degats = 26, duree = 3, recharge = 12 },
-    [5] = { degats = 32, duree = 3.5, chakra = 28, recharge = 10, nombre = 8 },
+    [1] = { degats = 15, duree = 0.5, vitesse = 600, nombre = 6, decalage = 0.08, chakra = 35, recharge = 14, duree_mudra = 0, delai = 0.6, portee = 900, hitbox = 20 },
+    [2] = {  duree = 0.8 },
+    [3] = { duree = 1.2, chakra = 32 },
+    [4] = {  duree = 1.5, recharge = 12 },
+    [5] = { , duree = 1.8, chakra = 28, recharge = 10, nombre = 8 },
 }
 
 -- Meute d'araignées (server/bakuton/sv_bakuton_meute.lua) : comme les serpents d'encre, elles courent vers la cible
 --   et explosent au contact ; rotation = degrés/s de virage (plus bas = plus facile à esquiver)
 NA_NIV_TECH.bakuton_meute = {
-    [1] = { degats = 35, rayon = 110, chakra = 35, recharge = 13, vitesse = 650, rotation = 240, duree_vie = 4, nombre = 5, decalage = 0.15, ecart = 30, devant = 60, duree_mudra = 0, delai = 0.6, detection = 500 },
-    [2] = { degats = 40 },
-    [3] = { degats = 46, chakra = 32 },
-    [4] = { degats = 53, recharge = 11, rotation = 280 },
-    [5] = { degats = 62, chakra = 28, recharge = 9, nombre = 7, rotation = 320 },
+    [1] = { degats = 10, rayon = 110, chakra = 35, recharge = 13, vitesse = 650, rotation = 240, duree_vie = 4, nombre = 5, decalage = 0.15, ecart = 30, devant = 60, duree_mudra = 0, delai = 0.6, detection = 500 },
+    [2] = { degats = 12 },
+    [3] = { degats = 13, chakra = 32 },
+    [4] = { degats = 14, recharge = 11, rotation = 280 },
+    [5] = { degats = 15, chakra = 28, recharge = 9, nombre = 7, rotation = 320 },
 }
 
 -- Dragon d'argile (server/bakuton/sv_bakuton_dragon.lua) : vol sur le dragon (pilotage des ailes de papier)
