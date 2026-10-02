@@ -13,6 +13,7 @@ local MODELE      = "models/bakuton/atg_dragon_bakuton.mdl"
 local ANIM        = "atg_fly"
 local ECHELLE     = 0.5
 local DECALAGE    = Vector(-10, 0, -70)   -- par rapport aux pieds, dans le repère du dragon (z négatif = plus bas)
+local UNE_FOIS    = false               -- true = atg_fly joué une fois puis figé ; false = en boucle
 local DECALAGE_YAW = 0                  -- si le dragon ne regarde pas devant : essayer 90, -90 ou 180
 --========================================================
 
@@ -44,7 +45,11 @@ local function Creer()
     ent:SetModelScale(ECHELLE, 0)
     ent.RenderOverride = Dessiner
     local id = ent:LookupSequence(ANIM)
-    if id >= 0 then ent:ResetSequence(id) end
+    if id >= 0 then
+        ent:ResetSequence(id)
+        ent:SetCycle(0)
+        ent:SetPlaybackRate(1)
+    end
     return ent
 end
 
@@ -56,11 +61,14 @@ hook.Add("PreRender", "NA_BakutonDragon", function()
     local ang = Angle(0, yaw, 0)
     ent:SetPos(ply:GetPos() + ang:Forward() * DECALAGE.x + ang:Right() * DECALAGE.y + Vector(0, 0, DECALAGE.z))
     ent:SetAngles(ang)
-    -- même principe que les ailes de papier : lecture automatique, toujours atg_fly
+    -- animation pilotée à la main (un modèle client n'avance pas tout seul de façon fiable)
     local id = ent:LookupSequence(ANIM)
-    if id >= 0 and ent:GetSequence() ~= id then ent:ResetSequence(id) end
-    ent.AutomaticFrameAdvance = true
-    ent:SetPlaybackRate(1)
+    if id >= 0 then
+        if ent:GetSequence() ~= id then ent:ResetSequence(id) ent:SetCycle(0) end
+        local cycle = ent:GetCycle() + FrameTime() / math.max(ent:SequenceDuration(id), 0.01)
+        if UNE_FOIS then cycle = math.min(cycle, 0.999) else cycle = cycle % 1 end
+        ent:SetCycle(cycle)
+    end
   end
 end)
 
@@ -78,17 +86,28 @@ hook.Add("Think", "NA_BakutonDragon_FX", function()
     end
 end)
 
--- animation du joueur sur le dragon : pose debout normale (comme le ride Inkuton)
+-- animation du joueur sur le dragon : même pose de mudra que le ride Inkuton
+-- (index de séquence non mis en cache : wOS DynaBase ajoute les séquences nrp_* après coup)
+local SEQ_RIDE = "nrp_lobby_shikamaru_etc_team_type1_wait_loop"
+
 local function SurDragon(ply)
     return IsValid(ply) and ply:Alive() and ply:GetNW2Bool("NA_Dragon", false)
 end
 
 hook.Add("CalcMainActivity", "NA_BakutonDragon_Anim", function(ply)
-    if SurDragon(ply) then return ACT_HL2MP_IDLE, -1 end
+    if not SurDragon(ply) then return end
+    local seq = ply:LookupSequence(SEQ_RIDE)
+    if seq and seq >= 0 then return ACT_INVALID, seq end
+    return ACT_HL2MP_IDLE, -1
 end)
 
 hook.Add("UpdateAnimation", "NA_BakutonDragon_Anim_Update", function(ply)
     if not SurDragon(ply) then return end
+    local seq = ply:LookupSequence(SEQ_RIDE)
+    if seq and seq >= 0 and ply:GetSequence() ~= seq then
+        ply:SetSequence(seq)
+        ply:SetCycle(0)
+    end
     ply:SetPlaybackRate(1)
     return true
 end)

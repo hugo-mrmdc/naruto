@@ -1,0 +1,15 @@
+VertexLitGeneric
+{
+	$basetexture "models/skylyxx/ctg/characters/outline"
+
+	$lightwarptexture "models/skylyxx/ctg/characters/toon"
+
+	Proxies
+	{
+		CTGNeckColor
+		{
+			resultVar "$color2"
+			default 1 1 1
+		}
+	}
+}

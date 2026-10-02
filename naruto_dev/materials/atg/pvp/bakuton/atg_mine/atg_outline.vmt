@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "atg/pvp/bakuton/atg_mignon/atg_outline"
+                " $selfillum" 1
+                "$translucent" 1
+    "Proxies" {
+        "ForceBloom" {}
+}

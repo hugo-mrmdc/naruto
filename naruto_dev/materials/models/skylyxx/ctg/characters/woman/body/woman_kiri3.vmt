@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/skylyxx/ctg/characters/woman/body/woman_kiri3"
+	"$lightwarptexture" "models/skylyxx/ctg/characters/toon"
+}

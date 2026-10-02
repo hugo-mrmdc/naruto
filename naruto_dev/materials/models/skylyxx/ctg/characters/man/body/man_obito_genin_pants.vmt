@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/skylyxx/ctg/characters/man/body/man_obito_genin_pants"
+	"$lightwarptexture" "models/skylyxx/ctg/characters/toon"
+}

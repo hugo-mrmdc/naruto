@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+    "$basetexture" "atg/pvp/bakuton/atg_mine//atg_mine"
+    "$lightwarptexture" "atg_props/shared/lightwarpshader_bakuton"
+    "$nocull" "1"
+    "$nodecal" "1"
+}
