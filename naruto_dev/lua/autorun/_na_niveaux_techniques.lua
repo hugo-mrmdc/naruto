@@ -1136,6 +1136,17 @@ NA_NIV_TECH.bakuton_dragon = {
     [5] = { duree = 40, chakra = 30, recharge = 1 },
 }
 
+-- Déflagration (server/bakuton/sv_bakuton_bombe.lua) : le lanceur monte dans le ciel, puis une bombe géante
+--   tombe sur le point visé ; hauteur = montée (unités), vitesse = vitesse de montée, attente = secondes en l'air
+--   avant de lâcher la bombe, degats = au centre (moitié en bordure), rayon = de l'explosion
+NA_NIV_TECH.bakuton_bombe = {
+    [1] = { degats = 150, rayon = 450, chakra = 70, recharge = 60, hauteur = 700, vitesse = 900, attente = 1.0, duree_mudra = 0.6 },
+    [2] = { degats = 175, rayon = 500 },
+    [3] = { degats = 200, chakra = 65, recharge = 54 },
+    [4] = { degats = 230, rayon = 560, recharge = 48 },
+    [5] = { degats = 270, rayon = 620, chakra = 55, recharge = 40 },
+}
+
 -- Sharingan (server/uchiha/sv_uchiha_sharingan.lua) : à activer / désactiver
 --   tomoe = 1 à 3 (niveaux 1-2 : 1 tomoe, niveau 3 : 2 tomoe, niveaux 4-5 : 3 tomoe),
 --   chakra = PAR SECONDE, chakra_mini = requis pour l'activer,

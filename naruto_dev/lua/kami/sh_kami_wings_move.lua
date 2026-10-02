@@ -58,8 +58,12 @@ hook.Add("Move", "KamiWings_Move", function(ply, mv)
         voulu:Mul(KamiWings.VITESSE_VOL)
     end
 
-    if mv:KeyDown(IN_JUMP) then voulu.z = voulu.z + KamiWings.VITESSE_MONTEE end
-    if mv:KeyDown(IN_DUCK) then voulu.z = voulu.z - KamiWings.VITESSE_DESCENTE end
+    -- Bakuton Déflagration : montée (ou attente) imposée, sans pilotage
+    local monte = ply:GetNW2Float("NA_MonteVit", -1)
+    if monte >= 0 then voulu = Vector(0, 0, monte) end
+
+    if monte < 0 and mv:KeyDown(IN_JUMP) then voulu.z = voulu.z + KamiWings.VITESSE_MONTEE end
+    if monte < 0 and mv:KeyDown(IN_DUCK) then voulu.z = voulu.z - KamiWings.VITESSE_DESCENTE end
 
     -- flottement : vitesse = dérivée du sinus, donc la position oscille de FLOTTE_HAUTEUR
     -- (ailes seulement ; sans effet quand on monte / descend volontairement)

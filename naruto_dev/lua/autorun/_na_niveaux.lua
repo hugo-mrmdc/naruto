@@ -71,7 +71,7 @@ NA_NIV.LIGNEES = {
     { "senju_renfo", "senju_soin", "senju_frappe", "senju_pied", "senju_ermite" },
     { "uchiha_sharingan", "katon_saut", "katon_dragons", "uchiha_genjutsu", "uchiha_shuriken" },
     { "inkuton_chiens", "inkuton_serpents", "inkuton_singes", "inkuton_moine", "inkuton_dieux", "inkuton_dragon" },
-    { "bakuton_oiseaux", "bakuton_mignons", "bakuton_araignees", "bakuton_meute", "bakuton_dragon" },
+    { "bakuton_oiseaux", "bakuton_mignons", "bakuton_araignees", "bakuton_meute", "bakuton_dragon", "bakuton_bombe" },
 }
 --========================================================
 

@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/bomb_bakuton_solve_geams/white_clay_bomb_geams"
+	"$bumpmap" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/normal"
+
+	"$lightwarptexture" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/lightwarptexture"
+
+}

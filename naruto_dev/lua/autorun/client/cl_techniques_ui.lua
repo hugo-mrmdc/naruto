@@ -82,6 +82,9 @@ local TECHNIQUES = {
     { cat = "Bakuton", name = "Dragon d'argile", key = "", id = "bakuton_dragon", rang = "B", icone = "ui/icon/bakuton_dragonnet.png", court = "Dragon", cooldown = 45,
       desc = "Invoque un dragon d'argile et monte dessus : tu voles pendant 20 secondes. ZQSD pour avancer, Espace pour monter, Ctrl pour descendre. E (ou relancer la technique) pour en descendre. Coûte 40 de chakra.",
       dmg = "Aucun dégât : vol" },
+    { cat = "Bakuton", name = "Déflagration", key = "", id = "bakuton_bombe", rang = "S", icone = "ui/icon/bakuton_deflagration_annihilation.png", court = "Déflagration", cooldown = 60,
+      desc = "Tu t'élèves dans le ciel, puis une énorme bombe d'argile tombe du ciel sur le point que tu visais et explose en une gigantesque déflagration. Coûte 70 de chakra.",
+      dmg = "150 au centre (moitié en bordure), rayon 450" },
 
     -- ===== SUITON =====
     { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "", court = "Requin", cooldown = 5, cd = 5.3,
