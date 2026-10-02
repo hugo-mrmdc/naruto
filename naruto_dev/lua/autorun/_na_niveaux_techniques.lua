@@ -1116,6 +1116,16 @@ NA_NIV_TECH.bakuton_araignees = {
     [5] = { degats = 32, duree = 3.5, chakra = 28, recharge = 10, nombre = 8 },
 }
 
+-- Meute d'araignées (server/bakuton/sv_bakuton_meute.lua) : comme les serpents d'encre, elles courent vers la cible
+--   et explosent au contact ; rotation = degrés/s de virage (plus bas = plus facile à esquiver)
+NA_NIV_TECH.bakuton_meute = {
+    [1] = { degats = 35, rayon = 110, chakra = 35, recharge = 13, vitesse = 650, rotation = 240, duree_vie = 4, nombre = 5, decalage = 0.15, ecart = 30, devant = 60, duree_mudra = 0, delai = 0.6, detection = 500 },
+    [2] = { degats = 40 },
+    [3] = { degats = 46, chakra = 32 },
+    [4] = { degats = 53, recharge = 11, rotation = 280 },
+    [5] = { degats = 62, chakra = 28, recharge = 9, nombre = 7, rotation = 320 },
+}
+
 -- Dragon d'argile (server/bakuton/sv_bakuton_dragon.lua) : vol sur le dragon (pilotage des ailes de papier)
 --   duree = secondes de vol (E ou relancer pour descendre avant)
 NA_NIV_TECH.bakuton_dragon = {

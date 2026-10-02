@@ -1,8 +1,8 @@
 --========================================================
--- Bakuton : Araignées explosives (SERVEUR) - stun
--- Vise un ennemi (visée des singes : NA_InkutonCible). Des araignées sortent de toi, courent jusqu'à lui et
--- s'accrochent : la première arrivée l'étourdit (NA_Etourdir, comme le cube Jinton), puis elles explosent
--- quand le stun se termine (entité bakuton_araignee).
+-- Bakuton : Mines explosives (SERVEUR) - stun
+-- Vise un ennemi (visée des singes : NA_InkutonCible). Des mines (atg_mine_bakuton) apparaissent une à une en
+-- cercle au sol autour de lui : la première l'étourdit (NA_Etourdir, comme le cube Jinton), puis elles
+-- explosent quand le stun se termine (entité bakuton_araignee).
 --
 -- Réseau : "bakuton_araignees_cast" (client -> serveur)
 --========================================================
@@ -28,11 +28,12 @@ local ID = "bakuton_araignees"
 local function Niv(ply, stat, base) return NA_Stat(ply, ID, stat, base) end
 
 for _, ext in ipairs({ "mdl", "vvd", "dx80.vtx", "dx90.vtx" }) do
-    resource.AddFile("models/bakuton/atg_araignee_bakuton." .. ext)
+    resource.AddFile("models/bakuton/atg_mine_bakuton." .. ext)
 end
-for _, f in ipairs({ "atg_araignee_bakuton.vmt", "atg_araignee_bakuton.vtf", "atg_outline.vmt", "atg_outline.vtf" }) do
-    resource.AddFile("materials/atg/pvp/bakuton/atg_araignee/" .. f)
+for _, f in ipairs({ "atg_mine.vmt", "atg_mine.vtf", "atg_outline.vmt", "atg_outline.vtf" }) do
+    resource.AddFile("materials/atg/pvp/bakuton/atg_mine/" .. f)
 end
+resource.AddFile("materials/atg/pvp/bakuton/atg_mignon/atg_outline.vtf")
 resource.AddFile("materials/atg_props/shared/lightwarpshader_bakuton.vtf")
 
 local pret = {}
@@ -45,11 +46,9 @@ local function Lancer(ply, cible)
             if not IsValid(ply) or not ply:Alive() or not IsValid(cible) then return end
             local ent = ents.Create("bakuton_araignee")
             if not IsValid(ent) then return end
-            ent:SetPos(ply:GetPos() + Angle(0, math.random(0, 359), 0):Forward() * 20)
             ent:SetOwner(ply)
             ent.Cible   = cible
             ent.Index, ent.Total = i, nombre
-            ent.Vitesse = Niv(ply, "vitesse", VITESSE)
             ent.Degats  = Niv(ply, "degats", DEGATS)
             ent.Duree   = Niv(ply, "duree", DUREE)
             ent:Spawn()
