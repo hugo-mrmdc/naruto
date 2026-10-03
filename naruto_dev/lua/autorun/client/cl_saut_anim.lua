@@ -39,8 +39,10 @@ local function AutreAnimation(ply)
     if (ply:GetNWBool("MokutonRide", false) or ply:GetNWBool("InkutonRide", false)) then return true end
     if ply:GetNW2Float("NA_FrappeFin", 0) > CurTime() then return true end   -- frappe terrestre Senju (cl_senju_frappe.lua)
 
-    -- un jutsu lancé en l'air a sa propre animation (jutsu_anim_cl.lua)
-    if Jutsu and Jutsu.Anim.EnLair and Jutsu.Anim.EnLair(ply) then return true end
+    -- Les mudras se superposent au saut ; seuls les jutsus qui remplacent
+    -- l'animation principale prennent aussi la main sur les jambes.
+    local jutsu = Jutsu and Jutsu.Anim and Jutsu.Anim.EnLair and Jutsu.Anim.EnLair(ply)
+    if jutsu and not jutsu.upperBody then return true end
 
     -- un coup d'arme donné en l'air a sa propre animation (naruto_arme_base.lua)
     local g = ply.NA_GesteArme

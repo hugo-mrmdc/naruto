@@ -111,7 +111,7 @@ net.Receive("jinton_cube_cast", function(_, ply)
     end
 
     local cible = TrouverCible(ply, Niv(ply, "portee", PORTEE))
-    if not cible then   -- sinon silencieux
+    if not cible then   -- pas de cible : mudras + recharge quand même (le cube ne sortira pas)
         if GetConVar("developer"):GetInt() > 0 then
             local oeil, t = ply:EyePos(), HitboxVisee(ply)
             local vus = {}
@@ -121,9 +121,8 @@ net.Receive("jinton_cube_cast", function(_, ply)
                     vus[#vus + 1] = tostring(e) .. " PV=" .. e:Health()
                 end
             end
-            Diag(ply, "refusé : aucune cible dans la hitbox. Traversé :", #vus > 0 and table.concat(vus, ", ") or "rien")
+            Diag(ply, "aucune cible dans la hitbox. Traversé :", #vus > 0 and table.concat(vus, ", ") or "rien")
         end
-        return
     end
     Diag(ply, "cible :", tostring(cible))
 

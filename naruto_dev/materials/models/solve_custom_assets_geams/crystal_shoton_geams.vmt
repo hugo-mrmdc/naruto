@@ -1,0 +1,5 @@
+"UnlitGeneric"
+{
+	"$basetexture" "models/solve_custom_assets_geams/crystal_shoton_geams"
+	"$bumpmap" "models/solve_custom_assets_geams/nrm"
+}

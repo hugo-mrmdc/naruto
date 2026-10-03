@@ -129,7 +129,6 @@ net.Receive("chinoike_genjutsu_cast", function(_, ply)
     if (pret[ply] or 0) > CurTime() then return end
 
     local cible = TrouverCible(ply)
-    if not cible then return end   -- personne dans le viseur : rien n'est dépensé
 
     local cout = NA_Stat(ply, "chinoike_genjutsu", "chakra", CHAKRA_COUT)
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)

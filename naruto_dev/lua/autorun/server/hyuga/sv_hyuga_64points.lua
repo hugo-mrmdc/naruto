@@ -138,11 +138,8 @@ net.Receive("hyuga_64points_cast", function(_, ply)
     if not IsValid(ply) or not ply:Alive() or enCours[ply] then return end
     if (pret[ply] or 0) > CurTime() then return end
 
-    -- personne dans la zone : technique inutilisable (pas d'animation, pas de
-    -- coût, pas de recharge).
     local portee, rayon = Niv(ply, "portee", PORTEE), Niv(ply, "rayon", RAYON)
     local cibles = CiblesDevant(ply, portee, rayon)
-    if #cibles == 0 then return end
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
     local cout = Niv(ply, "chakra", CHAKRA_COUT)
@@ -154,10 +151,13 @@ net.Receive("hyuga_64points_cast", function(_, ply)
         ply:SetNW2Float("NA_Chakra", chakra - cout)
     end
 
-    enCours[ply] = true
     local recharge = Niv(ply, "recharge", RECHARGE)
     pret[ply] = CurTime() + recharge
     if NA_CD then NA_CD.Set(ply, "hyuga_64points", recharge) end   -- recharge visible dans la barre
+
+    -- personne dans la zone : coût + recharge seulement, sans animation
+    if #cibles == 0 then return end
+    enCours[ply] = true
 
     local degats, intervalle, etourdi = Niv(ply, "degats", DEGATS_TICK), Niv(ply, "intervalle", INTERVALLE), Niv(ply, "etourdi", ETOURDI)
 

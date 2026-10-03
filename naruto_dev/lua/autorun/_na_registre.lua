@@ -220,6 +220,7 @@ function NA_Lancer(id)
     end
 
     NA_DernierLancer[id] = CurTime()
+    if NA_DemarrerDuree then NA_DemarrerDuree(id) end   -- barre de durée (cl_duration_bars.lua)
 
     -- un jutsu lancé pendant l'invisibilité Fuma fait réapparaître (sv_fumainv.lua)
     if id ~= "fuma_invisibilite" and ply:GetNWBool("IsInvisible", false) then

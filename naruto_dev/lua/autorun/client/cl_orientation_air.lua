@@ -20,7 +20,9 @@ end
 -- Avant toutes les passes de rendu, y compris les ombres : aucune pièce ne doit
 -- calculer ses os avant que l'orientation du corps soit définitive.
 local function Orienter(ply)
-    if VITESSE <= 0 or not ply:Alive() or ply:OnGround() or AutreOrientation(ply) then
+    local jutsu = Jutsu and Jutsu.Anim and Jutsu.Anim.EnLair and Jutsu.Anim.EnLair(ply)
+    if jutsu and jutsu.upperBody then jutsu = nil end
+    if VITESSE <= 0 or not ply:Alive() or (ply:OnGround() and not jutsu) or AutreOrientation(ply) then
         ply.NA_AirYaw = nil
         ply.NA_AirT = nil
         return
@@ -30,9 +32,8 @@ local function Orienter(ply)
     local now = CurTime()
     local cible = ply:EyeAngles().y
     if not ply.NA_AirYaw then
-        -- GetRenderAngles peut renvoyer nil : sans cap connu, on part du regard
-        local ra = ply:GetRenderAngles()
-        ply.NA_AirYaw = ra and ra.y or cible
+        -- Partir du regard, sans récupérer le décalage de la séquence précédente.
+        ply.NA_AirYaw = cible
     elseif now ~= ply.NA_AirT then
         ply.NA_AirYaw = math.ApproachAngle(ply.NA_AirYaw, cible, (now - (ply.NA_AirT or now)) * VITESSE)
     end
@@ -40,11 +41,14 @@ local function Orienter(ply)
 
     -- Comparer au cap réel : le moteur peut l'avoir changé depuis la dernière
     -- image. Si rien ne change, conserver les caches du corps et des pièces.
+    -- Le cap de caméra reste indépendant du décalage propre aux mudras :
+    -- celui-ci disparaît dès que la séquence se termine, même après l'atterrissage.
+    local yaw = ply.NA_AirYaw + (jutsu and jutsu.yawOffset or 0)
     local rendu = ply:GetRenderAngles()
     if rendu and rendu.p == 0 and rendu.r == 0
-        and math.abs(math.AngleDifference(rendu.y, ply.NA_AirYaw)) < 0.001 then return end
+        and math.abs(math.AngleDifference(rendu.y, yaw)) < 0.001 then return end
 
-    ply:SetRenderAngles(Angle(0, ply.NA_AirYaw, 0))
+    ply:SetRenderAngles(Angle(0, yaw, 0))
     ply:InvalidateBoneCache()
     -- Invalider le joueur ne suffit pas : les pièces fusionnées ont leur
     -- propre cache, qui peut encore contenir les matrices de l'ancien cap.

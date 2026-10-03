@@ -103,6 +103,12 @@ hook.Add("InitPostEntity", "Jutsu_Anim_AutoDiag", function()
     timer.Simple(10, function() writeDiag("auto") end)
 end)
 
+-- Les mudras restent un geste du haut du corps : les jambes conservent
+-- l'animation normale de saut, puis de déplacement après l'atterrissage.
+local UPPER_BODY_SEQUENCES = {
+    nrp_ninjutsu_defend_dragonflamebombs_start = true,
+}
+
 local function playSequenceOn(ply, seqName, coupe, vitesse)
     if not IsValid(ply) then return false end
     if type(seqName) ~= "string" or seqName == "" then return false end
@@ -119,12 +125,12 @@ local function playSequenceOn(ply, seqName, coupe, vitesse)
     local jeton = (ply.NA_AnimJeton or 0) + 1
     ply.NA_AnimJeton = jeton
 
-    -- lancé en l'air : un geste est masqué par l'animation de saut et serait coupé à l'atterrissage ;
-    -- l'animation devient donc l'animation principale (voir le hook plus bas), jouée en entier
+    -- Les mudras sont maintenus en superposition ; les autres animations de
+    -- jutsu gardent leur séquence principale jusqu'à leur fin.
     if not ply:OnGround() and ply:GetMoveType() == MOVETYPE_WALK
         and not ply:GetNW2Bool("NA_Vol", false) and not ply:GetNW2Bool("NA_Wings", false) then
         ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
-        ply.NA_JutsuAir = { seq = seq, debut = CurTime(), duree = duree, vitesse = vitesse, jeton = jeton }
+        ply.NA_JutsuAir = { seq = seq, debut = CurTime(), duree = duree, vitesse = vitesse, jeton = jeton, upperBody = UPPER_BODY_SEQUENCES[seqName] or false, yawOffset = 0 }
         ply.NA_AnimFin = CurTime() + math.min(duree, 3)
         return true
     end
@@ -155,6 +161,7 @@ function Jutsu.Anim.EnLair(ply)
     local a = ply.NA_JutsuAir
     if not a then return end
     if a.jeton ~= ply.NA_AnimJeton or not ply:Alive() or CurTime() - a.debut >= a.duree then
+        if a.upperBody and a.jeton == ply.NA_AnimJeton then ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM) end
         ply.NA_JutsuAir = nil
         return
     end
@@ -163,17 +170,51 @@ end
 
 hook.Add("CalcMainActivity", "NA_Jutsu_EnLair", function(ply)
     local a = Jutsu.Anim.EnLair(ply)
-    if a then return ACT_MP_JUMP, a.seq end
+    if a and not a.upperBody then return ACT_MP_JUMP, a.seq end
 end)
 
 hook.Add("UpdateAnimation", "NA_Jutsu_EnLair_Force", function(ply)
     local a = Jutsu.Anim.EnLair(ply)
-    if not a then return end
+    if not a or a.upperBody then return end
     if ply:GetSequence() ~= a.seq then ply:SetSequence(a.seq) end
     ply:SetCycle(math.Clamp((CurTime() - a.debut) * a.vitesse / ply:SequenceDuration(a.seq), 0, 0.999))
     ply:SetPlaybackRate(0)
+
+    -- l'UpdateAnimation de base est court-circuitée : les paramètres de pose gardent leur
+    -- dernière valeur (déplacement latéral...)
+    for _, p in ipairs({ "move_x", "move_y", "move_yaw", "aim_yaw", "body_yaw", "aim_pitch", "head_yaw", "head_pitch" }) do
+        ply:SetPoseParameter(p, 0)
+    end
     return true
 end)
+
+-- Réappliquer le geste à son cycle courant avant le rendu : un saut ou un
+-- atterrissage peut effacer le slot, sans devoir remplacer la pose des jambes.
+hook.Add("PreRender", "NA_Jutsu_MudrasHautCorps", function()
+    for _, ply in ipairs(player.GetAll()) do
+        if not ply:IsDormant() then
+            local a = Jutsu.Anim.EnLair(ply)
+            if a and a.upperBody then
+                local cycle = math.Clamp((CurTime() - a.debut) * a.vitesse / math.max(ply:SequenceDuration(a.seq), 0.001), 0, 0.999)
+                ply:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, a.seq, cycle, true)
+                ply:InvalidateBoneCache()
+                for _, ent in ipairs(ply:GetChildren()) do
+                    if IsValid(ent) and ent:IsEffectActive(EF_BONEMERGE) then
+                        ent:InvalidateBoneCache()
+                    end
+                end
+            end
+        end
+    end
+end)
+
+-- Retirer les anciens hooks de flexion lors d'un rechargement Lua à chaud.
+-- OnReloaded restaure les angles sauvegardés par la version précédente.
+hook.Remove("PreRender", "NA_Jutsu_JambesSouples")
+
+-- L'orientation est appliquée avant le calcul des os, avec les pièces et les
+-- ombres, par cl_orientation_air.lua. Retirer l'ancien hook au rechargement.
+hook.Remove("PrePlayerDraw", "NA_Jutsu_EnLair_Cap")
 
 -- Reçoit du serveur: tout le monde joue l'anim sur le joueur
 -- (coupe envoyée seulement par NA_AnimJutsu, _na_mudra.lua ; les autres envois n'en ont pas)

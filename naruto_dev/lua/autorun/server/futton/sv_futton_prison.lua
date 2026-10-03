@@ -30,11 +30,7 @@ net.Receive("futton_prison_cast", function(_, ply)
     if not NA_Debloquee(ply, ID) then return end
     if (pret[ply] or 0) > CurTime() then return end
 
-    local cible = NA_InkutonCible and NA_InkutonCible(ply, ID)
-    if not cible then
-        ply:PrintMessage(HUD_PRINTCENTER, "Aucune cible")
-        return
-    end
+    local cible = NA_InkutonCible and NA_InkutonCible(ply, ID)   -- nil = mudras + recharge quand même
 
     local cout = Niv(ply, "chakra", CHAKRA_COUT)
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)

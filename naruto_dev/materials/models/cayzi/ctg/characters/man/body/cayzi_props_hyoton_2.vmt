@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\cayzi\ctg\characters\man\body\cayzi_props_hyoton_2"
+	"$surfaceprop" "Ice"
+}

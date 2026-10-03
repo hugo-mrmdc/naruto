@@ -44,9 +44,11 @@ SWEP.Combo = {
     { anim = "nrp2_attacks_punch3", vitesseAnim = 1.5, duree = 0.6, degats = 25, recul = 350, reculHaut = 100, touche = "izox_hit_type_one_basic" },
 }
 -- Combo pendant les ailes de papier Kami (en vol) : deux coups aériens
+-- Par coup : "delaiEffet" = quand la particule "effet" apparaît (s après le début du coup),
+-- "delai" = quand le coup touche (et quand "touche"/"impact" apparaissent)
 SWEP.ComboAiles = {
-    { anim = "kb_mha3_at011_attackair1.006", vitesseAnim = 1.5, duree = 0.4, degats = 15, effet = "kami_04_solve_slash", roulis = 0, impact = "kami_02_impact_ground" },
-    { anim = "kb_mha3_at011_attackair1.017", vitesseAnim = 1.5, duree = 0.5, degats = 20, effet = "kami_04_solve_slash", roulis = 90, impact = "kami_02_impact_ground", recul = 250, reculHaut = 80 },
+    { anim = "kb_mha3_at011_attackair1.006", vitesseAnim = 1.5, duree = 0.4, degats = 15, effet = "kami_04_solve_slash", delaiEffet = 0, roulis = 0, impact = "kami_02_impact_ground" },
+    { anim = "kb_mha3_at011_attackair1.017", vitesseAnim = 1.5, duree = 0.5, degats = 20, effet = "kami_04_solve_slash", delaiEffet = 0, roulis = 90, impact = "kami_02_impact_ground", recul = 250, reculHaut = 80 },
 }
 SWEP.ComboReset = 1.5  -- secondes sans frapper avant de revenir au coup de poing
 

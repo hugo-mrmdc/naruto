@@ -72,7 +72,9 @@ NA_NIV.LIGNEES = {
     { "uchiha_sharingan", "katon_saut", "katon_dragons", "uchiha_genjutsu", "uchiha_shuriken" },
     { "inkuton_chiens", "inkuton_serpents", "inkuton_singes", "inkuton_moine", "inkuton_dieux", "inkuton_dragon" },
     { "bakuton_oiseaux", "bakuton_mignons", "bakuton_araignees", "bakuton_meute", "bakuton_dragon", "bakuton_bombe" },
-    { "futton_vapeur", "futton_tornade", "futton_cage", "futton_monde", "futton_prison", "futton_projectile" },
+    { "futton_vapeur", "futton_tornade", "futton_cage","futton_projectile", "futton_prison", "futton_monde" },
+    { "hyoton_dome", "hyoton_pics", "hyoton_vague", "hyoton_loup", "hyoton_prison" },
+    { "shoton_cristal" },
 }
 --========================================================
 

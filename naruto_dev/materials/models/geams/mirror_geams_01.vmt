@@ -1,0 +1,11 @@
+"UnlitGeneric"
+{
+	"$basetexture" "models/geams/mirror_geams_01"
+	"$surfaceprop" "rock"
+                "$envmap" "env_cubemap"
+                "$envmaptint" "[.85 .85 .85]"
+	"$nocull" 1
+	"$bumpmap" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/normal"
+
+	"$lightwarptexture" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/lightwarptexture"
+}

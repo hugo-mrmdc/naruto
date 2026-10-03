@@ -270,12 +270,16 @@ function SWEP:PrimaryAttack()
     JouerAnim(owner, coup.anim, coup.vitesseAnim or coup.vitesse or self.VitesseAnim)   -- "vitesse" : ancien nom
 
     -- effet de particule du coup (coup.effet, roulis coup.roulis) : joué par les clients
+    -- coup.delaiEffet = secondes après le début du coup (0 = tout de suite)
     if coup.effet then
-        net.Start("NA_Arme_Effet")
-            net.WriteEntity(owner)
-            net.WriteString(coup.effet)
-            net.WriteFloat(coup.roulis or 0)
-        net.Broadcast()
+        timer.Simple(coup.delaiEffet or 0, function()
+            if not IsValid(owner) or not owner:Alive() then return end
+            net.Start("NA_Arme_Effet")
+                net.WriteEntity(owner)
+                net.WriteString(coup.effet)
+                net.WriteFloat(coup.roulis or 0)
+            net.Broadcast()
+        end)
     end
 
     -- sons de swing (plusieurs pour les coups multiples)

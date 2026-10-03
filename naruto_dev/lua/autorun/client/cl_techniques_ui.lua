@@ -73,10 +73,10 @@ local TECHNIQUES = {
     { cat = "Bakuton", name = "Mignons d'argile", key = "", id = "bakuton_mignons", rang = "C", icone = "ui/icon/bakuton_mignon_argile.png", court = "Mignons", cooldown = 12,
       desc = "Des mignons d'argile courent un par un devant toi. Si tu vises un ennemi, ils le poursuivent ; sinon ils avancent tout droit et poursuivent le premier ennemi qui passe à portée, puis explosent au contact. Ils tournent vite mais pas instantanément : une cible qui change de direction peut leur échapper. Un mur les fait exploser. Coûte 30 de chakra.",
       dmg = "50 par mignon qui explose" },
-    { cat = "Bakuton", name = "Mines explosives", key = "", id = "bakuton_araignees", rang = "B", icone = "", court = "Mines", cooldown = 14,
+    { cat = "Bakuton", name = "Mines explosives", key = "", id = "bakuton_araignees", rang = "B", icone = "ui/icon/minebakuton.png", court = "Mines", cooldown = 14,
       desc = "Vise un ennemi (900 unités max) : des mines d'argile apparaissent en cercle autour de lui. Il est étourdi 2 secondes, puis les mines explosent. Coûte 35 de chakra.",
       dmg = "15 par mine + stun de 2 s" },
-    { cat = "Bakuton", name = "Meute d'araignées", key = "", id = "bakuton_meute", rang = "B", icone = "", court = "Meute", cooldown = 13,
+    { cat = "Bakuton", name = "Meute d'araignées", key = "", id = "bakuton_meute", rang = "B", icone = "ui/icon/araigner.png", court = "Meute", cooldown = 13,
       desc = "Des araignées d'argile courent une par une devant toi. Si tu vises un ennemi, elles le poursuivent ; sinon elles avancent tout droit et poursuivent le premier ennemi qui passe à portée, puis explosent au contact. Elles tournent vite mais pas instantanément : une cible qui change de direction peut leur échapper. Un mur les fait exploser. Coûte 35 de chakra.",
       dmg = "35 par araignée qui explose" },
     { cat = "Bakuton", name = "Dragon d'argile", key = "", id = "bakuton_dragon", rang = "B", icone = "ui/icon/bakuton_dragonnet.png", court = "Dragon", cooldown = 45,
@@ -91,7 +91,7 @@ local TECHNIQUES = {
       desc = "Une vapeur brûlante émane de toi pendant 8 secondes : tu cours plus vite et les ennemis autour de toi subissent des dégâts à chaque instant. Coûte 30 de chakra.",
       dmg = "6 par tick autour de toi + vitesse x1.3" },
 
-    { cat = "Futton", name = "Tornade de vapeur", key = "", id = "futton_tornade", rang = "C", icone = "", court = "Tornade", cooldown = 14, cd = 14,
+    { cat = "Futton", name = "Tornade de vapeur", key = "", id = "futton_tornade", rang = "C", icone = "ui/icon/tornadevapeur.png", court = "Tornade", cooldown = 14, cd = 14,
       desc = "Trois tornades de vapeur partent devant toi en éventail et avancent tout droit. Chaque tornade touche un ennemi une seule fois. Elles s'arrêtent sur un mur. Coûte 35 de chakra.",
       dmg = "8 par tornade qui touche" },
 
@@ -103,11 +103,35 @@ local TECHNIQUES = {
       desc = "Une immense zone de vapeur se déploie autour de toi pendant 10 secondes. Les ennemis qui s'y trouvent sont ralentis et subissent des dégâts à chaque instant. Coûte 70 de chakra.",
       dmg = "8 par tick + ralentissement" },
 
-    { cat = "Futton", name = "Prison de vapeur", key = "", id = "futton_prison", rang = "A", icone = "", court = "Prison", cooldown = 18, cd = 18,
+    { cat = "Hyoton", name = "Dôme de glace", key = "", id = "hyoton_dome", rang = "C", icone = "ui/icon/hyoton_arene_de_glace.png", court = "Dôme", cooldown = 30, cd = 30,
+      desc = "Un dôme de glace se déploie autour de toi pendant 8 secondes. Les ennemis qui s'y trouvent sont ralentis et subissent des dégâts à chaque instant. Coûte 50 de chakra.",
+      dmg = "6 par tick + ralentissement" },
+
+    { cat = "Hyoton", name = "Pics de glace", key = "", id = "hyoton_pics", rang = "C", icone = "ui/icon/hyoton_epine_de_glace.png", court = "Pics", cooldown = 14, cd = 14,
+      desc = "Des pics de glace sortent du sol en éventail devant toi, rangée après rangée. Chaque ennemi touché subit des dégâts une seule fois et est étourdi 1 seconde. Coûte 40 de chakra.",
+      dmg = "40 par ennemi touché + stun de 1 s" },
+
+    { cat = "Hyoton", name = "Vague de glace", key = "", id = "hyoton_vague", rang = "B", icone = "ui/icon/hyoton_loup_de_glace.png", court = "Vague", cooldown = 16, cd = 16,
+      desc = "Un bouquet de pics de glace part devant toi et avance tout droit au ras du sol, jusqu'à 900 unités. Le premier ennemi touché subit des dégâts et est étourdi 1 seconde. Il s'arrête sur un mur. Coûte 45 de chakra.",
+      dmg = "50 au premier ennemi touché + stun de 1 s" },
+
+    { cat = "Hyoton", name = "Loups de glace", key = "", id = "hyoton_loup", rang = "B", icone = "ui/icon/hyoton_loup_de_glace.png", court = "Loups", cooldown = 14, cd = 14,
+      desc = "Des loups de glace courent un par un devant toi. Si tu vises un ennemi, ils le poursuivent ; sinon ils avancent tout droit et poursuivent le premier ennemi qui passe à portée, puis le mordent au contact. Ils tournent vite mais pas instantanément : une cible qui change de direction peut leur échapper. Un mur les arrête. Coûte 40 de chakra.",
+      dmg = "45 par loup qui touche" },
+
+    { cat = "Hyoton", name = "Prison de glace", key = "", id = "hyoton_prison", rang = "A", icone = "ui/icon/hyoton_prison_de_glace.png", court = "Prison", cooldown = 18, cd = 18,
+      desc = "Vise un ennemi (900 unités max) : il est enfermé dans une arène de miroirs de glace, étourdi pendant 2,5 secondes et subit des dégâts à chaque instant. Coûte 45 de chakra.",
+      dmg = "5 par tick + stun de 2,5 s" },
+
+    { cat = "Shoton", name = "Cristal", key = "", id = "shoton_cristal", rang = "B", icone = "geams/ui/shoton_armor.png", court = "Cristal", cooldown = 18, cd = 18,
+      desc = "Une onde invisible avance tout droit devant toi, jusqu'à 900 unités. Le premier ennemi touché est enfermé dans un cristal et étourdi pendant 3 secondes. Elle s'arrête sur un mur. Coûte 40 de chakra.",
+      dmg = "Stun de 3 s" },
+
+    { cat = "Futton", name = "Prison de vapeur", key = "", id = "futton_prison", rang = "A", icone = "ui/icon/prisonvapeur.png", court = "Prison", cooldown = 18, cd = 18,
       desc = "Vise un ennemi (900 unités max) : il est enfermé dans une cage de vapeur et étourdi pendant 2,5 secondes. Coûte 40 de chakra.",
       dmg = "Stun de 2,5 s" },
 
-    { cat = "Futton", name = "Projectile de vapeur", key = "", id = "futton_projectile", rang = "A", icone = "", court = "Projectile", cooldown = 10, cd = 10,
+    { cat = "Futton", name = "Projectile de vapeur", key = "", id = "futton_projectile", rang = "B", icone = "ui/icon/futton_protection_de_vapeur.png", court = "Projectile", cooldown = 10, cd = 10,
       desc = "Lance un projectile de vapeur droit devant toi. Il touche le premier ennemi sur sa route et lui inflige des dégâts, sans autre effet. Il s'arrête sur un mur. Coûte 45 de chakra.",
       dmg = "80 au premier ennemi touché" },
 
@@ -438,7 +462,7 @@ local ONGLETS = {
     { nom = "Stats",         icone = "stat.png" },
     { nom = "Jutsus",        icone = "jutsu.png",       cats = { "Katon", "Suiton", "Futon", "Raiton", "Doton" },
       desc = "Cette catégorie répertorie les techniques des natures du chakra" },
-    { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton", "Inkuton", "Bakuton", "Futton" },
+    { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton", "Inkuton", "Bakuton", "Futton", "Hyoton", "Shoton" },
       desc = "Cette catégorie répertorie les techniques héritées par le sang" },
     { nom = "Clan",          icone = "clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike", "Hyuga", "Senju", "Uchiha" },
       desc = "Cette catégorie répertorie les techniques secrètes des clans" },

@@ -787,7 +787,7 @@ NA_NIV_TECH.hyuga_32points = {
 --   etourdi = secondes d'étourdissement de la cible (= durée totale de la rafale)
 NA_NIV_TECH.hyuga_64points = {
     [1] = {
-        degats = 8, chakra = 45, recharge = 26, portee = 300, rayon = 50,
+        degats = 8, chakra = 45, recharge = 26, portee = 600, rayon = 50,
         intervalle = 0.2, etourdi = 4,
     },
     [2] = { degats = 9 },
@@ -1186,6 +1186,70 @@ NA_NIV_TECH.futton_monde = {
     [3] = { duree = 12, degats = 12, chakra = 64 },
     [4] = { degats = 14, recharge = 52, ralenti = 0.55 },
     [5] = { duree = 15, degats = 18,chakra = 56, recharge = 10, ralenti = 0.5 },
+}
+
+-- Dôme de glace (server/hyoton/sv_hyoton_dome.lua) : zone sur le lanceur ; les ennemis dedans sont ralentis et subissent des dégâts par tick
+--   rayon / hauteur = taille de la zone, duree = secondes, degats = par tick, intervalle = secondes entre ticks, ralenti = multiplicateur de vitesse des ennemis
+NA_NIV_TECH.hyoton_dome = {
+    [1] = { rayon = 400, hauteur = 300, duree = 8, degats = 15, intervalle = 0.5, ralenti = 0.7, chakra = 50, recharge = 30, duree_mudra = 0.6 },
+    [2] = { degats =  20},
+    [3] = { duree = 10, degats = 8, chakra = 46 },
+    [4] = { degats = 22, recharge = 26, ralenti = 0.65 },
+    [5] = { duree = 15, degats = 25, chakra = 42, recharge = 22, ralenti = 0.6 },
+}
+
+-- Pics de glace (server/hyoton/sv_hyoton_pics.lua) : des pics sortent du sol en éventail devant le lanceur
+--   rangees = nombre de rangées (3 pics chacune), rayon = zone touchée autour d'un pic, degats = par ennemi (une fois), stun = secondes,
+--   echelle = taille des pics, duree_vie = secondes avant qu'ils disparaissent
+NA_NIV_TECH.hyoton_pics = {
+    [1] = { rangees = 8, rayon = 70, degats = 60, stun = 0, echelle = 0.6, duree_vie = 0.8, chakra = 40, recharge = 14, duree_mudra = 0.4 },
+    [2] = { degats = 75 },
+    [3] = { rangees = 10, degats = 84, chakra = 36 },
+    [4] = { degats = 87, stun = 0, recharge = 12 },
+    [5] = { rangees = 12, degats = 96, stun = 0, chakra = 32, recharge = 10 },
+}
+
+-- Vague de glace (server/hyoton/sv_hyoton_vague.lua) : un bouquet de pics avance tout droit au ras du sol, touche le premier ennemi
+--   portee = distance max, vitesse = unités/s, rayon = demi-largeur qui touche, degats, stun = secondes, echelle = taille du modèle
+NA_NIV_TECH.hyoton_vague = {
+    [1] = { portee = 900, vitesse = 1100, rayon = 90, degats = 50, stun = 1, echelle = 0.8, chakra = 45, recharge = 16, duree_mudra = 0.4 },
+    [2] = { degats = 60 },
+    [3] = { portee = 1200, degats = 70, chakra = 40 },
+    [4] = { degats = 85, stun = 1.5, recharge = 14 },
+    [5] = { portee = 1400, vitesse = 1300, degats = 100, stun = 2, chakra = 36, recharge = 3 },
+}
+
+-- Loups de glace (server/hyoton/sv_hyoton_loup.lua) : rampent vers la cible, dégâts au contact (comme les serpents d'encre)
+--   rotation = degrés/s de virage (plus bas = plus facile à esquiver)
+NA_NIV_TECH.hyoton_loup = {
+    [1] = {
+        degats = 45, chakra = 40, recharge = 14, vitesse = 700, rotation = 220, duree_vie = 3,
+        nombre = 2, decalage = 0.25, ecart = 60, devant = 60, duree_mudra = 0.4, portee = 1000,
+    },
+    [2] = { degats = 55 },
+    [3] = { degats = 65, chakra = 36 },
+    [4] = { degats = 75, recharge = 12, rotation = 260 },
+    [5] = { degats = 90, chakra = 32, recharge = 10, nombre = 3, rotation = 300 },
+}
+
+-- Prison de glace (server/hyoton/sv_hyoton_prison.lua) : stun de la cible visée dans une arène de miroirs, dégâts par tick
+--   duree = secondes de stun, degats = par tick, intervalle = secondes entre ticks, portee = distance de visée maximale, hitbox = demi-taille de la hitbox de visée
+NA_NIV_TECH.hyoton_prison = {
+    [1] = { duree = 2.5, degats = 5, intervalle = 0.5, portee = 900, hitbox = 25, chakra = 45, recharge = 18, duree_mudra = 0.3 },
+    [2] = { degats = 6 },
+    [3] = {  degats = 8, chakra = 40 },
+    [4] = {  degats = 10, recharge = 15 },
+    [5] = { duree =3, degats = 12, chakra = 36, recharge = 12 },
+}
+
+-- Cristal (server/shoton/sv_shoton_cristal.lua) : un projectile invisible avance, le premier ennemi touché est enfermé dans un cristal (stun)
+--   duree = secondes de stun, portee = distance max du projectile, vitesse = unités/s, rayon = demi-largeur de sa hitbox
+NA_NIV_TECH.shoton_cristal = {
+    [1] = { duree = 3, portee = 900, vitesse = 1500, rayon = 30, chakra = 40, recharge = 18, duree_mudra = 0.3 },
+    [2] = { duree = 3.5 },
+    [3] = { duree = 4, chakra = 36 },
+    [4] = { duree = 4.5, recharge = 15 },
+    [5] = { duree = 5, chakra = 32, recharge = 12 },
 }
 
 -- Prison de vapeur (server/futton/sv_futton_prison.lua) : stun de la cible visée, dans une cage de vapeur

@@ -231,7 +231,6 @@ net.Receive("suiton_prison_cast", function(_, ply)
 
     local portee = Niv(ply, "portee", PORTEE)
     local cible = TrouverCible(ply, portee)
-    if not cible then return end   -- pas de cible visée : rien (ni chakra ni recharge)
 
     local cout = Niv(ply, "chakra", CHAKRA_COUT)
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
