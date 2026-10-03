@@ -25,7 +25,7 @@ local RECHARGE     = 12
 local CHAKRA_COUT  = 30
 local CHAKRA_MAX   = NA_CHAKRA_MAX or 100
 local DELAI        = 0.6
-local ANIM_LANCER  = "m_throw_kunai_front"
+local ANIM_LANCER  = "nrp_ninjutsu_defend_mudwall"
 --========================================================
 
 local ID = "bakuton_meute"
@@ -89,7 +89,7 @@ net.Receive("bakuton_meute_cast", function(_, ply)
     pret[ply] = CurTime() + recharge
     if NA_CD then NA_CD.Set(ply, ID, recharge) end
 
-    NA_AnimJutsu(ply, ANIM_LANCER)
+    NA_AnimJutsu(ply, ANIM_LANCER, 0, 3)   -- x3 plus vite
     local mudra = Niv(ply, "duree_mudra", 0)
     if NA_Mudra then NA_Mudra(ply, mudra) end
 

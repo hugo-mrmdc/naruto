@@ -351,7 +351,12 @@ end
 -- et compensée, sinon la tête se retrouve tournée.
 function NA_DessinerRecul(cs, ent, recul)
     if not IsValid(cs) or not IsValid(ent) then return end
-    local os = ent:LookupBone("ValveBiped.Bip01_Head1")
+    local modeleParent = ent:GetModel()
+    if ent.NA_ReculModeleParent ~= modeleParent or ent.NA_ReculOsTete == nil then
+        ent.NA_ReculModeleParent = modeleParent
+        ent.NA_ReculOsTete = ent:LookupBone("ValveBiped.Bip01_Head1")
+    end
+    local os = ent.NA_ReculOsTete
     local tete = os and ent:GetBoneMatrix(os)
     if not tete then return end
 
@@ -361,6 +366,7 @@ function NA_DessinerRecul(cs, ent, recul)
     local modele = cs:GetModel()
     if cs.NA_PoseModele ~= modele then
         cs.NA_PoseInv = nil
+        cs.NA_ReculLocal = nil
         cs.NA_PoseModele = modele
     end
 
@@ -368,6 +374,7 @@ function NA_DessinerRecul(cs, ent, recul)
         cs:SetPlaybackRate(0)
         cs:SetPos(vector_origin)
         cs:SetAngles(angle_zero)
+        cs:InvalidateBoneCache()
         cs:SetupBones()
         local osCs = cs:LookupBone("ValveBiped.Bip01_Head1")
         local pose = osCs and cs:GetBoneMatrix(osCs)
@@ -375,10 +382,19 @@ function NA_DessinerRecul(cs, ent, recul)
         cs.NA_PoseInv = pose:GetInverse()
     end
 
-    translation:SetTranslation(Vector(0, recul / 10, 0))
-    local placement = tete * REPERE_RECUL_INV * translation * REPERE_RECUL * cs.NA_PoseInv
+    -- Le décalage local est constant tant que le modèle et le réglage restent
+    -- identiques : seule la matrice animée du joueur change à chaque dessin.
+    if not cs.NA_ReculLocal or cs.NA_ReculValeur ~= recul then
+        translation:SetTranslation(Vector(0, recul / 10, 0))
+        cs.NA_ReculLocal = REPERE_RECUL_INV * translation * REPERE_RECUL * cs.NA_PoseInv
+        cs.NA_ReculValeur = recul
+    end
+    local placement = tete * cs.NA_ReculLocal
     cs:SetPos(placement:GetTranslation())
     cs:SetAngles(placement:GetAngles())
+    -- SetupBones peut réutiliser une pose déjà calculée dans cette image
+    -- (ombres, autre vue ou mesure initiale), malgré le nouveau placement.
+    cs:InvalidateBoneCache()
     cs:SetupBones()
 
     -- Dessin centralisé : les effets de visage peuvent muter temporairement le matériau
@@ -430,7 +446,8 @@ end
 
 hook.Add("PostPlayerDraw", "NA_Perso_Recul", function(ply)
     local tete = ply:GetNW2Entity("NA_TeteEnt")
-    local p = NA_PERSO.Decoder(ply:GetNW2String("NA_Perso", ""))
+    local persoJson = ply:GetNW2String("NA_Perso", "")
+    local p = NA_PERSO.Decoder(persoJson)
     if not IsValid(tete) or p.visage == 0 or p.recul == 0 then
         if copies[ply] then Vider(ply) end
         return
@@ -447,7 +464,7 @@ hook.Add("PostPlayerDraw", "NA_Perso_Recul", function(ply)
     copies[ply] = copies[ply] or {}
     local c = copies[ply]
     local yeux = ply:GetNW2String("NA_Yeux", "")
-    local json = ply:GetNW2String("NA_Perso", "") .. "|" .. yeux
+    local json = persoJson .. "|" .. yeux
 
     local ct = Copie(c, "tete", tete)
     if ct then

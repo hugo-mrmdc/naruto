@@ -15,8 +15,8 @@ ENT.PrintName = "Bombe d'argile"
 ENT.Spawnable = false
 
 ENT.Degats       = 150
-ENT.Rayon        = 450
-ENT.Echelle      = 6        -- le modèle fait ~40 unités : ajuster si la bombe est trop grosse / petite
+ENT.Rayon        = 700
+ENT.Echelle      = 20       -- le modèle fait ~40 unités : ajuster si la bombe est trop grosse / petite
 ENT.VitesseDepart = 800
 ENT.Gravite      = 2200     -- accélération de chute (unités/s²)
 ENT.VitesseMax   = 3500
@@ -31,7 +31,7 @@ if SERVER then
         self:SetMoveType(MOVETYPE_NONE)
         self:SetSolid(SOLID_NONE)
         self:DrawShadow(false)
-        self:SetModelScale(self.Echelle, 0)
+        self:SetModelScale(self.Echelle * self.Rayon / 700, 0)   -- la taille suit le rayon
         self:SetAngles(Angle(0, math.random(0, 359), 0))
         self.Vitesse = self.VitesseDepart
         self.MortA = CurTime() + self.DureeVie
@@ -52,9 +52,14 @@ if SERVER then
             local a = math.rad(i * 30 + 15)
             Boum(pos + Vector(math.cos(a), math.sin(a), 0) * rayon * 0.95, 0.12)
         end
-        for h = 1, 5 do
-            Boum(pos + Vector(math.Rand(-60, 60), math.Rand(-60, 60), h * rayon * 0.3), 0.08 * h)
-            Boum(pos + Vector(math.Rand(-120, 120), math.Rand(-120, 120), h * rayon * 0.22), 0.1 * h)
+        for i = 0, 15 do
+            local a = math.rad(i * 22.5)
+            Boum(pos + Vector(math.cos(a), math.sin(a), 0) * rayon * 0.3, 0.03)
+            Boum(pos + Vector(math.cos(a), math.sin(a), 0) * rayon * 0.75, 0.09)
+        end
+        for h = 1, 8 do
+            Boum(pos + Vector(math.Rand(-100, 100), math.Rand(-100, 100), h * rayon * 0.3), 0.06 * h)
+            Boum(pos + Vector(math.Rand(-200, 200), math.Rand(-200, 200), h * rayon * 0.22), 0.08 * h)
         end
     end
 
@@ -67,12 +72,11 @@ if SERVER then
         sound.Play(self.Son, pos, 140, 70, 1)
         sound.Play(self.Son, pos, 140, 90, 1)
         util.ScreenShake(pos, 25, 40, 2.5, self.Rayon * 6)
-        util.Decal("Scorch", pos + Vector(0, 0, 50), pos - Vector(0, 0, 100))
 
         for _, ent in ipairs(ents.FindInSphere(pos, self.Rayon)) do
             if EstCible(ent, owner) then
                 local dmg = DamageInfo()
-                dmg:SetDamage(self.Degats * (1 - math.Clamp(ent:WorldSpaceCenter():Distance(pos) / self.Rayon, 0, 1) * 0.5))
+                dmg:SetDamage(self.Degats)
                 dmg:SetAttacker(IsValid(owner) and owner or self)
                 dmg:SetInflictor(self)
                 dmg:SetDamageType(DMG_BLAST)
@@ -96,7 +100,7 @@ if SERVER then
         -- impact : sol, mur, ou un joueur / PNJ en travers (le lanceur est ignoré)
         local tr = util.TraceHull({
             start = from, endpos = to - Vector(0, 0, 40),
-            mins = Vector(-60, -60, -20), maxs = Vector(60, 60, 20),
+            mins = Vector(-100, -100, -20), maxs = Vector(100, 100, 20),
             filter = { self, self:GetOwner() }, mask = MASK_SOLID,
         })
         if tr.Hit then self:Exploser(tr.HitPos) return true end

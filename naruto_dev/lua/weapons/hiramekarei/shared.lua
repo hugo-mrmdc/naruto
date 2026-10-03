@@ -49,9 +49,9 @@ SWEP.Anims = {
 
 -- Combo : le 1er coup touche 4 fois
 SWEP.Combo = {
-    { anim = "oldjimmy_tengen_a_p0013_v00_c00_atkcmbw03",   vitesseAnim = 1.0, duree = 1.0, degats = 100, coups = 4, intervalle = 0.15, sons = 4 },
-    { anim = "oldjimmy_tengen_a_p0013_v00_c00_atkcmbw04",   vitesseAnim = 1.0, duree = 0.7, degats = 100 },
-    { anim = "oldjimmy_tanjiro_a_p0001_v00_c00_atkskl02_2", vitesseAnim = 1.0, duree = 1.0, degats = 100 },
+    { anim = "oldjimmy_tengen_a_p0013_v00_c00_atkcmbw03",   vitesseAnim = 1.0, duree = 1.0, degats = 100, coups = 4, intervalle = 0.15, sons = 4, touche = "izox_hit_type_one_basic" },
+    { anim = "oldjimmy_tengen_a_p0013_v00_c00_atkcmbw04",   vitesseAnim = 1.0, duree = 0.7, degats = 100, touche = "izox_hit_type_one_basic" },
+    { anim = "oldjimmy_tanjiro_a_p0001_v00_c00_atkskl02_2", vitesseAnim = 1.0, duree = 1.0, degats = 100, touche = "izox_hit_type_one_basic" },
 }
 SWEP.ComboReset = 2.0
 

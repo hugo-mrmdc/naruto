@@ -293,33 +293,33 @@ NA_NIV_TECH.futon_windball = {
 -- Jugement de l'éclair (sv_raiton_jugement.lua) : duree = étourdissement
 NA_NIV_TECH.raiton_jugement = {
     [1] = {
-        degats = 30, chakra = 30, recharge = 14, duree = 1.5, rayon = 180, portee = 900,
+        degats = 50, chakra = 30, recharge = 14, duree = 1.5, rayon = 180, portee = 900,
     },
-    [2] = { degats = 34 },
-    [3] = { degats = 38, duree = 1.8, recharge = 13 },
-    [4] = { degats = 42, rayon = 210 },
-    [5] = { degats = 48, duree = 2.2, chakra = 24, recharge = 11 },
+    [2] = { degats = 55 },
+    [3] = { degats = 60, duree = 1.8, recharge = 13 },
+    [4] = { degats = 65, rayon = 210 },
+    [5] = { degats = 80, duree = 2.2, chakra = 24, recharge = 11 },
 }
 
 -- Cercle de foudre (sv_raiton_cercle.lua) : à chaque impulsion, dégâts + projection vers l'extérieur
 NA_NIV_TECH.raiton_cercle = {
     [1] = {
-        degats = 55, chakra = 35, recharge = 15,
+        degats = 70, chakra = 35, recharge = 15,
         rayon = 320, impulsions = 1, intervalle = 0.8, recul = 700, souleve = 250, duree_mudra = 0.5,
     },
-    [2] = { degats = 67 },
-    [3] = { degats = 74, recharge = 13.5},
-    [4] = { degats = 81, rayon = 350 },
-    [5] = { degats = 95, chakra = 28, recharge = 12},
+    [2] = { degats = 80 },
+    [3] = { degats = 90, recharge = 13.5},
+    [4] = { degats = 100, rayon = 350 },
+    [5] = { degats = 110, chakra = 28, recharge = 12},
 }
 
 -- Boule de foudre (sv_raiton_boule.lua) : duree = étourdissement
 NA_NIV_TECH.raiton_boule = {
-    [1] = { degats = 30, chakra = 25, recharge = 10, duree = 1.5, vitesse = 1300, duree_mudra = 0.3 },
-    [2] = { degats = 34 },
-    [3] = { degats = 38, duree = 1.8, recharge = 9 },
-    [4] = { degats = 42, vitesse = 1500 },
-    [5] = { degats = 48, duree = 2.2, chakra = 20, recharge = 8 },
+    [1] = { degats = 40, chakra = 25, recharge = 10, duree = 1.5, vitesse = 1300, duree_mudra = 0.3 },
+    [2] = { degats = 50 },
+    [3] = { degats = 60, duree = 1.8, recharge = 9 },
+    [4] = { degats = 70, vitesse = 1500 },
+    [5] = { degats = 80, duree = 2.2, chakra = 20, recharge = 8 },
 }
 
 --========================================================
@@ -620,7 +620,8 @@ NA_NIV_TECH.jinton_cube = {
 NA_NIV_TECH.jinton_bouclier = {
     [1] = {
         degats = 70, chakra = 25, recharge = 20,
-        explo_hauteur = 140, explo_rayon = 200, pourcent_vie = 20, echelle = 1.35, duree = 10,
+        explo_hauteur = 140, explo_rayon = 500, pourcent_vie = 20, echelle = 1.35, duree = 10,
+        resistance = 25, explosions = 3,
         duree_mudra = 0.5,
     },
     [2] = { degats = 80 },
@@ -1034,14 +1035,14 @@ NA_NIV_TECH.inkuton_chiens = {
 -- la cible, la blessent chaque seconde (degats = par tick) et la marquent (marque = secondes après l'effet)
 NA_NIV_TECH.inkuton_singes = {
     [1] = {
-        degats = 10, intervalle = 1, duree = 5, marque = 8, ralenti = 0.4,
+        degats = 10, intervalle = 1, duree = 1.5, marque = 8, ralenti = 0.4,
         chakra = 30, recharge = 14, vitesse = 420, nombre = 3, ecart = 40, devant = 60,
         duree_mudra = 0, delai_singes = 0.6, portee = 1000,
     },
     [2] = { degats = 12 },
-    [3] = { degats = 14, chakra = 27, duree = 6 },
+    [3] = { degats = 14, chakra = 27, duree = 2.5 },
     [4] = { degats = 16, recharge = 12, ralenti = 0.35 },
-    [5] = { degats = 20, chakra = 24, recharge = 10, duree = 7, marque = 10, ralenti = 0.3 },
+    [5] = { degats = 20, chakra = 24, recharge = 10, duree = 3, marque = 10, ralenti = 0.3 },
 }
 
 -- Serpents d'encre (server/inkuton/sv_inkuton_serpents.lua) : rampent vers la cible, dégâts au contact
@@ -1113,7 +1114,7 @@ NA_NIV_TECH.bakuton_araignees = {
     [2] = {  duree = 0.8 },
     [3] = { duree = 1.2, chakra = 32 },
     [4] = {  duree = 1.5, recharge = 12 },
-    [5] = { , duree = 1.8, chakra = 28, recharge = 10, nombre = 8 },
+    [5] = { duree = 1.8, chakra = 28, recharge = 10, nombre = 8 },
 }
 
 -- Meute d'araignées (server/bakuton/sv_bakuton_meute.lua) : comme les serpents d'encre, elles courent vers la cible
@@ -1140,11 +1141,71 @@ NA_NIV_TECH.bakuton_dragon = {
 --   tombe sur le point visé ; hauteur = montée (unités), vitesse = vitesse de montée, attente = secondes en l'air
 --   avant de lâcher la bombe, degats = au centre (moitié en bordure), rayon = de l'explosion
 NA_NIV_TECH.bakuton_bombe = {
-    [1] = { degats = 150, rayon = 450, chakra = 70, recharge = 60, hauteur = 700, vitesse = 900, attente = 1.0, duree_mudra = 0.6 },
-    [2] = { degats = 175, rayon = 500 },
-    [3] = { degats = 200, chakra = 65, recharge = 54 },
-    [4] = { degats = 230, rayon = 560, recharge = 48 },
-    [5] = { degats = 270, rayon = 620, chakra = 55, recharge = 40 },
+    [1] = { degats = 500, rayon = 700, chakra = 70, recharge = 60, hauteur = 700, vitesse = 900, attente = 1.0, duree_mudra = 0.6 },
+    [2] = { degats = 600, rayon = 780 },
+    [3] = { degats = 700, chakra = 65, recharge = 54 },
+    [4] = { degats = 900, rayon = 880, recharge = 48 },
+    [5] = { degats = 1000, rayon = 980, chakra = 55, recharge = 5 },
+}
+
+-- Émanation de vapeur (server/futton/sv_futton_vapeur.lua) : buff de vitesse (multiplicateur) + dégâts par tick autour du lanceur
+--   duree = secondes du buff, vitesse = multiplicateur de vitesse, degats = par tick, intervalle = secondes entre ticks, rayon = de la vapeur
+NA_NIV_TECH.futton_vapeur = {
+    [1] = { duree = 8, vitesse = 1.3, degats = 6, intervalle = 0.5, rayon = 220, chakra = 30, recharge = 20, duree_mudra = 0.4 },
+    [2] = { vitesse = 1.35, degats = 7 },
+    [3] = { duree = 9, degats = 8, chakra = 27 },
+    [4] = { vitesse = 1.4, degats = 9, recharge = 17 },
+    [5] = { duree = 11, vitesse = 1.5, degats = 11, rayon = 260, chakra = 24, recharge = 14 },
+}
+
+-- Tornade de vapeur (server/futton/sv_futton_tornade.lua) : nombre tornades partent devant le lanceur en éventail
+--   degats = par tick, intervalle = secondes entre ticks, rayon = de chaque tornade, vitesse, duree_vie = secondes (portée = vitesse x durée), ecart = degrés entre tornades
+NA_NIV_TECH.futton_tornade = {
+    [1] = { degats = 70, intervalle = 0.3, rayon = 90, vitesse = 800, duree_vie = 3, nombre = 1, ecart = 10, devant = 60, chakra = 35, recharge = 14, duree_mudra = 0.3 },
+    [2] = { degats = 80 },
+    [3] = { degats = 90, chakra = 32 },
+    [4] = { degats = 100, recharge = 12, duree_vie = 3.5 },
+    [5] = { degats = 113, chakra = 28, recharge = 10, rayon = 110, duree_vie = 4 },
+}
+
+-- Cage de vapeur (server/futton/sv_futton_cage.lua) : zone posée là où le lanceur regarde ; ceux dedans ne sortent plus, personne d'autre n'entre
+--   rayon / hauteur = taille de la cage, duree = secondes, portee = distance de visée maximale, degats = par tick (toutes les intervalle s) à ceux dedans
+NA_NIV_TECH.futton_cage = {
+    [1] = { rayon = 300, hauteur = 400, duree = 6, portee = 1500, degats = 5, intervalle = 0.5, chakra = 50, recharge = 30, duree_mudra = 0.4 },
+    [2] = { duree = 7, degats = 6 },
+    [3] = { duree = 8, degats = 7, chakra = 45 },
+    [4] = { duree = 9, degats = 8, rayon = 340, recharge = 26 },
+    [5] = { duree = 10, degats = 10, rayon = 380, chakra = 40, recharge = 22 },
+}
+
+-- Monde de vapeur (server/futton/sv_futton_monde.lua) : grande zone sur le lanceur ; les ennemis dedans sont ralentis et subissent des dégâts par tick
+--   rayon / hauteur = taille de la zone, duree = secondes, degats = par tick, intervalle = secondes entre ticks, ralenti = multiplicateur de vitesse des ennemis
+NA_NIV_TECH.futton_monde = {
+    [1] = { rayon = 920, hauteur = 400, duree = 10, degats = 8, intervalle = 0.5, ralenti = 0.6, chakra = 70, recharge = 60, duree_mudra = 0.6 },
+    [2] = { degats = 10 },
+    [3] = { duree = 12, degats = 12, chakra = 64 },
+    [4] = { degats = 14, recharge = 52, ralenti = 0.55 },
+    [5] = { duree = 15, degats = 18,chakra = 56, recharge = 10, ralenti = 0.5 },
+}
+
+-- Prison de vapeur (server/futton/sv_futton_prison.lua) : stun de la cible visée, dans une cage de vapeur
+--   duree = secondes de stun, portee = distance de visée maximale, hitbox = demi-taille de la hitbox de visée
+NA_NIV_TECH.futton_prison = {
+    [1] = { duree = 2.5, portee = 900, hitbox = 25, chakra = 40, recharge = 18, duree_mudra = 0.3 },
+    [2] = { duree = 3 },
+    [3] = { duree = 3.5, chakra = 36 },
+    [4] = { duree = 4, recharge = 15 },
+    [5] = { duree = 5, chakra = 32, recharge = 12 },
+}
+
+-- Projectile de vapeur (server/futton/sv_futton_projectile.lua) : un projectile droit, dégâts au premier ennemi touché
+--   degats = dégâts, rayon = demi-largeur de la hitbox, vitesse, duree_vie = secondes (portée = vitesse x durée), devant = distance de départ
+NA_NIV_TECH.futton_projectile = {
+    [1] = { degats = 80, rayon = 30, vitesse = 1800, duree_vie = 2, devant = 50, chakra = 45, recharge = 10, duree_mudra = 0.3 },
+    [2] = { degats = 90 },
+    [3] = { degats = 100, chakra = 40 },
+    [4] = { degats = 115, recharge = 8 },
+    [5] = { degats = 130, chakra = 35, recharge = 6, duree_vie = 2.5 },
 }
 
 -- Sharingan (server/uchiha/sv_uchiha_sharingan.lua) : à activer / désactiver

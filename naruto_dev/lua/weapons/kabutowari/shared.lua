@@ -48,9 +48,9 @@ SWEP.Anims = {
 }
 
 SWEP.Combo = {
-    { anim = "oldjimmy_tanjiro_a_p0001_v00_c00_atkskl02_2",  vitesseAnim = 1.0, duree = 1.0, degats = 40 },
-    { anim = "oldjimmy_tanjiro_a_p0001_v00_c00_atkskl03a_0", vitesseAnim = 1.0, duree = 1.1, degats = 40 },
-    { anim = "oldjimmy_tengen_a_p0013_v00_c00_atkcmbw03u01", vitesseAnim = 1.0, duree = 1.3, degats = 40 },
+    { anim = "oldjimmy_tanjiro_a_p0001_v00_c00_atkskl02_2",  vitesseAnim = 1.0, duree = 1.0, degats = 40, touche = "izox_hit_type_one_basic" },
+    { anim = "oldjimmy_tanjiro_a_p0001_v00_c00_atkskl03a_0", vitesseAnim = 1.0, duree = 1.1, degats = 40, touche = "izox_hit_type_one_basic" },
+    { anim = "oldjimmy_tengen_a_p0013_v00_c00_atkcmbw03u01", vitesseAnim = 1.0, duree = 1.3, degats = 40, touche = "izox_hit_type_one_basic" },
 }
 SWEP.ComboReset = 2.0
 

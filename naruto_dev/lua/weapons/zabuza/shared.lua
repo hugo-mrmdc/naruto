@@ -42,9 +42,9 @@ SWEP.Anims = {
 }
 
 SWEP.Combo = {
-    { anim = "nrp_sword_slashhorizon",         vitesseAnim = 1.0, duree = 1.0, degats = 40 },
-    { anim = "nrp_sword_turnslashingshoulder", vitesseAnim = 1.0, duree = 1.1, degats = 40 },
-    { anim = "nrp_sword_slashing",             vitesseAnim = 1.0, duree = 1.3, degats = 40 },
+    { anim = "nrp_sword_slashhorizon",         vitesseAnim = 1.0, duree = 1.0, degats = 40, touche = "izox_hit_type_one_basic" },
+    { anim = "nrp_sword_turnslashingshoulder", vitesseAnim = 1.0, duree = 1.1, degats = 40, touche = "izox_hit_type_one_basic" },
+    { anim = "nrp_sword_slashing",             vitesseAnim = 1.0, duree = 1.3, degats = 40, touche = "izox_hit_type_one_basic" },
 }
 SWEP.ComboReset = 2.0
 

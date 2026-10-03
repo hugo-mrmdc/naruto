@@ -44,6 +44,7 @@ for _, f in ipairs(file.Find("materials/models/solve/billy/inkutonmonkey/*", "GA
     resource.AddFile("materials/models/solve/billy/inkutonmonkey/" .. f)
 end
 game.AddParticles("particles/solve_inkuton_geams.pcf")
+PrecacheParticleSystem("solve_inkuton_dispawn_singe")
 
 local pret    = {}   -- joueur -> moment où la technique est de nouveau disponible
 local effets  = {}   -- cible -> { fin, marque, lanceur, singes, prochain, degats, intervalle }
@@ -98,7 +99,10 @@ end
 --------------------------------------------------------
 local function Retirer(cible, e)
     for _, s in ipairs(e.singes) do
-        if IsValid(s) then s:Remove() end
+        if IsValid(s) then
+            ParticleEffect("solve_inkuton_dispawn_singe", s:GetPos(), s:GetAngles())   -- disparition, à la fin du stun
+            s:Remove()
+        end
     end
     e.singes = {}
     if IsValid(cible) then

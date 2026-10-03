@@ -75,7 +75,7 @@ local function LacherBombe(ply)
         ent:SetPos(haut.HitPos - Vector(0, 0, haut.Hit and 120 or 0))
         ent:SetOwner(ply)
         ent.Degats = Niv(ply, "degats", 150)
-        ent.Rayon  = Niv(ply, "rayon", 450)
+        ent.Rayon  = Niv(ply, "rayon", 700)
         ent:Spawn()
     end
 

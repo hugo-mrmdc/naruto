@@ -16,6 +16,7 @@ local ACTIONS = {
     { "techniques", "Menu techniques",          KEY_F2 },
     { "inventaire", "Menu inventaire",          KEY_F4 },
     { "biblio",     "Bibliothèque",             KEY_F6 },
+    { "special",    "Attaque spéciale (armes)", MOUSE_RIGHT },   -- lu par cl_touche_special.lua
 }
 local DEFAUT = {}
 for _, a in ipairs(ACTIONS) do DEFAUT[a[1]] = a[3] end
@@ -36,7 +37,7 @@ local function Sauver() file.Write(FICHIER, util.TableToJSON(Reg)) end
 
 function NA_Touche(action) return Reg.touches[action] or DEFAUT[action] end
 
-local NOMS_SOURIS = { [MOUSE_MIDDLE] = "MOLETTE (clic)", [MOUSE_4] = "SOURIS 4", [MOUSE_5] = "SOURIS 5" }
+local NOMS_SOURIS = { [MOUSE_RIGHT] = "CLIC DROIT", [MOUSE_MIDDLE] = "MOLETTE (clic)", [MOUSE_4] = "SOURIS 4", [MOUSE_5] = "SOURIS 5" }
 local BOUTONS_SOURIS = { MOUSE_MIDDLE, MOUSE_4, MOUSE_5 }   -- clic gauche / droit restent réservés
 
 -- la touche de l'action est-elle enfoncée ? (clavier ou souris)

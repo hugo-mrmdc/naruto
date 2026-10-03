@@ -118,13 +118,21 @@ if SERVER then
     util.AddNetworkString("NA_Arme_Slash")   -- effet de slash (cl_slash_arme.lua)
     util.AddNetworkString("NA_Arme_Effet")   -- particule d'un coup (coup.effet)
     util.AddNetworkString("NA_Arme_Impact")  -- particule sur l'ennemi touché (coup.impact)
+    util.AddNetworkString("NA_Arme_Touche")  -- particule posée SUR l'ennemi touché (coup.touche)
+    resource.AddFile("particles/1abyssal.pcf")
 else
+    game.AddParticles("particles/1abyssal.pcf")
+    PrecacheParticleSystem("izox_hit_type_one_basic")
     game.AddParticles("particles/solve_kami_geams.pcf")
     PrecacheParticleSystem("kami_04_solve_slash")
     -- l'impact est composé de sous-effets : il faut tous les précharger, sinon il reste invisible
     for _, suffixe in ipairs({ "", "_add", "_add_1", "_add_2", "_add_3", "_add_4", "_add_5" }) do
         PrecacheParticleSystem("kami_02_impact_ground" .. suffixe)
     end
+
+    net.Receive("NA_Arme_Touche", function()
+        ParticleEffect(net.ReadString(), net.ReadVector(), angle_zero)
+    end)
 
     net.Receive("NA_Arme_Impact", function()
         ParticleEffect(net.ReadString(), net.ReadVector(), angle_zero)
@@ -305,6 +313,7 @@ function SWEP:PrimaryAttack()
         recul      = coup.recul,
         reculHaut  = coup.reculHaut,
         impact     = coup.impact,
+        touche     = coup.touche,
         touches    = {},
     }
 end
@@ -443,6 +452,17 @@ function SWEP:Think()
             ent:TakeDamageInfo(dmg)
             self:CompterCoup(owner, ent)
 
+            if a.touche then
+                -- sur le torse de l'ennemi touché (os de colonne, sinon centre du corps)
+                local torse = ent:LookupBone("ValveBiped.Bip01_Spine2")
+                local pos = torse and ent:GetBonePosition(torse) or ent:WorldSpaceCenter()
+                if pos:DistToSqr(ent:GetPos()) < 1 then pos = ent:WorldSpaceCenter() end   -- os pas calculé côté serveur
+                net.Start("NA_Arme_Touche")
+                    net.WriteString(a.touche)
+                    net.WriteVector(pos)
+                net.Broadcast()
+            end
+
             if a.impact then
                 -- sur le sol sous l'ennemi (même s'il est en l'air)
                 local p = ent:GetPos()
@@ -472,7 +492,19 @@ end
 --========================================================
 -- Clic droit : attaque spéciale
 --========================================================
+-- Touche de l'attaque spéciale : convar client "na_touche_special" (code BUTTON_CODE, défaut = clic droit),
+-- réglée dans les Paramètres F1 (cl_parametres.lua, cl_touche_special.lua)
+local function SpecialSurClicDroit(ply)
+    return ply:GetInfoNum("na_touche_special", MOUSE_RIGHT) == MOUSE_RIGHT
+end
+
 function SWEP:SecondaryAttack()
+    local owner = self:GetOwner()
+    if IsValid(owner) and owner:IsPlayer() and not SpecialSurClicDroit(owner) then return end
+    self:DeclencherSpecial()
+end
+
+function SWEP:DeclencherSpecial()
     local s = self.Special
     if not s then return end
 
@@ -502,6 +534,15 @@ function SWEP:SecondaryAttack()
     if NA_StopChakraRun then NA_StopChakraRun(owner) end
     JouerAnim(owner, s.anim, s.vitesseAnim or 1)
     self:LancerSpecial(owner, s)
+end
+
+-- touche personnalisée pressée (envoyée par cl_touche_special.lua)
+if SERVER then
+    util.AddNetworkString("NA_Arme_Special")
+    net.Receive("NA_Arme_Special", function(_, ply)
+        local w = IsValid(ply) and ply:Alive() and ply:GetActiveWeapon()
+        if IsValid(w) and w.Special and w.DeclencherSpecial and not SpecialSurClicDroit(ply) then w:DeclencherSpecial() end
+    end)
 end
 
 -- Attaque spéciale par défaut : explosions successives devant le joueur.

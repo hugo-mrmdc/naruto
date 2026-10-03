@@ -22,6 +22,9 @@ util.AddNetworkString("jinton_bouclier_cast")
 local POURCENT_VIE  = 20    -- % de la vie max en bouclier
 local DUREE         = 10     -- secondes
 local ECHELLE       = 1.35   -- taille de la sphère (1 = 68 unités de diamètre)
+local RESISTANCE    = 25     -- % de dégâts en moins tant que le bouclier est actif (en plus de l'absorption)
+local EXPLOSIONS    = 3      -- E : explosions possibles avant la destruction (la dernière détruit le bouclier)
+local DELAI_EXPLO   = 0.6    -- secondes minimum entre deux explosions (E)
 
 local RECHARGE      = 20     -- secondes avant de pouvoir relancer (depuis le lancement)
 local CHAKRA_COUT   = 25     -- chakra dépensé (0 = gratuit)
@@ -119,6 +122,7 @@ function NA_JintonBouclierFin(ply, casse, exploser)
     local actif = ply:GetNW2Float("NA_BouclierMax", 0) > 0
     if IsValid(ply.NA_SphereJinton) then ply.NA_SphereJinton:Remove() end
     ply.NA_SphereJinton = nil
+    ply.NA_ExploRestantes = nil
     timer.Remove("jinton_bouclier_" .. ply:EntIndex())
 
     if Bouclier(ply) > 0 or casse then
@@ -142,6 +146,8 @@ local function Activer(ply)
     local points = math.max(1, math.floor(ply:GetMaxHealth() * Niv(ply, "pourcent_vie", POURCENT_VIE) / 100))
     ply:SetNW2Float("NA_Bouclier", points)
     ply:SetNW2Float("NA_BouclierMax", points)
+    ply.NA_ExploRestantes = Niv(ply, "explosions", EXPLOSIONS)
+    ply.NA_ExploProchaine = 0
 
     local sphere = ents.Create("jinton_bouclier")
     if IsValid(sphere) then
@@ -195,8 +201,8 @@ hook.Add("EntityTakeDamage", "JintonBouclier_Absorbe", function(cible, dmg)
     local reste = Bouclier(cible)
     if reste <= 0 then return end
 
-    local degats = dmg:GetDamage()
-    if degats <= 0 then return end
+    local degats = dmg:GetDamage() * (1 - math.Clamp(Niv(cible, "resistance", RESISTANCE), 0, 100) / 100)
+    if degats <= 0 then dmg:SetDamage(0) return end
 
     local absorbe = math.min(degats, reste)
     dmg:SetDamage(degats - absorbe)
@@ -212,7 +218,7 @@ end)
 
 ----------------------------------------------------------
 -- E pendant le bouclier : explosion anticipée
--- (sauf en regardant une entité proche - porte, salamandre... - ou sur une monture)
+-- (sauf en regardant un objet proche - porte, salamandre... - ou sur une monture)
 ----------------------------------------------------------
 hook.Add("KeyPress", "JintonBouclier_ExploserE", function(ply, key)
     if key ~= IN_USE or not IsFirstTimePredicted() then return end
@@ -224,9 +230,19 @@ hook.Add("KeyPress", "JintonBouclier_ExploserE", function(ply, key)
         endpos = ply:EyePos() + ply:GetAimVector() * 150,
         filter = ply
     })
-    if IsValid(tr.Entity) then return end
+    -- seul un objet utilisable (porte, prop...) bloque : ni le décor, ni un ennemi (en plein combat on le regarde)
+    local e = tr.Entity
+    if IsValid(e) and not e:IsWorld() and not e:IsPlayer() and not e:IsNPC() and not e:IsNextBot() then return end
 
-    NA_JintonBouclierFin(ply, false, true)
+    -- explosions successives : le bouclier reste tant qu'il en reste ; la dernière le détruit
+    if (ply.NA_ExploProchaine or 0) > CurTime() then return end
+    ply.NA_ExploRestantes = (ply.NA_ExploRestantes or 1) - 1
+    if ply.NA_ExploRestantes > 0 then
+        ply.NA_ExploProchaine = CurTime() + DELAI_EXPLO
+        Exploser(ply)
+    else
+        NA_JintonBouclierFin(ply, false, true)
+    end
 end)
 
 ----------------------------------------------------------

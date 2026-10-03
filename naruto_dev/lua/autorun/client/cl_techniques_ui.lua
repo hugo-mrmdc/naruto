@@ -82,9 +82,34 @@ local TECHNIQUES = {
     { cat = "Bakuton", name = "Dragon d'argile", key = "", id = "bakuton_dragon", rang = "B", icone = "ui/icon/bakuton_dragonnet.png", court = "Dragon", cooldown = 45,
       desc = "Invoque un dragon d'argile et monte dessus : tu voles pendant 20 secondes. ZQSD pour avancer, Espace pour monter, Ctrl pour descendre. E (ou relancer la technique) pour en descendre. Coûte 40 de chakra.",
       dmg = "Aucun dégât : vol" },
-    { cat = "Bakuton", name = "Déflagration", key = "", id = "bakuton_bombe", rang = "S", icone = "ui/icon/bakuton_deflagration_annihilation.png", court = "Déflagration", cooldown = 60,
+    { cat = "Bakuton", name = "Déflagration", key = "", id = "bakuton_bombe", rang = "S", icone = "ui/icon/bakuton_deflagration_annihilation.png", court = "Déflagration", cooldown = 60, cd = 60,
       desc = "Tu t'élèves dans le ciel, puis une énorme bombe d'argile tombe du ciel sur le point que tu visais et explose en une gigantesque déflagration. Coûte 70 de chakra.",
       dmg = "150 au centre (moitié en bordure), rayon 450" },
+
+    -- ===== FUTTON =====
+    { cat = "Futton", name = "Émanation de vapeur", key = "", id = "futton_vapeur", rang = "C", icone = "ui/icon/futton_emanation_de_vapeur.png", court = "Vapeur", cooldown = 20, cd = 20,
+      desc = "Une vapeur brûlante émane de toi pendant 8 secondes : tu cours plus vite et les ennemis autour de toi subissent des dégâts à chaque instant. Coûte 30 de chakra.",
+      dmg = "6 par tick autour de toi + vitesse x1.3" },
+
+    { cat = "Futton", name = "Tornade de vapeur", key = "", id = "futton_tornade", rang = "C", icone = "", court = "Tornade", cooldown = 14, cd = 14,
+      desc = "Trois tornades de vapeur partent devant toi en éventail et avancent tout droit. Chaque tornade touche un ennemi une seule fois. Elles s'arrêtent sur un mur. Coûte 35 de chakra.",
+      dmg = "8 par tornade qui touche" },
+
+    { cat = "Futton", name = "Cage de vapeur", key = "", id = "futton_cage", rang = "B", icone = "ui/icon/futton_cage_de_vapeur.png", court = "Cage", cooldown = 30, cd = 30,
+      desc = "Pose une cage de vapeur là où tu regardes. Tous ceux qui sont dedans ne peuvent plus en sortir, et personne ne peut y entrer : seul toi passes librement. Ils subissent aussi des dégâts sur la durée. La cage disparaît au bout de quelques secondes ou si tu meurs. Coûte 50 de chakra.",
+      dmg = "5 par tick à ceux dans la cage" },
+
+    { cat = "Futton", name = "Monde de vapeur", key = "", id = "futton_monde", rang = "S", icone = "ui/icon/futton_monde_de_vapeur.png", court = "Monde", cooldown = 60, cd = 60,
+      desc = "Une immense zone de vapeur se déploie autour de toi pendant 10 secondes. Les ennemis qui s'y trouvent sont ralentis et subissent des dégâts à chaque instant. Coûte 70 de chakra.",
+      dmg = "8 par tick + ralentissement" },
+
+    { cat = "Futton", name = "Prison de vapeur", key = "", id = "futton_prison", rang = "A", icone = "", court = "Prison", cooldown = 18, cd = 18,
+      desc = "Vise un ennemi (900 unités max) : il est enfermé dans une cage de vapeur et étourdi pendant 2,5 secondes. Coûte 40 de chakra.",
+      dmg = "Stun de 2,5 s" },
+
+    { cat = "Futton", name = "Projectile de vapeur", key = "", id = "futton_projectile", rang = "A", icone = "", court = "Projectile", cooldown = 10, cd = 10,
+      desc = "Lance un projectile de vapeur droit devant toi. Il touche le premier ennemi sur sa route et lui inflige des dégâts, sans autre effet. Il s'arrête sur un mur. Coûte 45 de chakra.",
+      dmg = "80 au premier ennemi touché" },
 
     -- ===== SUITON =====
     { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "", court = "Requin", cooldown = 5, cd = 5.3,
@@ -413,7 +438,7 @@ local ONGLETS = {
     { nom = "Stats",         icone = "stat.png" },
     { nom = "Jutsus",        icone = "jutsu.png",       cats = { "Katon", "Suiton", "Futon", "Raiton", "Doton" },
       desc = "Cette catégorie répertorie les techniques des natures du chakra" },
-    { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton", "Inkuton", "Bakuton" },
+    { nom = "Kekkei Genkai", icone = "kekei.png",      cats = { "Mokuton", "Jinton", "Kiminari", "Jiton", "Inkuton", "Bakuton", "Futton" },
       desc = "Cette catégorie répertorie les techniques héritées par le sang" },
     { nom = "Clan",          icone = "clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike", "Hyuga", "Senju", "Uchiha" },
       desc = "Cette catégorie répertorie les techniques secrètes des clans" },

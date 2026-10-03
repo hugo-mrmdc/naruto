@@ -52,7 +52,7 @@ if SERVER then
         for _, ent in ipairs(ents.FindInSphere(pos, self.Rayon)) do
             if EstCible(ent, owner) then
                 local dmg = DamageInfo()
-                dmg:SetDamage(self.Degats * (1 - math.Clamp(ent:WorldSpaceCenter():Distance(pos) / self.Rayon, 0, 1) * 0.5))
+                dmg:SetDamage(self.Degats)
                 dmg:SetAttacker(IsValid(owner) and owner or self)
                 dmg:SetInflictor(self)
                 dmg:SetDamageType(DMG_BLAST)
