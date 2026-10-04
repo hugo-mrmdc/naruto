@@ -11,6 +11,7 @@
 util.AddNetworkString("shoton_cristal_cast")
 util.AddNetworkString("shoton_cristal_fx")
 util.AddNetworkString("shoton_cristal_touche")
+util.AddNetworkString("shoton_cristal_brise")
 
 --========================================================
 -- RÉGLAGES (valeurs par niveau : _na_niveaux_techniques.lua)
@@ -87,7 +88,17 @@ local function Lancer(ply)
         })
         reste = reste - d
         pos = tr.HitPos
-        if tr.Hit then
+        -- hitbox visible avec developer 1 (comme le projectile de vapeur)
+        if GetConVar("developer"):GetInt() > 0 then
+            debugoverlay.Box(pos, -t, t, 0.1, Color(255, 100, 200, 25))
+        end
+        if tr.Hit and not EstCible(tr.Entity, ply) and tr.HitNormal.z > 0.7 then
+            -- sol : l'onde glisse dessus au lieu de s'arrêter (viser le sol / les pieds de la cible la touche quand même)
+            local glisse = dir - tr.HitNormal * dir:Dot(tr.HitNormal)
+            if glisse:LengthSqr() < 0.01 then glisse = ply:GetForward() glisse.z = 0 end   -- visée droit vers le bas
+            dir = glisse:GetNormalized()
+            pos = tr.HitPos + tr.HitNormal
+        elseif tr.Hit then
             timer.Remove(nom)
             Particules(ply, false)
             if EstCible(tr.Entity, ply) then Emprisonner(ply, tr.Entity) end

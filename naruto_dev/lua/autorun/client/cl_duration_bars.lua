@@ -19,7 +19,7 @@ for _, id in ipairs({
     "kaguya_danse", "kaguya_legion", "chinoike_pluie", "chinoike_vortex", "hyuga_tourbillon",
     "kiminari_prison", "jiton_emergence", "jiton_nuage", "jiton_vortex", "senju_renfo", "senju_soin",
     "inkuton_moine", "bakuton_dragon", "futton_vapeur", "futton_cage", "futton_monde",
-    "hyoton_dome",
+    "hyoton_dome", "shoton_armure",
 }) do DUREES[id] = true end
 
 local ECART = 58 -- hauteur occupée par une barre + son nom (empilées vers le bas)

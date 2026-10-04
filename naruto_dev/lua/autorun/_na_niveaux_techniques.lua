@@ -1249,7 +1249,49 @@ NA_NIV_TECH.shoton_cristal = {
     [2] = { duree = 3.5 },
     [3] = { duree = 4, chakra = 36 },
     [4] = { duree = 4.5, recharge = 15 },
-    [5] = { duree = 5, chakra = 32, recharge = 12 },
+    [5] = { duree = 5, chakra = 32, recharge = 1 },
+}
+
+-- Armure de cristal (server/shoton/sv_shoton_armure.lua) : armure rose pendant "duree" secondes
+--   duree = secondes, reduction = % de dégâts subis en moins, chakra = coût
+NA_NIV_TECH.shoton_armure = {
+    [1] = { duree = 15, reduction = 35, chakra = 40, recharge = 30, duree_mudra = 0.4 },
+    [2] = { duree = 16, reduction = 38 },
+    [3] = { duree = 18, reduction = 42, chakra = 36 },
+    [4] = { duree = 20, reduction = 46, recharge = 26 },
+    [5] = { duree = 22, reduction = 50, chakra = 32, recharge = 22 },
+}
+
+-- Roquettes (server/shoton/sv_shoton_rockets.lua) : le lanceur s'élève et tire "nombre" roquettes de cristal
+--   degats = par roquette (zone), explosion = rayon de zone, nombre, intervalle = secondes entre tirs, hauteur = montée, vitesse
+NA_NIV_TECH.shoton_rockets = {
+    [1] = { degats = 60, explosion = 120, nombre = 3, intervalle = 0.45, hauteur = 450, montee = 0.9, vitesse = 1600, chakra = 60, recharge = 25, duree_mudra = 0.3 },
+    [2] = { degats = 70 },
+    [3] = { degats = 80, chakra = 54 },
+    [4] = { degats = 90, recharge = 22 },
+    [5] = { degats = 105, chakra = 48, recharge = 18 , nombre = 5 },
+}
+
+-- Pics de cristal (server/shoton/sv_shoton_pics.lua) : une forêt de cristaux sort du sol en éventail devant le lanceur
+--   rangees = nombre de rangées, par_rangee = cristaux par rangée, rayon = zone touchée autour d'un cristal,
+--   degats = par ennemi (une fois), stun = secondes, echelle = taille des cristaux, duree_vie = secondes avant qu'ils disparaissent
+NA_NIV_TECH.shoton_pics = {
+    [1] = { rangees = 6, par_rangee = 6, rayon = 90, degats = 50, stun = 0, echelle = 0.8, duree_vie = 1.8, chakra = 55, recharge = 20, duree_mudra = 0.4 },
+    [2] = { degats = 60 },
+    [3] = { rangees = 7, degats = 70, chakra = 50 },
+    [4] = { degats = 80, recharge = 17 },
+    [5] = { rangees = 8, par_rangee = 7, degats = 95, chakra = 45, recharge = 14 },
+}
+
+-- Chute de cristal (server/shoton/sv_shoton_chute.lua) : un gros cristal tombe du ciel sur le point visé
+--   portee = distance de visée max, hauteur = hauteur de départ, degats = dégâts de zone, explosion = rayon de zone,
+--   stun = secondes d'étourdissement, echelle = taille du cristal
+NA_NIV_TECH.shoton_chute = {
+    [1] = { portee = 800, hauteur = 700, degats = 120, explosion = 150, stun = 0.8, echelle = 0.8, chakra = 70, recharge = 25, duree_mudra = 0.4 },
+    [2] = { degats = 135 },
+    [3] = { degats = 150, chakra = 63 },
+    [4] = { degats = 170, recharge = 22, explosion = 170 },
+    [5] = { degats = 195, chakra = 56, recharge = 18, explosion = 190 },
 }
 
 -- Prison de vapeur (server/futton/sv_futton_prison.lua) : stun de la cible visée, dans une cage de vapeur

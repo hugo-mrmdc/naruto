@@ -123,9 +123,25 @@ local TECHNIQUES = {
       desc = "Vise un ennemi (900 unités max) : il est enfermé dans une arène de miroirs de glace, étourdi pendant 2,5 secondes et subit des dégâts à chaque instant. Coûte 45 de chakra.",
       dmg = "5 par tick + stun de 2,5 s" },
 
-    { cat = "Shoton", name = "Cristal", key = "", id = "shoton_cristal", rang = "B", icone = "geams/ui/shoton_armor.png", court = "Cristal", cooldown = 18, cd = 18,
+    { cat = "Shoton", name = "Cristal", key = "", id = "shoton_cristal", rang = "B", icone = "geams/ui/shoton_sword.png", court = "Cristal", cooldown = 18, cd = 18,
       desc = "Une onde invisible avance tout droit devant toi, jusqu'à 900 unités. Le premier ennemi touché est enfermé dans un cristal et étourdi pendant 3 secondes. Elle s'arrête sur un mur. Coûte 40 de chakra.",
       dmg = "Stun de 3 s" },
+
+    { cat = "Shoton", name = "Armure de cristal", key = "", id = "shoton_armure", rang = "A", icone = "geams/ui/shoton_armor.png", court = "Armure", cooldown = 30, cd = 30,
+      desc = "Une armure de cristal rose recouvre ton corps pendant 15 secondes : tu encaisses 35 % de dégâts en moins. Coûte 40 de chakra.",
+      dmg = "-35 % de dégâts subis pendant 15 s" },
+
+    { cat = "Shoton", name = "Roquettes", key = "", id = "shoton_rockets", rang = "A", icone = "geams/ui/shoton_roquets.png", court = "Roquettes", cooldown = 25, cd = 25,
+      desc = "Tu t'élèves dans les airs et tires 3 roquettes de cristal là où tu vises. Chacune explose au contact d'un ennemi ou d'un mur et blesse tous les ennemis proches. Pas de dégâts de chute à l'atterrissage. Coûte 60 de chakra.",
+      dmg = "60 par roquette (zone)" },
+
+    { cat = "Shoton", name = "Pics de cristal", key = "", id = "shoton_pics", rang = "S", icone = "ui/main_menu/library/new_icone/shoton.png", court = "Pics", cooldown = 20, cd = 20,
+      desc = "Une forêt de cristaux roses et lilas jaillit du sol en éventail devant toi, rangée après rangée. Chaque ennemi touché subit des dégâts une seule fois (aucun étourdissement). Coûte 55 de chakra.",
+      dmg = "50 par ennemi touché" },
+
+    { cat = "Shoton", name = "Chute de cristal", key = "", id = "shoton_chute", rang = "S", icone = "ui/main_menu/library/shoton.png", court = "Chute", cooldown = 25, cd = 25,
+      desc = "Un énorme cristal tombe du ciel sur le point que tu vises (800 unités max) et explose à l'impact : tous les ennemis proches subissent des dégâts et sont légèrement étourdis (0,8 s). Coûte 70 de chakra.",
+      dmg = "120 de dégâts de zone + stun de 0,8 s" },
 
     { cat = "Futton", name = "Prison de vapeur", key = "", id = "futton_prison", rang = "A", icone = "ui/icon/prisonvapeur.png", court = "Prison", cooldown = 18, cd = 18,
       desc = "Vise un ennemi (900 unités max) : il est enfermé dans une cage de vapeur et étourdi pendant 2,5 secondes. Coûte 40 de chakra.",

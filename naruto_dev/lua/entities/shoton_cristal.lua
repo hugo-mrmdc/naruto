@@ -56,6 +56,17 @@ if SERVER then
         end
         return true
     end
+
+    -- le cristal se brise : mêmes particules qu'à sa création (cl_shoton_cristal.lua)
+    function ENT:OnRemove()
+        local cible = self.Cible
+        net.Start("shoton_cristal_brise")
+            -- au sol, sous la cible
+            local centre = IsValid(cible) and cible:WorldSpaceCenter() or self:WorldSpaceCenter()
+            local sol = util.TraceLine({ start = centre, endpos = centre - Vector(0, 0, 400), mask = MASK_SOLID_BRUSHONLY })
+            net.WriteVector(sol.Hit and sol.HitPos or centre)
+        net.Broadcast()
+    end
 end
 
 if CLIENT then
