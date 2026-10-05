@@ -46,10 +46,10 @@ local ANIM_COUPE   = 0.4    -- l'animation de mudras est coupée après ces seco
 local ANIM_VOL     = "nrp_ninjutsu_attack_aerial_d21nj3_start"   -- jouée en l'air, avant le premier tir
 local ANIM_VOL_COUPE = 0    -- l'animation en l'air est coupée après ces secondes (0 = entière)
 
-local SON_ENVOL    = "ambient/energy/zap9.wav"
-local SON_CHARGE   = "ambient/energy/electric_loop.wav"
-local SON_TIR      = "ambient/energy/zap%d.wav"     -- %d = 1 à 3
-local SON_IMPACT   = "ambient/energy/spark%d.wav"   -- %d = 1 à 6
+local SON_ENVOL    = "naruto_sound/jutsu/raiton/raiton1.wav"
+local SON_CHARGE   = "naruto_sound/jutsu/raiton/raiton10.wav"
+local SON_TIR      = "naruto_sound/jutsu/raiton/raiton11.wav"     -- %d = 1 à 3
+local SON_IMPACT   = "naruto_sound/jutsu/raiton/raiton12.wav"   -- %d = 1 à 6
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

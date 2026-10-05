@@ -78,7 +78,7 @@ local function Detruire(ply, avecRecharge)
     st.frappeA = nil
 
     ParticleEffect(FX_FIN, ply:GetPos(), angle_zero)
-    ply:EmitSound("physics/wood/wood_furniture_break" .. math.random(1, 2) .. ".wav", 95, 55)
+    ply:EmitSound("naruto_sound/jutsu/senju/senju1.wav", 95, 55)
     timer.Simple(DELAI_FIN, function()
         if IsValid(ply) and etat[ply] == st then Arreter(ply, avecRecharge) end
     end)
@@ -134,7 +134,7 @@ local function Transformer(ply)
 
     local arme = ply:GetActiveWeapon()
     if IsValid(arme) then arme:SetNoDraw(true) end
-    ply:EmitSound("physics/wood/wood_furniture_break1.wav", 90, 60)
+    ply:EmitSound("naruto_sound/jutsu/senju/senju4.wav", 90, 60)
 end
 
 net.Receive("mokuton_golem_cast", function(_, ply)
@@ -195,7 +195,7 @@ local function Attaquer(ply, st)
     ply:SetNW2Int("NA_GolemAtk", st.combo)
     ply:SetNW2Float("NA_GolemAtkDebut", now)
     ply:SetNW2Float("NA_GolemAtkFin", now + duree)
-    ply:EmitSound("physics/wood/wood_plank_impact_hard" .. math.random(1, 3) .. ".wav", 80, 70)
+    ply:EmitSound("naruto_sound/jutsu/senju/senju2.wav", 80, 70)
 end
 
 -- Le coup part : dégâts + projection devant le golem
@@ -223,7 +223,7 @@ local function Frapper(ply, st)
         end
     end
 
-    ply:EmitSound("physics/wood/wood_furniture_break" .. math.random(1, 2) .. ".wav", 85, 80)
+    ply:EmitSound("naruto_sound/jutsu/senju/senju1.wav", 85, 80)
 
     -- particule d'impact AU SOL, là où le coup tombe : la même que le dragon (solve_doton_golem_impact, coupée au bout
     -- d'1 s par les clients : message "mokuton_dragon_impact_fx", client/mokuton/mokuton_dragon_cl.lua)

@@ -48,7 +48,7 @@ if SERVER then
         self.Dernier = CurTime()
         self.Touches = {}
 
-        self:EmitSound("ambient/wind/wind_snippet4.wav", 80, 80)
+        self:EmitSound("naruto_sound/jutsu/jishaku/jishaku2.wav", 80, 80)
     end
 
     local function EstCible(ent, lanceur)
@@ -82,7 +82,7 @@ if SERVER then
             ent:TakeDamageInfo(dmg)
 
             ent:SetVelocity(Vector(0, 0, self.Projection) + self.Direction * 150)
-            ent:EmitSound("player/footsteps/sand2.wav", 75, math.random(90, 110), 0.8)
+            ent:EmitSound("naruto_sound/jutsu/jishaku/jishaku3.wav", 75, math.random(90, 110), 0.8)
         end
 
         if GetConVar("developer"):GetInt() > 0 then
@@ -124,7 +124,7 @@ if SERVER then
     end
 
     function ENT:OnRemove()
-        self:StopSound("ambient/wind/wind_snippet4.wav")
+        self:StopSound("naruto_sound/jutsu/jishaku/jishaku2.wav")
     end
 end
 

@@ -28,7 +28,7 @@ local ANIM_APPEL   = "attack_hyuga_64poings"
 local ANIM_DUREE_DEFAUT = 0.8   -- si la séquence est introuvable sur le modèle (comme _na_mudra.lua)
 local ANIM_DUREE_MAX    = 6     -- durée maximum de l'invulnérabilité/figement (couvre le pire cas d'étourdi, cf. Niv plus bas)
 
-local SON_IMPACT   = "physics/body/body_medium_impact_hard3.wav"
+local SON_IMPACT   = "naruto_sound/jutsu/hyuga/hyuga1.wav"
 --========================================================
 
 resource.AddFile("particles/patlick_atgparticules.pcf")
@@ -97,7 +97,6 @@ local function InfligerTick(ply, ent, degats)
     dmg:SetDamageType(DMG_CLUB)
     dmg:SetDamagePosition(ent:WorldSpaceCenter())
     ent:TakeDamageInfo(dmg)
-    ent:EmitSound(SON_IMPACT, 75, math.random(95, 110), 0.6)
 
     if ent:IsPlayer() then
         ent:SetVelocity(-ent:GetVelocity())

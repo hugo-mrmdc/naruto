@@ -67,7 +67,7 @@ if SERVER then
         self.Fini = true
 
         ParticleEffect(self.FX_IMPACT, pos, normale:Angle())
-        self:EmitSound("ambient/water/water_splash" .. math.random(1, 3) .. ".wav", 70, math.random(110, 140))
+        self:EmitSound("naruto_sound/jutsu/senju/senju2.wav", 70, math.random(110, 140))
         self:Remove()
     end
 

@@ -85,7 +85,7 @@ local function Nuee(ply)
     local fin = CurTime() + duree
 
     if developer:GetInt() > 0 then debugoverlay.Sphere(centre, rayon, duree, Color(255, 120, 40, 12), true) end
-    sound.Play("ambient/fire/ignite.wav", centre, 90, 70)
+    sound.Play("geams/solve_jutsu/katon/solve_katon_arena_start.wav", centre, 90, 70)
 
     -- fil de feu entre la bouche du lanceur et la nuée, pendant toute la nuée
     net.Start("katon_nuee_fil")

@@ -89,7 +89,7 @@ local function Demarrer(ply)
         if SalamandrePoison and SalamandrePoison.Stop then SalamandrePoison.Stop(ply) end
     end
 
-    ply:EmitSound("npc/headcrab_poison/ph_hiss1.wav", 75, 90)
+    ply:EmitSound("naruto_sound/jutsu/senju/senju1.wav", 75, 90)
 
     local prochainTick = CurTime()
     timer.Create(minuteur, 0.1, 0, function()

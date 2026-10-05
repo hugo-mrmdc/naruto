@@ -46,7 +46,7 @@ if SERVER then
         self.Fin     = self.Debut + self.Duree
         self.Tir     = self.Debut + self.Montee + 0.3   -- premier tir : un instant après être sorti
         self:SetPos(self.Sol - Vector(0, 0, self.Enfoncement * self.Echelle))
-        self:EmitSound("physics/concrete/concrete_break3.wav", 85, 70)
+        self:EmitSound("naruto_sound/jutsu/doton/earth10.wav", 85, 70)
     end
 
     function ENT:Think()
@@ -83,7 +83,7 @@ if SERVER then
                 balle.Dragon  = self
                 balle:Spawn()
             end
-            self:EmitSound("physics/concrete/rock_impact_hard" .. math.random(1, 6) .. ".wav", 80, math.random(60, 80))
+            self:EmitSound("naruto_sound/jutsu/doton/earth11.wav", 80, math.random(60, 80))
         end
 
         self:NextThink(now)

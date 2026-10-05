@@ -30,7 +30,7 @@ NRP.Config.Dojutsu = {
         clan = "uchiha",
         activationCost = 10,
         cooldown = 4,
-        sounds = { on = "ambient/levels/citadel/pod_open1.wav" },
+        sounds = { on = "naruto_sound/jutsu/uchiha/uchiha2.wav" },
         eye = { color = Color(230, 20, 30), size = 1.6 },
         stages = {
             { name = "Sharingan - 1 tomoe", unlock = "tree", level = 8, drain = 1.2,
@@ -53,7 +53,7 @@ NRP.Config.Dojutsu = {
         clan = "hyuga",
         activationCost = 8,
         cooldown = 3,
-        sounds = { on = "ambient/levels/labs/electric_explosion4.wav" },
+        sounds = { on = "naruto_sound/jutsu/hyuga/hyuga3.wav" },
         eye = { color = Color(235, 235, 255), size = 1.4 },
         stages = {
             { name = "Byakugan", unlock = "tree", level = 1, drain = 1.0,

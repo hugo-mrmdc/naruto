@@ -29,8 +29,8 @@ local ANIM_APPEL   = "nrp_ninjutsu_defend_d25nj3"   -- (nom réel dans anim_exte
 local ANIM_VITESSE = 2      -- vitesse de l'animation (1 = normale, 2 = deux fois plus vite)
 local DELAI_FOUDRE = 0.4   -- secondes entre le début de l'animation et la chute de la foudre
 
-local SON_DECHARGE = "ambient/energy/zap9.wav"
-local SON_TOUCHE   = "ambient/energy/spark%d.wav"   -- %d = 1 à 6
+local SON_DECHARGE = "naruto_sound/jutsu/raiton/raiton1.wav"
+local SON_TOUCHE   = "naruto_sound/jutsu/raiton/raiton12.wav"   -- %d = 1 à 6
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

@@ -37,7 +37,7 @@ if SERVER then
         self:SetHealth(self:Health() - dmg:GetDamage())
         if self:Health() <= 0 and not self.NRPBroken then
             self.NRPBroken = true
-            self:EmitSound("physics/concrete/concrete_break" .. math.random(2, 3) .. ".wav")
+            self:EmitSound("naruto_sound/jutsu/doton/earth16.wav")
             NRP.Combat.PlayFX("earth", self:GetPos(), { scale = 1.5 })
             self:Remove()
         end

@@ -36,19 +36,19 @@ if SERVER then
         self:SetModelScale(self.Echelle, 0)
         self.Vitesse = self.VitesseDepart
         self.MortA = CurTime() + self.DureeVie
-        self:EmitSound("ambient/wind/wind_snippet1.wav", 95, 60, 1)
+        self:EmitSound("geams/solve_jutsu/katon/solve_katon_fire_tornado_start.wav", 95, 60, 1)
     end
 
     function ENT:Exploser(pos)
         pos = pos or self:GetPos()
         local owner = self:GetOwner()
-        self:StopSound("ambient/wind/wind_snippet1.wav")
+        self:StopSound("geams/solve_jutsu/katon/solve_katon_fire_tornado_start.wav")
 
         net.Start("katon_meteore_fx")
             net.WriteVector(pos)
         net.Broadcast()
-        sound.Play("ambient/explosions/explode_" .. math.random(1, 5) .. ".wav", pos, 140, 80, 1)
-        sound.Play("ambient/fire/ignite.wav", pos, 120, 60, 1)
+        sound.Play("geams/solve_jutsu/katon/solve_katon_fireball_01.wav", pos, 140, 80, 1)
+        sound.Play("geams/solve_jutsu/katon/solve_katon_arena_start.wav", pos, 120, 60, 1)
         util.ScreenShake(pos, 25, 40, 2.5, self.Rayon * 6)
 
         for _, ent in ipairs(ents.FindInSphere(pos + Vector(0, 0, 60), self.Rayon)) do

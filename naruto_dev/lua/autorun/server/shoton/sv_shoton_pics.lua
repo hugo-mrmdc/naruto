@@ -93,7 +93,7 @@ local function Rangee(ply, centre, dr, av, largeur, par, touches, rayon, degats,
     end
 
     if #liste == 0 then return end
-    sound.Play("physics/glass/glass_impact_bullet" .. math.random(1, 4) .. ".wav", centre, 75, math.random(70, 100))   -- un seul son par rangée
+    sound.Play("geams/solve_jutsu/shoton/solve_shoton_dragon_start.wav", centre, 75, math.random(70, 100))   -- un seul son par rangée
 
     net.Start("shoton_pics_touche")
         net.WriteVector(centre)

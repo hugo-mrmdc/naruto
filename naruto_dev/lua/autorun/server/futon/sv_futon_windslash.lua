@@ -54,7 +54,7 @@ local function Lancer(ply)
     ent.Roulis   = Niv(ply, "roulis", ROULIS)
     ent:Spawn()
 
-    ply:EmitSound("ambient/wind/wind_snippet" .. math.random(1, 5) .. ".wav", 75, 130)
+    ply:EmitSound("naruto_sound/jutsu/futon/futon12.wav", 75, 130)
 end
 
 net.Receive("futon_windslash_cast", function(_, ply)

@@ -146,6 +146,7 @@ hook.Add("Think", "naruto_dev_katon_projectiles_move", function()
 end)
 
 net.Receive(NET_FIRE, function(_, ply)
+    NA_SonJutsu(ply)
     if not NA_Debloquee(ply, "katon_boule") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:IsPlayer() or not ply:Alive() then return end
 

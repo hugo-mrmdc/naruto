@@ -30,8 +30,8 @@ local DELAI_IMPACT = 0.65   -- secondes entre le lancer de l'animation et la fra
 local FX_DISTANCE  = 15     -- longueur de la particule (départ -> arrivée)
 local ANIM_APPEL   = "m_attack_chakrafista_palm_large"
 
-local SON_LANCER   = "npc/zombie/claw_miss1.wav"
-local SON_IMPACT   = "physics/body/body_medium_impact_hard3.wav"
+local SON_LANCER   = "naruto_sound/jutsu/hyuga/hyuga2.wav"
+local SON_IMPACT   = "naruto_sound/jutsu/hyuga/hyuga1.wav"
 --========================================================
 
 resource.AddFile("particles/ctg_hyuga_jutsus.pcf")

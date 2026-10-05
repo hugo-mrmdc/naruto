@@ -42,7 +42,7 @@ if SERVER then
         self:SetFin(CurTime() + self.Duree)
         self.ProchainTick = CurTime()
 
-        self:EmitSound("weapons/bugbait/bugbait_squeeze" .. math.random(1, 3) .. ".wav", 75, 70)
+        self:EmitSound("naruto_sound/jutsu/senju/senju2.wav", 75, 70)
     end
 
     local function EstCible(ent, lanceur)

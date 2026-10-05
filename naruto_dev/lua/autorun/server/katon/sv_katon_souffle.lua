@@ -76,7 +76,7 @@ local function Souffler(ply)
     local nom = "katon_souffle_" .. ply:EntIndex()
     actifs[ply] = nom
     EnvoyerFx(ply, duree)
-    ply:EmitSound("ambient/fire/mtov_flame2.wav", 80, 90)
+    ply:EmitSound("geams/solve_jutsu/katon/solve_katon_balsamique.wav", 80, 90)
 
     -- l'animation du souffle (haut du corps) est jouée par les clients : cl_katon_souffle.lua
     -- pas de NA_Mudra ici : pendant le souffle, on peut frapper et lancer d'autres jutsu

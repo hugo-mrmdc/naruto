@@ -39,9 +39,9 @@ local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.l
 local DUREE_MUDRA  = 0.5    -- incantation avant la zone
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 
-local SON_DEBUT    = "ambient/energy/zap9.wav"
-local SON_BOUCLE   = "ambient/energy/electric_loop.wav"
-local SON_TOUCHE   = "ambient/energy/spark%d.wav"   -- %d = 1 à 6
+local SON_DEBUT    = "naruto_sound/jutsu/raiton/raiton1.wav"
+local SON_BOUCLE   = "naruto_sound/jutsu/raiton/raiton10.wav"
+local SON_TOUCHE   = "naruto_sound/jutsu/raiton/raiton12.wav"   -- %d = 1 à 6
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

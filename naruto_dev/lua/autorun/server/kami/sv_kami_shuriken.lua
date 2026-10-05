@@ -69,7 +69,7 @@ local function Lancer(ply)
         ent:Spawn()
     end
 
-    ply:EmitSound("weapons/slam/throw.wav", 70, 130)
+    ply:EmitSound("geams/solve_jutsu/meiton/solve_meiton_absorption_chakra_start.wav", 70, 130)
 end
 
 net.Receive("kami_shuriken_cast", function(_, ply)

@@ -49,7 +49,7 @@ if SERVER then
         self.Dir.z = 0
         self.Dir:Normalize()
 
-        self:EmitSound("ambient/wind/windgust_strong.wav", 80, 100)
+        self:EmitSound("naruto_sound/jutsu/futon/futon12.wav", 80, 100)
     end
 
     local function EstCible(ent, lanceur)

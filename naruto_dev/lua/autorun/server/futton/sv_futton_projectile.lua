@@ -44,7 +44,7 @@ local function Lancer(ply)
     ent.Vitesse   = Niv(ply, "vitesse", VITESSE)
     ent.DureeVie  = Niv(ply, "duree_vie", DUREE_VIE)
     ent:Spawn()
-    ply:EmitSound("ambient/wind/wind_snippet2.wav", 75, 130, 0.8)
+    ply:EmitSound("naruto_sound/jutsu/futon/futon10.wav", 75, 130, 0.8)
 end
 
 net.Receive("futton_projectile_cast", function(_, ply)

@@ -222,7 +222,7 @@ if SERVER then
 
         -- la roue envoie la cible devant elle
         ent:SetVelocity(self.Direction * self.Poussee + Vector(0, 0, self.Soulevement))
-        ent:EmitSound("physics/cardboard/cardboard_box_impact_hard" .. math.random(1, 7) .. ".wav", 70, 100)
+        ent:EmitSound("geams/solve_jutsu/meiton/solve_meiton_give_chakra.wav", 70, 100)
     end
 
     function ENT:Blesser(lanceur, depuis, vers)

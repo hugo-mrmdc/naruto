@@ -33,16 +33,16 @@ hook.Add("NRP.Notify", "NRP.UI.Toasts", function(text, kind, duration)
     while #toasts > 6 do table.remove(toasts, 1) end
 
     if kind == NRP.NOTIFY_ERROR then
-        surface.PlaySound("buttons/button10.wav")
+        surface.PlaySound("solve_naruto_base/ui/reroll_click.wav")
     elseif kind ~= NRP.NOTIFY_XP then
-        surface.PlaySound("buttons/lightswitch2.wav")
+        surface.PlaySound("solve_naruto_base/ui/menu_selection_v2.wav")
     end
     return true
 end)
 
 hook.Add("NRP.Announce", "NRP.UI.Announce", function(title, subtitle, color, duration)
     announce = { title = title, subtitle = subtitle, color = color, born = CurTime(), die = CurTime() + (duration or 5) }
-    surface.PlaySound("garrysmod/content_downloaded.wav")
+    surface.PlaySound("solve_naruto_base/ui/unlock_jutsu.wav")
     return true
 end)
 

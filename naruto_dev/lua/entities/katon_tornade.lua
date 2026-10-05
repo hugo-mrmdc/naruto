@@ -45,7 +45,7 @@ if SERVER then
         self.ProchainTick = CurTime()
         self.Brule = {}   -- cible -> fin de la brûlure qu'on lui a mise (pas de brûlure empilée à chaque tick)
 
-        self:EmitSound("ambient/fire/ignite.wav", 80, 80)
+        self:EmitSound("geams/solve_jutsu/katon/solve_katon_arena_start.wav", 80, 80)
     end
 
     local function EstCible(ent, lanceur)

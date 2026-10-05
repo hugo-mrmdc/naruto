@@ -49,7 +49,7 @@ if SERVER then
         self:SetFin(CurTime() + self.Duree)
         self.ProchainDegat = CurTime()
 
-        self:EmitSound("ambient/wind/wind_snippet4.wav", 80, 70)
+        self:EmitSound("naruto_sound/jutsu/senju/senju4.wav", 80, 70)
     end
 
     local function EstCible(ent, lanceur)

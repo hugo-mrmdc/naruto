@@ -89,8 +89,8 @@ for _, e in ipairs(ELEMENTS) do IMAGES[#IMAGES + 1] = e.icone end
 local prechauffe = false
 hook.Add("InitPostEntity", "NA_Selecteur_Precharger", function()
     for _, nom in ipairs(IMAGES) do Mat(nom) end
-    util.PrecacheSound("ui/buttonrollover.wav")
-    util.PrecacheSound("ui/buttonclick.wav")
+    util.PrecacheSound("solve_naruto_base/ui/menu_selection_v2.wav")
+    util.PrecacheSound("naruto_sound/menu_select.mp3")
 end)
 
 hook.Add("HUDPaint", "NA_Selecteur_Prechauffer", function()
@@ -175,7 +175,7 @@ local function Valider(ply)
     net.Start("NA_Selecteur_Choisir")
         net.WriteString(e.id)
     net.SendToServer()
-    ply:EmitSound("ui/buttonclick.wav", 0, 100, 0.5)
+    ply:EmitSound("naruto_sound/menu_select.mp3", 0, 100, 0.5)
     Fermer()
 end
 
@@ -217,7 +217,7 @@ hook.Add("PlayerBindPress", "NA_Selecteur_Molette", function(ply, bind, pressed)
     if nouveau ~= selAbs then
         selAbs = nouveau
         impulsion = 1
-        ply:EmitSound("ui/buttonrollover.wav", 0, 110, 0.35)
+        ply:EmitSound("solve_naruto_base/ui/menu_selection_v2.wav", 0, 110, 0.35)
     end
     return true
 end)

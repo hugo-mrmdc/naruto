@@ -63,7 +63,7 @@ local function Expulser(ply)
         net.WriteEntity(ply)
         net.WriteFloat(rayon)   -- le client étale l'effet sur tout le rayon
     net.Broadcast()
-    ply:EmitSound("ambient/explosions/explode_4.wav", 85, 120)
+    ply:EmitSound("naruto_sound/jutsu/futon/futon1.wav", 85, 120)
 end
 
 net.Receive("futon_expulsion_cast", function(_, ply)

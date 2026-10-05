@@ -53,7 +53,7 @@ if SERVER then
         net.Start("shoton_rocket_boom")
             net.WriteVector(sol.Hit and sol.HitPos or pos)
         net.Broadcast()
-        sound.Play("physics/glass/glass_largesheet_break1.wav", pos, 80, 120)
+        sound.Play("geams/solve_jutsu/shoton/solve_shoton_dragon_start.wav", pos, 80, 120)
         self:Remove()
     end
 

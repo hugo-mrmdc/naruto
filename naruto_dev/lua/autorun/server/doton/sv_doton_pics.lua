@@ -54,7 +54,7 @@ local function Petrifier(ent, stun)
     pic:SetAngles(Angle(0, ent:GetAngles().y, 0))
     pic:SetSolid(SOLID_NONE)
     pic:Spawn()
-    pic:EmitSound("physics/concrete/rock_impact_hard" .. math.random(1, 6) .. ".wav", 80, math.random(60, 80))
+    pic:EmitSound("naruto_sound/jutsu/doton/earth1.wav", 80, math.random(60, 80))
     timer.Simple(stun, function() if IsValid(pic) then pic:Remove() end end)
 end
 

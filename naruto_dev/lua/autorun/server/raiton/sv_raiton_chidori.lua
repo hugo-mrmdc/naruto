@@ -106,7 +106,7 @@ local function Toucher(ply, cible)
     net.Start("raiton_poing_impact")   -- défini dans sv_raiton_poing.lua, joué par cl_raiton_poing.lua
         net.WriteVector(tr.Hit and tr.HitPos or cible:GetPos())
     net.Broadcast()
-    sound.Play("physics/concrete/concrete_break3.wav", cible:GetPos(), 85, 90, 1)
+    sound.Play("naruto_sound/jutsu/raiton/raiton3.wav", cible:GetPos(), 85, 90, 1)
 end
 
 local function Courir(ply)

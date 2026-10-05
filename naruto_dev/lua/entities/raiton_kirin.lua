@@ -84,7 +84,7 @@ if SERVER then
         -- s'écraserait instantanément. On garde donc au moins la moitié de la hauteur à parcourir.
         local reste = math.min(self.Tete * self.Echelle, (pos.z - self.Cible.z) * 0.5)
         self.Arret = Vector(pos.x, pos.y, self.Cible.z + reste)
-        self:EmitSound("ambient/energy/zap9.wav", 90, 80)
+        self:EmitSound("geams/solve_jutsu/solve_kirin_geams.wav", 90, 80)
     end
 
     function ENT:Think()
@@ -122,7 +122,7 @@ if SERVER then
             net.WriteBool(false)   -- false = impact au sol, true = nuage
             net.WriteVector(point)
         net.Broadcast()
-        sound.Play("ambient/explosions/explode_" .. math.random(1, 5) .. ".wav", point, 95, 110, 1)
+        sound.Play("geams/solve_jutsu/solve_kirin_geams.wav", point, 95, 110, 1)
 
         for _, ent in ipairs(ents.FindInSphere(point, self.Rayon)) do
             if ent == lanceur or not (NA_InkutonEstCible and NA_InkutonEstCible(ent, lanceur)) then continue end

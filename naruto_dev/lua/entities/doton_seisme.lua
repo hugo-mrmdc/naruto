@@ -41,7 +41,7 @@ if SERVER then
         self:SetFin(CurTime() + self.Duree)
         self.ProchainTick = CurTime()
 
-        self:EmitSound("physics/concrete/concrete_break3.wav", 85, 70)
+        self:EmitSound("naruto_sound/jutsu/doton/earth10.wav", 85, 70)
     end
 
     local function EstCible(ent, lanceur)
@@ -82,7 +82,7 @@ if SERVER then
         if now >= self.ProchainTick then
             self.ProchainTick = now + self.Intervalle
             self:Blesser()
-            self:EmitSound("physics/concrete/rock_impact_hard" .. math.random(1, 6) .. ".wav", 70, math.random(70, 90), 0.6)
+            self:EmitSound("naruto_sound/jutsu/doton/earth11.wav", 70, math.random(70, 90), 0.6)
         end
 
         self:NextThink(now + 0.1)

@@ -32,8 +32,8 @@ local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.l
 local DUREE_MUDRA  = 0.5    -- incantation avant la pluie
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 
-local SON_DEBUT    = "ambient/water/water_splash1.wav"
-local SON_TICK     = "physics/flesh/flesh_squishy_impact_hard1.wav"
+local SON_DEBUT    = "naruto_sound/jutsu/mugen/1-03.wav"
+local SON_TICK     = "naruto_sound/jutsu/mugen/1-02.wav"
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

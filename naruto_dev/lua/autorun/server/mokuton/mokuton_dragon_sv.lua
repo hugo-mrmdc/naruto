@@ -390,7 +390,7 @@ local function Lancer(ply, st)
     nextRide[ply] = CurTime() + DASH_RECHARGE
     if NA_CD then NA_CD.Set(ply, "mokuton_dragon", DASH_RECHARGE) end   -- recharge visible dans la barre
 
-    dragon:EmitSound("ambient/wind/wind_snippet2.wav", 95, 90)
+    dragon:EmitSound("naruto_sound/jutsu/senju/senju3.wav", 95, 90)
 end
 
 -- Clic droit : l'animation démarre tout de suite, le dragon part un instant plus tard (DASH_DELAI).
@@ -582,7 +582,7 @@ hook.Add("Think", "MokutonDragon_Projectiles", function()
         local choc = mur.Hit and not mur.StartSolid
         if choc or now >= p.fin then
             if choc then
-                dragon:EmitSound("physics/wood/wood_furniture_break" .. math.random(1, 2) .. ".wav", 95, 80)
+                dragon:EmitSound("naruto_sound/jutsu/senju/senju1.wav", 95, 80)
 
                 -- la particule se joue AU SOL, sous le point d'impact (300 unités au plus ; sinon à l'impact)
                 local sol = util.TraceLine({ start = mur.HitPos + Vector(0, 0, 10), endpos = mur.HitPos - Vector(0, 0, 300), mask = MASK_SOLID_BRUSHONLY })
@@ -616,7 +616,7 @@ hook.Add("Think", "MokutonDragon_Projectiles", function()
             else
                 ent:SetVelocity(vel)
             end
-            ent:EmitSound("physics/wood/wood_plank_impact_hard" .. math.random(1, 3) .. ".wav", 85, math.random(85, 100))
+            ent:EmitSound("naruto_sound/jutsu/senju/senju2.wav", 85, math.random(85, 100))
         end
     end
 end)

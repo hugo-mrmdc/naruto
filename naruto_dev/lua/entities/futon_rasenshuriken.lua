@@ -69,7 +69,7 @@ if SERVER then
             net.WriteVector(pos)
             net.WriteVector(normale or Vector(0, 0, 1))   -- l'explosion s'oriente selon la surface touchée
         net.Broadcast()
-        sound.Play("ambient/explosions/explode_" .. math.random(1, 5) .. ".wav", pos, 100, 100, 1)
+        sound.Play("naruto_sound/jutsu/futon/futon11.wav", pos, 100, 100, 1)
 
         for _, ent in ipairs(ents.FindInSphere(pos, self.Rayon)) do
             if ent == lanceur or not EstCible(ent, lanceur) then continue end

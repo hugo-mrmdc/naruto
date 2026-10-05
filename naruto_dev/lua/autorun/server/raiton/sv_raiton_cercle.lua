@@ -30,7 +30,7 @@ local DUREE_MUDRA  = 0.5    -- incantation avant la première impulsion
 local DUREE_FX     = 1.5    -- secondes de la particule après chaque impulsion
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 local ANIM_COUPE   = 0.6    -- l'animation de mudras est coupée après ces secondes (0 = entière)
-local SON_IMPULSION = "ambient/energy/zap9.wav"
+local SON_IMPULSION = "naruto_sound/jutsu/raiton/raiton1.wav"
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
@@ -85,7 +85,7 @@ local function Impulsion(ply, rayon, degats, recul, souleve)
             ent:SetVelocity(vel)
         end
 
-        ent:EmitSound("ambient/energy/spark" .. math.random(1, 6) .. ".wav", 75, math.random(95, 110), 0.8)
+        ent:EmitSound("naruto_sound/jutsu/raiton/raiton2.wav", 75, math.random(95, 110), 0.8)
     end
 
     if GetConVar("developer"):GetInt() > 0 then

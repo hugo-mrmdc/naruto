@@ -141,6 +141,7 @@ local function SpawnFlowerAndDamage(caller)
 end
 
 net.Receive("MokutonSpawn_fleur", function(_, caller)
+    NA_SonJutsu(caller)
     if not NA_Debloquee(caller, "mokuton_fleur") then return end   -- technique pas encore débloquée (F6)
     print("[MOKUTON] ========================================")
     print("[MOKUTON] 📨 SIGNAL REÇU!")

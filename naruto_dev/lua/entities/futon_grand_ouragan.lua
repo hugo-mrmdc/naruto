@@ -41,7 +41,7 @@ if SERVER then
         self:SetRayon(self.Rayon)
         self:SetFin(CurTime() + self.Duree)
         self.ProchainTick = CurTime()
-        self:EmitSound("ambient/wind/wind_snippet2.wav", 85, 80)
+        self:EmitSound("naruto_sound/jutsu/futon/futon1.wav", 85, 80)
     end
 
     -- aspire la cible vers le centre

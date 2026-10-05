@@ -33,6 +33,40 @@ function NA_Mudra(ply, duree)
     end
 end
 
+-- Son d'incantation d'un jutsu, choisi dans le pack naruto_sound selon l'élément
+-- (= dossier du fichier appelant dans autorun/server/<élément>/).
+local NS = "naruto_sound/jutsu/"
+local G  = "geams/solve_jutsu/"
+local DOSSIER = {
+    katon = G .. "katon", hyoton = G .. "hyoton", bakuton = G .. "bakuton", shoton = G .. "shoton",
+    kami = G .. "meiton", doton = NS .. "doton", futon = NS .. "futon", futton = NS .. "futon",
+    raiton = NS .. "raiton", kiminari = NS .. "raiton", jiton = NS .. "jishaku", jinton = NS .. "jishaku",
+    hyuga = NS .. "hyuga", chinoike = NS .. "mugen",
+}
+local DEFAUT = NS .. "senju"   -- senju, mokuton, inkuton, suiton, salamandre...
+-- Sons dédiés du pack (par fichier de jutsu), prioritaires sur le son d'élément
+local G2 = "geams/solve_jutsu/"
+local DEDIE = {
+    sv_raiton_kirin = G2 .. "solve_kirin_geams.wav",
+}
+local sons = {}
+local function Sons(dir)
+    if not sons[dir] then sons[dir] = file.Find("sound/" .. dir .. "/*.wav", "GAME") end
+    return sons[dir]
+end
+
+function NA_SonJutsu(ply, niveau)
+    if not IsValid(ply) then return end
+    local src = debug.getinfo(niveau or 2, "S").short_src or ""
+    local dedie = DEDIE[src:match("([^/]+)%.lua$") or ""]
+    if dedie then ply:EmitSound(dedie, 80, 100) return end
+    local elem = src:match("autorun/server/([^/]+)/") or ""
+    local dir = DOSSIER[elem] or ((elem == "uchiha" or elem == "kaguya" or elem == "fumaSpell") and NS .. "uchiha") or DEFAUT
+    local liste = Sons(dir)
+    if #liste == 0 then return end
+    ply:EmitSound(dir .. "/" .. liste[math.random(#liste)], 80, math.random(95, 105))
+end
+
 -- Animation de jutsu : jouée chez tout le monde (jutsu_anim_cl.lua) et, pendant
 -- sa durée (lue dans le modèle du joueur), pas de coups d'arme.
 local ANIM_DUREE_DEFAUT = 0.8   -- si la séquence est introuvable sur le modèle
@@ -54,6 +88,8 @@ function NA_AnimJutsu(ply, seq, coupe, vitesse)
         net.WriteFloat(coupe)
         net.WriteFloat(vitesse)
     net.Broadcast()
+
+    NA_SonJutsu(ply, 3)
 
     local id = ply:LookupSequence(seq)
     local duree = ((id and id >= 0) and ply:SequenceDuration(id) or ANIM_DUREE_DEFAUT) / vitesse

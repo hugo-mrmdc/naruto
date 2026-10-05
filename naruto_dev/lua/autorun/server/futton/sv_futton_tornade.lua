@@ -51,7 +51,7 @@ local function Lancer(ply)
             ent:Spawn()
         end
     end
-    ply:EmitSound("ambient/wind/wind_snippet2.wav", 75, 110, 0.8)
+    ply:EmitSound("naruto_sound/jutsu/futon/futon10.wav", 75, 110, 0.8)
 end
 
 net.Receive("futton_tornade_cast", function(_, ply)

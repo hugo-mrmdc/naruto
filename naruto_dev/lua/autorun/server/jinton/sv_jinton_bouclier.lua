@@ -32,9 +32,9 @@ local CHAKRA_MAX    = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.
 local DUREE_MUDRA   = 0.5    -- incantation avant l'apparition du bouclier
 local ANIM_APPEL    = "nrp_ninjutsu_defend_dragonflamebombs_start"
 
-local SON_DEBUT     = "ambient/energy/whiteflash.wav"
-local SON_IMPACT    = "physics/glass/glass_impact_bullet%d.wav"   -- %d = 1 à 4
-local SON_CASSE     = "physics/glass/glass_largesheet_break1.wav"
+local SON_DEBUT     = "naruto_sound/jutsu/jishaku/jishaku1.wav"
+local SON_IMPACT    = "naruto_sound/jutsu/jishaku/jishaku2.wav"   -- %d = 1 à 4
+local SON_CASSE     = "naruto_sound/jutsu/jishaku/jishaku3.wav"
 
 -- Explosion à la fin du bouclier (son du tick du cube, particule du vortex Jinton)
 -- Zone : un cylindre autour du lanceur (le lanceur n'est pas touché).
@@ -126,7 +126,7 @@ function NA_JintonBouclierFin(ply, casse, exploser)
     timer.Remove("jinton_bouclier_" .. ply:EntIndex())
 
     if Bouclier(ply) > 0 or casse then
-        ply:EmitSound(casse and SON_CASSE or "ambient/energy/whiteflash.wav", 70, casse and 110 or 140, 0.6)
+        ply:EmitSound(casse and SON_CASSE or "naruto_sound/jutsu/jishaku/jishaku1.wav", 70, casse and 110 or 140, 0.6)
     end
     ply:SetNW2Float("NA_Bouclier", 0)
     ply:SetNW2Float("NA_BouclierMax", 0)

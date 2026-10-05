@@ -79,7 +79,7 @@ if SERVER then
             hit:TakeDamageInfo(dmg)
         end
 
-        self:EmitSound("ambient/wind/wind_hit" .. math.random(1, 3) .. ".wav", 80, math.random(110, 130))
+        self:EmitSound("naruto_sound/jutsu/futon/futon3.wav", 80, math.random(110, 130))
         self:Remove()
     end
 

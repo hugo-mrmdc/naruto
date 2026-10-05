@@ -32,9 +32,9 @@ local DUREE_FX     = 1      -- secondes de la particule sur le point frappé
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 local ANIM_COUPE   = 0.6    -- l'animation de mudras est coupée après ces secondes (0 = entière)
 
-local SON_CHARGE   = "ambient/energy/electric_loop.wav"
-local SON_DECHARGE = "ambient/energy/zap9.wav"
-local SON_TOUCHE   = "ambient/energy/spark%d.wav"   -- %d = 1 à 6
+local SON_CHARGE   = "naruto_sound/jutsu/raiton/raiton10.wav"
+local SON_DECHARGE = "naruto_sound/jutsu/raiton/raiton1.wav"
+local SON_TOUCHE   = "naruto_sound/jutsu/raiton/raiton12.wav"   -- %d = 1 à 6
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

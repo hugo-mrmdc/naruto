@@ -43,9 +43,9 @@ local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.l
 local DUREE_MUDRA  = 0.5    -- incantation avant l'armure
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 
-local SON_DEBUT    = "physics/body/body_medium_break3.wav"
-local SON_IMPACT   = "physics/body/body_medium_scrape_rough_loop1.wav"   -- quand l'armure encaisse
-local SON_FIN      = "physics/body/body_medium_break2.wav"
+local SON_DEBUT    = "naruto_sound/jutsu/uchiha/uchiha4.wav"
+local SON_IMPACT   = "naruto_sound/jutsu/uchiha/uchiha5.wav"   -- quand l'armure encaisse
+local SON_FIN      = "naruto_sound/jutsu/uchiha/uchiha6.wav"
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

@@ -32,8 +32,8 @@ local CHAKRA_MAX    = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.
 local DUREE_MUDRA   = 0.5    -- incantation avant le sarcophage
 local ANIM_APPEL    = "nrp_ninjutsu_defend_dragonflamebombs_start"
 
-local SON_APPEL     = "player/footsteps/sand1.wav"
-local SON_PRISE     = "physics/concrete/concrete_break2.wav"
+local SON_APPEL     = "naruto_sound/jutsu/jishaku/jishaku6.wav"
+local SON_PRISE     = "naruto_sound/jutsu/jishaku/jishaku1.wav"
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

@@ -61,7 +61,7 @@ local function Emprisonner(ply, cible)
         net.WriteEntity(cible)
         net.WriteFloat(duree)
     net.Broadcast()
-    cible:EmitSound("physics/glass/glass_impact_bullet4.wav", 75, 70)
+    cible:EmitSound("geams/solve_jutsu/shoton/solve_shoton_shuriken_start.wav", 75, 70)
 end
 
 -- Projectile invisible : avance par pas, s'arrête sur un mur, un obstacle ou le premier ennemi touché

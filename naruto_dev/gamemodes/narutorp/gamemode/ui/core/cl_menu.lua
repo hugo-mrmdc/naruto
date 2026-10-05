@@ -106,7 +106,7 @@ function UI.OpenMenu(tabId)
         btn:Dock(LEFT)
         btn:DockMargin(0, 0, S(6), 0)
         btn.DoClick = function()
-            surface.PlaySound("ui/buttonclickrelease.wav")
+            surface.PlaySound("naruto_sound/menu_select.mp3")
             UI.SelectTab(def.id)
         end
         menu.TabButtons[def.id] = btn

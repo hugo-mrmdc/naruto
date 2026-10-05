@@ -30,7 +30,7 @@ local ANIM_APPEL    = "m_attack_cmb09"   -- doit matcher ANIM de cl_senju_frappe
 local ANIM_VITESSE  = 1
 
 local PARTICULE     = "solve_doton_pics_floor"   -- particles/solve_doton.pcf
-local SON           = "physics/concrete/concrete_break3.wav"
+local SON           = "naruto_sound/jutsu/senju/senju1.wav"
 
 local ROCHER        = "models/clan/konoha/nr_doton_petrifying_sub.mdl"   -- dalle de roche qui sort du sol à l'impact
 local ROCHER_ECHELLE = 2.2
@@ -185,6 +185,7 @@ local function Lancer(ply)
 end
 
 net.Receive("senju_frappe_cast", function(_, ply)
+    NA_SonJutsu(ply)
     if not IsValid(ply) or not ply:Alive() then return end
     if not NA_Debloquee(ply, "senju_frappe") then return end   -- technique pas encore débloquée (F6)
     if (pret[ply] or 0) > CurTime() then return end

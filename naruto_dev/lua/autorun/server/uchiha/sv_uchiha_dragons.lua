@@ -82,6 +82,7 @@ local function CreerZone(ply)
 end
 
 net.Receive("naruto_dev_uchih3", function(_, ply)
+    NA_SonJutsu(ply)
     if not IsValid(ply) or not ply:IsPlayer() or not ply:Alive() then return end
     if not NA_Debloquee(ply, "katon_dragons") then return end   -- technique pas encore débloquée (F6)
 

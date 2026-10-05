@@ -199,7 +199,7 @@ local function Demarrer(ply, cible)
     -- Les PNJ gardent leur pose : changer leur séquence côté serveur provoquait
     -- "Bad pstudiohdr in GetSequenceLinearMotion()" sur les modèles sans cette séquence.
     if cible:IsPlayer() then cible:SetNW2String("NA_EtourdiAnim", ANIM_CIBLE) end
-    cible:EmitSound("ambient/water/water_splash" .. math.random(1, 3) .. ".wav", 80, 90)
+    cible:EmitSound("naruto_sound/jutsu/senju/senju3.wav", 80, 90)
 
     local idx = ply:EntIndex()
     actives[ply] = { cible = cible, restaurer = restaurer, tFin = "suiton_prison_fin_" .. idx, tVeille = "suiton_prison_veille_" .. idx }

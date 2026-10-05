@@ -31,9 +31,9 @@ local DUREE_MUDRA  = 0.5    -- incantation avant la première salve
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
 local ANIM_TIR     = "m_ni_atk_ninjutsu_d21nj3_start"   -- jouée après les mudras, au début des salves
 
-local SON_CHARGE   = "ambient/energy/electric_loop.wav"
-local SON_TIR      = "ambient/energy/zap%d.wav"     -- %d = 1 à 3
-local SON_TOUCHE   = "ambient/energy/spark%d.wav"   -- %d = 1 à 6
+local SON_CHARGE   = "naruto_sound/jutsu/raiton/raiton10.wav"
+local SON_TIR      = "naruto_sound/jutsu/raiton/raiton11.wav"     -- %d = 1 à 3
+local SON_TOUCHE   = "naruto_sound/jutsu/raiton/raiton12.wav"   -- %d = 1 à 6
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

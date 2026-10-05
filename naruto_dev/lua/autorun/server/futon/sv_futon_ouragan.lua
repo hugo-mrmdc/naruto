@@ -49,7 +49,7 @@ local function Lancer(ply)
     ent.Pousse   = Niv(ply, "pousse", POUSSE)
     ent.Soulevee = Niv(ply, "souleve", SOULEVEE)
     ent:Spawn()
-    ply:EmitSound("ambient/wind/wind_snippet2.wav", 75, 90, 0.8)
+    ply:EmitSound("naruto_sound/jutsu/futon/futon10.wav", 75, 90, 0.8)
 end
 
 net.Receive("futon_ouragan_cast", function(_, ply)

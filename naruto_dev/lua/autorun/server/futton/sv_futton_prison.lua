@@ -56,7 +56,7 @@ net.Receive("futton_prison_cast", function(_, ply)
         local duree = Niv(ply, "duree", DUREE)
         if NA_Etourdir then NA_Etourdir(cible, duree) end
         cible:SetNW2Float("NA_FuttonPrisonFin", CurTime() + duree)
-        cible:EmitSound("ambient/levels/canals/headcrab_canister_ambient5.wav", 75, 120, 0.7)
+        cible:EmitSound("naruto_sound/jutsu/futon/futon2.wav", 75, 120, 0.7)
     end)
 end)
 

@@ -139,7 +139,7 @@ local function Lancer(ply)
         net.WriteVector(centre + Vector(0, 0, Niv(ply, "hauteur_nuage", HAUTEUR_NUAGE)))
         net.WriteFloat(duree)
     net.Broadcast()
-    sound.Play("ambient/water/water_run1.wav", centre, 80, 100)
+    sound.Play("naruto_sound/jutsu/senju/senju2.wav", centre, 80, 100)
 
     if developer:GetInt() > 0 then debugoverlay.Sphere(centre, rayon, duree, Color(60, 140, 255, 15), true) end
 

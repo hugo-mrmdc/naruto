@@ -35,9 +35,9 @@ local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.l
 local DUREE_MUDRA  = 0.4    -- incantation avant l'accroche
 local ANIM_APPEL   = "nrp_ninjutsu_attack_rasenganinvisible_attack_end"
 
-local SON_ACCROCHE = "physics/body/body_medium_break3.wav"
-local SON_TICK     = "physics/body/body_medium_impact_hard2.wav"
-local SON_SOIN     = "items/medshot4.wav"
+local SON_ACCROCHE = "naruto_sound/jutsu/uchiha/uchiha4.wav"
+local SON_TICK     = "naruto_sound/jutsu/uchiha/uchiha7.wav"
+local SON_SOIN     = "naruto_sound/jutsu/uchiha/uchiha8.wav"
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

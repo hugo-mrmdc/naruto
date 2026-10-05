@@ -57,7 +57,7 @@ net.Receive("chinoike_genjutsu_cible", function()
         genjutsuDebut = CurTime()
         genjutsuFin = CurTime() + duree
         util.ScreenShake(cible:GetPos(), 3, 5, 0.6, 100)
-        surface.PlaySound("ambient/levels/citadel/strange_talk" .. math.random(3, 11) .. ".wav")
+        surface.PlaySound("naruto_sound/jutsu/mugen/1-01.wav")
     end
 end)
 

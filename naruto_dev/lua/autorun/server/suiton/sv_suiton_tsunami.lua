@@ -65,7 +65,7 @@ local function Monter(ply)
         degats = Niv(ply, "degats", DEGATS), intervalle = Niv(ply, "intervalle", INTERVALLE),
         rayon = Niv(ply, "rayon", RAYON), touches = {}, prochain = 0,
     }
-    ply:EmitSound("ambient/water/water_splash2.wav", 80, 90)
+    ply:EmitSound("naruto_sound/jutsu/senju/senju4.wav", 80, 90)
 end
 
 net.Receive("suiton_tsunami_cast", function(_, ply)

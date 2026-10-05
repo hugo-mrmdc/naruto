@@ -71,7 +71,7 @@ local function Rangee(ply, centre, dr, largeur, touches, rayon, degats, stun, ec
         end
     end
 
-    sound.Play("physics/glass/glass_impact_bullet1.wav", centre, 70, math.random(80, 100))   -- un seul son par rangée
+    sound.Play("geams/solve_jutsu/hyoton/solve_hyoton_dragon_start.wav", centre, 70, math.random(80, 100))   -- un seul son par rangée
 
     net.Start("hyoton_pics_rangee")
         net.WriteFloat(vie)

@@ -69,7 +69,7 @@ local function StartShield(ply)
         net.WriteFloat(Niv(ply, "duree", DUREE))
     net.Broadcast()
 
-    ply:EmitSound("ambient/wind/wind_snippet2.wav", 70, 120, 0.6)
+    ply:EmitSound("geams/solve_jutsu/meiton/solve_meiton_dome_start.wav", 70, 120, 0.6)
 
     timer.Create("kami_shield_" .. ply:EntIndex(), Niv(ply, "duree", DUREE), 1, function()
         StopShield(ply)
@@ -126,7 +126,7 @@ hook.Add("EntityTakeDamage", "KamiShield_Reduce", function(target, dmg)
 
     if Niv(target, "reduction", REDUCTION) <= 0 then return end
     dmg:ScaleDamage(math.Clamp(1 - Niv(target, "reduction", REDUCTION) / 100, 0, 1))
-    target:EmitSound("physics/cardboard/cardboard_box_impact_soft" .. math.random(1, 7) .. ".wav", 65, 110, 0.6)
+    target:EmitSound("geams/solve_jutsu/meiton/solve_meiton_boost_start.wav", 65, 110, 0.6)
 end)
 
 ----------------------------------------------------------

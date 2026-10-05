@@ -86,7 +86,7 @@ local function Atterrir(ply)
     net.Start("raiton_poing_impact")
         net.WriteVector(pos)
     net.Broadcast()
-    sound.Play("physics/concrete/concrete_break3.wav", pos, 90, 80, 1)
+    sound.Play("naruto_sound/jutsu/raiton/raiton3.wav", pos, 90, 80, 1)
 
     local rayon, degats = Niv(ply, "rayon", RAYON), Niv(ply, "degats", DEGATS)
     local proj, haut = Niv(ply, "projection", PROJECTION), Niv(ply, "proj_haut", PROJ_HAUT)

@@ -59,7 +59,7 @@ local function Lancer(ply)
     ent.Recul    = Niv(ply, "recul", RECUL)
     ent:Spawn()
 
-    ply:EmitSound("ambient/water/water_spray" .. math.random(1, 3) .. ".wav", 75, 100)
+    ply:EmitSound("naruto_sound/jutsu/senju/senju1.wav", 75, 100)
 end
 
 net.Receive("suiton_waterball_cast", function(_, ply)

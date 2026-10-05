@@ -66,7 +66,7 @@ local function Lancer(ply)
     ent.Echelle   = Niv(ply, "echelle", ent.Echelle)
     ent.Suivi     = suivi
     ent:Spawn()
-    ply:EmitSound("ambient/wind/wind_snippet2.wav", 75, 110, 0.8)
+    ply:EmitSound("geams/solve_jutsu/shoton/solve_shoton_stun_hit.wav", 75, 110, 0.8)
 end
 
 net.Receive("shoton_chute_cast", function(_, ply)

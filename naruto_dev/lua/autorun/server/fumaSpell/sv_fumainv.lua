@@ -13,7 +13,7 @@ local ADMIN_ONLY = false   -- true = seuls les admins peuvent devenir invisibles
 local DUREE      = 10      -- secondes d'invisibilité
 local RECHARGE   = 8       -- secondes avant de pouvoir redevenir invisible (après la réapparition)
 local FX_FUMEE   = "solve_smoke_ayatsuri_geams"   -- particles/solve_ayatsuri_geams.pcf
-local SON_FUMEE  = "ambient/levels/citadel/pod_open1.wav"
+local SON_FUMEE  = "naruto_sound/jutsu/uchiha/uchiha3.wav"
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

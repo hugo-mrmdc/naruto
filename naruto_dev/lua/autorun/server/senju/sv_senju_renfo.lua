@@ -32,8 +32,8 @@ local RECHARGE      = 15     -- secondes avant de pouvoir la réactiver (après 
 local DUREE_MUDRA   = 0.5    -- incantation avant l'activation
 local ANIM_APPEL    = "nrp_ninjutsu_defend_dragonflamebombs_start"
 
-local SON_DEBUT     = "items/suitchargeok1.wav"
-local SON_FIN       = "items/suitchargeno1.wav"
+local SON_DEBUT     = "naruto_sound/jutsu/senju/senju3.wav"
+local SON_FIN       = "naruto_sound/jutsu/senju/senju4.wav"
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

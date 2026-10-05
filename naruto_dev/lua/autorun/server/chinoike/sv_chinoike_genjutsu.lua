@@ -37,8 +37,8 @@ local CHAKRA_MAX    = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.
 local DUREE_MUDRA   = 0.5    -- incantation avant le genjutsu
 local ANIM_APPEL    = "nrp_ninjutsu_defend_dragonflamebombs_start"
 
-local SON_OEIL      = "ambient/levels/citadel/weapon_disintegrate2.wav"
-local SON_TICK      = "physics/flesh/flesh_squishy_impact_hard1.wav"
+local SON_OEIL      = "naruto_sound/jutsu/mugen/1-01.wav"
+local SON_TICK      = "naruto_sound/jutsu/mugen/1-02.wav"
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

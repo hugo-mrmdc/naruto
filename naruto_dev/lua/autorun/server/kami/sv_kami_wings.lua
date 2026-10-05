@@ -216,7 +216,7 @@ local function Atterrir(ply, silencieux)
         ply.MokutonNoFall = CurTime() + 5
 
         if not silencieux then
-            ply:EmitSound("ambient/wind/wind_snippet1.wav", 65, 110, 0.5)
+            ply:EmitSound("geams/solve_jutsu/meiton/solve_meiton_give_chakra.wav", 65, 110, 0.5)
         end
     end
 
@@ -247,7 +247,7 @@ local function Decoller(ply)
     if not ply:HasWeapon("naruto_poings") then ply:Give("naruto_poings") end
     ply:SelectWeapon("naruto_poings")
 
-    ply:EmitSound("ambient/wind/wind_snippet3.wav", 70, 100, 0.6)
+    ply:EmitSound("geams/solve_jutsu/meiton/solve_meiton_hit_dome.wav", 70, 100, 0.6)
 end
 
 hook.Add("PlayerSwitchWeapon", "NA_Wings_Poings", function(ply, _, newWep)

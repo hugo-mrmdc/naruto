@@ -318,6 +318,7 @@ end)
 -- Lancement
 --========================================================
 net.Receive(NET_TIR, function(_, ply)
+    NA_SonJutsu(ply)
     if not NA_Debloquee(ply, ID) then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() then return end
     if (prochain[ply] or 0) > CurTime() then return end

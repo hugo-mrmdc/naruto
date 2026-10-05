@@ -81,7 +81,7 @@ local function LacherBombe(ply)
         ent:Spawn()
     end
 
-    ply:EmitSound("ambient/wind/wind_snippet1.wav", 70, 100, 0.6)
+    ply:EmitSound("geams/solve_jutsu/bakuton/solve_bakuton_bigexplosion.wav", 70, 100, 0.6)
     Redescendre(ply)
 end
 
@@ -119,7 +119,7 @@ net.Receive("bakuton_bombe_cast", function(_, ply)
         local depart = ply:GetPos().z
         ply:SetNW2Bool("NA_Vol", true)
         ply:SetNW2Float("NA_MonteVit", vitesse)
-        ply:EmitSound("ambient/wind/wind_snippet3.wav", 75, 90, 0.7)
+        ply:EmitSound("geams/solve_jutsu/bakuton/solve_bakuton_flying_bird.wav", 75, 90, 0.7)
 
         -- montée : on surveille la hauteur (ou un plafond qui bloque), puis on reste en l'air
         timer.Create(TimerNom(ply, "montee"), 0.05, 0, function()

@@ -42,7 +42,7 @@ local function Descendre(ply)
     ply:SetNW2Bool("NA_Nuage", false)
     ply:SetNW2Bool("NA_Vol", false)
     ply.MokutonNoFall = CurTime() + 5   -- on peut retomber de haut : pas de dégâts de chute
-    ply:EmitSound("player/footsteps/sand1.wav", 70, 90, 0.8)
+    ply:EmitSound("naruto_sound/jutsu/jishaku/jishaku6.wav", 70, 90, 0.8)
 end
 
 local function Monter(ply)
@@ -51,7 +51,7 @@ local function Monter(ply)
     ply:SetNW2Bool("NA_Nuage", true)
     ply:SetNW2Bool("NA_Vol", true)
     ply:SetVelocity(Vector(0, 0, 200))   -- petit décollage
-    ply:EmitSound("ambient/wind/wind_snippet3.wav", 70, 90, 0.6)
+    ply:EmitSound("naruto_sound/jutsu/jishaku/jishaku7.wav", 70, 90, 0.6)
 
     timer.Create(TimerNom(ply), Niv(ply, "duree", DUREE), 1, function() Descendre(ply) end)
 end

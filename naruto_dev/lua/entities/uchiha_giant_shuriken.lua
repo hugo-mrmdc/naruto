@@ -79,7 +79,7 @@ if SERVER then
 
         ParticleEffect(self.FX_HIT, tr.HitPos, angle_zero)
 
-        self:EmitSound("physics/metal/metal_solid_impact_hard" .. math.random(1, 5) .. ".wav", 75, 90)
+        self:EmitSound("naruto_sound/jutsu/uchiha/uchiha6.wav", 75, 90)
         self:Remove()
     end
 

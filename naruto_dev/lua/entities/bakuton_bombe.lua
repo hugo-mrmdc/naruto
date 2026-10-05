@@ -35,7 +35,7 @@ if SERVER then
         self:SetAngles(Angle(0, math.random(0, 359), 0))
         self.Vitesse = self.VitesseDepart
         self.MortA = CurTime() + self.DureeVie
-        self:EmitSound("ambient/wind/wind_snippet1.wav", 90, 70, 1)
+        self:EmitSound("geams/solve_jutsu/bakuton/solve_bakuton_bigexplosion.wav", 90, 70, 1)
     end
 
     -- grappe de particules : centre, anneau au sol, colonne qui monte (décalées dans le temps)
@@ -66,7 +66,7 @@ if SERVER then
     function ENT:Exploser(pos)
         pos = pos or self:GetPos()
         local owner = self:GetOwner()
-        self:StopSound("ambient/wind/wind_snippet1.wav")
+        self:StopSound("geams/solve_jutsu/bakuton/solve_bakuton_bigexplosion.wav")
 
         Particules(pos, self.Rayon)
         sound.Play(self.Son, pos, 140, 70, 1)

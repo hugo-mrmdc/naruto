@@ -122,7 +122,7 @@ function BUTTON:Paint(w, h)
 end
 
 function BUTTON:OnCursorEntered()
-    if self:IsEnabled() then surface.PlaySound("ui/buttonrollover.wav") end
+    if self:IsEnabled() then surface.PlaySound("solve_naruto_base/ui/menu_selection_v2.wav") end
 end
 
 vgui.Register("NRP.Button", BUTTON, "DButton")
@@ -198,7 +198,7 @@ function UI.Button(parent, label, onClick, style)
     btn:SetLabel(label)
     btn:SetStyle(style or "primary")
     btn.DoClick = function(self)
-        surface.PlaySound("ui/buttonclickrelease.wav")
+        surface.PlaySound("naruto_sound/menu_select.mp3")
         if onClick then onClick(self) end
     end
     return btn

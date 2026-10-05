@@ -61,9 +61,9 @@ if SERVER then
                 SalamandrePoison.Apply(hit, owner)
             end
 
-            hit:EmitSound("physics/flesh/flesh_squishy_impact_hard" .. math.random(1, 4) .. ".wav", 70, 110)
+            hit:EmitSound("naruto_sound/jutsu/senju/senju2.wav", 70, 110)
         else
-            self:EmitSound("physics/flesh/flesh_bloody_impact_hard1.wav", 65, 130)
+            self:EmitSound("naruto_sound/jutsu/senju/senju3.wav", 65, 130)
         end
 
         ParticleEffect(self.FX_IMPACT, tr.HitPos, tr.HitNormal:Angle())

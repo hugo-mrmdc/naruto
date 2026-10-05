@@ -127,13 +127,13 @@ if SERVER then
             fx:SetNormal(tr.HitNormal)
             util.Effect("BloodImpact", fx)
 
-            hit:EmitSound("physics/flesh/flesh_impact_bullet" .. math.random(1, 5) .. ".wav", 70, 110)
+            hit:EmitSound("geams/solve_jutsu/meiton/solve_meiton_dome_start.wav", 70, 110)
         elseif IsValid(hit) then
             -- objet du décor : on lui donne juste un coup
             local phys = hit:GetPhysicsObject()
             if IsValid(phys) then phys:ApplyForceOffset(self.Direction * 2000, tr.HitPos) end
         else
-            self:EmitSound("physics/cardboard/cardboard_box_impact_hard" .. math.random(1, 7) .. ".wav", 70, 120)
+            self:EmitSound("geams/solve_jutsu/meiton/solve_meiton_give_chakra.wav", 70, 120)
         end
 
         ParticleEffect(self.FX_IMPACT, tr.HitPos, tr.HitNormal:Angle())

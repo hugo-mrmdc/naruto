@@ -65,7 +65,7 @@ local function Lancer(ply)
         ent:Spawn()
     end
 
-    ply:EmitSound("weapons/slam/throw.wav", 70, 80)
+    ply:EmitSound("naruto_sound/jutsu/uchiha/uchiha9.wav", 70, 80)
 end
 
 net.Receive("uchiha_shuriken_cast", function(_, ply)

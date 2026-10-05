@@ -98,7 +98,7 @@ local function Lancer(ply)
     end
 
     ply:SetNW2Float("NA_RasenFin", 0)   -- la particule de la main s'arrête : la boule est partie
-    ply:EmitSound("ambient/energy/zap9.wav", 80, 110)
+    ply:EmitSound("naruto_sound/jutsu/futon/futon11.wav", 80, 110)
     timer.Create(TimerNom(ply, "fin"), Niv(ply, "fin_anim", FIN_ANIM), 1, function() Terminer(ply) end)
 end
 

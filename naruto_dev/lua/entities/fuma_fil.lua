@@ -109,7 +109,7 @@ if SERVER then
                 self.FinAccroche = now + self.Accroche
                 self:SetCible(cible)
                 self:SetBout(cible:WorldSpaceCenter())
-                cible:EmitSound("physics/metal/metal_chainlink_impact_hard" .. math.random(1, 3) .. ".wav", 75, 120)
+                cible:EmitSound("naruto_sound/jutsu/uchiha/uchiha2.wav", 75, 120)
                 if NA_FumaJugementTouche then NA_FumaJugementTouche(owner, cible) end
             elseif mur.Hit or bout then
                 self.Phase = "retour"

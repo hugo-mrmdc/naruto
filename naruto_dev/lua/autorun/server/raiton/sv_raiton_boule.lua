@@ -56,7 +56,7 @@ local function Lancer(ply)
     ent.RayonHaut = Niv(ply, "hitbox_haut", HITBOX_HAUT)
     ent:Spawn()
 
-    ply:EmitSound("ambient/energy/zap9.wav", 75, 110)
+    ply:EmitSound("naruto_sound/jutsu/raiton/raiton1.wav", 75, 110)
 end
 
 net.Receive("raiton_boule_cast", function(_, ply)

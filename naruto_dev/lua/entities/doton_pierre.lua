@@ -69,7 +69,7 @@ if SERVER then
         -- la particule se joue AU SOL, sous le point d'impact (300 unités au plus)
         local sol = util.TraceLine({ start = tr.HitPos + Vector(0, 0, 10), endpos = tr.HitPos - Vector(0, 0, 300), mask = MASK_SOLID_BRUSHONLY })
         ParticleEffect(self.FX_IMPACT, sol.Hit and sol.HitPos or tr.HitPos, angle_zero)
-        sound.Play("physics/concrete/concrete_break" .. math.random(2, 3) .. ".wav", tr.HitPos, 80, math.random(90, 110), 1)
+        sound.Play("naruto_sound/jutsu/doton/earth15.wav", tr.HitPos, 80, math.random(90, 110), 1)
         self:Remove()
     end
 

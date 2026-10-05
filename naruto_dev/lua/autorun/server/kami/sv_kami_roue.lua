@@ -120,7 +120,7 @@ local function Lancer(ply)
         roues[2]:SetPartenaire(roues[1])
     end
 
-    ply:EmitSound("weapons/slam/throw.wav", 70, 80)
+    ply:EmitSound("geams/solve_jutsu/meiton/solve_meiton_absorption_chakra_start.wav", 70, 80)
 end
 
 net.Receive("kami_roue_cast", function(_, ply)

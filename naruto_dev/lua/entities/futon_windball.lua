@@ -88,7 +88,7 @@ if SERVER then
         })
         if sol.Hit then pos = sol.HitPos end
         ParticleEffect(self.FX_IMPACT, pos, angle_zero)
-        self:EmitSound("ambient/wind/wind_hit" .. math.random(1, 3) .. ".wav", 80, math.random(90, 110))
+        self:EmitSound("naruto_sound/jutsu/futon/futon3.wav", 80, math.random(90, 110))
         self:Remove()
     end
 

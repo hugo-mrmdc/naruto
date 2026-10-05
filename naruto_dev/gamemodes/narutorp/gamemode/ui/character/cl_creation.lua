@@ -34,7 +34,7 @@ function UI.SelectCard(parent, title, subtitle, description, color, selected, on
         end
     end
     card.DoClick = function()
-        surface.PlaySound("ui/buttonclick.wav")
+        surface.PlaySound("naruto_sound/menu_select.mp3")
         onClick()
     end
     return card

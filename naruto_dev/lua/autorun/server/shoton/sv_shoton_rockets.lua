@@ -47,7 +47,7 @@ local function Tirer(ply, i)
     ent.Explosion = Niv(ply, "explosion", EXPLOSION)
     ent.Vitesse   = Niv(ply, "vitesse", VITESSE)
     ent:Spawn()
-    ply:EmitSound("weapons/rpg/rocketfire1.wav", 75, 140, 0.8)
+    ply:EmitSound("geams/solve_jutsu/shoton/solve_shoton_shuriken_start.wav", 75, 140, 0.8)
     NA_AnimJutsu(ply, ANIM_TIR[(i - 1) % 2 + 1], Niv(ply, "intervalle", INTERVALLE))   -- coupée avant le tir suivant
 end
 

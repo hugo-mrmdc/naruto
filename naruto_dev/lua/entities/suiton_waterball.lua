@@ -66,7 +66,7 @@ if SERVER then
         end
 
         ParticleEffect(self.FX_IMPACT, tr.HitPos, tr.HitNormal:Angle())
-        self:EmitSound("ambient/water/water_splash" .. math.random(1, 3) .. ".wav", 80, 100)
+        self:EmitSound("naruto_sound/jutsu/senju/senju2.wav", 80, 100)
         self:Remove()
     end
 

@@ -120,13 +120,13 @@ local function Detruire(ply)
     local now = CurTime()
     ply:SetNW2Float("NA_GolemMortDebut", now)
     ply:SetNW2Float("NA_GolemMortFin", now + duree)
-    ply:EmitSound("physics/concrete/concrete_break3.wav", 90, 60)
+    ply:EmitSound("naruto_sound/jutsu/doton/earth11.wav", 90, 60)
 
     -- le golem se détruit DETRUIRE_AVANT secondes avant la fin de l'animation de mort
     timer.Simple(math.max(duree - DETRUIRE_AVANT, 0), function()
         if not IsValid(ply) or etat[ply] ~= st then return end
         ParticleEffect(FX_FIN, ply:GetPos(), angle_zero)
-        ply:EmitSound("physics/concrete/concrete_break2.wav", 95, 55)
+        ply:EmitSound("naruto_sound/jutsu/doton/earth12.wav", 95, 55)
         timer.Simple(DELAI_FIN, function()
             if IsValid(ply) and etat[ply] == st then Arreter(ply, true) end
         end)
@@ -156,7 +156,7 @@ local function Transformer(ply)
 
     local arme = ply:GetActiveWeapon()
     if IsValid(arme) then arme:SetNoDraw(true) end
-    ply:EmitSound("physics/concrete/concrete_break3.wav", 90, 60)
+    ply:EmitSound("naruto_sound/jutsu/doton/earth11.wav", 90, 60)
 end
 
 net.Receive("doton_golem_cast", function(_, ply)
@@ -211,7 +211,7 @@ local function Attaquer(ply, st)
     ply:SetNW2Int("NA_GolemAtk", 1)
     ply:SetNW2Float("NA_GolemAtkDebut", now)
     ply:SetNW2Float("NA_GolemAtkFin", now + duree)
-    ply:EmitSound("physics/concrete/concrete_impact_hard" .. math.random(1, 3) .. ".wav", 80, 70)
+    ply:EmitSound("naruto_sound/jutsu/doton/earth10.wav", 80, 70)
 end
 
 -- Le coup part : dégâts + projection devant le golem
@@ -240,7 +240,7 @@ local function Frapper(ply)
         end
     end
 
-    ply:EmitSound("physics/concrete/concrete_break2.wav", 85, 80)
+    ply:EmitSound("naruto_sound/jutsu/doton/earth12.wav", 85, 80)
 
     -- particule d'impact AU SOL, là où le coup tombe (même message que le Golem Mokuton : mokuton_dragon_impact_fx)
     local sol = util.TraceLine({ start = centre + Vector(0, 0, 40), endpos = centre - Vector(0, 0, 400), mask = MASK_SOLID_BRUSHONLY })

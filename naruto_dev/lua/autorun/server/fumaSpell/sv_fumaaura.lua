@@ -24,8 +24,8 @@ local CHAKRA_COUT  = 20     -- chakra dépensé (0 = gratuit)
 local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.4    -- incantation avant l'aura
 local ANIM_APPEL   = "nrp_ninjutsu_defend_dragonflamebombs_start"
-local SON_DEBUT    = "ambient/energy/newspark04.wav"
-local SON_FIN      = "ambient/energy/newspark02.wav"
+local SON_DEBUT    = "naruto_sound/jutsu/uchiha/uchiha1.wav"
+local SON_FIN      = "naruto_sound/jutsu/uchiha/uchiha2.wav"
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

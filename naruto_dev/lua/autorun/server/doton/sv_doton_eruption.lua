@@ -101,7 +101,7 @@ local function Rangee(ply, i, c, dr, av, l, par, touches, rayon, degats, stun, e
     end
 
     -- un seul son par rangée (pas de prop : le son est joué à la position du milieu)
-    sound.Play("physics/concrete/rock_impact_hard" .. math.random(1, 6) .. ".wav", pos[1], 78, math.random(60, 90))
+    sound.Play("naruto_sound/jutsu/doton/earth1.wav", pos[1], 78, math.random(60, 90))
 
     -- un seul message pour toute la rangée (positions + taille + durée + particule oui/non)
     net.Start("doton_eruption_rangee")

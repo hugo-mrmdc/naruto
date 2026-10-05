@@ -32,8 +32,8 @@ local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.l
 local ANIM_LOOP    = "m_ni_def_ninjutsu_palmrotation_loop"
 local ANIM_FIN     = "m_ni_def_ninjutsu_palmrotation_end"
 
-local SON_TOURNE   = "ambient/energy/force_field_loop1.wav"
-local SON_IMPACT   = "physics/body/body_medium_impact_hard3.wav"
+local SON_TOURNE   = "naruto_sound/jutsu/hyuga/hyuga3.wav"
+local SON_IMPACT   = "naruto_sound/jutsu/hyuga/hyuga1.wav"
 --========================================================
 
 resource.AddFile("particles/solve_hyuga_dome.pcf")
@@ -88,6 +88,7 @@ local function Impulsion(ply, rayon, degats, recul, souleve)
 end
 
 net.Receive("hyuga_tourbillon_cast", function(_, ply)
+    NA_SonJutsu(ply)
     if not NA_Debloquee(ply, "hyuga_tourbillon") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() or enCours[ply] then return end
     if (pret[ply] or 0) > CurTime() then return end

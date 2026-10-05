@@ -93,7 +93,7 @@ if SERVER then
 
         self:SetDebut(CurTime())
         self:SetDureeVie(self.Duree)
-        self:EmitSound("physics/body/body_medium_break" .. math.random(2, 3) .. ".wav", 80, math.random(90, 110), 0.8)
+        self:EmitSound("naruto_sound/jutsu/uchiha/uchiha4.wav", 80, math.random(90, 110), 0.8)
 
         -- dégâts une seule fois, quand la lame est sortie
         local centre = sol + Vector(0, 0, 40)

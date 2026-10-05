@@ -53,11 +53,11 @@ if SERVER then
         self:SetRayon(self.Rayon)
         self:SetFin(CurTime() + self.Duree)
         self.ProchainTick = CurTime()
-        self:EmitSound("ambient/water/water_flow_loop1.wav", 85, 80)
+        self:EmitSound("naruto_sound/jutsu/senju/senju3.wav", 85, 80)
     end
 
     function ENT:OnRemove()
-        self:StopSound("ambient/water/water_flow_loop1.wav")
+        self:StopSound("naruto_sound/jutsu/senju/senju3.wav")
     end
 
     -- aspire légèrement la cible vers le centre

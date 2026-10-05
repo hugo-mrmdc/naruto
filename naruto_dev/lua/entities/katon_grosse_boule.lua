@@ -36,7 +36,7 @@ if SERVER then
         self:DrawShadow(false)
         self.Mort = CurTime() + self.Vie
         self.Dir = self.Dir or self:GetForward()
-        self:EmitSound("ambient/fire/ignite.wav", 85, 70)
+        self:EmitSound("geams/solve_jutsu/katon/solve_katon_arena_start.wav", 85, 70)
     end
 
     function ENT:Exploser(pos)
@@ -70,7 +70,7 @@ if SERVER then
         net.Start("katon_grosse_boule_impact")
             net.WriteVector(sol.Hit and sol.HitPos or pos)
         net.Broadcast()
-        self:EmitSound("ambient/explosions/explode_4.wav", 90, 110)
+        self:EmitSound("geams/solve_jutsu/katon/solve_katon_balsamique.wav", 90, 110)
         self:Remove()
     end
 

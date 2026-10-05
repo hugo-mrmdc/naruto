@@ -25,7 +25,7 @@ local function Actif(ply) return IsValid(ply) and ply:GetNW2Bool("NA_ShotonArmur
 local function Arreter(ply)
     if not IsValid(ply) then return end
     timer.Remove("ShotonArmure_" .. ply:EntIndex())
-    if Actif(ply) and ply:Alive() then ply:EmitSound("physics/glass/glass_sheet_break1.wav", 75, 100, 0.7) end
+    if Actif(ply) and ply:Alive() then ply:EmitSound("geams/solve_jutsu/shoton/solve_shoton_dragon_start.wav", 75, 100, 0.7) end
     ply:SetNW2Bool("NA_ShotonArmure", false)
 end
 
@@ -53,7 +53,7 @@ net.Receive("shoton_armure_cast", function(_, ply)
     timer.Simple(mudra, function()
         if not IsValid(ply) or not ply:Alive() then return end
         ply:SetNW2Bool("NA_ShotonArmure", true)
-        ply:EmitSound("physics/glass/glass_impact_bullet4.wav", 80, 90, 0.9)
+        ply:EmitSound("geams/solve_jutsu/shoton/solve_shoton_shuriken_start.wav", 80, 90, 0.9)
         timer.Create("ShotonArmure_" .. ply:EntIndex(), Niv(ply, "duree", DUREE), 1, function() Arreter(ply) end)
     end)
 end)

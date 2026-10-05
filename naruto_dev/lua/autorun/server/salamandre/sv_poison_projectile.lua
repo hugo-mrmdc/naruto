@@ -164,7 +164,7 @@ local function Lancer(ply)
     ent.Rayon = NA_Stat(ply, "salamandre_poison", "hitbox", RAYON)
     ent:Spawn()
 
-    ply:EmitSound("npc/headcrab_poison/ph_poisonbite" .. math.random(1, 3) .. ".wav", 75, 110)
+    ply:EmitSound("naruto_sound/jutsu/senju/senju2.wav", 75, 110)
 end
 
 net.Receive("PoisonProjectile_Fire", function(_, ply)

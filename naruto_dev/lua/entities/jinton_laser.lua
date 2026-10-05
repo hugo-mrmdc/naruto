@@ -30,7 +30,7 @@ ENT.FX_RAYON    = ""   -- jet de particules en forme de laser : retiré ("[2]_re
 ENT.FX_DEPART   = "start_laser"
 ENT.FX_IMPACT   = "impact_world_geams"
 ENT.FX_TOUCHE   = "hit_jinton"
-ENT.SON_BOUCLE  = "ambient/energy/force_field_loop1.wav"
+ENT.SON_BOUCLE  = "naruto_sound/jutsu/jishaku/jishaku1.wav"
 
 -- main d'où part le laser : "ValveBiped.Bip01_L_Hand" (gauche) ou "ValveBiped.Bip01_R_Hand" (droite)
 local OS_MAIN = "ValveBiped.Bip01_L_Hand"

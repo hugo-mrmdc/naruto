@@ -105,7 +105,7 @@ net.Receive("suiton_bulle_cast", function(_, ply)
     for i = 0, nombre - 1 do
         timer.Simple(mudra + salve * (i / math.max(nombre - 1, 1)), function()
             Lancer(ply)
-            if i == 0 and IsValid(ply) then ply:EmitSound("ambient/water/water_spray1.wav", 75, 120) end
+            if i == 0 and IsValid(ply) then ply:EmitSound("naruto_sound/jutsu/senju/senju1.wav", 75, 120) end
         end)
     end
     timer.Simple(mudra + salve, function() enCours[ply] = nil end)

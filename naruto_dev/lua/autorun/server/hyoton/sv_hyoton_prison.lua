@@ -65,7 +65,7 @@ net.Receive("hyoton_prison_cast", function(_, ply)
         ent.Degats     = Niv(ply, "degats", DEGATS)
         ent.Intervalle = Niv(ply, "intervalle", INTERVALLE)
         ent:Spawn()
-        cible:EmitSound("physics/glass/glass_impact_bullet4.wav", 75, 90)
+        cible:EmitSound("geams/solve_jutsu/hyoton/solve_hyoton_mirror_end.wav", 75, 90)
     end)
 end)
 

@@ -70,7 +70,7 @@ if SERVER then
                 dmg:SetDamagePosition(tr.HitPos)
                 tr.Entity:TakeDamageInfo(dmg)
             end
-            self:EmitSound("physics/concrete/concrete_impact_hard" .. math.random(1, 3) .. ".wav", 75, math.random(80, 110))
+            self:EmitSound("naruto_sound/jutsu/doton/earth13.wav", 75, math.random(80, 110))
             self:Remove()
             return true
         end

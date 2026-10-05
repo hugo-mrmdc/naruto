@@ -43,7 +43,7 @@ local PARTICULE      = "solve_doton_pics_floor"   -- particles/solve_doton.pcf
 local NB_PARTICULES  = 3      -- une au centre + le reste en cercle (chaque système de particules coûte cher au client)
 local ROCHER_ECHELLE = 5.5    -- la roche de la Frappe terrestre est à 2.2
 local ROCHER_DUREE   = 3
-local SON            = "physics/concrete/concrete_break3.wav"
+local SON            = "naruto_sound/jutsu/senju/senju1.wav"
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)

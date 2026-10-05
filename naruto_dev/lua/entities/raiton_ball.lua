@@ -56,7 +56,7 @@ if SERVER then
             if NA_Etourdir then NA_Etourdir(hit, self.Duree) end
         end
 
-        sound.Play("ambient/energy/zap" .. math.random(1, 3) .. ".wav", tr.HitPos, 80, math.random(95, 110), 1)
+        sound.Play("naruto_sound/jutsu/raiton/raiton10.wav", tr.HitPos, 80, math.random(95, 110), 1)
         self:Remove()
     end
 
