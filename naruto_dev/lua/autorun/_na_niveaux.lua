@@ -74,6 +74,7 @@ NA_NIV.LIGNEES = {
     { "bakuton_oiseaux", "bakuton_mignons", "bakuton_araignees", "bakuton_meute", "bakuton_dragon", "bakuton_bombe" },
     { "futton_vapeur", "futton_tornade", "futton_cage","futton_projectile", "futton_prison", "futton_monde" },
     { "hyoton_dome", "hyoton_pics", "hyoton_vague", "hyoton_loup", "hyoton_prison" },
+    { "taijutsu_pied", "taijutsu_descendant", "taijutsu_combo" },
     { "shoton_cristal", "shoton_armure", "shoton_rockets", "shoton_chute", "shoton_pics" },
 }
 --========================================================

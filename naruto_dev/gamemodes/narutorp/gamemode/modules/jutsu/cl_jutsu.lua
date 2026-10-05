@@ -52,7 +52,7 @@ function Jutsu.Select(slot)
     slot = math.Clamp(slot, 1, Jutsu.SlotCount())
     if Jutsu.SelectedSlot ~= slot then
         Jutsu.SelectedSlot = slot
-        surface.PlaySound("solve_naruto_base/ui/swap_jutsu_deck.wav")
+        surface.PlaySound("buttons/lightswitch2.wav")
         hook.Run("NRP.JutsuSelected", slot)
     end
     if cvQuickCast:GetBool() then

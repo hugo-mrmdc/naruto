@@ -50,7 +50,9 @@ local ONGLETS = {
         { nom = "Médecin",    embleme = LIB .. "classe/medecin.png" },
         { nom = "Rempart",    embleme = LIB .. "classe/rempart.png" },
     } },
-    { nom = "Arts Ninja", icone = "kenTai.png", groupes = {} },
+    { nom = "Arts Ninja", icone = "kenTai.png", groupes = {
+        { nom = "Taijutsu", embleme = LIB .. "new_icone/taiton.png" },
+    } },
     { nom = "Clans", icone = "icon_clan.png", groupes = {
         { nom = "Salamandre" }, { nom = "Fuma" }, { nom = "Kami" }, { nom = "Kaguya" }, { nom = "Chinoike" }, { nom = "Hyuga" }, { nom = "Senju" }, { nom = "Uchiha" },
     } },

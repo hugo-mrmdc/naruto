@@ -33,7 +33,7 @@ hook.Add("NRP.Notify", "NRP.UI.Toasts", function(text, kind, duration)
     while #toasts > 6 do table.remove(toasts, 1) end
 
     if kind == NRP.NOTIFY_ERROR then
-        surface.PlaySound("solve_naruto_base/ui/reroll_click.wav")
+        surface.PlaySound("solve_naruto_base/ui/reroll_click_v2.wav")
     elseif kind ~= NRP.NOTIFY_XP then
         surface.PlaySound("solve_naruto_base/ui/menu_selection_v2.wav")
     end

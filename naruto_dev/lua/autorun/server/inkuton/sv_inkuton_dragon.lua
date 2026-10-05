@@ -360,7 +360,6 @@ local function StartRide(ply)
     if NA_CD then NA_CD.Set(ply, "inkuton_dragon", 1 + mudra) end -- recharge visible dans la barre
 
     NA_AnimJutsu(ply, ANIM_MUDRA, mudra)   -- animation coupée après "mudra" secondes + pas de coups pendant (_na_mudra.lua)
-    ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
     if NA_Mudra then NA_Mudra(ply, mudra) end   -- pas de coups pendant les mudras (_na_mudra.lua)
 
     timer.Simple(mudra, function()
@@ -403,7 +402,6 @@ local function Lancer(ply, st)
     nextRide[ply] = CurTime() + recharge
     if NA_CD then NA_CD.Set(ply, "inkuton_dragon", recharge) end   -- recharge visible dans la barre
 
-    dragon:EmitSound("naruto_sound/jutsu/senju/senju3.wav", 95, 90)
 end
 
 -- Clic droit : l'animation démarre tout de suite, le dragon part un instant plus tard (DASH_DELAI).
@@ -595,7 +593,6 @@ hook.Add("Think", "InkutonDragon_Projectiles", function()
         local choc = mur.Hit and not mur.StartSolid
         if choc or now >= p.fin then
             if choc then
-                dragon:EmitSound("naruto_sound/jutsu/senju/senju1.wav", 95, 80)
 
                 -- la particule se joue AU SOL, sous le point d'impact (300 unités au plus ; sinon à l'impact)
                 local sol = util.TraceLine({ start = mur.HitPos + Vector(0, 0, 10), endpos = mur.HitPos - Vector(0, 0, 300), mask = MASK_SOLID_BRUSHONLY })
@@ -629,7 +626,6 @@ hook.Add("Think", "InkutonDragon_Projectiles", function()
             else
                 ent:SetVelocity(vel)
             end
-            ent:EmitSound("naruto_sound/jutsu/senju/senju2.wav", 85, math.random(85, 100))
         end
     end
 end)

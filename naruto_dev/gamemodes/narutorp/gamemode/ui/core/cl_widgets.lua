@@ -198,7 +198,7 @@ function UI.Button(parent, label, onClick, style)
     btn:SetLabel(label)
     btn:SetStyle(style or "primary")
     btn.DoClick = function(self)
-        surface.PlaySound("naruto_sound/menu_select.mp3")
+        surface.PlaySound("solve_naruto_base/ui/begin_reroll_sound.wav")
         if onClick then onClick(self) end
     end
     return btn

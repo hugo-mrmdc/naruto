@@ -16,8 +16,8 @@ ENT.RenderGroup = RENDERGROUP_BOTH
 
 ENT.Model      = "models/justu/jinton/cubeonoki2.mdl"   -- cube de ~72 unités, centré
 ENT.FX         = "solve_geams_01_j"
-ENT.SonDebut   = "jutsu/jinton/damage_cube_start.wav"       -- quand le cube se pose sur la cible
-ENT.SonTick    = "jutsu/jinton/damage_cube_explosion.wav"   -- à chaque tick de dégâts
+ENT.SonDebut   = "solve_naruto_base/jutsu/jinton/damage_cube_start.wav"       -- quand le cube se pose sur la cible
+ENT.SonTick    = "solve_naruto_base/jutsu/jinton/damage_cube_explosion.wav"   -- à chaque tick de dégâts
 
 -- Valeurs par défaut (remplacées au lancement)
 ENT.Duree      = 4

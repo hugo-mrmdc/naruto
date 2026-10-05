@@ -94,7 +94,63 @@ if SERVER then
         self:BecomeRagdoll(dmg)
     end
 
+    --========================================================
+    -- Projection / attraction
+    -- Un nextbot freine et se recolle au sol tout seul : toute technique qui le
+    -- pousse ou l'attire (ent:SetVelocity, ou ent.loco:SetVelocity) le ferait
+    -- rester sur place. On lui retire donc le freinage tant qu'il est en
+    -- mouvement, on le décolle du sol quand il monte, et on applique nous-mêmes
+    -- un frottement au sol.
+    --========================================================
+    local FROTTEMENT = 6     -- frottement au sol pendant une projection (1/s)
+    local VITESSE_MIN = 40   -- en dessous, il est considéré à l'arrêt
+
+    local function Decoller(self)
+        self:SetGroundEntity(NULL)
+        self:SetPos(self:GetPos() + Vector(0, 0, 8))
+    end
+
+    -- Appelée par toutes les techniques (SetVelocity d'un joueur AJOUTE de la vitesse)
+    function ENT:SetVelocity(v)
+        if not self.loco then return end
+        if v:IsZero() then
+            self.loco:SetVelocity(vector_origin)
+            return
+        end
+        if v.z > 30 then Decoller(self) end
+        if not self.Freinage then self.Freinage = self.loco:GetDeceleration() end
+        self.loco:SetDeceleration(0)
+        self.loco:SetVelocity(self.loco:GetVelocity() + v)
+    end
+
+    function ENT:SuivreMouvement()
+        if not self.loco then return end
+        local v = self.loco:GetVelocity()
+        local vh = Vector(v.x, v.y, 0)
+        local vitesse = vh:Length()
+        local enAir = not self:IsOnGround()
+
+        -- poussé directement via loco:SetVelocity (sans passer par SetVelocity ci-dessus)
+        if not self.Freinage and (vitesse > 150 or v.z > 30) then
+            self.Freinage = self.loco:GetDeceleration()
+            self.loco:SetDeceleration(0)
+        end
+        if v.z > 30 and not enAir then Decoller(self) end
+
+        if self.Freinage then
+            if vitesse < VITESSE_MIN and not enAir then
+                self.loco:SetDeceleration(self.Freinage)   -- arrêté : il retrouve son freinage normal
+                self.Freinage = nil
+            elseif not enAir then
+                local k = math.max(1 - FROTTEMENT * FrameTime(), 0)
+                self.loco:SetVelocity(Vector(v.x * k, v.y * k, v.z))
+            end
+        end
+    end
+
     function ENT:Think()
+        self:SuivreMouvement()
+
         -- retour à fond après REGEN_DELAI secondes sans coup
         if self.RegenDelai > 0 and self:Health() < self.VieMax and CurTime() - self.DernierCoup > self.RegenDelai then
             self:SetHealth(self.VieMax)
@@ -104,7 +160,7 @@ if SERVER then
         local vie = math.max(self:Health(), 0)
         if self:GetVie() ~= vie then self:SetVie(vie) end
 
-        self:NextThink(CurTime() + 0.1)
+        self:NextThink(CurTime())   -- chaque tick : le mouvement doit être suivi de près
         return true
     end
 end

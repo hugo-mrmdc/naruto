@@ -46,7 +46,7 @@ function Combat.MeleeHit(ply, info)
         end
 
         Combat.Damage(ent, info)
-        ply:EmitSound("physics/body/body_medium_impact_hard" .. math.random(1, 6) .. ".wav", 70, math.random(95, 110))
+        ply:EmitSound("dimix/sond/taijutsu/hit1.wav", 70, math.random(95, 110))
         return true, ent
     end
 

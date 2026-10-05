@@ -50,6 +50,7 @@ NA_NIV_TECH = NA_NIV_TECH or {}
 NA_NIV.NOMS = {
     { "tomoe",      "TOMOE",       "" },
     { "degats",     "DÉGÂTS",      "" },
+    { "degats_final", "DÉGÂTS FINAUX", "" },
     { "soin",       "SOIN",        "" },
     { "poison",     "POISON",      "" },
     { "chakra",     "CHAKRA",      "" },
@@ -809,10 +810,10 @@ NA_NIV_TECH.jinton_cube = {
         degats = 40, chakra = 30, recharge = 1, hitbox = 20,
         portee = 900, duree_mudra = 0.6, duree = 1.5, intervalle = 0.7, echelle = 1.1,
     },
-    [2] = { degats = 40,duree = 1.7 },
-    [3] = { degats = 40, hitbox = 24,duree = 2 },
-    [4] = { degats = 40 ,duree = 2.5},
-    [5] = { degats = 40, chakra = 24, hitbox = 28,duree = 3 },
+    [2] = { degats = 43,duree = 1.7 },
+    [3] = { degats = 47, hitbox = 24,duree = 2 },
+    [4] = { degats = 50 ,duree = 2.5},
+    [5] = { degats = 55, chakra = 24, hitbox = 28,duree = 3 ,intervalle = 0.5},
 }
 
 -- Bouclier Jinton (sv_jinton_bouclier.lua) : degats = explosion du bouclier
@@ -965,6 +966,41 @@ NA_NIV_TECH.hyuga_paume = {
     [3] = { degats = 38, recharge = 7 },
     [4] = { degats = 41 },
     [5] = { degats = 45, chakra = 10, recharge = 6 },
+}
+
+-- Coup de pied tournoyant (server/taijutsu/sv_taijutsu_pied.lua)
+--   etourdi = secondes d'étourdissement de la cible
+NA_NIV_TECH.taijutsu_pied = {
+    [1] = {
+        degats = 28, chakra = 10, recharge = 8, portee = 130, recul = 350, souleve = 60,
+        etourdi = 1.5, delai_impact = 0.4,
+    },
+    [2] = { degats = 31 },
+    [3] = { degats = 34, recharge = 7, etourdi = 1.8 },
+    [4] = { degats = 38 },
+    [5] = { degats = 42, chakra = 8, recharge = 6, etourdi = 2.2 },
+}
+
+-- Coup de pied descendant (server/taijutsu/sv_taijutsu_descendant.lua) : dégâts seulement
+NA_NIV_TECH.taijutsu_descendant = {
+    [1] = { degats = 35, chakra = 8, recharge = 6, portee = 130, delai_impact = 0.4 },
+    [2] = { degats = 39 },
+    [3] = { degats = 43, recharge = 5.5 },
+    [4] = { degats = 48 },
+    [5] = { degats = 54, chakra = 6, recharge = 5 },
+}
+
+-- Enchaînement aérien (server/taijutsu/sv_taijutsu_combo.lua)
+--   degats = 1er coup, degats_final = coup de talon, lancer = hauteur de l'envol
+NA_NIV_TECH.taijutsu_combo = {
+    [1] = {
+        degats = 15, degats_final = 40, chakra = 30, recharge = 18, portee = 150,
+        lancer = 450, delai_impact = 0.35, delai_sommet = 0.45, delai_final = 0.5,
+    },
+    [2] = { degats = 17, degats_final = 45 },
+    [3] = { degats = 19, degats_final = 50, recharge = 16 },
+    [4] = { degats = 21, degats_final = 56 },
+    [5] = { degats = 24, degats_final = 64, chakra = 25, recharge = 14 },
 }
 
 -- 32 Points du Hakke (server/hyuga/sv_hyuga_32points.lua)

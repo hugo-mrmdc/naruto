@@ -434,6 +434,19 @@ local TECHNIQUES = {
       desc = "Un nuage de sable te porte : tu voles (ZQSD, Espace pour monter, Ctrl pour descendre) pendant 20 secondes. Appuie sur E pour en descendre avant. Coûte 35 de chakra.",
       dmg = "Vol pendant 20 s" },
 
+    -- ===== TAIJUTSU =====
+    { cat = "Taijutsu", name = "Coup de pied tournoyant", key = "", id = "taijutsu_pied", rang = "C", icone = "ui/icon/taijutsu_pied_ardent.png", court = "Pied", cooldown = 8,
+      desc = "Un coup de pied circulaire au corps à corps : blesse, repousse et étourdit 1,5 seconde les ennemis devant toi. Coûte 10 de chakra.",
+      dmg = "28 dégâts + projection + étourdissement" },
+
+    { cat = "Taijutsu", name = "Coup de pied descendant", key = "", id = "taijutsu_descendant", rang = "C", icone = "ui/icon/taijutsu_fureur_dragon.png", court = "Descendant", cooldown = 6,
+      desc = "Un coup de pied descendant au corps à corps : inflige des dégâts aux ennemis devant toi. Coûte 8 de chakra.",
+      dmg = "35 dégâts" },
+
+    { cat = "Taijutsu", name = "Enchaînement aérien", key = "", id = "taijutsu_combo", rang = "B", icone = "ui/icon/taijutsu_tornade_jade.png", court = "Aérien", cooldown = 18,
+      desc = "Un coup de pied relevé envoie en l'air l'ennemi devant toi, puis tu le rejoins et l'écrases au sol d'un coup de talon plongeant. Coûte 30 de chakra.",
+      dmg = "15 + 40 dégâts + projection en l'air puis au sol" },
+
     -- ===== ARMES =====
     --[[{ cat = "Armes", name = "Zabuza", key = "Clic gauche / droit",
       desc = "Kubikiribocho. Clic gauche pour trancher, clic droit pour la double explosion." },
@@ -541,7 +554,7 @@ local ONGLETS = {
       desc = "Cette catégorie répertorie les techniques héritées par le sang" },
     { nom = "Clan",          icone = "clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike", "Hyuga", "Senju", "Uchiha" },
       desc = "Cette catégorie répertorie les techniques secrètes des clans" },
-    { nom = "Arts Ninja",    icone = "kentai.png",    cats = { "Armes", "Déplacement", "Divers" },
+    { nom = "Arts Ninja",    icone = "kentai.png",    cats = { "Taijutsu", "Armes", "Déplacement", "Divers" },
       desc = "Cette catégorie répertorie toutes les techniques des arts ninja" },
     { nom = "Sub Jutsu",     icone = "sub.png" },
     { nom = "Jutsu Class",   icone = "classe.png" },

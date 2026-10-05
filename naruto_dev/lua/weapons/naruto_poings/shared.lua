@@ -56,7 +56,7 @@ SWEP.ComboReset = 1.5  -- secondes sans frapper avant de revenir au coup de poin
 SWEP.Frappe = { portee = 220, largeur = 90, hauteur = 100, delai = 0.07, duree = 0.25 }
 
 SWEP.SonSwing   = Sound("npc/zombie/claw_miss1.wav")
-SWEP.SonImpact  = Sound("Flesh.ImpactHard")
+SWEP.SonImpact  = Sound("dimix/sond/taijutsu/hit1.wav")
 SWEP.TypeDegats = DMG_CLUB
 
 SWEP.Slash = false   -- pas d'effet de slash : des poings ne font pas de swing

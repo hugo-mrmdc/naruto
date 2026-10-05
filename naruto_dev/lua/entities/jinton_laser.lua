@@ -30,7 +30,7 @@ ENT.FX_RAYON    = ""   -- jet de particules en forme de laser : retiré ("[2]_re
 ENT.FX_DEPART   = "start_laser"
 ENT.FX_IMPACT   = "impact_world_geams"
 ENT.FX_TOUCHE   = "hit_jinton"
-ENT.SON_BOUCLE  = "naruto_sound/jutsu/jishaku/jishaku1.wav"
+ENT.SON_BOUCLE  = "solve_naruto_base/jutsu/jinton/6fgcfjo.wav"
 
 -- main d'où part le laser : "ValveBiped.Bip01_L_Hand" (gauche) ou "ValveBiped.Bip01_R_Hand" (droite)
 local OS_MAIN = "ValveBiped.Bip01_L_Hand"
@@ -88,7 +88,7 @@ if SERVER then
         self.ProchainTick = CurTime() + 0.1
 
         self.Boucle = CreateSound(self, self.SON_BOUCLE)
-        if self.Boucle then self.Boucle:PlayEx(0.6, 140) end
+        if self.Boucle then self.Boucle:PlayEx(0.8, 100) end
     end
 
     function ENT:Think()

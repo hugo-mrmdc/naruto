@@ -110,6 +110,11 @@ NA_DELAI_APRES = NA_DELAI_APRES or {
     katon_meteore = 0.6,               -- Météore (rang S)
     katon_grosse_boule = 0.4,          -- Grosse boule de feu (rang B)
 
+    -- Taijutsu
+    taijutsu_descendant = 0.4,         -- Coup de pied descendant (rang C)
+    taijutsu_combo = 0.4,              -- Enchaînement aérien (rang B)
+    taijutsu_pied = 0.4,               -- Coup de pied tournoyant (rang C)
+
     -- Uchiha
     katon_saut = 0.4,                  -- Boule de feu sautée (rang C)
     katon_dragons = 0.4,               -- Dragons de feu (rang B)

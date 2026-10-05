@@ -115,7 +115,7 @@ local function JutsuRow(parent, jutsu, data, known)
     row.DoClick = function()
         if not known then return end
         pickedJutsu = pickedJutsu ~= jutsu and jutsu or nil
-        surface.PlaySound("naruto_sound/menu_select.mp3")
+        surface.PlaySound("solve_naruto_base/ui/begin_reroll_sound.wav")
     end
 
     row.DoRightClick = function()

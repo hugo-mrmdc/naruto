@@ -48,6 +48,9 @@ local DEFAUT = NS .. "senju"   -- senju, mokuton, inkuton, suiton, salamandre...
 local G2 = "geams/solve_jutsu/"
 local DEDIE = {
     sv_raiton_kirin = G2 .. "solve_kirin_geams.wav",
+    sv_jinton_laser = "solve_naruto_base/jutsu/jinton/laser_start.wav",
+    sv_jinton_cube = "solve_naruto_base/jutsu/jinton/cage_cube_start.wav",
+    sv_jinton_bouclier = "solve_naruto_base/jutsu/jinton/shield_start.wav",
 }
 local sons = {}
 local function Sons(dir)
@@ -61,6 +64,7 @@ function NA_SonJutsu(ply, niveau)
     local dedie = DEDIE[src:match("([^/]+)%.lua$") or ""]
     if dedie then ply:EmitSound(dedie, 80, 100) return end
     local elem = src:match("autorun/server/([^/]+)/") or ""
+    if elem == "inkuton" or elem == "taijutsu" then return end   -- pas de son d'incantation
     local dir = DOSSIER[elem] or ((elem == "uchiha" or elem == "kaguya" or elem == "fumaSpell") and NS .. "uchiha") or DEFAUT
     local liste = Sons(dir)
     if #liste == 0 then return end

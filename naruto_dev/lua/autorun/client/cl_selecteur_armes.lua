@@ -90,7 +90,7 @@ local prechauffe = false
 hook.Add("InitPostEntity", "NA_Selecteur_Precharger", function()
     for _, nom in ipairs(IMAGES) do Mat(nom) end
     util.PrecacheSound("solve_naruto_base/ui/menu_selection_v2.wav")
-    util.PrecacheSound("naruto_sound/menu_select.mp3")
+    util.PrecacheSound("solve_naruto_base/ui/begin_reroll_sound.wav")
 end)
 
 hook.Add("HUDPaint", "NA_Selecteur_Prechauffer", function()
@@ -175,7 +175,7 @@ local function Valider(ply)
     net.Start("NA_Selecteur_Choisir")
         net.WriteString(e.id)
     net.SendToServer()
-    ply:EmitSound("naruto_sound/menu_select.mp3", 0, 100, 0.5)
+    ply:EmitSound("solve_naruto_base/ui/begin_reroll_sound.wav", 0, 100, 0.5)
     Fermer()
 end
 
