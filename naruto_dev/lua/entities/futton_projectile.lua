@@ -46,12 +46,13 @@ if SERVER then
         -- hitbox visible avec developer 1
         if now >= (self.ProchainDebug or 0) and GetConVar("developer"):GetInt() > 0 then
             self.ProchainDebug = now + 0.1
-            debugoverlay.Sphere(to, r, 0.1, Color(120, 255, 200, 25), true)
+            debugoverlay.Box(to, Vector(-r, -r, 0), Vector(r, r, r * 2), 0.1, Color(120, 255, 200, 25))
         end
 
         -- un seul test par tick (TraceHull) : ne traverse ni mur ni cible, même à grande vitesse
         local tr = util.TraceHull({
-            start = from, endpos = to, mins = Vector(-r, -r, -r), maxs = Vector(r, r, r),
+            -- hitbox remontée : plus rien sous la ligne de visée, le projectile ne racle plus le sol
+            start = from, endpos = to, mins = Vector(-r, -r, 0), maxs = Vector(r, r, r * 2),
             filter = function(ent) return ent ~= self and ent ~= owner and (ent:IsWorld() or EstCible(ent, owner)) end,
             mask = MASK_SHOT_HULL,
         })

@@ -1,0 +1,15 @@
+"UnlitGeneric"
+{
+	"$basetexture" "gpymousss/gpymousss_hitpack_1_17"
+	"$translucent" 1
+
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedTextureVar"		"$basetexture"
+			"animatedTextureFrameNumVar"	"$frame"
+			"animatedTextureFrameRate"		"35.56"
+		}
+	}
+}

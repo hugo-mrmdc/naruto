@@ -34,6 +34,8 @@ for _, f in ipairs(file.Find("materials/models/solve/billy/inkutonmonk/*", "GAME
     resource.AddFile("materials/models/solve/billy/inkutonmonk/" .. f)
 end
 
+util.PrecacheModel("models/inkuton/inkutonmonk.mdl")   -- chargé au démarrage, pas à la première invocation
+
 local pret   = {}   -- joueur -> moment où la technique est de nouveau disponible
 local moines = {}   -- joueur -> son moine
 

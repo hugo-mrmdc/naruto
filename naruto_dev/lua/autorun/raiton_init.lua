@@ -8,10 +8,16 @@ if SERVER then
     include("autorun/server/raiton/sv_raiton_cercle.lua")
     AddCSLuaFile("autorun/client/raiton/cl_raiton_boule.lua")
     include("autorun/server/raiton/sv_raiton_boule.lua")
+    AddCSLuaFile("autorun/client/raiton/cl_raiton_zone.lua")
+    include("autorun/server/raiton/sv_raiton_zone.lua")
+    AddCSLuaFile("autorun/client/raiton/cl_raiton_poing.lua")
+    include("autorun/server/raiton/sv_raiton_poing.lua")
 end
 
 if CLIENT then
     include("autorun/client/raiton/cl_raiton_jugement.lua")
     include("autorun/client/raiton/cl_raiton_cercle.lua")
     include("autorun/client/raiton/cl_raiton_boule.lua")
+    include("autorun/client/raiton/cl_raiton_zone.lua")
+    include("autorun/client/raiton/cl_raiton_poing.lua")
 end

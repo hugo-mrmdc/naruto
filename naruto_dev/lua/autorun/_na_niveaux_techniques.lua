@@ -196,20 +196,67 @@ NA_NIV_TECH.katon_souffle = {
     [5] = { degats = 7, chakra = 20, recharge = 6, duree = 3.5, brulure_duree = 5, brulure_dps = 6 },
 }
 
+-- Tornade de feu (sv_katon_tornade.lua)
+NA_NIV_TECH.katon_tornade = {
+    [1] = {
+        degats = 5, chakra = 30, recharge = 12,
+        duree = 5, rayon = 350, intervalle = 0.5, attraction = 600, duree_mudra = 0.8,
+        brulure_duree = 4, brulure_dps = 4,
+    },
+    [2] = { degats = 6 },
+    [3] = { degats = 7, recharge = 11, rayon = 400, brulure_dps = 5 },
+    [4] = { degats = 8, attraction = 700 },
+    [5] = { degats = 9, chakra = 25, recharge = 10, duree = 6, brulure_duree = 5, brulure_dps = 6 },
+}
+
+-- Grosse boule de feu (sv_katon_grosse_boule.lua)
+NA_NIV_TECH.katon_grosse_boule = {
+    [1] = {
+        degats = 60, chakra = 35, recharge = 10, duree_mudra = 1,
+        vitesse = 900, vie = 3, hitbox = 40, rayon = 220,
+        brulure_duree = 4, brulure_dps = 5,
+    },
+    [2] = { degats = 65 },
+    [3] = { degats = 70, recharge = 9, rayon = 250, brulure_dps = 6 },
+    [4] = { degats = 75 },
+    [5] = { degats = 85, chakra = 30, recharge = 8, rayon = 280, brulure_duree = 5, brulure_dps = 7 },
+}
+
 --========================================================
 -- SUITON
 --========================================================
--- Requin d'eau (sv_suiton_shark.lua) : pas de dégâts branchés (fixés dans le fichier)
+-- Requin d'eau (sv_suiton_shark.lua) : degats = dégâts du requin principal quand il touche (la nuée fait 1 par requin en plus), stun = secondes d'étourdissement en l'air, recul / souleve = bump (vitesse horizontale / verticale, comme le Wind Ball)
 NA_NIV_TECH.suiton_requin = {
     [1] = {
-        recharge = 5, hitbox = 18,
-        swarm_count = 10, swarm_radius = 500, swarm_speed = 15, mid_radius = 40, swarm_life = 1,
-        main_speed = 15,
+        recharge = 5, hitbox = 18, degats = 150, stun = 1, recul = 600, souleve = 250,
+        swarm_count = 10, swarm_radius = 250, swarm_speed = 15, mid_radius = 40, swarm_life = 1,
+        main_speed = 15, detect = 450,   -- detect = distance à laquelle le requin repère une cible et se met à la suivre
     },
-    [2] = { hitbox = 20 },
-    [3] = { recharge = 4.5, hitbox = 22 },
-    [4] = { hitbox = 24 },
-    [5] = { recharge = 4, hitbox = 28 },
+    [2] = { hitbox = 20, degats = 160 },
+    [3] = { recharge = 4.5, hitbox = 22, degats = 165, detect = 550 },
+    [4] = { hitbox = 24, degats = 36 },
+    [5] = { recharge = 4, hitbox = 28, degats = 172, detect = 650 },
+}
+
+-- Tsunami (sv_suiton_tsunami.lua) : une vague emporte le lanceur en continu dans la direction de son regard ; dégâts aux ennemis touchés par son front
+--   duree = secondes sur la vague, vitesse = vitesse de la vague, degats = par touche, intervalle = secondes avant de retoucher le même ennemi, rayon = zone touchée devant le lanceur
+NA_NIV_TECH.suiton_tsunami = {
+    [1] = { degats = 80, duree = 6, vitesse = 650, intervalle = 0.4, rayon = 250, chakra = 60, recharge = 20, duree_mudra = 0.8 },
+    [2] = { degats = 85 },
+    [3] = { degats = 90, duree = 7, chakra = 54 },
+    [4] = { degats = 95, rayon = 280, recharge = 17 },
+    [5] = { degats = 100, duree = 8, vitesse = 750, chakra = 48, recharge = 14 },
+}
+
+-- Pluie suiton (sv_suiton_pluie.lua) : un nuage fait pleuvoir des bulles d'eau sur la zone visée ; chaque bulle qui touche le sol explose et blesse
+--   duree = secondes de pluie, rayon = zone, par_vague / intervalle = bulles par vague et secondes entre deux vagues, degats = par bulle,
+--   rayon_bulle = zone touchée sous une bulle, hauteur = hauteur de chute, hauteur_nuage = hauteur du nuage, vitesse = vitesse de chute, portee = distance de visée
+NA_NIV_TECH.suiton_pluie = {
+    [1] = { degats = 30, rayon = 250, duree = 4, par_vague = 3, intervalle = 0.2, rayon_bulle = 110, hauteur = 400, hauteur_nuage = 650, vitesse = 300, portee = 700, chakra = 40, recharge = 14, duree_mudra = 0.5 },
+    [2] = { degats = 30 },
+    [3] = { degats = 33, rayon = 280, rayon_bulle = 125, chakra = 36 },
+    [4] = { degats = 35, duree = 4.5, recharge = 12 },
+    [5] = { degats = 40, rayon = 320, rayon_bulle = 140, par_vague = 4, duree = 5, chakra = 32, recharge = 10 },
 }
 
 -- Boule d'eau (sv_suiton_waterball.lua)
@@ -254,37 +301,57 @@ NA_NIV_TECH.suiton_bulle = {
 -- Wind Slash (sv_futon_windslash.lua)
 NA_NIV_TECH.futon_windslash = {
     [1] = {
-        degats = 35, chakra = 20, recharge = 5,
+        degats = 60, chakra = 20, recharge = 5,
         vitesse = 1800, duree_vie = 1.5, hitbox = 40, hitbox_haut = 15, echelle = 0.6, roulis = 0, duree_mudra = 0.5,
     },
-    [2] = { degats = 40 },
-    [3] = { degats = 45, recharge = 4.5, hitbox = 45 },
-    [4] = { degats = 50 },
-    [5] = { degats = 58, chakra = 16, recharge = 4, hitbox = 50 },
+    [2] = { degats = 64 },
+    [3] = { degats = 73, recharge = 4.5, hitbox = 45 },
+    [4] = { degats = 79 },
+    [5] = { degats = 103, chakra = 16, recharge = 4, hitbox = 50 },
 }
 
 -- Tornade de vent (sv_futon_tornade.lua)
 NA_NIV_TECH.futon_tornade = {
     [1] = {
-        degats = 60, chakra = 30, recharge = 12,
+        degats = 66, chakra = 30, recharge = 12,
         duree = 2, vitesse = 1200, rayon = 130, hauteur = 250, intervalle = 0.25, recul = 300, souleve = 220, duree_mudra = 0.8,
     },
-    [2] = { degats = 70 },
-    [3] = { degats = 80, recharge = 11, duree = 2 },
-    [4] = { degats = 90 },
-    [5] = { degats = 100, chakra = 24, recharge = 9, duree = 2 },
+    [2] = { degats = 74 },
+    [3] = { degats = 86, recharge = 11, duree = 2 },
+    [4] = { degats = 98 },
+    [5] = { degats = 112, chakra = 24, recharge = 9, duree = 2 },
+}
+
+-- Ouragan de vent (sv_futon_ouragan.lua) : une grosse tornade qui avance ; dégâts + bump à chaque ennemi traversé (une fois chacun)
+--   degats = dégâts, rayon, vitesse, duree_vie = secondes (portée = vitesse x durée), pousse = bump horizontal, souleve = bump vertical, devant = distance de départ
+NA_NIV_TECH.futon_ouragan = {
+    [1] = { degats = 124, rayon = 110, vitesse = 500, duree_vie = 3, pousse = 450, souleve = 250, devant = 70, chakra = 40, recharge = 12, duree_mudra = 0.4 },
+    [2] = { degats = 136 },
+    [3] = { degats = 142, chakra = 36, rayon = 120 },
+    [4] = { degats = 153, recharge = 10, duree_vie = 3.5 },
+    [5] = { degats = 166, chakra = 32, recharge = 8, rayon = 135, duree_vie = 4 },
+}
+
+-- Expulsion de vent (sv_futon_expulsion.lua) : explosion autour du lanceur, dégâts + projection des ennemis proches
+--   degats, rayon = zone autour du lanceur, pousse = vitesse horizontale donnée aux ennemis, souleve = vitesse verticale
+NA_NIV_TECH.futon_expulsion = {
+    [1] = { degats = 110, rayon = 350, pousse = 1100, souleve = 300, chakra = 40, recharge = 14, duree_mudra = 0.5 },
+    [2] = { degats = 123 },
+    [3] = { degats = 135, rayon = 400, chakra = 36 },
+    [4] = { degats = 150, recharge = 12 },
+    [5] = { degats = 173, rayon = 450, pousse = 1300, chakra = 32, recharge = 10 },
 }
 
 -- Wind Ball (sv_futon_windball.lua)
 NA_NIV_TECH.futon_windball = {
     [1] = {
-        degats = 25, chakra = 20, recharge = 6,
+        degats = 60, chakra = 20, recharge = 6,
         vitesse = 1500, duree_vie = 2, hitbox = 30, hitbox_haut = 30, echelle = 0.5, recul = 600, souleve = 250, duree_mudra = 0.5,
     },
-    [2] = { degats = 28 },
-    [3] = { degats = 32, recharge = 5.5, hitbox = 34 },
-    [4] = { degats = 36 },
-    [5] = { degats = 42, chakra = 16, recharge = 4.5, hitbox = 38, recul = 750 },
+    [2] = { degats = 76 },
+    [3] = { degats = 80, recharge = 5.5, hitbox = 34 },
+    [4] = { degats = 88 },
+    [5] = { degats = 95, chakra = 16, recharge = 4.5, hitbox = 38, recul = 750 },
 }
 
 --========================================================
@@ -323,27 +390,48 @@ NA_NIV_TECH.raiton_boule = {
 }
 
 --========================================================
+-- Zone de foudre (sv_raiton_zone.lua) : zone autour du lanceur ; dégâts à chaque tick, et toutes les `pulse` secondes les ennemis dedans sont étourdis
+--   duree = secondes de zone, rayon, degats = par tick, intervalle = secondes entre deux ticks, pulse = secondes entre deux étourdissements, stun = secondes d'étourdissement
+NA_NIV_TECH.raiton_zone = {
+    [1] = { degats = 10, rayon = 450, duree = 10, intervalle = 0.5, pulse = 3, stun = 1, chakra = 45, recharge = 15, duree_mudra = 0.8 },
+    [2] = { degats = 12 },
+    [3] = { degats = 15, chakra = 40, stun = 1.2 },
+    [4] = { degats = 18, recharge = 13 },
+    [5] = { degats = 25, chakra = 35, recharge = 11, stun = 1.5, duree = 12 },
+}
+
+-- Poing de foudre (sv_raiton_poing.lua) : petit bond puis plongeon vers le bas, poing chargé ; onde + dégâts + projection à l'atterrissage
+--   degats, rayon = zone autour de l'impact, projection / proj_haut = vitesses données aux ennemis, stun = secondes d'étourdissement des ennemis touchés, vitesse = du plongeon, saut = hauteur du bond, delai_plongee = secondes de bond avant de plonger
+NA_NIV_TECH.raiton_poing = {
+    [1] = { degats = 50, rayon = 280, projection = 450, proj_haut = 280, stun = 0.5, vitesse = 1700, saut = 600, delai_plongee = 0.45, chakra = 40, recharge = 16 },
+    [2] = { degats = 56 },
+    [3] = { degats = 63, rayon = 310, chakra = 36 },
+    [4] = { degats = 70, recharge = 14 },
+    [5] = { degats = 80, rayon = 340, projection = 550, chakra = 32, recharge = 1 },
+}
+
+--========================================================
 -- DOTON
 --========================================================
 -- Boule de roche (sv_doton_pierre.lua)
 NA_NIV_TECH.doton_pierre = {
     [1] = {
-        degats = 40, chakra = 20, recharge = 8,
+        degats = 64, chakra = 20, recharge = 8,
         vitesse = 1300, duree_vie = 2, hitbox = 22, hitbox_haut = 22, echelle = 0.45, recul = 500, souleve = 200, duree_mudra = 0.6,
     },
-    [2] = { degats = 45 },
-    [3] = { degats = 50, recharge = 7 },
-    [4] = { degats = 56, hitbox = 25, echelle = 0.52 },
-    [5] = { degats = 65, chakra = 16, recharge = 6 },
+    [2] = { degats = 76 },
+    [3] = { degats = 86, recharge = 7 },
+    [4] = { degats = 97, hitbox = 25, echelle = 0.52 },
+    [5] = { degats = 105, chakra = 16, recharge = 6 },
 }
 
 -- Séisme (sv_doton_seisme.lua) : dégâts à chaque tick ; la recharge compte depuis la FIN de la zone
 NA_NIV_TECH.doton_seisme = {
-    [1] = { degats = 5, chakra = 20, recharge = 10, duree = 5, rayon = 250, intervalle = 0.5, duree_mudra = 0.8 },
-    [2] = { degats = 6 },
-    [3] = { degats = 7, recharge = 9 },
-    [4] = { degats = 8, rayon = 280 },
-    [5] = { degats = 10, chakra = 16, recharge = 8, duree = 6 },
+    [1] = { degats = 8, chakra = 20, recharge = 10, duree = 5, rayon = 250, intervalle = 0.5, duree_mudra = 0.8 },
+    [2] = { degats = 12 },
+    [3] = { degats = 15, recharge = 9 },
+    [4] = { degats = 18, rayon = 280 },
+    [5] = { degats = 22, chakra = 16, recharge = 8, duree = 6 },
 }
 
 -- Voyage souterrain (sv_doton_taupe.lua) : duree = temps sous terre ; recharge compte depuis la sortie
@@ -353,6 +441,26 @@ NA_NIV_TECH.doton_taupe = {
     [3] = { recharge = 13 },
     [4] = { duree = 8 },
     [5] = { chakra = 24, recharge = 11, duree = 10 },
+}
+
+-- Éruption de roche (sv_doton_eruption.lua) : des roches de MÊME taille sortent du sol en éventail devant le lanceur
+--   rangees, par_rangee = nombre de roches, rayon = zone touchée autour d'une roche, echelle = taille (1 = taille du modèle, ~14 x 30), degats, stun (0 = aucun), duree_vie
+NA_NIV_TECH.doton_eruption = {
+    [1] = { degats = 120, rayon = 95, rangees = 6, par_rangee = 5, echelle = 5, stun = 0, duree_vie = 2, chakra = 45, recharge = 16, duree_mudra = 0.4 },
+    [2] = { degats = 134 },
+    [3] = { degats = 140, rangees = 7, chakra = 41 },
+    [4] = { degats = 152, recharge = 14 },
+    [5] = { degats = 160, rangees = 8, par_rangee = 6, chakra = 36, recharge = 12 },
+}
+
+-- Pics de pierre (sv_doton_pics.lua) : comme le Cube Jinton, vise l'ennemi le plus proche dans la hitbox de visée ; dégâts + étourdissement + pierre
+--   degats, stun = secondes d'étourdissement, portee = distance maximale, hitbox = demi-taille de la boîte de visée
+NA_NIV_TECH.doton_pics = {
+    [1] = { degats = 50, stun = 2, portee = 900, hitbox = 20, chakra = 35, recharge = 14, duree_mudra = 0.5 },
+    [2] = { degats = 58, stun = 2.3 },
+    [3] = { degats = 64, hitbox = 24, chakra = 32 },
+    [4] = { degats = 72, stun = 2.7, recharge = 12 },
+    [5] = { degats = 80, hitbox = 28, stun = 3, chakra = 28, recharge = 10 },
 }
 
 --========================================================

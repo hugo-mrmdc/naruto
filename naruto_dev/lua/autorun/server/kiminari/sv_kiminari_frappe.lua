@@ -2,8 +2,8 @@
 -- Kiminari : Frappe noire (SERVEUR)
 --
 -- Mudras pendant DUREE_MUDRA secondes, puis À LA FIN des mudras la frappe se
--- pose là où le lanceur regarde à ce moment (PORTEE max ; au-delà, au sol
--- sous le point de portée max) : la particule
+-- pose AU SOL là où le lanceur regarde à ce moment (PORTEE max ; si le regard
+-- touche un joueur ou un mur, le point est descendu jusqu'au sol) : la particule
 -- [19]_kiminari_charge (particles/atg_farisv2.pcf) y apparaît et
 -- la décharge frappe : tout ennemi dans le rayon prend des dégâts et est
 -- étourdi DUREE secondes (NA_Etourdir, sv_etourdissement.lua). La particule ne
@@ -51,8 +51,9 @@ local function EstCible(ent, lanceur)
     return false
 end
 
--- Point visé : ce que le regard touche dans la portée, sinon le sol sous le
--- point de portée max
+-- Point visé : ce que le regard touche dans la portée (joueur, mur, sol...), sinon le point de portée max.
+-- Dans TOUS les cas la frappe tombe AU SOL : le point est ensuite descendu jusqu'au sol (même si on vise un joueur
+-- en l'air ou un mur), on part juste devant la surface touchée pour ne pas rester coincé dedans.
 local function PointVise(ply)
     local debut = ply:EyePos()
     local tr = util.TraceLine({
@@ -61,15 +62,15 @@ local function PointVise(ply)
         filter = ply,
         mask = MASK_SOLID,
     })
-    if tr.Hit then return tr.HitPos end
 
+    local depart = tr.Hit and (tr.HitPos + tr.HitNormal * 5) or tr.HitPos
     local sol = util.TraceLine({
-        start = tr.HitPos,
-        endpos = tr.HitPos - Vector(0, 0, 4000),
+        start = depart,
+        endpos = depart - Vector(0, 0, 4000),
         filter = ply,
         mask = MASK_SOLID_BRUSHONLY,
     })
-    return sol.HitPos
+    return sol.Hit and sol.HitPos or tr.HitPos
 end
 
 -- Particule de charge pendant "duree" secondes (vue par tout le monde),

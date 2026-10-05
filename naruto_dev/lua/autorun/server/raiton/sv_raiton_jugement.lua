@@ -50,7 +50,9 @@ local function EstCible(ent, lanceur)
     return false
 end
 
--- Point visé : ce que le regard touche dans la portée, sinon le sol sous le point de portée max
+-- Point visé : ce que le regard touche dans la portée (joueur, mur, sol...), sinon le point de portée max.
+-- Dans TOUS les cas la foudre tombe AU SOL : le point est ensuite descendu jusqu'au sol (même si on vise un joueur
+-- en l'air ou un mur), on part juste devant la surface touchée pour ne pas rester coincé dedans.
 local function PointVise(ply)
     local debut = ply:EyePos()
     local tr = util.TraceLine({
@@ -59,15 +61,15 @@ local function PointVise(ply)
         filter = ply,
         mask = MASK_SOLID,
     })
-    if tr.Hit then return tr.HitPos end
 
+    local depart = tr.Hit and (tr.HitPos + tr.HitNormal * 5) or tr.HitPos
     local sol = util.TraceLine({
-        start = tr.HitPos,
-        endpos = tr.HitPos - Vector(0, 0, 4000),
+        start = depart,
+        endpos = depart - Vector(0, 0, 4000),
         filter = ply,
         mask = MASK_SOLID_BRUSHONLY,
     })
-    return sol.HitPos
+    return sol.Hit and sol.HitPos or tr.HitPos
 end
 
 local function Foudre(ply, point)

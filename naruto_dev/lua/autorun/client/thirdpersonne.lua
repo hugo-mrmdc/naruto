@@ -53,12 +53,24 @@ end)
 local DISTANCE_TOURBILLON_BONUS = 80
 local HAUTEUR_TOURBILLON_BONUS = 60
 
+-- Caméra reculée et plus haute pendant le Tsunami Suiton (la vague est très grande), avec une transition en douceur
+local DISTANCE_TSUNAMI_BONUS = 350
+local HAUTEUR_TSUNAMI_BONUS  = 120
+local TSUNAMI_VITESSE        = 3     -- vitesse de la transition (plus grand = plus rapide)
+local tsunami = 0                    -- 0 = caméra normale, 1 = caméra du Tsunami (valeur lissée)
+
+local function MajTsunami(ply)
+    local cible = (IsValid(ply) and ply:GetNW2Float("NA_TsunamiFin", 0) > CurTime()) and 1 or 0
+    tsunami = math.Approach(tsunami, cible, FrameTime() * TSUNAMI_VITESSE)
+end
+
 local function GetDist(ply)
     local c = GetConVar("na_tps_dist_cl")
     local v = (c and c:GetInt()) or DISTANCE
     if IsValid(ply) and ply:GetNW2Float("NA_TourbillonFin", 0) > CurTime() then
         v = v + DISTANCE_TOURBILLON_BONUS
     end
+    v = v + DISTANCE_TSUNAMI_BONUS * tsunami
     return math.Clamp(v, DIST_MIN, DIST_MAX)
 end
 
@@ -68,7 +80,7 @@ local function GetHeight(ply)
     if IsValid(ply) and ply:GetNW2Float("NA_TourbillonFin", 0) > CurTime() then
         h = h + HAUTEUR_TOURBILLON_BONUS
     end
-    return h
+    return h + HAUTEUR_TSUNAMI_BONUS * tsunami
 end
 
 -- Remet les valeurs écrites en haut de ce fichier
@@ -104,6 +116,7 @@ hook.Add("CalcView", "NA_TPS_CalcView", function(ply, pos, ang, fov)
     if not IsValid(ply) or not ply:Alive() then return end
     if ply ~= LocalPlayer() then return end
 
+    MajTsunami(ply)
     local dist   = GetDist(ply)
     local height = GetHeight(ply)
 

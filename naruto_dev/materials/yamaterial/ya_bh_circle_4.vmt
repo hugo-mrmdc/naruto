@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+    "$basetexture" "yamaterial/Ya_bh_circle_4"
+    "$translucent" 1
+    "$vertexalpha" 1
+    "$vertexcolor" 1
+    "$nocull" 1
+}

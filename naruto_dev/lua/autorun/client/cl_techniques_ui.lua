@@ -36,6 +36,12 @@ local TECHNIQUES = {
     { cat = "Katon", name = "Souffle katon", key = "", id = "katon_souffle", rang = "C", icone = "ui/icon/katon_souffle_feu.png", court = "Souffle", cooldown = 8,
       desc = "Souffle un jet de flammes devant toi pendant 3 secondes, dans la direction de ton regard : il blesse et brûle tous les ennemis dans le cône. Coûte 25 de chakra.",
       dmg = "5 par tick (toutes les 0,25 s) + brûlure" },
+    { cat = "Katon", name = "Tornade de feu", key = "", id = "katon_tornade", rang = "B", icone = "ui/icon/katon_tornade_feu.png", court = "Tornade", cooldown = 12,
+      desc = "Fait surgir une tornade de flammes devant toi pendant 5 secondes : elle attire vers son centre, blesse et brûle tous les ennemis dedans. Coûte 30 de chakra.",
+      dmg = "5 par tick (toutes les 0,5 s) + brûlure + attraction" },
+    { cat = "Katon", name = "Grosse boule de feu", key = "", id = "katon_grosse_boule", rang = "B", icone = "ui/icon/katon_big_boule_feu.png", court = "Grosse boule", cooldown = 10,
+      desc = "Après les mudras, lance une énorme boule de feu qui explose au contact : elle blesse et brûle tous les ennemis dans le souffle. Coûte 35 de chakra.",
+      dmg = "60 à l'explosion + brûlure" },
      { cat = "Uchiha", name = "Boule de feu sautée", key = KEY_J, id = "katon_saut", rang = "C", icone = "ui/icon/uchiha_boule_feu_supreme.png", court = "Saut feu", cooldown = 1, cd = 2,
       desc = "Charge de chakra puis boule de feu avec un bond." },
     { cat = "Uchiha", name = "Dragons de feu", key = KEY_COMMA, id = "katon_dragons", rang = "B", icone = "ui/icon/uchiha_flamme_infernal.png", court = "Dragons", cooldown = 15,
@@ -151,9 +157,17 @@ local TECHNIQUES = {
       desc = "Lance un projectile de vapeur droit devant toi. Il touche le premier ennemi sur sa route et lui inflige des dégâts, sans autre effet. Il s'arrête sur un mur. Coûte 45 de chakra.",
       dmg = "80 au premier ennemi touché" },
 
+
+
     -- ===== SUITON =====
     { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "", court = "Requin", cooldown = 5, cd = 5.3,
       desc = "Envoie un requin d'eau sur la cible visée." },
+    { cat = "Suiton", name = "Tsunami", key = "", id = "suiton_tsunami", rang = "A", icone = "ui/icon/suiton_tsunami.png", court = "Tsunami", cooldown = 20,
+      desc = "Tu montes sur une vague qui avance en continu dans la direction de ton regard pendant 6 secondes : tous les ennemis touchés par son front sont blessés. Appuie sur E pour en descendre. Coûte 60 de chakra.",
+      dmg = "12 par touche (toutes les 0,4 s par ennemi)" },
+    { cat = "Suiton", name = "Pluie suiton", key = "", id = "suiton_pluie", rang = "B", icone = "ui/icon/suiton_tir_en_cascade.png", court = "Pluie", cooldown = 14,
+      desc = "Un nuage d'eau se forme là où tu vises et fait pleuvoir des bulles pendant 4 secondes : chaque bulle qui touche le sol explose et blesse ceux qui sont dessous. Coûte 40 de chakra.",
+      dmg = "6 par bulle qui touche (pendant 4 s)" },
     { cat = "Suiton", name = "Boule d'eau", key = "", id = "suiton_waterball", rang = "C", icone = "ui/icon/suiton_bombe_eau.png", court = "Boule d'eau", cooldown = 6,
       desc = "Lance une boule d'eau droit devant toi : elle blesse et repousse le premier ennemi touché. Coûte 20 de chakra.",
       dmg = "30 à l'impact + projection" },
@@ -175,6 +189,12 @@ local TECHNIQUES = {
     { cat = "Futon", name = "Wind Ball", key = "", id = "futon_windball", rang = "C", icone = "ui/icon/futon_balle_vent.png", court = "Wind Ball", cooldown = 6,
       desc = "Lance une boule de vent droit devant toi : elle blesse le premier ennemi touché et le projette violemment en arrière et vers le haut. Coûte 20 de chakra.",
       dmg = "25 à l'impact + projection" },
+    { cat = "Futon", name = "Ouragan de vent", key = "", id = "futon_ouragan", rang = "B", icone = "ui/icon/futon_tornade_vent.png", court = "Ouragan", cooldown = 12,
+      desc = "Une grosse tornade de vent avance devant toi : chaque ennemi traversé subit des dégâts et est projeté un peu en l'air. Elle s'arrête sur un mur. Coûte 40 de chakra.",
+      dmg = "60 + bump à chaque ennemi traversé" },
+    { cat = "Futon", name = "Expulsion de vent", key = "", id = "futon_expulsion", rang = "B", icone = "ui/icon/futon_repulsion_vent.png", court = "Expulsion", cooldown = 14,
+      desc = "Une explosion de vent jaillit autour de toi : tous les ennemis proches subissent des dégâts et sont projetés loin de toi. Coûte 40 de chakra.",
+      dmg = "50 + projection" },
 
     -- ===== RAITON =====
     { cat = "Raiton", name = "Jugement de l'éclair", key = "", id = "raiton_jugement", rang = "C", icone = "ui/icon/raiton_jugement_eclair.png", court = "Jugement", cooldown = 14,
@@ -184,6 +204,12 @@ local TECHNIQUES = {
       desc = "Déploie un cercle de foudre autour de toi : à chaque impulsion (3 en tout), tous les ennemis dans la zone prennent des dégâts et sont repoussés vers l'extérieur. Coûte 35 de chakra.",
       dmg = "12 par impulsion (3 impulsions) + projection" },
 
+    { cat = "Raiton", name = "Zone de foudre", key = "", id = "raiton_zone", rang = "B", icone = "ui/icon/raiton_piege_electrique.png", court = "Zone", cooldown = 15,
+      desc = "Une zone de foudre apparaît autour de toi pendant 10 secondes : elle blesse tous les ennemis dedans, et toutes les 3 secondes elle les étourdit 1 seconde, reliés au centre par un arc électrique. Coûte 45 de chakra.",
+      dmg = "4 par tick (toutes les 0,5 s) + étourdissement 1 s toutes les 3 s" },
+    { cat = "Raiton", name = "Poing de foudre", key = "", id = "raiton_poing", rang = "B", icone = "ui/icon/raiton_onde_foudroyante.png", court = "Poing", cooldown = 16,
+      desc = "Tu bondis puis plonges vers le bas, le poing droit chargé de foudre : à l'atterrissage, une onde de foudre blesse, projette et étourdit 0,5 seconde les ennemis autour de toi. Coûte 40 de chakra.",
+      dmg = "50 + projection + étourdissement 0,5 s" },
     { cat = "Raiton", name = "Boule de foudre", key = "", id = "raiton_boule", rang = "C", icone = "ui/icon/raiton_boule_electrique.png", court = "Boule", cooldown = 10,
       desc = "Lance une boule de foudre droit devant toi : elle blesse le premier ennemi touché et l'étourdit un instant. Coûte 25 de chakra.",
       dmg = "30 dégâts + étourdi 1,5 s" },
@@ -198,6 +224,12 @@ local TECHNIQUES = {
     { cat = "Doton", name = "Voyage souterrain", key = "", id = "doton_taupe", rang = "C", icone = "ui/icon/doton_taupe.png", court = "Taupe", cooldown = 15,
       desc = "Tu passes sous terre pendant 6 secondes : tu deviens invisible et tu ne peux plus subir aucun dégât, mais tu ne peux ni sauter ni faire la course de chakra. Appuie sur E pour ressortir plus tôt ; aucun jutsu possible sous terre. Coûte 30 de chakra.",
       dmg = "Invulnérable 6 s" },
+    { cat = "Doton", name = "Pics de pierre", key = "", id = "doton_pics", rang = "B", icone = "ui/icon/doton_tremblement_de_terre.png", court = "Pics", cooldown = 14,
+      desc = "Vise un ennemi devant toi : il est blessé, étourdi 2 secondes et pétrifié sous des pics de pierre. La précision de la visée augmente avec le niveau. Coûte 35 de chakra.",
+      dmg = "20 + étourdissement 2 s" },
+    { cat = "Doton", name = "Éruption de roche", key = "", id = "doton_eruption", rang = "B", icone = "ui/icon/doton_boule_de_roche.png", court = "Éruption", cooldown = 16,
+      desc = "Une forêt de roches jaillit du sol en éventail devant toi, rangée après rangée : tous les ennemis touchés prennent des dégâts. Coûte 45 de chakra.",
+      dmg = "30 par ennemi touché (une fois)" },
 
     -- ===== MOKUTON =====
     { cat = "Mokuton", name = "Arche", key = KEY_K, id = "mokuton_arche", rang = "C", icone = "ui/icon/arche.png", court = "Arche", cd = 2,

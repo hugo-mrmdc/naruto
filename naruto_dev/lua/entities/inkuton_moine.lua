@@ -29,18 +29,11 @@ ENT.PauseCoups  = 0.3
 ENT.InstantCoup = 0.4  -- part de l'animation où le coup touche
 
 if CLIENT then
-    local PCF, FX, FX_SPAWN = "particles/solve_inkuton_geams.pcf", "solve_inkuton_dispawn_moine", "solve_inkuton_moine_spawn_trap"
+    -- Les .pcf et le modèle sont chargés UNE SEULE FOIS au démarrage (cl_inkuton_moine.lua) : les charger ici,
+    -- à chaque apparition d'un moine, figeait le jeu un instant (patlick_atgparticules.pcf fait 2,8 Mo).
+    local FX, FX_SPAWN = "solve_inkuton_dispawn_moine", "solve_inkuton_moine_spawn_trap"
     local FX_RUSH, DUREE_SPAWN = "solve_inkuton_moine_rush", 1   -- l'effet d'apparition reste 1 s collé au moine
-    local PCF_IMPACT, FX_IMPACT = "particles/patlick_atgparticules.pcf", "golem_encre_impact_pat"
-
-    function ENT:Initialize()
-        game.AddParticles(PCF)
-        PrecacheParticleSystem(FX)
-        PrecacheParticleSystem(FX_SPAWN)
-        PrecacheParticleSystem(FX_RUSH)
-        game.AddParticles(PCF_IMPACT)
-        PrecacheParticleSystem(FX_IMPACT)
-    end
+    local FX_IMPACT = "golem_encre_impact_pat"
 
     -- au premier tick (la position est alors à jour, contrairement à Initialize)
     function ENT:Think()

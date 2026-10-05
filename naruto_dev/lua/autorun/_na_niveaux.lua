@@ -53,11 +53,11 @@ NA_NIV.POINTS_PAR_KILL = 1   -- points gagnés en tuant un autre joueur
 -- débloqué celle d'avant dans la même ligne. La première est libre.
 -- Même ordre que l'affichage (rangs C, puis B, puis A : cl_techniques_ui.lua).
 NA_NIV.LIGNEES = {
-    { "katon_boule", "katon_dome", "katon_souffle" },
-    { "suiton_waterball", "suiton_prison", "suiton_bulle","suiton_requin" },
-    { "futon_windslash", "futon_tornade", "futon_windball" },
-    { "raiton_jugement", "raiton_cercle", "raiton_boule" },
-    { "doton_pierre", "doton_seisme", "doton_taupe" },
+    { "katon_boule", "katon_dome", "katon_souffle", "katon_tornade", "katon_grosse_boule" },
+    { "suiton_waterball", "suiton_prison", "suiton_bulle","suiton_requin", "suiton_pluie", "suiton_tsunami" },
+    { "futon_windslash", "futon_tornade", "futon_windball", "futon_ouragan", "futon_expulsion" },
+    { "raiton_jugement", "raiton_cercle", "raiton_boule", "raiton_zone", "raiton_poing" },
+    { "doton_pierre", "doton_seisme", "doton_taupe", "doton_pics", "doton_eruption" },
     { "mokuton_arche", "mokuton_protection", "mokuton_wood_hand", "mokuton_dragon", "mokuton_golem" },
     { "salamandre_poison", "salamandre_dome", "salamandre_corps", "salamandre_tornade" },
     { "fuma_tp", "fuma_invisibilite", "fuma_aura", "fuma_jugement", "fuma_ciel" },

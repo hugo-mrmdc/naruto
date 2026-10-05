@@ -199,6 +199,15 @@ function NA_Lancer(id)
         return false
     end
 
+    -- sur un dragon monté (Bakuton NA_Dragon, Mokuton MokutonRide, Inkuton InkutonRide) : pas d'autre jutsu, quel que soit le
+    -- dragon (pas les Dragons de feu Katon, qui ne se montent pas). Seul le dragon lui-même se relance (pour en descendre / le renvoyer).
+    if (ply:GetNW2Bool("NA_Dragon", false) or ply:GetNWBool("MokutonRide", false) or ply:GetNWBool("InkutonRide", false))
+        and id ~= "bakuton_dragon" and id ~= "mokuton_dragon" and id ~= "inkuton_dragon" then
+        NA_DernierRefus[id] = CurTime()
+        Diag(id, "sur un dragon")
+        return false
+    end
+
     -- mains vides ou mode caméra : pas de jutsu (cl_selecteur_armes.lua)
     if NA_JutsuBloque and NA_JutsuBloque(ply) then
         NA_DernierRefus[id] = CurTime()   -- la case clignote en rouge, sans son
