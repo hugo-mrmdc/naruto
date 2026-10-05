@@ -296,7 +296,6 @@ end
 
 local function Refus(message)
     notification.AddLegacy(message, NOTIFY_ERROR, 3)
-    surface.PlaySound("buttons/button10.wav")
 end
 
 local function Desequiper(slot)
@@ -311,7 +310,6 @@ local function Desequiper(slot)
     SlotsEquipement[slot] = nil
 
     EnvoyerRetrait(slot)
-    surface.PlaySound("physics/cardboard/cardboard_box_impact_soft2.wav")
     RafraichirUI()
 end
 
@@ -346,7 +344,6 @@ local function Equiper(i)
 
     SlotsEquipement[cible] = nouveau
     EnvoyerEquipement(cible, nouveau)
-    surface.PlaySound("physics/cardboard/cardboard_box_impact_soft1.wav")
     RafraichirUI()
 end
 
@@ -409,7 +406,6 @@ function AjouterEpee(recherche)
     AjouterItem(libre, e.nom, 1, nil, "arme", nil, e.modele, nil, nil, nil, nil, e.rarete)
     Inventaire[libre].classe = e.classe
     notification.AddLegacy(e.nom .. " ajoutée à l'inventaire (F4 pour l'équiper).", NOTIFY_GENERIC, 3)
-    surface.PlaySound("physics/cardboard/cardboard_box_impact_soft1.wav")
 end
 
 concommand.Add("ajouter_epee", function(_, _, args)
@@ -1019,7 +1015,6 @@ local function OuvrirEditeur(slot)
             SauverPlacement(it)
             EnvoyerEquipement(slot, it)   -- les autres joueurs voient le nouveau placement
         end
-        surface.PlaySound("buttons/button14.wav")
         RetourInventaire()
     end)
     b3:SetParent(bas) b3:SetPos((bw + 8) * 2, 0) b3:SetSize(bw, 34)
@@ -1128,7 +1123,6 @@ local function OuvrirMenu()
         surface.DrawTexturedRect(m, m, w - m * 2, h - m * 2)
     end
     fermer.DoClick = function()
-        surface.PlaySound("ui/buttonclick.wav")
         FermerMenu()
     end
     local gauche = vgui.Create("DPanel", frame)

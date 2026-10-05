@@ -42,6 +42,9 @@ local TECHNIQUES = {
     { cat = "Katon", name = "Nuée ardente", key = "", id = "katon_nuee", rang = "A", icone = "ui/icon/katon_nuee_ardente.png", court = "Nuée", cooldown = 22,
       desc = "Une nuée de feu éclate au sol là où tu regardes : tous les ennemis dans la zone sont blessés d'un coup, puis brûlent. Si tu vises un ennemi, elle éclate sur lui. Coûte 70 de chakra.",
       dmg = "8 d'un coup + brûlure" },
+    { cat = "Katon", name = "Météore", key = "", id = "katon_meteore", rang = "S", icone = "ui/icon/katon_explosion_feu.png", court = "Météore", cooldown = 45, cd = 45,
+      desc = "Un énorme météore tombe du ciel là où tu regardes : à l'impact au sol, une explosion blesse et brûle tous les ennemis dans la zone. Coûte 90 de chakra.",
+      dmg = "400 (explosion) + brûlure" },
     { cat = "Katon", name = "Grosse boule de feu", key = "", id = "katon_grosse_boule", rang = "B", icone = "ui/icon/katon_big_boule_feu.png", court = "Grosse boule", cooldown = 10,
       desc = "Après les mudras, lance une énorme boule de feu qui explose au contact : elle blesse et brûle tous les ennemis dans le souffle. Coûte 35 de chakra.",
       dmg = "60 à l'explosion + brûlure" },
@@ -165,9 +168,12 @@ local TECHNIQUES = {
     -- ===== SUITON =====
     { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "ui/icon/requin.png", court = "Requin", cooldown = 5, cd = 5.3,
       desc = "Envoie un requin d'eau sur la cible visée." },
-    { cat = "Suiton", name = "Tsunami", key = "", id = "suiton_tsunami", rang = "A", icone = "ui/icon/suiton_tsunami.png", court = "Tsunami", cooldown = 20,
+    { cat = "Suiton", name = "Tsunami", key = "", id = "suiton_tsunami", rang = "S", icone = "ui/icon/suiton_tsunami.png", court = "Tsunami", cooldown = 20,
       desc = "Tu montes sur une vague qui avance en continu dans la direction de ton regard pendant 6 secondes : tous les ennemis touchés par son front sont blessés. Appuie sur E pour en descendre. Coûte 60 de chakra.",
       dmg = "12 par touche (toutes les 0,4 s par ennemi)" },
+    { cat = "Suiton", name = "Océan", key = "", id = "suiton_ocean", rang = "A", icone = "ui/icon/suiton_ocean_dechainer.png", court = "Océan", cooldown = 40, cd = 40,
+      desc = "Un océan se déchaîne au sol devant toi pendant 8 secondes : tous les ennemis dedans sont légèrement attirés vers son centre et subissent des dégâts à chaque instant. Coûte 80 de chakra.",
+      dmg = "12 par tick (toutes les 0,5 s) + légère attraction" },
     { cat = "Suiton", name = "Pluie suiton", key = "", id = "suiton_pluie", rang = "B", icone = "ui/icon/suiton_tir_en_cascade.png", court = "Pluie", cooldown = 14,
       desc = "Un nuage d'eau se forme là où tu vises et fait pleuvoir des bulles pendant 4 secondes : chaque bulle qui touche le sol explose et blesse ceux qui sont dessous. Coûte 40 de chakra.",
       dmg = "6 par bulle qui touche (pendant 4 s)" },
@@ -186,7 +192,7 @@ local TECHNIQUES = {
     { cat = "Futon", name = "Wind Slash", key = "", id = "futon_windslash", rang = "C", icone = "ui/icon/futon_lamelle_air.png", court = "Wind Slash", cooldown = 5,
       desc = "Lance une lame de vent en forme de croissant droit devant toi : elle fonce en ligne droite et blesse le premier ennemi touché. Coûte 20 de chakra.",
       dmg = "35 à l'impact" },
-    { cat = "Futon", name = "Tornade", key = "", id = "futon_tornade", rang = "C", icone = "ui/icon/futon_tornade_vent.png", court = "Tornade", cooldown = 12,
+    { cat = "Futon", name = "Tornade", key = "", id = "futon_tornade", rang = "C", icone = "ui/icon/futon_vent_condenser.png", court = "Tornade", cooldown = 12,
       desc = "Fait surgir une tornade de vent devant toi : elle avance dans la direction de ton regard pendant 4 secondes, blesse tout ce qu'elle touche et le projette en l'air. Elle se dissipe contre un mur. Coûte 30 de chakra.",
       dmg = "6 par tick (toutes les 0,25 s)" },
     { cat = "Futon", name = "Wind Ball", key = "", id = "futon_windball", rang = "C", icone = "ui/icon/futon_balle_vent.png", court = "Wind Ball", cooldown = 6,
@@ -195,12 +201,15 @@ local TECHNIQUES = {
     { cat = "Futon", name = "Ouragan de vent", key = "", id = "futon_ouragan", rang = "B", icone = "ui/icon/futon_tornade_vent.png", court = "Ouragan", cooldown = 12,
       desc = "Une grosse tornade de vent avance devant toi : chaque ennemi traversé subit des dégâts et est projeté un peu en l'air. Elle s'arrête sur un mur. Coûte 40 de chakra.",
       dmg = "60 + bump à chaque ennemi traversé" },
-    { cat = "Futon", name = "Grand ouragan", key = "", id = "futon_grand_ouragan", rang = "A", icone = "ui/icon/futon_tornade_vent.png", court = "Gd ouragan", cooldown = 22,
+    { cat = "Futon", name = "Grand ouragan", key = "", id = "futon_grand_ouragan", rang = "A", icone = "ui/icon/cycloneA.png", court = "Gd ouragan", cooldown = 22,
       desc = "Fait surgir un énorme ouragan de vent devant toi pendant 5 secondes : il attire vers son centre et blesse tous les ennemis dedans. Coûte 60 de chakra.",
       dmg = "10 par tick (toutes les 0,5 s) + attraction" },
-    { cat = "Futon", name = "Expulsion de vent", key = "", id = "futon_expulsion", rang = "B", icone = "ui/icon/futon_repulsion_vent.png", court = "Expulsion", cooldown = 14,
+    { cat = "Futon", name = "Expulsion de vent", key = "", id = "futon_expulsion", rang = "B", icone = "ui/icon/futon_ecran_air.png", court = "Expulsion", cooldown = 14,
       desc = "Une explosion de vent jaillit autour de toi : tous les ennemis proches subissent des dégâts et sont projetés loin de toi. Coûte 40 de chakra.",
       dmg = "50 + projection" },
+    { cat = "Futon", name = "Rasenshuriken", key = "", id = "futon_rasenshuriken", rang = "S", icone = "ui/icon/futton_monde_de_vapeur.png", court = "Rasen", cooldown = 40, cd = 40,
+      desc = "Tu montes dans les airs, un Rasenshuriken tourne dans ta main droite, puis tu le lances droit devant toi : il explose au contact et blesse et projette tous les ennemis autour. Tu ne peux lancer aucun autre jutsu pendant la technique. Coûte 80 de chakra.",
+      dmg = "120 (explosion) + projection" },
 
     -- ===== RAITON =====
     { cat = "Raiton", name = "Jugement de l'éclair", key = "", id = "raiton_jugement", rang = "C", icone = "ui/icon/raiton_jugement_eclair.png", court = "Jugement", cooldown = 14,
@@ -216,6 +225,9 @@ local TECHNIQUES = {
     { cat = "Raiton", name = "Chidori", key = "", id = "raiton_chidori", rang = "A", icone = "ui/icon/raiton_chidori.png", court = "Chidori", cooldown = 18,
       desc = "Tu charges la foudre dans ta main gauche, puis tu fonces droit devant toi : le premier ennemi touché est frappé, blessé et étourdi 2 secondes, avec une onde de foudre au sol. Coûte 55 de chakra.",
       dmg = "70 + étourdissement 2 s" },
+    { cat = "Raiton", name = "Kirin", key = "", id = "raiton_kirin", rang = "S", icone = "ui/icon/raiton_kirin.png", court = "Kirin", cooldown = 50,
+      desc = "Un nuage d'orage se forme au-dessus de là où tu regardes : le Kirin, dragon de foudre, en sort et s'abat sur le sol. L'impact blesse et étourdit tous les ennemis autour. Coûte 90 de chakra.",
+      dmg = "150 + étourdissement 2 s" },
     { cat = "Raiton", name = "Poing de foudre", key = "", id = "raiton_poing", rang = "B", icone = "ui/icon/raiton_onde_foudroyante.png", court = "Poing", cooldown = 16,
       desc = "Tu bondis puis plonges vers le bas, le poing droit chargé de foudre : à l'atterrissage, une onde de foudre blesse, projette et étourdit 0,5 seconde les ennemis autour de toi. Coûte 40 de chakra.",
       dmg = "50 + projection + étourdissement 0,5 s" },
@@ -239,6 +251,9 @@ local TECHNIQUES = {
     { cat = "Doton", name = "Dragon de terre", key = "", id = "doton_dragon", rang = "A", icone = "ui/icon/doton_peau_de_roche.png", court = "Dragon", cooldown = 25,
       desc = "Un dragon de roche sort du sol devant toi pendant 5 secondes : il se tourne vers l'endroit où tu regardes et tire en rafale des projectiles de pierre. Coûte 60 de chakra.",
       dmg = "20 par projectile (toutes les 0,3 s)" },
+    { cat = "Doton", name = "Golem de roche", key = "", id = "doton_golem", rang = "S", icone = "ui/icon/golem_de_roche.png", court = "Golem", cooldown = 45, cd = 45,
+      desc = "Tu deviens un golem de roche pendant 30 secondes et tu résistes à 50 % des dégâts : le clic gauche lance une attaque qui blesse et projette tout devant toi. Tu ne peux ni lancer de jutsu ni dasher sous cette forme. Appuie sur E (ou rappuie) pour détruire le golem. Coûte 70 de chakra.",
+      dmg = "90 par attaque + projection" },
     { cat = "Doton", name = "Éruption de roche", key = "", id = "doton_eruption", rang = "B", icone = "ui/icon/doton_boule_de_roche.png", court = "Éruption", cooldown = 16,
       desc = "Une forêt de roches jaillit du sol en éventail devant toi, rangée après rangée : tous les ennemis touchés prennent des dégâts. Coûte 45 de chakra.",
       dmg = "30 par ennemi touché (une fois)" },
@@ -281,7 +296,7 @@ local TECHNIQUES = {
 
     -- ===== FUMA =====
     { cat = "Fuma", name = "Téléportation", key = "", id = "fuma_tp", rang = "C", icone = "ui/icon/fuma_shuriken.png", court = "TP", cooldown = 2,
-      desc = "Lance un shuriken : rappuie pour te téléporter dessus. S'il touche un mur, tu y es téléporté automatiquement ; s'il touche un ennemi, il explose. S'il ne touche rien, il disparaît.",
+      desc = "Lance un shuriken : appuie sur E pour te téléporter dessus. S'il touche un mur, tu y es téléporté automatiquement ; s'il touche un ennemi, il explose. S'il ne touche rien, il disparaît.",
       dmg = "60 (explosion sur un ennemi)" },
     { cat = "Fuma", name = "Jugement des Quatre Lames", key = "", id = "fuma_jugement", rang = "B", icone = "ui/icon/fuma_jugement_shuriken.png", court = "Jugement", cooldown = 18,
       desc = "Lance un fil d'acier là où tu vises. S'il touche un ennemi, il est étourdi 2,5 secondes : quatre shurikens apparaissent au-dessus de lui, un de chaque côté, et foncent sur lui. Coûte 25 de chakra.",
@@ -835,12 +850,11 @@ local function Open()
                 if ongletActif == i then return end
                 ongletActif = i
                 selection = nil
-                surface.PlaySound("ui/buttonclick.wav")
                 Rafraichir()
             end
         else
             b:SetTooltip("Bientôt disponible")
-            b.DoClick = function() surface.PlaySound("buttons/button10.wav") end
+            b.DoClick = function()  end
         end
     end
 
@@ -870,7 +884,6 @@ local function Open()
         Image(DOSSIER .. "btn_base_close.png", m, m, w - m * 2, h - m * 2)
     end
     fermer.DoClick = function()
-        surface.PlaySound("ui/buttonclick.wav")
         frame:Remove()
     end
 
@@ -890,7 +903,6 @@ local function Open()
     end
     coche.DoClick = function()
         filtreEquipables = not filtreEquipables
-        surface.PlaySound("ui/buttonclick.wav")
         Rafraichir()
     end
 
@@ -956,7 +968,6 @@ local function Open()
 
         b.DoClick = function()
             selection = (selection == tech) and nil or tech
-            surface.PlaySound("ui/buttonclick.wav")
         end
         b.DoDoubleClick = function()
             if not equipable or EmplacementDe(tech.id) then return end
@@ -1214,7 +1225,6 @@ local function Open()
     end
     optModele.DoClick = function()
         RunConsoleCommand("na_prison_sans_modele", SansModele() and "0" or "1")
-        surface.PlaySound("ui/buttonclick.wav")
     end
 
     Rafraichir()

@@ -98,7 +98,173 @@ end
 ----------------------------------------------------------
 NA_DELAI_RANG = { C = 0.4, B = 0.4, A = 0.4, S = 0.6 }
 NA_DELAI_APRES = NA_DELAI_APRES or {
-    -- id de technique = secondes ; exemple : katon_boule = 0.4,
+    -- id de technique = secondes avant de pouvoir lancer N'IMPORTE QUELLE autre technique (0 = aucun délai). Une technique absente
+    -- de la liste prend la valeur de son rang (NA_DELAI_RANG ci-dessus).
+
+    -- Katon
+    katon_boule = 0.4,                 -- Boule de feu (rang C)
+    katon_dome = 0.4,                  -- Dôme de feu (rang C)
+    katon_souffle = 0.4,               -- Souffle katon (rang C)
+    katon_tornade = 0.4,               -- Tornade de feu (rang B)
+    katon_nuee = 1,                  -- Nuée ardente (rang A)
+    katon_meteore = 0.6,               -- Météore (rang S)
+    katon_grosse_boule = 0.4,          -- Grosse boule de feu (rang B)
+
+    -- Uchiha
+    katon_saut = 0.4,                  -- Boule de feu sautée (rang C)
+    katon_dragons = 0.4,               -- Dragons de feu (rang B)
+    uchiha_genjutsu = 0.4,             -- Genjutsu du Sharingan (rang B)
+    uchiha_shuriken = 0.4,             -- Shuriken géant (rang C)
+
+    -- Inkuton
+    inkuton_chiens = 0.4,              -- Chiens d'encre (rang C)
+    inkuton_singes = 0.4,              -- Singes d'encre (rang B)
+    inkuton_serpents = 0.4,            -- Serpents d'encre (rang C)
+    inkuton_moine = 0.4,               -- Moine d'encre (rang B)
+    inkuton_dieux = 0.4,               -- Dieux d'encre (rang A)
+    inkuton_dragon = 0.6,              -- Dragon d'encre (rang S)
+
+    -- Bakuton
+    bakuton_oiseaux = 0.4,             -- Oiseaux explosifs (rang C)
+    bakuton_mignons = 0.4,             -- Mignons d'argile (rang C)
+    bakuton_araignees = 0.4,           -- Mines explosives (rang B)
+    bakuton_meute = 0.4,               -- Meute d'araignées (rang B)
+    bakuton_dragon = 0.4,              -- Dragon d'argile (rang B)
+    bakuton_bombe = 0.6,               -- Déflagration (rang S)
+
+    -- Futton
+    futton_vapeur = 0.4,               -- Émanation de vapeur (rang C)
+    futton_tornade = 0.4,              -- Tornade de vapeur (rang C)
+    futton_cage = 0.4,                 -- Cage de vapeur (rang B)
+    futton_monde = 0.6,                -- Monde de vapeur (rang S)
+
+    -- Hyoton
+    hyoton_dome = 0.4,                 -- Dôme de glace (rang C)
+    hyoton_pics = 0.4,                 -- Pics de glace (rang C)
+    hyoton_vague = 0.4,                -- Vague de glace (rang B)
+    hyoton_loup = 0.4,                 -- Loups de glace (rang B)
+    hyoton_prison = 0.4,               -- Prison de glace (rang A)
+
+    -- Shoton
+    shoton_cristal = 0.4,              -- Cristal (rang C)
+    shoton_armure = 0.4,               -- Armure de cristal (rang C)
+    shoton_rockets = 0.4,              -- Roquettes (rang B)
+    shoton_pics = 0.4,                 -- Pics de cristal (rang A)
+    shoton_chute = 0.4,                -- Chute de cristal (rang B)
+
+    -- Futton
+    futton_prison = 0.4,               -- Prison de vapeur (rang A)
+    futton_projectile = 0.4,           -- Projectile de vapeur (rang B)
+
+    -- Suiton
+    suiton_requin = 0.4,               -- Requin d'eau (rang B)
+    suiton_tsunami = 0.6,              -- Tsunami (rang S)
+    suiton_ocean = 0.4,                -- Océan (rang A)
+    suiton_pluie = 0.4,                -- Pluie suiton (rang B)
+    suiton_waterball = 0.4,            -- Boule d'eau (rang C)
+    suiton_prison = 0.4,               -- Prison aqueuse (rang C)
+    suiton_bulle = 0.4,                -- Bulles (rang C)
+
+    -- Futon
+    futon_windslash = 0.4,             -- Wind Slash (rang C)
+    futon_tornade = 0.4,               -- Tornade (rang C)
+    futon_windball = 0.4,              -- Wind Ball (rang C)
+    futon_ouragan = 0.4,               -- Ouragan de vent (rang B)
+    futon_grand_ouragan = 0.4,         -- Grand ouragan (rang A)
+    futon_rasenshuriken = 0.6,         -- Rasenshuriken (rang S)
+    futon_expulsion = 0.4,             -- Expulsion de vent (rang B)
+
+    -- Raiton
+    raiton_jugement = 0.4,             -- Jugement de l'éclair (rang C)
+    raiton_cercle = 0.4,               -- Cercle de foudre (rang C)
+    raiton_zone = 0.4,                 -- Zone de foudre (rang B)
+    raiton_chidori = 0.4,              -- Chidori (rang A)
+    raiton_kirin = 0.6,                -- Kirin (rang S)
+    raiton_poing = 0.4,                -- Poing de foudre (rang B)
+    raiton_boule = 0.4,                -- Boule de foudre (rang C)
+
+    -- Doton
+    doton_pierre = 0.4,                -- Boule de roche (rang C)
+    doton_seisme = 0.4,                -- Séisme (rang C)
+    doton_taupe = 0.4,                 -- Voyage souterrain (rang C)
+    doton_pics = 0.4,                  -- Pics de pierre (rang B)
+    doton_dragon = 0.4,                -- Dragon de terre (rang A)
+    doton_golem = 0.6,                 -- Golem de roche (rang S)
+    doton_eruption = 0.4,              -- Éruption de roche (rang B)
+
+    -- Mokuton
+    mokuton_arche = 0.4,               -- Arche (rang C)
+    mokuton_fleur = 0.4,               -- Fleur (rang C)
+    mokuton_protection = 0.4,          -- Protection de bois (rang C)
+    mokuton_wood_hand = 0.4,           -- Mains de bois (rang B)
+    mokuton_dragon = 0.4,              -- Dragon (rang B)
+    mokuton_golem = 0.4,               -- Golem de bois (rang A)
+
+    -- Salamandre
+    salamandre_dome = 0.4,             -- Dôme de brume (rang B)
+    salamandre_poison = 0.4,           -- Crachat de poison (rang C)
+    salamandre_tornade = 0.4,          -- Typhon de poison (rang A)
+    salamandre_corps = 0.4,            -- Corps de poison (rang B)
+
+    -- Fuma
+    fuma_tp = 0.4,                     -- Téléportation (rang C)
+    fuma_jugement = 0.4,               -- Jugement des Quatre Lames (rang B)
+    fuma_aura = 0.4,                   -- Aura Fuma (rang B)
+    fuma_ciel = 0.4,                   -- Shuriken Céleste (rang A)
+    fuma_invisibilite = 0.4,           -- Invisibilité (rang C)
+
+    -- Kami
+    kami_circle = 0.4,                 -- Kami Circle (rang B)
+    kami_shuriken = 0.4,               -- Shuriken de papier (rang C)
+    kami_bouclier = 0.4,               -- Paper Shield (rang B)
+    kami_ailes = 0.4,                  -- Ailes de papier (rang A)
+    kami_roue = 0.4,                   -- Roue de papier (rang B)
+
+    -- Jinton
+    jinton_cube = 0.4,                 -- Cube de confinement (rang C)
+    jinton_bouclier = 0.4,             -- Bouclier Jinton (rang C)
+    jinton_laser = 0.4,                -- Rayon de dissolution (rang A)
+
+    -- Kaguya
+    kaguya_armure = 0.4,               -- Armure d'os (rang C)
+    kaguya_legion = 0.4,               -- Légion d'os (rang A)
+    kaguya_danse = 0.4,                -- Danse des os (rang C)
+
+    -- Senju
+    senju_renfo = 0.4,                 -- Renforcement Senju (rang B)
+    senju_soin = 0.4,                  -- Soin Senju (rang B)
+    senju_frappe = 0.4,                -- Frappe terrestre (rang B)
+    senju_pied = 0.4,                  -- Coup de pied céleste (rang A)
+    senju_ermite = 0.6,                -- Ermite naturel (rang S)
+
+    -- Chinoike
+    chinoike_ketsuryugan = 0.4,        -- Ketsuryugan (rang C)
+    chinoike_genjutsu = 0.4,           -- Genjutsu du Ketsuryugan (rang C)
+    chinoike_pluie = 0.4,              -- Pluie de sang (rang B)
+    chinoike_vortex = 0.4,             -- Vortex de sang (rang B)
+
+    -- Hyuga
+    hyuga_byakugan = 0.4,              -- Byakugan (rang C)
+    hyuga_paume = 0.4,                 -- Paume du Hakke (rang C)
+    hyuga_32points = 0.4,              -- 32 Points du Hakke (rang B)
+    hyuga_64points = 0.4,              -- 64 Points du Hakke (rang A)
+    hyuga_tourbillon = 0.4,            -- Tourbillon Divin (rang A)
+
+    -- Uchiha
+    uchiha_sharingan = 0.4,            -- Sharingan (rang C)
+
+    -- Kiminari
+    kiminari_frappe = 0.4,             -- Frappe noire (rang C)
+    kiminari_prison = 0.4,             -- Prison noire (rang C)
+    kiminari_laser = 0.4,              -- Laser Circus (rang B)
+    kiminari_boulets = 0.4,            -- Boulets noirs (rang A)
+
+    -- Jiton
+    jiton_sarcophage = 0.4,            -- Sarcophage de sable (rang C)
+    jiton_emergence = 0.4,             -- Émergence de sable (rang C)
+    jiton_vortex = 0.4,                -- Vortex de sable (rang B)
+    jiton_tornade = 0.4,               -- Tornade de sable (rang B)
+    jiton_nuage = 0.4,                 -- Nuage de sable (rang A)
 }
 NA_VerrouFin = NA_VerrouFin or 0   -- jusqu'à quand aucune technique ne peut être lancée
 
@@ -120,6 +286,7 @@ NA_BASCULES.senju_renfo = "NA_SenjuRenfo"              -- server/senju/sv_senju_
 NA_BASCULES.senju_ermite = "NA_SenjuErmite"            -- server/senju/sv_senju_ermite.lua
 NA_BASCULES.hyuga_byakugan = "NA_Byakugan"            -- server/hyuga/sv_hyuga_byakugan.lua
 NA_BASCULES.uchiha_sharingan = "NA_Sharingan"          -- server/uchiha/sv_uchiha_sharingan.lua
+NA_BASCULES.doton_golem = "NA_Golem"                  -- server/doton/sv_doton_golem.lua (rappuyer détruit le golem)
 NA_BASCULES.mokuton_golem = "NA_Golem"                -- server/mokuton/mokuton_golem_sv.lua (rappuyer redonne l'apparence normale)
 
 function NA_TechniqueActive(id, ply)
@@ -213,6 +380,14 @@ function NA_Lancer(id)
     if ply:GetNW2Bool("NA_Canalise", false) then
         NA_DernierRefus[id] = CurTime()
         Diag(id, "technique canalisée en cours")
+        return false
+    end
+
+    -- sur la vague du Tsunami (Suiton, rang A) : pas d'autre jutsu tant qu'elle dure (le Tsunami lui-même se relance pour en descendre :
+    -- c'est la bascule en haut de la fonction)
+    if ply:GetNW2Float("NA_TsunamiFin", 0) > CurTime() then
+        NA_DernierRefus[id] = CurTime()
+        Diag(id, "sur la vague du Tsunami")
         return false
     end
 

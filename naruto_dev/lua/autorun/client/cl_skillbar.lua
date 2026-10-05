@@ -35,11 +35,18 @@ local PAR_DEFAUT = { "kami_circle", "kami_shuriken", "kami_bouclier", "kami_aile
 
 local MAT_CASE = Material("ui/hud/fight/case_skills.png", "smooth mips")
 local MAT_BIND = Material("ui/hud/fight/case_bind.png", "smooth mips")
+local MAT_DECK = Material("ui/hud/fight/deck_skills_rework.png", "smooth mips")   -- losange 52 x 42 : indique la barre active (1 ou 2)
+local DECK_L, DECK_H = 52, 42
+-- Centre du losange dans l'image (mesuré pixel par pixel : x = 26 / 52, y = 20,5 / 42) et correction du chiffre (px à l'écran,
+-- positif = vers la droite / le bas) : à ajuster si le numéro n'est pas pile au milieu.
+local DECK_CX, DECK_CY = 26 / 52, 20.5 / 42
+local DECK_NUM_DX, DECK_NUM_DY = 0, 0
 
 -- tailles de texte proportionnelles aux emplacements
 surface.CreateFont("NA.Skill.Nom",   { font = "Roboto", size = math.Round(TAILLE * 0.2), weight = 700 })
 surface.CreateFont("NA.Skill.Touche", { font = "Roboto", size = math.Round(TAILLE * 0.2), weight = 800 })
 surface.CreateFont("NA.Skill.Vide",  { font = "Roboto", size = math.Round(TAILLE * 0.36), weight = 500 })
+surface.CreateFont("NA.Skill.Deck", { font = "Roboto", size = math.Round(TAILLE * 0.3), weight = 800 })
 surface.CreateFont("NA.Skill.CD",    { font = "Roboto", size = math.Round(TAILLE * 0.3), weight = 800 })
 
 -- Couleur par famille de technique
@@ -136,7 +143,6 @@ function Bar.Equiper(slot, id)
     if id and not NA_Cast[id] then return end
     if id and NA_Debloquee and not NA_Debloquee(LocalPlayer(), id) then
         notification.AddLegacy("Technique verrouillée : débloque-la dans la bibliothèque (F6).", NOTIFY_ERROR, 3)
-        surface.PlaySound("buttons/button10.wav")
         return
     end
 
@@ -149,7 +155,6 @@ function Bar.Equiper(slot, id)
 
     Bar.Slots[slot] = id
     Sauver()
-    surface.PlaySound("ui/buttonclick.wav")
 end
 
 function Bar.Vider(slot)
@@ -181,7 +186,6 @@ function Bar.Changer()
     Bar.Active = Bar.Active % NB_BARRES + 1
     Bar.Slots = Bar.Barres[Bar.Active]
     Bar.Selection = nil
-    surface.PlaySound("ui/buttonclick.wav")
 end
 
 -- M : passe à l'autre barre
@@ -199,7 +203,6 @@ function Bar.Utiliser(slot)
     if not id then return false end
 
     Bar.Selection = (Bar.Selection ~= slot) and slot or nil
-    surface.PlaySound("ui/buttonclick.wav")
     return true
 end
 
@@ -375,8 +378,19 @@ hook.Add("HUDPaint", "NA_SkillBar_HUD", function()
     for i = 1, NB_EMPLACEMENTS do
         DessinerEmplacement(x + (i - 1) * (TAILLE + ECART), y, TAILLE, i, Bar.Slots[i])
     end
-    draw.SimpleText("Barre " .. Bar.Active .. "/" .. NB_BARRES .. "  [M]", "NA.Skill.Touche",
-        ScrW() / 2, y - 4, Color(255, 215, 120, 220), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+    -- losange à GAUCHE des cases, centré sur leur hauteur : le numéro de la barre ACTIVE est écrit dedans
+    local h = math.Round(TAILLE * 0.5)
+    local l = math.Round(h * DECK_L / DECK_H)
+    local dx, dy = x - ECART - l, y + TAILLE / 2 - h / 2
+    surface.SetMaterial(MAT_DECK)
+    surface.SetDrawColor(255, 255, 255, 255)
+    surface.DrawTexturedRect(dx, dy, l, h)
+    -- le chiffre est centré sur le centre RÉEL du losange (pas celui de l'image entière), à la hauteur de ses chiffres
+    surface.SetFont("NA.Skill.Deck")
+    local tw, th = surface.GetTextSize(tostring(Bar.Active))
+    surface.SetTextColor(70, 48, 26, 255)
+    surface.SetTextPos(math.Round(dx + l * DECK_CX - tw / 2 + DECK_NUM_DX), math.Round(dy + h * DECK_CY - th / 2 + DECK_NUM_DY))
+    surface.DrawText(tostring(Bar.Active))
 end)
 
 -- Hauteur occupée par la barre (pour placer les autres éléments du HUD au-dessus)

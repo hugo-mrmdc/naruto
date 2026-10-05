@@ -1,6 +1,6 @@
 --========================================================
 -- Téléportation Fuma (CLIENT)
--- 1er appui : lance le shuriken ; 2e appui : téléportation (sv_fumatp.lua).
+-- Lance le shuriken ; la téléportation sur le shuriken se fait avec E (sv_fumatp.lua).
 --========================================================
 
 local NET_FUMA    = "naruto_dev_fumaTp"

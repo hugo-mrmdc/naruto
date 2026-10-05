@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "atg/pvp/katon/atg_meteore/atg_katon_meteor"
+    "$lightwarptexture" "atg_props/shared/lightwarpshader_black"
+    "$nocull" "1"
+    "$nodecal" "1"
+}
+

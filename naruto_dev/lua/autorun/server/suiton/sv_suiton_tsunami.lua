@@ -20,9 +20,9 @@ local DUREE        = 6      -- secondes sur la vague
 local VITESSE      = 650    -- vitesse de la vague (unités/s ; un joueur marche à ~200)
 local DEGATS       = 12     -- dégâts à chaque touche
 local INTERVALLE   = 0.4    -- secondes avant qu'un même ennemi puisse être touché de nouveau
-local RAYON        = 250    -- rayon de la zone qui touche : la vague mesure ~600 de long, centrée sous le lanceur
-local DEVANT       = 40     -- décalage vers l'avant du centre de cette zone
-local HAUTEUR_MAX  = 220    -- hauteur maximale d'un ennemi AU-DESSUS DU SOL (le lanceur, lui, est tenu en l'air sur la crête)
+local RAYON        = 400    -- rayon de la zone qui touche : la vague mesure ~950 de long (échelle 2,4 : sh_suiton_tsunami.lua), centrée sous le lanceur
+local DEVANT       = 60     -- décalage vers l'avant du centre de cette zone
+local HAUTEUR_MAX  = 350    -- hauteur maximale d'un ennemi AU-DESSUS DU SOL (le lanceur, lui, est tenu en l'air sur la crête)
 
 local RECHARGE     = 20     -- secondes après la FIN de la vague avant de pouvoir relancer
 local CHAKRA_COUT  = 60

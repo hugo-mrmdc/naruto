@@ -3,7 +3,7 @@
 --
 --   1er appui : mudras, animation de lancer, puis le shuriken part dans la
 --               direction du regard.
---   2e appui  : téléporte le joueur sur le shuriken.
+--   E         : téléporte le joueur sur le shuriken (tant qu'il est en vol).
 --
 --   Le shuriken touche un joueur / PNJ -> il explose (dégâts de zone) et disparaît.
 --   Le shuriken touche un mur          -> téléportation AUTOMATIQUE contre le mur.
@@ -202,14 +202,8 @@ net.Receive(NET_FUMA, function(_, ply)
     if not NA_Debloquee(ply, "fuma_tp") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() then return end
 
-    -- 2e appui : téléportation sur le shuriken
-    local existing = fumaActive[ply]
-    if IsValid(existing) then
-        local pos = existing:GetPos()
-        RemoveFuma(ply)
-        Teleporter(ply, pos)
-        return
-    end
+    -- shuriken déjà en vol : relancer la technique ne fait rien (la téléportation se fait avec E, plus bas)
+    if IsValid(fumaActive[ply]) then return end
 
     -- 1er appui : mudras -> animation de lancer -> le shuriken part
     if enCours[ply] or (nextUse[ply] or 0) > CurTime() then return end
@@ -230,6 +224,16 @@ net.Receive(NET_FUMA, function(_, ply)
             Lancer(ply)   -- direction = là où il regarde au moment du lancer
         end)
     end)
+end)
+
+-- E : téléportation sur le shuriken en vol
+hook.Add("KeyPress", "FumaTpToucheE", function(ply, key)
+    if key ~= IN_USE or not IsValid(ply) or not ply:Alive() then return end
+    local shuriken = fumaActive[ply]
+    if not IsValid(shuriken) then return end
+    local pos = shuriken:GetPos()
+    RemoveFuma(ply)
+    Teleporter(ply, pos)
 end)
 
 hook.Add("PlayerDeath", "FumaTpMort", function(ply) RemoveFuma(ply) end)

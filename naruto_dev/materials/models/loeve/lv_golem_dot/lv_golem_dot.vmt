@@ -1,0 +1,9 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/loeve/lv_golem_dot/lv_golem_dot"
+	"$model" 1
+	// original : $bumpmap (normal.vtf, force 10) + $lightwarptexture (toon) = le modèle devient noir selon l'angle de la lumière
+	// et dans les zones sombres. Sans eux : éclairage normal et doux ($halflambert), jamais plus sombre que l'ambiance.
+	"$halflambert" 1
+	"$nocull" 1
+}

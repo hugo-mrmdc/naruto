@@ -128,6 +128,7 @@ local function Transformer(ply)
     ply:SetModelScale(NA_GOLEM.ECHELLE, 0)
     ply:SetColor(color_white)                           -- pas la teinte de peau du personnage
     if NA_AppliquerApparence then NA_AppliquerApparence(ply) end   -- retire la tête et les cheveux (pas de squelette humain)
+    ply:SetNW2String("NA_GolemType", "mokuton")   -- modèle / animations / hull du golem (mokuton_golem_sh.lua)
     ply:SetNW2Bool("NA_Golem", true)
     ParticleEffect(FX_DEBUT, ply:GetPos(), angle_zero)   -- la particule cache le changement de modèle
 

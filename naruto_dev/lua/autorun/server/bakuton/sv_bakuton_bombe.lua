@@ -45,10 +45,12 @@ local pret    = {}   -- [ply] = CurTime à partir duquel on peut relancer
 local function TimerNom(ply, n) return "bakuton_bombe_" .. n .. "_" .. ply:EntIndex() end
 
 local function Redescendre(ply)
+    local etait = enCours[ply]
     enCours[ply] = nil
     timer.Remove(TimerNom(ply, "montee"))
     timer.Remove(TimerNom(ply, "lacher"))
     if not IsValid(ply) then return end
+    if etait then ply:SetNW2Bool("NA_Canalise", false) end   -- les autres jutsu sont de nouveau permis
     ply:SetNW2Bool("NA_Vol", false)
     ply:SetNW2Float("NA_MonteVit", -1)
     ply.MokutonNoFall = CurTime() + 10   -- on retombe de haut : pas de dégâts de chute
@@ -101,6 +103,7 @@ net.Receive("bakuton_bombe_cast", function(_, ply)
 
     local recharge = Niv(ply, "recharge", RECHARGE)
     enCours[ply] = true
+    ply:SetNW2Bool("NA_Canalise", true)   -- pas d'autre jutsu pendant toute la technique (_na_registre.lua)
     pret[ply] = CurTime() + recharge
     if NA_CD then NA_CD.Set(ply, ID, recharge) end
 
@@ -110,7 +113,7 @@ net.Receive("bakuton_bombe_cast", function(_, ply)
     local mudra = Niv(ply, "duree_mudra", DUREE_MUDRA)
     if NA_Mudra then NA_Mudra(ply, mudra) end
     timer.Simple(mudra, function()
-        if not IsValid(ply) or not ply:Alive() then enCours[ply] = nil return end
+        if not IsValid(ply) or not ply:Alive() then Redescendre(ply) return end
 
         local hauteur, vitesse = Niv(ply, "hauteur", HAUTEUR), Niv(ply, "vitesse", VITESSE)
         local depart = ply:GetPos().z

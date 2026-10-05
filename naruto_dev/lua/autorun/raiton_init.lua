@@ -2,6 +2,8 @@
 -- GMod ne lit PAS les sous-dossiers de lua/autorun : sans ce fichier, rien ne se charge.
 
 if SERVER then
+    AddCSLuaFile("autorun/client/raiton/cl_raiton_kirin.lua")   -- en premier : une erreur dans un fichier serveur plus bas ne doit pas l'empêcher d'être envoyé
+    include("autorun/server/raiton/sv_raiton_kirin.lua")
     AddCSLuaFile("autorun/client/raiton/cl_raiton_jugement.lua")
     include("autorun/server/raiton/sv_raiton_jugement.lua")
     AddCSLuaFile("autorun/client/raiton/cl_raiton_cercle.lua")
@@ -17,6 +19,7 @@ if SERVER then
 end
 
 if CLIENT then
+    include("autorun/client/raiton/cl_raiton_kirin.lua")   -- avant les autres : ils ne doivent pas pouvoir l'empêcher de se charger
     include("autorun/client/raiton/cl_raiton_jugement.lua")
     include("autorun/client/raiton/cl_raiton_cercle.lua")
     include("autorun/client/raiton/cl_raiton_boule.lua")

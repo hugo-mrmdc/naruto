@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "atg/pvp/katon/atg_meteore/atg_fire2"
+	$translucent "1"
+	$nocull "1"
+}

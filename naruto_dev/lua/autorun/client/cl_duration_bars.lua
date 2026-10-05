@@ -13,7 +13,7 @@
 -- Techniques dont la stat "duree" est SA durée (pas un étourdissement ni une portée)
 local DUREES = {}
 for _, id in ipairs({
-    "katon_dome", "katon_souffle", "katon_tornade","katon_nuee", "futon_grand_ouragan", "katon_dragons", "suiton_prison", "raiton_zone", "suiton_pluie", "suiton_tsunami", "doton_seisme", "doton_dragon", "doton_taupe",
+    "katon_dome", "katon_souffle", "katon_tornade","katon_nuee", "futon_grand_ouragan", "katon_dragons", "suiton_prison", "raiton_zone", "suiton_pluie", "suiton_tsunami", "suiton_ocean", "doton_seisme", "doton_dragon", "doton_taupe", "doton_golem",
     "mokuton_protection", "mokuton_golem", "salamandre_dome", "salamandre_corps", "salamandre_tornade",
     "fuma_invisibilite", "fuma_aura", "kami_circle", "kami_bouclier", "jinton_bouclier", "jinton_laser",
     "kaguya_danse", "kaguya_legion", "chinoike_pluie", "chinoike_vortex", "hyuga_tourbillon",
@@ -21,6 +21,21 @@ for _, id in ipairs({
     "inkuton_moine", "bakuton_dragon", "futton_vapeur", "futton_cage", "futton_monde",
     "hyoton_dome", "shoton_armure",
 }) do DUREES[id] = true end
+
+-- Techniques qu'on peut COUPER avant la fin (re-lancer, E...) : id -> fonction vraie tant que la technique est active (état
+-- posé par le serveur). Dès qu'elle devient fausse, la barre disparaît ; si elle n'est jamais devenue vraie (lancement refusé), aussi.
+-- Une technique absente de cette liste garde sa barre jusqu'à la fin de sa durée.
+local ACTIVES = {
+    suiton_tsunami     = function(p) return p:GetNW2Float("NA_TsunamiFin", 0) > CurTime() end,   -- relancer ou E : on descend de la vague
+    doton_taupe        = function(p) return p:GetNW2Bool("NA_Souterrain", false) end,            -- E : on ressort
+    doton_golem        = function(p) return p:GetNW2Bool("NA_Golem", false) end,
+    mokuton_golem      = function(p) return p:GetNW2Bool("NA_Golem", false) end,                  -- relancer : on redevient normal
+    mokuton_protection = function(p) return p:GetNW2Bool("NA_Hobi", false) end,
+    senju_renfo        = function(p) return p:GetNW2Bool("NA_SenjuRenfo", false) end,
+    senju_soin         = function(p) return p:GetNW2Bool("NA_SenjuSoin", false) end,
+    fuma_invisibilite  = function(p) return p:GetNWBool("IsInvisible", false) end,               -- un jutsu lancé fait réapparaître
+}
+local DELAI_VERIF = 1.5   -- secondes de grâce après le début de la barre pour que le serveur pose l'état
 
 local ECART = 58 -- hauteur occupée par une barre + son nom (empilées vers le bas)
 
@@ -46,6 +61,10 @@ function NA_DemarrerDuree(id)
     local duree = NA_Stat and NA_Stat(ply, id, "duree", 0) or 0
     if duree <= 0 then return end
 
+    -- pas assez de chakra : le serveur refuse le jutsu, donc pas de barre
+    local cout = NA_Stat and NA_Stat(ply, id, "chakra", 0) or 0
+    if cout > 0 and ply:GetNW2Float("NA_Chakra", NA_CHAKRA_MAX or 100) < cout then return end
+
     -- la barre commence quand les mudras sont finis
     local debut = CurTime() + (NA_Stat and NA_Stat(ply, id, "duree_mudra", 0) or 0)
     actives[id] = { debut = debut, fin = debut + duree }
@@ -64,6 +83,15 @@ hook.Add("HUDPaint", "NA_DureeBars", function()
         if now >= a.fin then
             actives[id] = nil
         elseif now >= a.debut then
+            local actif = ACTIVES[id]
+            if actif then
+                if actif(ply) then
+                    a.vu = true
+                elseif a.vu or now > a.debut + DELAI_VERIF then
+                    actives[id] = nil   -- coupée avant la fin (ou jamais partie)
+                    continue
+                end
+            end
             liste[#liste + 1] = { id = id, a = a }
         end
     end

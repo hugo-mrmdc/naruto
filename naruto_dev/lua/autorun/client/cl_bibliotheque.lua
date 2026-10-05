@@ -312,7 +312,6 @@ local function Ouvrir()
         Image(DOSSIER .. "btn_base_close.png", m, m, w - m * 2, h - m * 2)
     end
     fermer.DoClick = function()
-        surface.PlaySound("ui/buttonclick.wav")
         frame:Remove()
     end
 
@@ -388,7 +387,6 @@ local function Ouvrir()
             end
             if actif then
                 b.DoClick = function()
-                    surface.PlaySound("ui/buttonclick.wav")
                     groupeActif = g
                     choisie = nil
                     Construire()
@@ -415,7 +413,6 @@ local function Ouvrir()
                 draw.SimpleText("‹  RETOUR", "NA.Bib.Petit", w / 2, h / 2, C_OR, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
             r.DoClick = function()
-                surface.PlaySound("ui/buttonclick.wav")
                 groupeActif, choisie = nil, nil
                 Construire()
             end
@@ -473,7 +470,6 @@ local function Ouvrir()
             if not IsValid(fiche) then return end
             fiche:Remove()
             choisie = nil
-            surface.PlaySound("ui/buttonclick.wav")
         end
         scene.OnMousePressed = function(_, code) if code == MOUSE_LEFT then FermerFiche() end end
         frame.OnMousePressed = scene.OnMousePressed
@@ -605,13 +601,11 @@ local function Ouvrir()
                 local niv = NA_Niveau(LocalPlayer(), tech.id)
                 local cout = NA_NIV.Cout(niv)
                 if not cout or Manque() or NA_Points(LocalPlayer()) < cout then
-                    surface.PlaySound("buttons/button10.wav")
                     return
                 end
                 net.Start("NA_Ameliorer")
                     net.WriteString(tech.id)
                 net.SendToServer()
-                surface.PlaySound("ui/buttonclick.wav")
             end
         end
 
@@ -664,7 +658,6 @@ local function Ouvrir()
                 end
             end
             nb.DoClick = function()
-                surface.PlaySound("ui/buttonclick.wav")
                 OuvrirFiche(i)
             end
 
@@ -731,7 +724,6 @@ local function Ouvrir()
         end
         b.DoClick = function()
             if ongletActif == i and not groupeActif then return end
-            surface.PlaySound("ui/buttonclick.wav")
             ongletActif = i
             groupeActif, choisie = nil, nil
             Construire()

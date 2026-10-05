@@ -14,6 +14,8 @@ if SERVER then
     include("autorun/server/doton/sv_doton_eruption.lua")
     AddCSLuaFile("autorun/client/doton/cl_doton_dragon.lua")
     include("autorun/server/doton/sv_doton_dragon.lua")
+    AddCSLuaFile("autorun/client/doton/cl_doton_golem.lua")
+    include("autorun/server/doton/sv_doton_golem.lua")
 end
 
 if CLIENT then
@@ -23,6 +25,7 @@ if CLIENT then
     include("autorun/client/doton/cl_doton_pics.lua")
     include("autorun/client/doton/cl_doton_eruption.lua")
     include("autorun/client/doton/cl_doton_dragon.lua")
+    include("autorun/client/doton/cl_doton_golem.lua")
 end
 
 -- Voyage souterrain : pas de saut (retiré des DEUX côtés pour que le client le prédise aussi)

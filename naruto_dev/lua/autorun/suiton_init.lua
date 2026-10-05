@@ -14,6 +14,8 @@ if SERVER then
     include("autorun/server/suiton/sv_suiton_pluie.lua")
     AddCSLuaFile("autorun/client/suiton/cl_suiton_tsunami.lua")
     include("autorun/server/suiton/sv_suiton_tsunami.lua")
+    AddCSLuaFile("autorun/client/suiton/cl_suiton_ocean.lua")
+    include("autorun/server/suiton/sv_suiton_ocean.lua")
 end
 
 if CLIENT then
@@ -23,4 +25,5 @@ if CLIENT then
     include("autorun/client/suiton/cl_suiton_bulle.lua")
     include("autorun/client/suiton/cl_suiton_pluie.lua")
     include("autorun/client/suiton/cl_suiton_tsunami.lua")
+    include("autorun/client/suiton/cl_suiton_ocean.lua")
 end

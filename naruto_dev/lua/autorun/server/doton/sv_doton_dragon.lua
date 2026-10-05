@@ -20,7 +20,7 @@ local CADENCE      = 0.3    -- secondes entre deux projectiles
 local DEGATS       = 20     -- dégâts d'un projectile
 local VITESSE      = 1600   -- vitesse d'un projectile
 local ECHELLE      = 1.2    -- taille du dragon (1 = taille du modèle : ~165 de long, ~140 de haut)
-local DEVANT       = 160    -- distance, devant le lanceur, où sort le dragon
+local DEVANT       = 90     -- distance, devant le lanceur, où sort le dragon
 
 local RECHARGE     = 25     -- secondes après la FIN du dragon avant de pouvoir relancer
 local CHAKRA_COUT  = 60

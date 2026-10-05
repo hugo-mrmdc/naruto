@@ -53,11 +53,11 @@ NA_NIV.POINTS_PAR_KILL = 1   -- points gagnés en tuant un autre joueur
 -- débloqué celle d'avant dans la même ligne. La première est libre.
 -- Même ordre que l'affichage (rangs C, puis B, puis A : cl_techniques_ui.lua).
 NA_NIV.LIGNEES = {
-    { "katon_boule", "katon_dome", "katon_souffle", "katon_tornade", "katon_grosse_boule", "katon_nuee" },
-    { "suiton_waterball", "suiton_prison", "suiton_bulle","suiton_requin", "suiton_pluie", "suiton_tsunami" },
-    { "futon_windslash", "futon_tornade", "futon_windball", "futon_ouragan", "futon_expulsion", "futon_grand_ouragan" },
-    { "raiton_jugement", "raiton_cercle", "raiton_boule", "raiton_zone", "raiton_poing", "raiton_chidori" },
-    { "doton_pierre", "doton_seisme", "doton_taupe", "doton_pics", "doton_eruption", "doton_dragon" },
+    { "katon_boule", "katon_dome", "katon_souffle", "katon_tornade", "katon_grosse_boule", "katon_nuee", "katon_meteore" },
+    { "suiton_waterball", "suiton_prison", "suiton_bulle","suiton_requin", "suiton_pluie", "suiton_ocean", "suiton_tsunami" },
+    { "futon_windslash", "futon_tornade", "futon_windball", "futon_ouragan", "futon_expulsion", "futon_grand_ouragan", "futon_rasenshuriken" },
+    { "raiton_jugement", "raiton_cercle", "raiton_boule", "raiton_zone", "raiton_poing", "raiton_chidori", "raiton_kirin" },
+    { "doton_pierre", "doton_seisme", "doton_taupe", "doton_pics", "doton_eruption", "doton_dragon", "doton_golem" },
     { "mokuton_arche", "mokuton_protection", "mokuton_wood_hand", "mokuton_dragon", "mokuton_golem" },
     { "salamandre_poison", "salamandre_dome", "salamandre_corps", "salamandre_tornade" },
     { "fuma_tp", "fuma_invisibilite", "fuma_aura", "fuma_jugement", "fuma_ciel" },

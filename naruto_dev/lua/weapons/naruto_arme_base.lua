@@ -691,7 +691,7 @@ function SWEP:DrawWorldModel()
     -- placement du dos en cours de réglage (menu F4) : l'arme est montrée dans le dos, pas en main
     if owner == LocalPlayer() and NA_DosEdition and NA_DosEdition.classe == self:GetClass() then return end
 
-    if self.MainDroite then
+    if self.MainDroite and not self:GetNW2Bool("NA_MainVide", false) then
         if not IsValid(self._ModeleDroite) then self._ModeleDroite = CreerModele(self.MainDroite) end
         if IsValid(self._ModeleDroite) then
             DessinerEnMain(self._ModeleDroite, owner, "ValveBiped.Bip01_R_Hand", self.MainDroite)

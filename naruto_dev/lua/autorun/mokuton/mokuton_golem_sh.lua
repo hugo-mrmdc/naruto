@@ -15,16 +15,42 @@ NA_GOLEM = NA_GOLEM or {}
 --========================================================
 -- RÉGLAGES
 --========================================================
-NA_GOLEM.MODELE  = "models/mokuton/nr_mokuton_golem.mdl"
-NA_GOLEM.ECHELLE = 0.25    -- taille du modèle (1 = ~945 unités de haut ; à 0,25 : ~236, environ 3 fois un joueur)
-NA_GOLEM.HULL_MINS = Vector(-40, -40, 0)
-NA_GOLEM.HULL_MAXS = Vector(40, 40, 220)     -- boîte de collision debout
-NA_GOLEM.VUE       = 200                     -- hauteur des yeux (caméra)
-NA_GOLEM.VITESSE_ANIM = 1.5   -- vitesse des animations d'attaque et de repos (1 = normale) ; la marche suit ta vitesse réelle
+-- Un golem a un TYPE (NW2String "NA_GolemType" posé par le serveur ; "mokuton" par défaut). Chaque type donne son modèle, sa
+-- taille, sa boîte de collision, ses animations et le message réseau de son clic d'attaque. Mokuton : mokuton_golem_sv.lua ;
+-- Doton : doton_golem_sv.lua (lv_golem_dot, animations lv_idle1 / walk / lv_attack1 / lv_death1).
+NA_GOLEM.TYPES = {
+    mokuton = {
+        modele = "models/mokuton/nr_mokuton_golem.mdl",
+        echelle = 0.25,   -- taille du modèle (1 = ~945 unités de haut ; à 0,25 : ~236, environ 3 fois un joueur)
+        hull_mins = Vector(-40, -40, 0), hull_maxs = Vector(40, 40, 220),   -- boîte de collision debout
+        vue = 200,                                                           -- hauteur des yeux (caméra)
+        vitesse_anim = 1.5,   -- vitesse des animations d'attaque et de repos (1 = normale) ; la marche suit ta vitesse réelle
+        idle = "nr_golem_idle", walk = "nr_golem_walk", atk = { "nr_golem_atk1", "nr_golem_atk2", "nr_golem_atk3" },
+        net_atk = "mokuton_golem_atk",
+    },
+    doton = {
+        modele = "models/nature/doton/lv_golem_dot.mdl",
+        echelle = 0.55,   -- ~350 unités de haut à l'échelle 1 : ~190 à 0,55, soit environ 2,5 fois un joueur
+        hull_mins = Vector(-40, -40, 0), hull_maxs = Vector(40, 40, 190),
+        vue = 170,
+        vitesse_anim = 1,
+        idle = "lv_idle1", walk = "walk", atk = { "lv_attack1" }, mort = "lv_death1",
+        net_atk = "doton_golem_atk",
+    },
+}
 
-local ANIM_IDLE = "nr_golem_idle"
-local ANIM_WALK = "nr_golem_walk"
-local ANIM_ATK  = { "nr_golem_atk1", "nr_golem_atk2", "nr_golem_atk3" }
+-- compatibilité (Mokuton) : les réglages du type mokuton restent accessibles comme avant
+NA_GOLEM.MODELE       = NA_GOLEM.TYPES.mokuton.modele
+NA_GOLEM.ECHELLE      = NA_GOLEM.TYPES.mokuton.echelle
+NA_GOLEM.HULL_MINS    = NA_GOLEM.TYPES.mokuton.hull_mins
+NA_GOLEM.HULL_MAXS    = NA_GOLEM.TYPES.mokuton.hull_maxs
+NA_GOLEM.VUE          = NA_GOLEM.TYPES.mokuton.vue
+NA_GOLEM.VITESSE_ANIM = NA_GOLEM.TYPES.mokuton.vitesse_anim
+
+-- type du golem d'un joueur
+function NA_GOLEM.Type(ply)
+    return NA_GOLEM.TYPES[ply:GetNW2String("NA_GolemType", "mokuton")] or NA_GOLEM.TYPES.mokuton
+end
 --========================================================
 
 -- Attaque : le clic gauche ne tire plus avec l'arme.
@@ -50,34 +76,47 @@ if CLIENT then
         local clic = input.IsMouseDown(MOUSE_LEFT)
         local libre = not (vgui.GetKeyboardFocus() or gui.IsGameUIVisible() or vgui.CursorVisible() or lp:IsTyping())
         if clic and not toucheAtk and libre then
-            net.Start("mokuton_golem_atk")
+            net.Start(NA_GOLEM.Type(lp).net_atk)
             net.SendToServer()
         end
         toucheAtk = clic
     end)
 end
 
--- Séquence du golem selon ce qu'il fait
+-- Séquence du golem selon ce qu'il fait (mort -> attaque -> marche -> repos)
 hook.Add("CalcMainActivity", "MokutonGolem_Anim", function(ply, vel)
     if not ply:GetNW2Bool("NA_Golem", false) then return end
+    local t = NA_GOLEM.Type(ply)
 
-    local n = ply:GetNW2Int("NA_GolemAtk", 0)
     local nom
-    if n > 0 and ply:GetNW2Float("NA_GolemAtkFin", 0) > CurTime() then
-        nom = ANIM_ATK[n]
-    elseif vel:Length2D() > 20 then
-        nom = ANIM_WALK
+    if t.mort and ply:GetNW2Float("NA_GolemMortFin", 0) > CurTime() then
+        nom = t.mort
     else
-        nom = ANIM_IDLE
+        local n = ply:GetNW2Int("NA_GolemAtk", 0)
+        if n > 0 and ply:GetNW2Float("NA_GolemAtkFin", 0) > CurTime() then
+            nom = t.atk[n]
+        elseif vel:Length2D() > 20 then
+            nom = t.walk
+        else
+            nom = t.idle
+        end
     end
 
-    local id = ply:LookupSequence(nom)
+    local id = nom and ply:LookupSequence(nom)
     if id and id >= 0 then return ACT_INVALID, id end
 end)
 
--- Vitesse de lecture : la marche suit la vitesse réelle, l'attaque repart de zéro à chaque coup
+-- Vitesse de lecture : la marche suit la vitesse réelle, l'attaque repart de zéro à chaque coup, la mort se joue une fois
 hook.Add("UpdateAnimation", "MokutonGolem_Vitesse", function(ply, vel)
     if not ply:GetNW2Bool("NA_Golem", false) then return end
+    local t = NA_GOLEM.Type(ply)
+
+    if t.mort and ply:GetNW2Float("NA_GolemMortFin", 0) > CurTime() then
+        local debut, fin = ply:GetNW2Float("NA_GolemMortDebut", 0), ply:GetNW2Float("NA_GolemMortFin", 0)
+        ply:SetCycle(math.Clamp((CurTime() - debut) / math.max(fin - debut, 0.1), 0, 0.999))   -- jouée une seule fois, sans boucle
+        ply:SetPlaybackRate(0)
+        return true
+    end
 
     if ply:GetNW2Float("NA_GolemAtkFin", 0) > CurTime() then
         local debut = ply:GetNW2Float("NA_GolemAtkDebut", 0)
@@ -85,7 +124,7 @@ hook.Add("UpdateAnimation", "MokutonGolem_Vitesse", function(ply, vel)
             ply.NA_GolemAtkVu = debut
             ply:SetCycle(0)
         end
-        ply:SetPlaybackRate(NA_GOLEM.VITESSE_ANIM)
+        ply:SetPlaybackRate(t.vitesse_anim)
     else
         local id = ply:GetSequence()
         local vitesse = vel:Length2D()
@@ -93,7 +132,7 @@ hook.Add("UpdateAnimation", "MokutonGolem_Vitesse", function(ply, vel)
         if vitesse > 20 and base and base > 1 then
             ply:SetPlaybackRate(math.Clamp(vitesse / base, 0.3, 2.5))
         else
-            ply:SetPlaybackRate(NA_GOLEM.VITESSE_ANIM)   -- repos
+            ply:SetPlaybackRate(t.vitesse_anim)   -- repos
         end
     end
     return true
@@ -105,10 +144,11 @@ timer.Create("MokutonGolem_Hull", 0.1, 0, function()
         local golem = ply:GetNW2Bool("NA_Golem", false)
         if golem and not ply.NA_GolemHull then
             ply.NA_GolemHull = true
-            ply:SetHull(NA_GOLEM.HULL_MINS, NA_GOLEM.HULL_MAXS)
-            ply:SetHullDuck(NA_GOLEM.HULL_MINS, NA_GOLEM.HULL_MAXS)
-            ply:SetViewOffset(Vector(0, 0, NA_GOLEM.VUE))
-            ply:SetViewOffsetDucked(Vector(0, 0, NA_GOLEM.VUE))
+            local t = NA_GOLEM.Type(ply)
+            ply:SetHull(t.hull_mins, t.hull_maxs)
+            ply:SetHullDuck(t.hull_mins, t.hull_maxs)
+            ply:SetViewOffset(Vector(0, 0, t.vue))
+            ply:SetViewOffsetDucked(Vector(0, 0, t.vue))
         elseif not golem and ply.NA_GolemHull then
             ply.NA_GolemHull = nil
             ply:ResetHull()

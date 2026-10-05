@@ -63,14 +63,15 @@ SWEP.Special = {
     delaiLancer = 0.6,
     modele      = "models/fumaSpell/orga_props_shuriken.mdl",
     vitesse     = 2400,    -- unités / seconde
-    dureeVie    = 3,       -- secondes avant de disparaître s'il ne touche rien
+    dureeAller  = 0.6,     -- secondes d'aller (ou impact) avant que le shuriken revienne
+    dureeVie    = 4,       -- sécurité : retour forcé en main après ce délai
     rayon       = 200,     -- rayon de l'explosion à l'impact sur un ennemi
     degats      = 60,
 }
 
 if not SERVER then return end
 
-local TAILLE = Vector(12, 12, 6)   -- demi-taille de la zone de collision du shuriken
+local TAILLE = Vector(50, 12, 6)   -- demi-taille de la zone de collision du shuriken
 
 local function EstCible(ent, lanceur)
     if not IsValid(ent) or ent == lanceur then return false end
@@ -112,25 +113,53 @@ function SWEP:LancerSpecial(owner, s)
         proj:SetSolid(SOLID_NONE)
         proj:SetMoveType(MOVETYPE_NONE)
 
+        -- le shuriken n'est plus dans la main tant qu'il n'est pas revenu
+        self:SetNW2Bool("NA_MainVide", true)
+
         local arme = self
-        local fin = CurTime() + s.dureeVie
-        local precedent = CurTime()
+        local now0 = CurTime()
+        local finAller = now0 + s.dureeAller
+        local fin = now0 + s.dureeVie
+        local precedent = now0
+        local retour = false
         local nom = "NA_ShurikenFuma_" .. proj:EntIndex()
 
+        local function Terminer()
+            if IsValid(arme) then arme:SetNW2Bool("NA_MainVide", false) end
+            if IsValid(proj) then proj:Remove() end
+            timer.Remove(nom)
+        end
+
         timer.Create(nom, 0, 0, function()
-            if not IsValid(proj) then timer.Remove(nom) return end
+            if not IsValid(proj) or not IsValid(owner) or not owner:Alive() or CurTime() > fin then
+                Terminer()
+                return
+            end
 
             local now = CurTime()
             local dt = now - precedent
             precedent = now
-            if now > fin then
-                proj:Remove()
-                timer.Remove(nom)
+            local depart = proj:GetPos()
+
+            if retour then
+                local cible = owner:GetPos() + Vector(0, 0, 50)
+                local vers = cible - depart
+                local pas = s.vitesse * dt
+                if vers:Length() <= math.max(pas, 40) then
+                    Terminer()
+                    return
+                end
+                proj:SetAngles(vers:Angle())
+                proj:SetPos(depart + vers:GetNormalized() * pas)
                 return
             end
 
-            local depart = proj:GetPos()
             local arrivee = depart + dir * s.vitesse * dt
+            local dev = GetConVar("developer")
+            if GetConVar("na_arme_debug"):GetBool() or (dev and dev:GetInt() > 0) then
+                debugoverlay.Box(arrivee, -TAILLE, TAILLE, 0.5, Color(255, 0, 0, 40))
+                debugoverlay.Sphere(arrivee, s.rayon, 0.1, Color(255, 128, 0, 10), true)
+            end
             local tr = util.TraceHull({
                 start  = depart,
                 endpos = arrivee,
@@ -144,12 +173,18 @@ function SWEP:LancerSpecial(owner, s)
                 if EstCible(tr.Entity, owner) then
                     Exploser(tr.HitPos, owner, IsValid(arme) and arme or proj, s)
                 end
-                proj:Remove()
-                timer.Remove(nom)
+                retour = true
                 return
             end
 
             proj:SetPos(arrivee)
+            if now > finAller then retour = true end
         end)
     end)
+end
+
+-- pas de nouveau lancer tant que le shuriken n'est pas revenu en main
+function SWEP:DeclencherSpecial()
+    if self:GetNW2Bool("NA_MainVide", false) then return end
+    self.BaseClass.DeclencherSpecial(self)
 end

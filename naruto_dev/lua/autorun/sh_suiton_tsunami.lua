@@ -13,11 +13,11 @@
 if SERVER then AddCSLuaFile() end
 
 -- Taille de la vague et hauteur de sa crête. Le modèle fait 396 de large, 290 de profondeur et 209 de haut à
--- l'échelle 1 (mesuré sur le .vvd) : à 1.5 la crête est à ~314 unités du sol, la vague mesure ~600 de large.
+-- l'échelle 1 (mesuré sur le .vvd) : à 1.5 la crête est à ~314 unités du sol, la vague mesure ~600 de large ; à 2.4 (rang S) : crête ~440, ~950 de large.
 -- Le joueur est tenu à la hauteur de la crête : une plus grande échelle le tient plus haut.
 NA_Tsunami = NA_Tsunami or {}
-NA_Tsunami.Echelle = 1.5
-NA_Tsunami.Enfonce  = 60                      -- le joueur est tenu un peu SOUS la crête (unités) : plus grand = plus bas
+NA_Tsunami.Echelle = 2.4
+NA_Tsunami.Enfonce  = 100                     -- le joueur est tenu un peu SOUS la crête (unités) : plus grand = plus bas
 NA_Tsunami.Haut    = 209 * NA_Tsunami.Echelle - NA_Tsunami.Enfonce   -- hauteur du joueur au-dessus du sol
 
 local RAIDEUR = 12     -- vitesse de rattrapage vers la hauteur voulue

@@ -219,6 +219,16 @@ NA_NIV_TECH.katon_nuee = {
     [5] = { degats = 380, chakra = 55, recharge = 16, brulure_duree = 5, brulure_dps = 7 },
 }
 
+-- Météore (server/katon/sv_katon_meteore.lua) : un météore tombe du ciel sur le point visé ; explosion au sol, dégâts (les mêmes partout dans le rayon) puis brûlure
+--   degats = de l'explosion, rayon = zone, echelle = taille du météore (1 = ~418 de large), hauteur = hauteur de départ, gravite = accélération de chute, portee = distance max du point visé, brulure_duree / brulure_dps
+NA_NIV_TECH.katon_meteore = {
+    [1] = { degats = 400, rayon = 600, echelle = 2, hauteur = 2500, gravite = 500, portee = 1500, brulure_duree = 4, brulure_dps = 6, chakra = 90, recharge = 45, duree_mudra = 1 },
+    [2] = { degats = 440 },
+    [3] = { degats = 490, chakra = 82, rayon = 650 },
+    [4] = { degats = 540, recharge = 39 },
+    [5] = { degats = 600, chakra = 74, rayon = 700, recharge = 1, brulure_duree = 5, brulure_dps = 8 },
+}
+
 -- Grosse boule de feu (sv_katon_grosse_boule.lua)
 NA_NIV_TECH.katon_grosse_boule = {
     [1] = {
@@ -251,11 +261,21 @@ NA_NIV_TECH.suiton_requin = {
 -- Tsunami (sv_suiton_tsunami.lua) : une vague emporte le lanceur en continu dans la direction de son regard ; dégâts aux ennemis touchés par son front
 --   duree = secondes sur la vague, vitesse = vitesse de la vague, degats = par touche, intervalle = secondes avant de retoucher le même ennemi, rayon = zone touchée devant le lanceur
 NA_NIV_TECH.suiton_tsunami = {
-    [1] = { degats = 20, duree = 6, vitesse = 650, intervalle = 1 ,rayon = 250, chakra = 60, recharge = 20, duree_mudra = 0.8 },
+    [1] = { degats = 70, duree = 6, vitesse = 650, intervalle = 1 ,rayon = 400, chakra = 60, recharge = 20, duree_mudra = 0.8 },
+    [2] = { degats = 80 },
+    [3] = { degats = 100, duree = 7, chakra = 54 },
+    [4] = { degats = 120, rayon = 450, recharge = 17 },
+    [5] = { degats = 150, duree = 8, vitesse = 750, chakra = 48, recharge = 1 },
+}
+
+-- Océan (server/suiton/sv_suiton_ocean.lua) : une zone d'océan posée au sol devant le lanceur ; elle attire légèrement et blesse tous les ennemis dedans
+--   degats = par tick, intervalle = secondes entre deux ticks, duree = secondes, rayon = zone (le modèle lv_zone_eau suit), attraction = vitesse d'aspiration (légère), distance = distance max devant le lanceur
+NA_NIV_TECH.suiton_ocean = {
+    [1] = { degats = 20, duree = 8, rayon = 450, intervalle = 0.5, attraction = 120, distance = 500, chakra = 80, recharge = 40, duree_mudra = 0.8 },
     [2] = { degats = 25 },
-    [3] = { degats = 30, duree = 7, chakra = 54 },
-    [4] = { degats = 35, rayon = 280, recharge = 17 },
-    [5] = { degats = 45, duree = 8, vitesse = 750, chakra = 48, recharge = 14 },
+    [3] = { degats = 30, chakra = 72, rayon = 500 },
+    [4] = { degats = 35, recharge = 34, attraction = 140 },
+    [5] = { degats = 40, chakra = 64, recharge = 28, duree = 10, rayon = 550 },
 }
 
 -- Pluie suiton (sv_suiton_pluie.lua) : un nuage fait pleuvoir des bulles d'eau sur la zone visée ; chaque bulle qui touche le sol explose et blesse
@@ -362,6 +382,17 @@ NA_NIV_TECH.futon_grand_ouragan = {
     [5] = { degats = 20, chakra = 48, recharge = 16, duree = 6, rayon = 460 },
 }
 
+-- Rasenshuriken Futon (server/futon/sv_futon_rasenshuriken.lua) : le lanceur monte dans les airs, joue l'animation et lance un Rasenshuriken qui explose au contact
+--   degats = de l'explosion (les mêmes partout dans le rayon), rayon = de l'explosion, vitesse = du Rasenshuriken, duree_vie = secondes avant qu'il disparaisse, poussee / souleve = projection horizontale / verticale,
+--   hauteur = montée du lanceur, vitesse_montee, delai_lancer = secondes entre le début de l'animation et le lancer, fin_anim = secondes en l'air après le lancer
+NA_NIV_TECH.futon_rasenshuriken = {
+    [1] = { degats = 1000, rayon = 350, vitesse = 1400, duree_vie = 3, poussee = 500, souleve = 300, hauteur = 350, vitesse_montee = 700, delai_lancer = 2, fin_anim = 0.6, chakra = 80, recharge = 40, duree_mudra = 0.4 },
+    [2] = { degats = 1050 },
+    [3] = { degats = 1150, rayon = 400, chakra = 72 },
+    [4] = { degats = 1200, recharge = 34 },
+    [5] = { degats = 1300, rayon = 450, chakra = 64, recharge = 1 },
+}
+
 -- Wind Ball (sv_futon_windball.lua)
 NA_NIV_TECH.futon_windball = {
     [1] = {
@@ -430,6 +461,16 @@ NA_NIV_TECH.raiton_chidori = {
     [5] = { degats = 120, chakra = 45, charge = 0.6, recharge = 13 },
 }
 
+-- Kirin (sv_raiton_kirin.lua) : un nuage se forme au-dessus du point visé, le Kirin en sort et frappe le sol : dégâts + étourdissement
+--   degats, rayon = zone autour de l'impact, stun = secondes, vitesse = du Kirin, echelle = taille du modèle, angle_pitch / angle_yaw / angle_roll = orientation du modèle par rapport au vol (degrés), monte = hauteur de départ du Kirin au-dessus du centre du nuage, decal_x / decal_y = décalage horizontal (monde) du départ, centrer = 1 centre la boîte du modèle sur le point de départ (0 = l'origine du modèle), face_moi = 1 : le Kirin regarde le lanceur (face = degrés de correction : 180 si c'est son dos, 90 / -90 de profil), anim_cycle = pose figée de l'animation du modèle (0 à 1 ; -1 = animation jouée, il dérive), debug = 1 : le Kirin reste immobile en l'air (sans recharge) pour régler les angles, 0 = normal, portee = distance max du point visé, delai_nuage = secondes avant la sortie du Kirin
+NA_NIV_TECH.raiton_kirin = {
+    [1] = { degats = 750, rayon = 350, stun = 2, vitesse = 600, echelle = 2, angle_pitch = 90, angle_yaw = 180, angle_roll = 0, monte = 1700, decal_x = 0, decal_y = 0, centrer = 1, debug = 0, anim_cycle = -1, face_moi = 1, face = 0, portee = 1200, delai_nuage = 0.5, chakra = 90, recharge = 50, duree_mudra = 0.5 },
+    [2] = { degats = 830 },
+    [3] = { degats = 870, chakra = 82, stun = 2.5 },
+    [4] = { degats = 940, recharge = 44 },
+    [5] = { degats = 1000, chakra = 75, stun = 3, recharge = 1 },
+}
+
 -- Poing de foudre (sv_raiton_poing.lua) : petit bond puis plongeon vers le bas, poing chargé ; onde + dégâts + projection à l'atterrissage
 --   degats, rayon = zone autour de l'impact, projection / proj_haut = vitesses données aux ennemis, stun = secondes d'étourdissement des ennemis touchés, vitesse = du plongeon, saut = hauteur du bond, delai_plongee = secondes de bond avant de plonger
 NA_NIV_TECH.raiton_poing = {
@@ -476,11 +517,21 @@ NA_NIV_TECH.doton_taupe = {
 -- Dragon de terre (sv_doton_dragon.lua) : un dragon de roche sort du sol, s'oriente vers là où regarde le lanceur et tire des projectiles
 --   duree = secondes du dragon, cadence = secondes entre deux tirs, degats = par projectile, vitesse = d'un projectile, echelle = taille du dragon, devant = distance où il sort
 NA_NIV_TECH.doton_dragon = {
-    [1] = { degats = 20, duree = 5, cadence = 0.2, vitesse = 1600, echelle = 1.2, devant = 160, chakra = 60, recharge = 25, duree_mudra = 0.8 },
+    [1] = { degats = 20, duree = 5, cadence = 0.2, vitesse = 1600, echelle = 1.2, devant = 90, chakra = 60, recharge = 25, duree_mudra = 0.8 },
     [2] = { degats = 23 },
     [3] = { degats = 26, chakra = 54 },
     [4] = { degats = 30, duree = 6, recharge = 22 },
     [5] = { degats = 35, cadence = 0.2, chakra = 48, recharge = 18 },
+}
+
+-- Golem de roche (server/doton/sv_doton_golem.lua) : le lanceur devient un golem (lv_golem_dot) ; clic gauche = attaque ; relancer = le détruire
+--   duree = secondes sous forme de golem, degats = de l'attaque, rayon = zone qui frappe, reduction = % de dégâts reçus en moins, echelle = taille du golem
+NA_NIV_TECH.doton_golem = {
+    [1] = { duree = 30, degats = 90, rayon = 200, reduction = 50, echelle = 0.55, chakra = 70, recharge = 45, duree_mudra = 0.6 },
+    [2] = { degats = 105 },
+    [3] = { duree = 35, degats = 120, chakra = 64, reduction = 55 },
+    [4] = { degats = 140, recharge = 38 },
+    [5] = { duree = 40, degats = 165, chakra = 58, reduction = 60, recharge = 1 },
 }
 
 -- Éruption de roche (sv_doton_eruption.lua) : des roches de MÊME taille sortent du sol en éventail devant le lanceur

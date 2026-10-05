@@ -1,0 +1,21 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/loeve/lv_zone_eau/lv_zone_eau"
+             "$translucent" 1
+                " $selfillum" 0
+                "$alphatest" 1
+ 	"$model" 0
+	"$nocull" "1"
+	"$additive" "1"
+	"$translucent" "0"
+
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" 0.3
+			"texturescrollangle" 90
+		}
+	}
+}

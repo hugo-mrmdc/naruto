@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/loeve/lv_kirin/lv_contour"
+                " $selfillum" 1
+                "$translucent" 1
+    "Proxies" {
+        "ForceBloom" {}
+}
