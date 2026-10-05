@@ -91,6 +91,23 @@ function NA_DureeRecharge(id)
 end
 
 ----------------------------------------------------------
+-- Délai avant la technique suivante
+-- Après avoir lancé une technique, on ne peut en lancer AUCUNE autre pendant ce délai.
+-- Valeur par technique : champ "delai" de son entrée dans cl_techniques_ui.lua, sinon la table ci-dessous,
+-- sinon la valeur de son rang. Affiché dans la fiche de la technique (menu F2 / bibliothèque).
+----------------------------------------------------------
+NA_DELAI_RANG = { C = 0.4, B = 0.4, A = 0.4, S = 0.6 }
+NA_DELAI_APRES = NA_DELAI_APRES or {
+    -- id de technique = secondes ; exemple : katon_boule = 0.4,
+}
+NA_VerrouFin = NA_VerrouFin or 0   -- jusqu'à quand aucune technique ne peut être lancée
+
+function NA_DelaiApres(id)
+    local info = NA_TechniqueParId and NA_TechniqueParId(id)
+    return (info and info.delai) or NA_DELAI_APRES[id] or NA_DELAI_RANG[info and info.rang or "C"] or 0.5
+end
+
+----------------------------------------------------------
 -- Techniques à activer / désactiver (même touche)
 --   id -> NW2Bool posé par le serveur tant que la technique est active.
 -- Quand elle est active, rappuyer la COUPE toujours : ni recharge, ni mains
@@ -215,6 +232,13 @@ function NA_Lancer(id)
         return false
     end
 
+    -- délai après la technique précédente
+    if NA_VerrouFin > CurTime() then
+        Diag(id, string.format("délai après la technique précédente (%.1f s)", NA_VerrouFin - CurTime()))
+        NA_DernierRefus[id] = CurTime()
+        return false
+    end
+
     -- en recharge : pas utilisable
     if NA_ResteRecharge(id) > 0 then
         Diag(id, string.format("en recharge (%.1f s)", NA_ResteRecharge(id)))
@@ -229,6 +253,7 @@ function NA_Lancer(id)
     end
 
     NA_DernierLancer[id] = CurTime()
+    NA_VerrouFin = CurTime() + NA_DelaiApres(id)
     if NA_DemarrerDuree then NA_DemarrerDuree(id) end   -- barre de durée (cl_duration_bars.lua)
 
     -- un jutsu lancé pendant l'invisibilité Fuma fait réapparaître (sv_fumainv.lua)

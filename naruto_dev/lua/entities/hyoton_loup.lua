@@ -21,3 +21,8 @@ ENT.FX_CIBLE  = "izox_hyoton_hit"
 ENT.Echelle     = 0.7   -- le modèle fait ~240 unités de long à l'échelle 1 : ajuster si trop gros / petit
 ENT.RayonTouche = 60
 ENT.DecalageYaw = 90    -- le modèle est long sur son axe Y : si il n'avance pas par la tête, essayer -90, 0 ou 180
+
+if CLIENT then
+    game.AddParticles(ENT.PCF)   -- une seule fois (la classe de base charge celui des serpents d'encre)
+    PrecacheParticleSystem(ENT.FX_HIT)
+end

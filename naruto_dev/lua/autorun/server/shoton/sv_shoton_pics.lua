@@ -49,48 +49,66 @@ local pret = {}
 local function Teinte()
     local t = TEINTES[math.random(#TEINTES)]
     local function v(c) return math.Clamp(c + math.random(-12, 12), 150, 255) end
-    return Color(v(t.r), v(t.g), v(t.b))
+    return v(t.r), v(t.g), v(t.b)
 end
 
+-- Une rangée : les cristaux sont de simples modèles côté CLIENT (aucune entité serveur) ; le serveur calcule leurs
+-- positions, fait UNE recherche d'ennemis pour toute la rangée et envoie tout dans UN seul message.
 -- grandeur : 0 (bord de l'éventail) à 1 (milieu) -> les cristaux du centre sont plus hauts
 -- progression : 0 (première rangée) à 1 (dernière) -> petits au début, de plus en plus gros à la fin
-local function Cristal(ply, pos, touches, rayon, degats, stun, echelle, vie, grandeur, progression)
-    local tr = util.TraceLine({ start = pos + Vector(0, 0, 100), endpos = pos - Vector(0, 0, 300), mask = MASK_SOLID_BRUSHONLY })
-    if not tr.Hit then return end
-    pos = tr.HitPos - Vector(0, 0, 3)
-
-    local c = ents.Create("prop_dynamic")
-    if not IsValid(c) then return end
-    c:SetModel(MODELE)
-    c:SetPos(pos)
-    c:SetAngles(Angle(math.Rand(-18, 18), math.random(0, 359), math.Rand(-18, 18)))
-    c:SetColor(Teinte())
-    c:SetSolid(SOLID_NONE)
-    c:Spawn()
-    local ech = echelle * math.Rand(0.8, 1.2) * (0.8 + 0.4 * grandeur) * Lerp(progression, PETIT, GROS)
-    c:SetModelScale(0.05, 0)
-    c:SetModelScale(ech, 0.15)
-    c:EmitSound("physics/glass/glass_impact_bullet" .. math.random(1, 4) .. ".wav", 70, math.random(70, 100))
-
-    timer.Simple(vie, function()
-        if not IsValid(c) then return end
-        c:SetModelScale(0.05, 0.3)
-        timer.Simple(0.3, function() if IsValid(c) then c:Remove() end end)
-    end)
-
-    for _, ent in ipairs(ents.FindInSphere(pos, rayon)) do
-        if not touches[ent] and IsValid(ply) and EstCible(ent, ply) then
-            touches[ent] = true
-            local dmg = DamageInfo()
-            dmg:SetDamage(degats)
-            dmg:SetAttacker(ply)
-            dmg:SetInflictor(ply)
-            dmg:SetDamageType(DMG_GENERIC)
-            dmg:SetDamagePosition(ent:WorldSpaceCenter())
-            ent:TakeDamageInfo(dmg)
-            if stun > 0 and NA_Etourdir then NA_Etourdir(ent, stun) end
+local function Rangee(ply, centre, dr, av, largeur, par, touches, rayon, degats, stun, echelle, vie, progression)
+    local liste = {}
+    for _ = 1, par do
+        local d = math.Rand(-1, 1)
+        local p = centre + dr * (d * largeur) + av * math.Rand(-ECART / 2, ECART / 2)
+        local tr = util.TraceLine({ start = p + Vector(0, 0, 100), endpos = p - Vector(0, 0, 300), mask = MASK_SOLID_BRUSHONLY })
+        if tr.Hit then
+            liste[#liste + 1] = {
+                pos = tr.HitPos - Vector(0, 0, 3),
+                ech = echelle * math.Rand(0.8, 1.2) * (0.8 + 0.4 * (1 - math.abs(d))) * Lerp(progression, PETIT, GROS),
+            }
         end
     end
+
+    -- dégâts : une seule recherche pour la rangée, puis distance à chaque cristal
+    local r2 = rayon * rayon
+    for _, ent in ipairs(ents.FindInSphere(centre, largeur + ECART / 2 + rayon + 10)) do
+        if not touches[ent] and EstCible(ent, ply) then
+            local ep = ent:GetPos()
+            for _, c in ipairs(liste) do
+                if ep:DistToSqr(c.pos) <= r2 then
+                    touches[ent] = true
+                    local dmg = DamageInfo()
+                    dmg:SetDamage(degats)
+                    dmg:SetAttacker(ply)
+                    dmg:SetInflictor(ply)
+                    dmg:SetDamageType(DMG_GENERIC)
+                    dmg:SetDamagePosition(ent:WorldSpaceCenter())
+                    ent:TakeDamageInfo(dmg)
+                    if stun > 0 and NA_Etourdir then NA_Etourdir(ent, stun) end
+                    break
+                end
+            end
+        end
+    end
+
+    if #liste == 0 then return end
+    sound.Play("physics/glass/glass_impact_bullet" .. math.random(1, 4) .. ".wav", centre, 75, math.random(70, 100))   -- un seul son par rangée
+
+    net.Start("shoton_pics_touche")
+        net.WriteVector(centre)
+        net.WriteFloat(vie)
+        net.WriteUInt(#liste, 6)
+        for _, c in ipairs(liste) do
+            net.WriteVector(c.pos)
+            net.WriteUInt(math.random(0, 359), 9)
+            net.WriteInt(math.random(-18, 18), 7)
+            net.WriteInt(math.random(-18, 18), 7)
+            net.WriteFloat(c.ech)
+            local r, g, b = Teinte()
+            net.WriteUInt(r, 8) net.WriteUInt(g, 8) net.WriteUInt(b, 8)
+        end
+    net.Broadcast()
 end
 
 net.Receive("shoton_pics_cast", function(_, ply)
@@ -129,15 +147,8 @@ net.Receive("shoton_pics_cast", function(_, ply)
             timer.Simple(i * DELAI, function()
                 if not IsValid(ply) then return end
                 local c = base + av * (DEPART + i * ECART)
-                local l = 40 + i * 18   -- l'éventail s'élargit
-                for _ = 1, par do
-                    local d = math.Rand(-1, 1)
-                    Cristal(ply, c + dr * (d * l) + av * math.Rand(-ECART / 2, ECART / 2),
-                        touches, rayon, degats, stun, echelle, vie, 1 - math.abs(d), i / math.max(rangees - 1, 1))
-                end
-                net.Start("shoton_pics_touche")   -- particules au centre de la rangée
-                    net.WriteVector(c)
-                net.Broadcast()
+                Rangee(ply, c, dr, av, 40 + i * 18, par, touches, rayon, degats, stun, echelle, vie,
+                    i / math.max(rangees - 1, 1))   -- l'éventail s'élargit
             end)
         end
     end)

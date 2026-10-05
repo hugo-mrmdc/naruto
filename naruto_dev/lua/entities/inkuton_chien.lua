@@ -119,11 +119,13 @@ if SERVER then
 end
 
 if CLIENT then
+    -- une seule fois pour le fichier (avant : à chaque apparition, le .pcf était rechargé = micro-freeze)
+    game.AddParticles(ENT.PCF)
+    PrecacheParticleSystem(ENT.FX_HIT)
+    PrecacheParticleSystem(ENT.FX_SPAWN)
+    PrecacheParticleSystem(ENT.FX_TRACE)
+
     function ENT:Initialize()
-        game.AddParticles(self.PCF)
-        PrecacheParticleSystem(self.FX_HIT)
-        PrecacheParticleSystem(self.FX_SPAWN)
-        PrecacheParticleSystem(self.FX_TRACE)
         PrecacheParticleSystem(self.FX_CIBLE)
     end
 

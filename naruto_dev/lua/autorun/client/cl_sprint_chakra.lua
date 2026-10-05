@@ -112,6 +112,7 @@ local function EstEnCourse(ply)
     if ply:InVehicle() or ply:GetMoveType() ~= MOVETYPE_WALK then return false end
     if (ply:GetNWBool("MokutonRide", false) or ply:GetNWBool("InkutonRide", false)) or ply:GetNW2Bool("NA_Dragon", false) then return false end
     if ply:GetNW2Float("NA_TsunamiFin", 0) > CurTime() then return false end   -- sur la vague Suiton (cl_suiton_tsunami.lua)
+    if ply:GetNW2Float("NA_ChidoriFin", 0) > CurTime() then return false end   -- Chidori Raiton (cl_raiton_chidori.lua)
     if not ply:GetNW2Bool("NA_Run", false) and not ply:GetNW2Bool("NA_ChakraRun", false) then return false end
     if not ply:OnGround() then return false end
     if ply:GetVelocity():Length2D() < 60 then return false end

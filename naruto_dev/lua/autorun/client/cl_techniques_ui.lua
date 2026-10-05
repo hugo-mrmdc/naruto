@@ -39,6 +39,9 @@ local TECHNIQUES = {
     { cat = "Katon", name = "Tornade de feu", key = "", id = "katon_tornade", rang = "B", icone = "ui/icon/katon_tornade_feu.png", court = "Tornade", cooldown = 12,
       desc = "Fait surgir une tornade de flammes devant toi pendant 5 secondes : elle attire vers son centre, blesse et brûle tous les ennemis dedans. Coûte 30 de chakra.",
       dmg = "5 par tick (toutes les 0,5 s) + brûlure + attraction" },
+    { cat = "Katon", name = "Nuée ardente", key = "", id = "katon_nuee", rang = "A", icone = "ui/icon/katon_nuee_ardente.png", court = "Nuée", cooldown = 22,
+      desc = "Une nuée de feu éclate au sol là où tu regardes : tous les ennemis dans la zone sont blessés d'un coup, puis brûlent. Si tu vises un ennemi, elle éclate sur lui. Coûte 70 de chakra.",
+      dmg = "8 d'un coup + brûlure" },
     { cat = "Katon", name = "Grosse boule de feu", key = "", id = "katon_grosse_boule", rang = "B", icone = "ui/icon/katon_big_boule_feu.png", court = "Grosse boule", cooldown = 10,
       desc = "Après les mudras, lance une énorme boule de feu qui explose au contact : elle blesse et brûle tous les ennemis dans le souffle. Coûte 35 de chakra.",
       dmg = "60 à l'explosion + brûlure" },
@@ -129,23 +132,23 @@ local TECHNIQUES = {
       desc = "Vise un ennemi (900 unités max) : il est enfermé dans une arène de miroirs de glace, étourdi pendant 2,5 secondes et subit des dégâts à chaque instant. Coûte 45 de chakra.",
       dmg = "5 par tick + stun de 2,5 s" },
 
-    { cat = "Shoton", name = "Cristal", key = "", id = "shoton_cristal", rang = "B", icone = "geams/ui/shoton_sword.png", court = "Cristal", cooldown = 18, cd = 18,
+    { cat = "Shoton", name = "Cristal", key = "", id = "shoton_cristal", rang = "C", icone = "geams/ui/shoton_sword.png", court = "Cristal", cooldown = 18, cd = 18,
       desc = "Une onde invisible avance tout droit devant toi, jusqu'à 900 unités. Le premier ennemi touché est enfermé dans un cristal et étourdi pendant 3 secondes. Elle s'arrête sur un mur. Coûte 40 de chakra.",
       dmg = "Stun de 3 s" },
 
-    { cat = "Shoton", name = "Armure de cristal", key = "", id = "shoton_armure", rang = "A", icone = "geams/ui/shoton_armor.png", court = "Armure", cooldown = 30, cd = 30,
+    { cat = "Shoton", name = "Armure de cristal", key = "", id = "shoton_armure", rang = "C", icone = "geams/ui/shoton_armor.png", court = "Armure", cooldown = 30, cd = 30,
       desc = "Une armure de cristal rose recouvre ton corps pendant 15 secondes : tu encaisses 35 % de dégâts en moins. Coûte 40 de chakra.",
       dmg = "-35 % de dégâts subis pendant 15 s" },
 
-    { cat = "Shoton", name = "Roquettes", key = "", id = "shoton_rockets", rang = "A", icone = "geams/ui/shoton_roquets.png", court = "Roquettes", cooldown = 25, cd = 25,
+    { cat = "Shoton", name = "Roquettes", key = "", id = "shoton_rockets", rang = "B", icone = "geams/ui/shoton_roquets.png", court = "Roquettes", cooldown = 25, cd = 25,
       desc = "Tu t'élèves dans les airs et tires 3 roquettes de cristal là où tu vises. Chacune explose au contact d'un ennemi ou d'un mur et blesse tous les ennemis proches. Pas de dégâts de chute à l'atterrissage. Coûte 60 de chakra.",
       dmg = "60 par roquette (zone)" },
 
-    { cat = "Shoton", name = "Pics de cristal", key = "", id = "shoton_pics", rang = "S", icone = "ui/main_menu/library/new_icone/shoton.png", court = "Pics", cooldown = 20, cd = 20,
+    { cat = "Shoton", name = "Pics de cristal", key = "", id = "shoton_pics", rang = "A", icone = "ui/main_menu/library/new_icone/shoton.png", court = "Pics", cooldown = 20, cd = 20,
       desc = "Une forêt de cristaux roses et lilas jaillit du sol en éventail devant toi, rangée après rangée. Chaque ennemi touché subit des dégâts une seule fois (aucun étourdissement). Coûte 55 de chakra.",
       dmg = "50 par ennemi touché" },
 
-    { cat = "Shoton", name = "Chute de cristal", key = "", id = "shoton_chute", rang = "S", icone = "ui/main_menu/library/shoton.png", court = "Chute", cooldown = 25, cd = 25,
+    { cat = "Shoton", name = "Chute de cristal", key = "", id = "shoton_chute", rang = "B", icone = "ui/main_menu/library/shoton.png", court = "Chute", cooldown = 25, cd = 25,
       desc = "Un énorme cristal tombe du ciel sur le point que tu vises (800 unités max) et explose à l'impact : tous les ennemis proches subissent des dégâts et sont légèrement étourdis (0,8 s). Coûte 70 de chakra.",
       dmg = "120 de dégâts de zone + stun de 0,8 s" },
 
@@ -160,7 +163,7 @@ local TECHNIQUES = {
 
 
     -- ===== SUITON =====
-    { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "", court = "Requin", cooldown = 5, cd = 5.3,
+    { cat = "Suiton", name = "Requin d'eau", key = KEY_R, id = "suiton_requin", rang = "B", icone = "ui/icon/requin.png", court = "Requin", cooldown = 5, cd = 5.3,
       desc = "Envoie un requin d'eau sur la cible visée." },
     { cat = "Suiton", name = "Tsunami", key = "", id = "suiton_tsunami", rang = "A", icone = "ui/icon/suiton_tsunami.png", court = "Tsunami", cooldown = 20,
       desc = "Tu montes sur une vague qui avance en continu dans la direction de ton regard pendant 6 secondes : tous les ennemis touchés par son front sont blessés. Appuie sur E pour en descendre. Coûte 60 de chakra.",
@@ -192,6 +195,9 @@ local TECHNIQUES = {
     { cat = "Futon", name = "Ouragan de vent", key = "", id = "futon_ouragan", rang = "B", icone = "ui/icon/futon_tornade_vent.png", court = "Ouragan", cooldown = 12,
       desc = "Une grosse tornade de vent avance devant toi : chaque ennemi traversé subit des dégâts et est projeté un peu en l'air. Elle s'arrête sur un mur. Coûte 40 de chakra.",
       dmg = "60 + bump à chaque ennemi traversé" },
+    { cat = "Futon", name = "Grand ouragan", key = "", id = "futon_grand_ouragan", rang = "A", icone = "ui/icon/futon_tornade_vent.png", court = "Gd ouragan", cooldown = 22,
+      desc = "Fait surgir un énorme ouragan de vent devant toi pendant 5 secondes : il attire vers son centre et blesse tous les ennemis dedans. Coûte 60 de chakra.",
+      dmg = "10 par tick (toutes les 0,5 s) + attraction" },
     { cat = "Futon", name = "Expulsion de vent", key = "", id = "futon_expulsion", rang = "B", icone = "ui/icon/futon_repulsion_vent.png", court = "Expulsion", cooldown = 14,
       desc = "Une explosion de vent jaillit autour de toi : tous les ennemis proches subissent des dégâts et sont projetés loin de toi. Coûte 40 de chakra.",
       dmg = "50 + projection" },
@@ -207,6 +213,9 @@ local TECHNIQUES = {
     { cat = "Raiton", name = "Zone de foudre", key = "", id = "raiton_zone", rang = "B", icone = "ui/icon/raiton_piege_electrique.png", court = "Zone", cooldown = 15,
       desc = "Une zone de foudre apparaît autour de toi pendant 10 secondes : elle blesse tous les ennemis dedans, et toutes les 3 secondes elle les étourdit 1 seconde, reliés au centre par un arc électrique. Coûte 45 de chakra.",
       dmg = "4 par tick (toutes les 0,5 s) + étourdissement 1 s toutes les 3 s" },
+    { cat = "Raiton", name = "Chidori", key = "", id = "raiton_chidori", rang = "A", icone = "ui/icon/raiton_chidori.png", court = "Chidori", cooldown = 18,
+      desc = "Tu charges la foudre dans ta main gauche, puis tu fonces droit devant toi : le premier ennemi touché est frappé, blessé et étourdi 2 secondes, avec une onde de foudre au sol. Coûte 55 de chakra.",
+      dmg = "70 + étourdissement 2 s" },
     { cat = "Raiton", name = "Poing de foudre", key = "", id = "raiton_poing", rang = "B", icone = "ui/icon/raiton_onde_foudroyante.png", court = "Poing", cooldown = 16,
       desc = "Tu bondis puis plonges vers le bas, le poing droit chargé de foudre : à l'atterrissage, une onde de foudre blesse, projette et étourdit 0,5 seconde les ennemis autour de toi. Coûte 40 de chakra.",
       dmg = "50 + projection + étourdissement 0,5 s" },
@@ -227,6 +236,9 @@ local TECHNIQUES = {
     { cat = "Doton", name = "Pics de pierre", key = "", id = "doton_pics", rang = "B", icone = "ui/icon/doton_tremblement_de_terre.png", court = "Pics", cooldown = 14,
       desc = "Vise un ennemi devant toi : il est blessé, étourdi 2 secondes et pétrifié sous des pics de pierre. La précision de la visée augmente avec le niveau. Coûte 35 de chakra.",
       dmg = "20 + étourdissement 2 s" },
+    { cat = "Doton", name = "Dragon de terre", key = "", id = "doton_dragon", rang = "A", icone = "ui/icon/doton_peau_de_roche.png", court = "Dragon", cooldown = 25,
+      desc = "Un dragon de roche sort du sol devant toi pendant 5 secondes : il se tourne vers l'endroit où tu regardes et tire en rafale des projectiles de pierre. Coûte 60 de chakra.",
+      dmg = "20 par projectile (toutes les 0,3 s)" },
     { cat = "Doton", name = "Éruption de roche", key = "", id = "doton_eruption", rang = "B", icone = "ui/icon/doton_boule_de_roche.png", court = "Éruption", cooldown = 16,
       desc = "Une forêt de roches jaillit du sol en éventail devant toi, rangée après rangée : tous les ennemis touchés prennent des dégâts. Coûte 45 de chakra.",
       dmg = "30 par ennemi touché (une fois)" },
@@ -1158,6 +1170,10 @@ local function Open()
         -- affiché même si la technique est verrouillée (valeur du niveau 1)
         local cd = NA_CooldownAuNiveau(t, t.id and NA_Niveau and NA_Niveau(LocalPlayer(), t.id) or 1)
         Ligne("COOLDOWN : " .. (cd and (string.format(cd == math.floor(cd) and "%d" or "%.1f", cd) .. " S") or "-"), C_RECHARGE)
+        if t.id and NA_DelaiApres then
+            local dl = NA_DelaiApres(t.id)
+            Ligne("DÉLAI APRÈS : " .. string.format(dl == math.floor(dl) and "%d" or "%.1f", dl) .. " S", C_RECHARGE)
+        end
         local reste = Recharge(t.id)
         if reste > 0 then
             Ligne("EN RECHARGE : " .. TexteRecharge(reste) .. " S", Color(255, 110, 90))

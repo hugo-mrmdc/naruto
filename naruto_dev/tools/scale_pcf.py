@@ -105,7 +105,9 @@ def main():
     n = 0
     for e in cibles:
         for nom, (t, off) in e['offs'].items():
-            if nom in FLOATS and t == 3:
+            # "Remap Initial Scalar" vers le rayon (champ de sortie 3) : sa valeur de sortie EST la taille (ex. fissures au sol)
+            remap_rayon = e['attrs'].get('output field', (0, None))[1] == 3 and nom in ('output minimum', 'output maximum')
+            if (nom in FLOATS or remap_rayon) and t == 3:
                 v = struct.unpack_from('<f', d, off)[0]
                 struct.pack_into('<f', d, off, v * facteur); n += 1
             elif nom in VECTEURS and t == 10:

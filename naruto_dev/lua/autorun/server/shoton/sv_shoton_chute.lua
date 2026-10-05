@@ -16,6 +16,7 @@ local HAUTEUR     = 700    -- hauteur de départ au-dessus du point visé (rédu
 local DEGATS      = 120
 local EXPLOSION   = 150
 local STUN        = 0.8    -- léger étourdissement (secondes)
+local TAILLE_VISEE = 35    -- demi-taille de la boîte de visée : un ennemi dedans est visé (comme le Cube Jinton)
 local RECHARGE    = 25
 local CHAKRA_COUT = 70
 local CHAKRA_MAX  = NA_CHAKRA_MAX or 100
@@ -32,9 +33,23 @@ local function Lancer(ply)
     if not IsValid(ply) or not ply:Alive() then return end
 
     local portee = Niv(ply, "portee", PORTEE)
-    local vise = util.TraceLine({ start = ply:GetShootPos(), endpos = ply:GetShootPos() + ply:GetAimVector() * portee, filter = ply, mask = MASK_SOLID_BRUSHONLY })
+    local oeil = ply:GetShootPos()
+    local vise = util.TraceLine({ start = oeil, endpos = oeil + ply:GetAimVector() * portee, filter = ply, mask = MASK_SOLID_BRUSHONLY })
     local cible = vise.HitPos
     if vise.Hit and vise.HitNormal.z < 0.5 then cible = cible + vise.HitNormal * 40 end   -- mur : on tombe devant lui
+
+    -- Ennemi visé : la visée ci-dessus ne voit que le décor, donc quand on visait un ennemi le cristal tombait sur le sol ou
+    -- le mur DERRIÈRE lui et passait à côté. On cherche d'abord un ennemi sur le chemin du regard (boîte lancée jusqu'au
+    -- décor, comme le Cube Jinton) : s'il y en a un, le cristal tombe sur LUI, et le suit pendant la chute s'il bouge.
+    local suivi, dMin = nil, math.huge
+    local t = Vector(TAILLE_VISEE, TAILLE_VISEE, TAILLE_VISEE)
+    for _, ent in ipairs(NA_FindAlongRay(oeil, vise.HitPos, t)) do   -- _na_visee.lua
+        if NA_InkutonEstCible and NA_InkutonEstCible(ent, ply) then
+            local d = oeil:DistToSqr(ent:WorldSpaceCenter())
+            if d < dMin then suivi, dMin = ent, d end
+        end
+    end
+    if suivi then cible = suivi:GetPos() end
 
     -- départ en hauteur, sans traverser un plafond
     local haut = Niv(ply, "hauteur", HAUTEUR)
@@ -49,6 +64,7 @@ local function Lancer(ply)
     ent.Explosion = Niv(ply, "explosion", EXPLOSION)
     ent.Stun      = Niv(ply, "stun", STUN)
     ent.Echelle   = Niv(ply, "echelle", ent.Echelle)
+    ent.Suivi     = suivi
     ent:Spawn()
     ply:EmitSound("ambient/wind/wind_snippet2.wav", 75, 110, 0.8)
 end

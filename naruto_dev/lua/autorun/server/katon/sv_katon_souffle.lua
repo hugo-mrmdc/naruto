@@ -79,7 +79,7 @@ local function Souffler(ply)
     ply:EmitSound("ambient/fire/mtov_flame2.wav", 80, 90)
 
     -- l'animation du souffle (haut du corps) est jouée par les clients : cl_katon_souffle.lua
-    if NA_Mudra then NA_Mudra(ply, duree) end   -- pas de coups d'arme pendant tout le souffle
+    -- pas de NA_Mudra ici : pendant le souffle, on peut frapper et lancer d'autres jutsu
 
     timer.Create(nom, intervalle, math.max(1, math.floor(duree / intervalle)), function()
         if not IsValid(ply) or not ply:Alive() then

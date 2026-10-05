@@ -7,7 +7,7 @@
 --========================================================
 
 local NET_TIR = "shark_projectile_fire"
-local DELAI_MUDRA = 1       -- secondes entre l'animation et le tir
+local DELAI_MUDRA = 0.4     -- secondes entre l'animation et le tir
 local DELAI_RELANCE = 5.3   -- secondes avant de pouvoir relancer côté client (le serveur a sa propre recharge)
 
 game.AddParticles("particles/patlick_atgsuiton.pcf")

@@ -8,7 +8,8 @@
 --========================================================
 
 util.AddNetworkString("hyoton_pics_cast")
-util.AddNetworkString("hyoton_pics_touche")   -- serveur -> clients : particule à chaque apparition d'un pic
+util.AddNetworkString("hyoton_pics_touche")   -- serveur -> clients : une particule à un endroit (la vague de glace s'en sert aussi)
+util.AddNetworkString("hyoton_pics_rangee")   -- serveur -> clients : une rangée de pics (modèles + particules)
 
 --========================================================
 -- RÉGLAGES (valeurs par niveau : _na_niveaux_techniques.lua)
@@ -37,43 +38,53 @@ local function EstCible(ent, owner) return NA_InkutonEstCible and NA_InkutonEstC
 
 local pret = {}
 
-local function Pic(ply, pos, touches, rayon, degats, stun, echelle, vie)
-    local tr = util.TraceLine({ start = pos + Vector(0, 0, 100), endpos = pos - Vector(0, 0, 300), mask = MASK_SOLID_BRUSHONLY })
-    if not tr.Hit then return end
-    pos = tr.HitPos
+-- Une rangée de pics : les pics sont de simples modèles côté CLIENT (aucune entité serveur) ; le serveur calcule leurs
+-- positions, fait UNE recherche d'ennemis pour toute la rangée et envoie tout dans UN seul message.
+local function Rangee(ply, centre, dr, largeur, touches, rayon, degats, stun, echelle, vie)
+    local liste = {}
+    for _, d in ipairs({ -largeur, 0, largeur }) do
+        local p = centre + dr * d
+        local tr = util.TraceLine({ start = p + Vector(0, 0, 100), endpos = p - Vector(0, 0, 300), mask = MASK_SOLID_BRUSHONLY })
+        if tr.Hit then liste[#liste + 1] = tr.HitPos end
+    end
+    if #liste == 0 then return end
 
-    local pic = ents.Create("prop_dynamic")
-    if not IsValid(pic) then return end
-    pic:SetModel("models/hyoton/cayzi_props_hyoton_2.mdl")
-    pic:SetPos(pos)
-    pic:SetAngles(Angle(-90 + math.Rand(-12, 12), math.random(0, 359), math.Rand(-12, 12)))   -- le modèle est couché sur X : pointe vers le haut
-    pic:SetSolid(SOLID_NONE)
-    pic:Spawn()
-    pic:SetModelScale(0.05, 0)
-    pic:SetModelScale(echelle * math.Rand(0.8, 1.2), 0.15)
-    pic:EmitSound("physics/glass/glass_impact_bullet1.wav", 70, math.random(80, 100))
-    net.Start("hyoton_pics_touche")
-    net.WriteVector(pos - Vector(0, 0, DECALAGE_FX))
-    net.Broadcast()
-    timer.Simple(vie, function()
-        if not IsValid(pic) then return end
-        pic:SetModelScale(0.05, 0.3)
-        timer.Simple(0.3, function() if IsValid(pic) then pic:Remove() end end)
-    end)
-
-    for _, ent in ipairs(ents.FindInSphere(pos, rayon)) do
+    -- dégâts : une seule recherche pour la rangée, puis distance à chaque pic
+    local r2 = rayon * rayon
+    for _, ent in ipairs(ents.FindInSphere(centre, largeur + rayon + 10)) do
         if not touches[ent] and IsValid(ply) and EstCible(ent, ply) then
-            touches[ent] = true
-            local dmg = DamageInfo()
-            dmg:SetDamage(degats)
-            dmg:SetAttacker(ply)
-            dmg:SetInflictor(ply)
-            dmg:SetDamageType(DMG_GENERIC)
-            dmg:SetDamagePosition(ent:WorldSpaceCenter())
-            ent:TakeDamageInfo(dmg)
-            if stun > 0 and NA_Etourdir then NA_Etourdir(ent, stun) end
+            local ep = ent:GetPos()
+            for _, p in ipairs(liste) do
+                if ep:DistToSqr(p) <= r2 then
+                    touches[ent] = true
+                    local dmg = DamageInfo()
+                    dmg:SetDamage(degats)
+                    dmg:SetAttacker(ply)
+                    dmg:SetInflictor(ply)
+                    dmg:SetDamageType(DMG_GENERIC)
+                    dmg:SetDamagePosition(ent:WorldSpaceCenter())
+                    ent:TakeDamageInfo(dmg)
+                    if stun > 0 and NA_Etourdir then NA_Etourdir(ent, stun) end
+                    break
+                end
+            end
         end
     end
+
+    sound.Play("physics/glass/glass_impact_bullet1.wav", centre, 70, math.random(80, 100))   -- un seul son par rangée
+
+    net.Start("hyoton_pics_rangee")
+        net.WriteFloat(vie)
+        net.WriteFloat(DECALAGE_FX)
+        net.WriteUInt(#liste, 3)
+        for _, p in ipairs(liste) do
+            net.WriteVector(p)
+            net.WriteInt(math.random(-12, 12), 6)    -- inclinaison
+            net.WriteUInt(math.random(0, 359), 9)    -- cap
+            net.WriteInt(math.random(-12, 12), 6)
+            net.WriteFloat(echelle * math.Rand(0.8, 1.2))
+        end
+    net.Broadcast()
 end
 
 net.Receive("hyoton_pics_cast", function(_, ply)
@@ -113,9 +124,7 @@ net.Receive("hyoton_pics_cast", function(_, ply)
                 if not IsValid(ply) then return end
                 local c = base + av * (DEPART + i * ECART)
                 local l = 30 + i * 12   -- l'éventail s'élargit
-                for _, d in ipairs({ -l, 0, l }) do
-                    Pic(ply, c + dr * d, touches, rayon, degats, stun, echelle, vie)
-                end
+                Rangee(ply, c, dr, l, touches, rayon, degats, stun, echelle, vie)
             end)
         end
     end)

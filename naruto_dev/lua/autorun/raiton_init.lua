@@ -12,6 +12,8 @@ if SERVER then
     include("autorun/server/raiton/sv_raiton_zone.lua")
     AddCSLuaFile("autorun/client/raiton/cl_raiton_poing.lua")
     include("autorun/server/raiton/sv_raiton_poing.lua")
+    AddCSLuaFile("autorun/client/raiton/cl_raiton_chidori.lua")
+    include("autorun/server/raiton/sv_raiton_chidori.lua")   -- après le Poing : réutilise son message d'impact
 end
 
 if CLIENT then
@@ -20,4 +22,5 @@ if CLIENT then
     include("autorun/client/raiton/cl_raiton_boule.lua")
     include("autorun/client/raiton/cl_raiton_zone.lua")
     include("autorun/client/raiton/cl_raiton_poing.lua")
+    include("autorun/client/raiton/cl_raiton_chidori.lua")
 end

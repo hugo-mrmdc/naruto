@@ -29,10 +29,22 @@ local function Arreter(ply)
     vagues[ply] = nil
 end
 
+-- Éclairage fixe : la lumière d'un modèle est lue à son ORIGINE. Quand la vague passe dans le sol ou un mur (elle est
+-- grande et posée sur le sol), son origine se retrouve dans la géométrie et le modèle devient NOIR. On impose donc une
+-- lumière fixe et claire (même méthode que le dragon Bakuton).
+local function Dessiner(self)
+    render.SuppressEngineLighting(true)
+    render.ResetModelLighting(0.9, 0.9, 0.9)
+    render.SetModelLighting(BOX_TOP, 1, 1, 1)
+    self:DrawModel()
+    render.SuppressEngineLighting(false)
+end
+
 local function Creer()
     local ent = ClientsideModel(MODELE, RENDERGROUP_TRANSLUCENT)
     if not IsValid(ent) then return end
     ent:SetModelScale(ECHELLE, 0)
+    ent.RenderOverride = Dessiner
     return ent
 end
 

@@ -141,10 +141,11 @@ if SERVER then
 end
 
 if CLIENT then
-    function ENT:Initialize()
-        game.AddParticles(self.PCF)
-        for _, fx in ipairs({ self.FX_SPAWN, self.FX_TRACE }) do PrecacheParticleSystem(fx) end
-    end
+    -- une seule fois pour le fichier (avant : à chaque apparition, le .pcf était rechargé = micro-freeze)
+    game.AddParticles(ENT.PCF)
+    for _, fx in ipairs({ ENT.FX_SPAWN, ENT.FX_TRACE }) do PrecacheParticleSystem(fx) end
+
+    function ENT:Initialize() end
 
     -- ondulation : une onde qui parcourt les os du corps, de la queue à la tête
     function ENT:Ondule()

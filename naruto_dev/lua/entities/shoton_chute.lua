@@ -18,6 +18,7 @@ ENT.Explosion = 150     -- rayon des dégâts de zone
 ENT.Stun      = 0.8     -- léger étourdissement des ennemis touchés (secondes, 0 = aucun)
 ENT.Vitesse   = 900     -- vitesse de départ (unités/s)
 ENT.Gravite   = 2500    -- accélération (unités/s²)
+ENT.Suivi_Vitesse = 700  -- vitesse horizontale à laquelle il suit l'ennemi visé pendant la chute (unités/s)
 ENT.Echelle   = 0.8     -- le modèle fait ~360 unités de haut à l'échelle 1 : ajuster si trop gros / petit
 -- Le modèle est dressé : Angle(180, 0, 0) met sa pointe vers le bas (si c'est l'inverse, mettre Angle(0, 0, 0))
 ENT.Rotation  = Angle(180, 0, 0)
@@ -77,6 +78,18 @@ if SERVER then
         local owner, from = self:GetOwner(), self:GetPos()
         self.V = self.V + self.Gravite * dt
         local to = from - Vector(0, 0, self.V * dt)
+
+        -- le cristal suit l'ennemi visé pendant la chute (il bouge : sans ça il tombait derrière lui)
+        local suivi = self.Suivi
+        if IsValid(suivi) and EstCible(suivi, owner) then
+            local cible = suivi:GetPos()
+            local dx, dy = cible.x - to.x, cible.y - to.y
+            local dist = math.sqrt(dx * dx + dy * dy)
+            if dist > 1 then
+                local pas = math.min(dist, self.Suivi_Vitesse * dt)
+                to.x, to.y = to.x + dx / dist * pas, to.y + dy / dist * pas
+            end
+        end
         local r = self.Rayon
         local tr = util.TraceHull({
             start = from, endpos = to, mins = Vector(-r, -r, -r), maxs = Vector(r, r, r),

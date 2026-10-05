@@ -38,6 +38,7 @@ local function AutreAnimation(ply)
     if ply:GetNW2Bool("NA_Canalise", false) or ply:GetNW2Bool("NA_Golem", false) then return true end
     if (ply:GetNWBool("MokutonRide", false) or ply:GetNWBool("InkutonRide", false)) then return true end
     if ply:GetNW2Float("NA_TsunamiFin", 0) > CurTime() then return true end   -- sur la vague Suiton (cl_suiton_tsunami.lua)
+    if ply:GetNW2Float("NA_ChidoriFin", 0) > CurTime() then return true end   -- Chidori Raiton (cl_raiton_chidori.lua)
     if ply:GetNW2Float("NA_FrappeFin", 0) > CurTime() then return true end   -- frappe terrestre Senju (cl_senju_frappe.lua)
 
     -- Les mudras se superposent au saut ; seuls les jutsus qui remplacent

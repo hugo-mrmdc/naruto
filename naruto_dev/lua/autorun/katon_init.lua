@@ -12,6 +12,8 @@ if SERVER then
     include("autorun/server/katon/sv_katon_tornade.lua")
     AddCSLuaFile("autorun/client/katon/cl_katon_grosse_boule.lua")
     include("autorun/server/katon/sv_katon_grosse_boule.lua")
+    AddCSLuaFile("autorun/client/katon/cl_katon_nuee.lua")
+    include("autorun/server/katon/sv_katon_nuee.lua")
 end
 
 if CLIENT then
@@ -20,4 +22,5 @@ if CLIENT then
     include("autorun/client/katon/cl_katon_souffle.lua")
     include("autorun/client/katon/cl_katon_tornade.lua")
     include("autorun/client/katon/cl_katon_grosse_boule.lua")
+    include("autorun/client/katon/cl_katon_nuee.lua")
 end

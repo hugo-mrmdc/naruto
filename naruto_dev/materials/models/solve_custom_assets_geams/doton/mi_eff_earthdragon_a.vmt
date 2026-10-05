@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	"$basetexture" "models/solve_custom_assets_geams/doton/MI_EFF_EarthDragon_A"
+	"$nocull" 1
+
+
+	"$lightwarptexture" "models/kaesar/solve/naruto_bodies/AnbuBlackOps_01/lightwarptexture"
+}
