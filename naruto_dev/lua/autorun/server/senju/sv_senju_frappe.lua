@@ -84,6 +84,7 @@ end)
 -- Projette une cible. Un nextbot (faux joueur) freine et recolle au sol tout seul : on lui retire le sol
 -- sous les pieds et le freinage pendant qu'il vole. (aussi utilisée par sv_senju_pied.lua)
 function NA_Propulser(ent, v)
+    do return end   -- aucune projection de la cible (pas de transfert de force)
     if not (ent:IsNextBot() and ent.loco) then return ent:SetVelocity(v) end
 
     local freinage = ent.loco:GetDeceleration()

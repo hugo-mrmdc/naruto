@@ -198,7 +198,7 @@ local function Demarrer(ply, cible)
     -- animation de la cible pendant la prison (joueurs seulement : lue par cl_etourdi_anim.lua).
     -- Les PNJ gardent leur pose : changer leur séquence côté serveur provoquait
     -- "Bad pstudiohdr in GetSequenceLinearMotion()" sur les modèles sans cette séquence.
-    if cible:IsPlayer() then cible:SetNW2String("NA_EtourdiAnim", ANIM_CIBLE) end
+    if cible:IsPlayer() then cible:SetNW2String("NA_EtourdiAnim", ANIM_CIBLE) cible:SetNW2Int("NA_EtourdiAnimId", cible:GetNW2Int("NA_EtourdiAnimId", 0) + 1) end
     cible:EmitSound("naruto_sound/jutsu/senju/senju3.wav", 80, 90)
 
     local idx = ply:EntIndex()

@@ -61,7 +61,7 @@ local DASH_DELAI            = 0.3    -- secondes entre le début de l'animation 
 local ANIM_DASH             = "nrp_ninjutsu_attack_aerial_woodendragon"   -- animation du joueur au lancement (nom réel dans anim_extension_mod6.mdl)
 
 -- Position joueur
-local PLAYER_OFFSET_FWD    = -5
+local PLAYER_OFFSET_FWD    = -10 -- négatif = vers l'arrière du dragon (le modèle est long : à -5 le joueur était sur la tête)
 local PLAYER_OFFSET_UP     = 15
 
 -- Grab (E)
@@ -70,7 +70,7 @@ local GRAB_CONE_DOT        = 0.75 -- ~41° de cône (1 = pile devant)
 local GRAB_HULL            = 22   -- vérif anti-mur (évite grab à travers murs)
 
 -- Position de la cible (dans la bouche du dragon)
-local MOUTH_OFFSET_FWD     = 0
+local MOUTH_OFFSET_FWD     = 300
 local MOUTH_OFFSET_UP      = 10
 -- Os de la mâchoire : la cible est tenue là plutôt qu'au centre du dragon
 local MOUTH_BONE           = "Jaw 01"   -- absent du dragon d'encre : la cible est alors tenue au centre (repli)
@@ -276,6 +276,7 @@ local function StopRide(ply)
         ply.NA_DashsEnLair = 0
 
         ply:SetNWBool("InkutonRide", false)
+        ply:SetNWBool("InkutonFige", false)
     end
 
     state[ply] = nil
@@ -343,7 +344,13 @@ local function SpawnRide(ply)
     ply:SetSolid(SOLID_BBOX)
     ply:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
 
-    ply:SetMoveType(MOVETYPE_NONE)
+    ply:SetMoveType(MOVETYPE_FLY)   -- vol géré par sh_inkuton_dragon_vol.lua (SetupMove), collisions du moteur
+    ply:SetGravity(0)
+    ply:SetNWFloat("InkutonVit", NA_Stat(ply, "inkuton_dragon", "vitesse_vol", FLY_SPEED))
+
+    -- Le client redessine le dragon à la position du cavalier (cl_inkuton_dragon.lua) : le prop est interpolé, pas le joueur
+    dragon:SetNWEntity("InkutonRider", ply)
+    dragon:SetNWVector("InkutonOff", Vector(PLAYER_OFFSET_FWD, 0, PLAYER_OFFSET_UP))
     ply:SetNWBool("InkutonRide", true)
 end
 
@@ -396,6 +403,7 @@ local function Lancer(ply, st)
         vitesse = stat("vitesse", DASH_SPEED), rayon = stat("rayon", DASH_RAYON), degats = stat("degats", DASH_DEGATS),
         recul = stat("recul", DASH_RECUL), souleve = stat("souleve", DASH_SOULEVE),
     }
+    dragon:SetNWEntity("InkutonRider", NULL)   -- le client le dessine de nouveau à sa vraie position
     st.dragon = nil   -- il n'appartient plus au cavalier : StopRide ne le supprime pas
 
     StopRide(ply)     -- le joueur descend (position libre, pas de dégâts de chute)
@@ -409,6 +417,7 @@ end
 local function Charge(ply, st)
     if st.chargePrevue or not IsValid(st.dragon) then return end
     st.chargePrevue = true
+    ply:SetNWBool("InkutonFige", true)   -- le cavalier s'arrête pendant l'animation de lancement
 
     NA_AnimJutsu(ply, ANIM_DASH)   -- animation + pas de coups pendant (_na_mudra.lua)
     timer.Simple(DASH_DELAI, function()
@@ -492,50 +501,12 @@ hook.Add("Think", "InkutonDragon_Move", function()
         st.yaw   = math.ApproachAngle(st.yaw, targetYaw, TURN_RATE * dt)
         st.pitch = math.ApproachAngle(st.pitch, targetPitch, PITCH_RATE * dt)
 
-        -- Velocity
+        -- Le VOL lui-même (vitesse, montée, murs) est fait par le moteur de mouvement du joueur, prédit côté client
+        -- (sh_inkuton_dragon_vol.lua) : c'est ce qui le rend fluide. Ici on ne fait que poser le dragon sous le
+        -- cavalier pour les captures, la gueule et le lancer. Son affichage est calculé par le client.
         local ang = Angle(st.pitch, st.yaw, 0)
-        local fwd, up = ang:Forward(), ang:Up()   -- calculés une fois (avant : 3 fois Forward et 2 fois Up)
-        local vel = fwd * NA_Stat(ply, "inkuton_dragon", "vitesse_vol", FLY_SPEED)
-
-        if ply:KeyDown(IN_JUMP) then
-            vel.z = vel.z + (ply:OnGround() and TAKEOFF_BOOST or FLY_UP_SPEED)
-        end
-
-        if ply:KeyDown(IN_DUCK) then
-            vel.z = vel.z - FLY_UP_SPEED
-        end
-
-        -- Position voulue du joueur sur le dos
-        local desiredPos =
-            st.dragon:GetPos()
-            + vel * dt
-            + fwd * PLAYER_OFFSET_FWD
-            + up  * PLAYER_OFFSET_UP
-
-        -- ✅ Anti-travers-murs : trace hull (hitbox joueur)
-        local tr = util.TraceHull({
-            start  = ply:GetPos(),
-            endpos = desiredPos,
-            mins   = ply:OBBMins(),
-            maxs   = ply:OBBMaxs(),
-            filter = st.filtre,
-            mask   = MASK_PLAYERSOLID
-        })
-
-        local finalPos = desiredPos
-        if tr.Hit then
-            finalPos = tr.HitPos + tr.HitNormal * 2
-        end
-
-        -- ✅ Dragon suit la position RÉELLE du joueur (weld behavior)
-        local dragonPos =
-            finalPos
-            - fwd * PLAYER_OFFSET_FWD
-            - up  * PLAYER_OFFSET_UP
-
-        st.dragon:SetPos(dragonPos)
+        st.dragon:SetPos(ply:GetPos() - ang:Forward() * PLAYER_OFFSET_FWD - ang:Up() * PLAYER_OFFSET_UP)
         st.dragon:SetAngles(ang)
-        ply:SetPos(finalPos)
 
         -- ✅ Maintien de la cible dans la bouche (si grab)
         if IsValid(st.grabbed) then
@@ -621,11 +592,7 @@ hook.Add("Think", "InkutonDragon_Projectiles", function()
             ent:TakeDamageInfo(dmg)
 
             local vel = p.dir * p.recul + Vector(0, 0, p.souleve)
-            if ent.loco then
-                ent.loco:SetVelocity(ent.loco:GetVelocity() + vel)   -- NextBot
-            else
-                ent:SetVelocity(vel)
-            end
+            -- aucune projection de la cible (pas de transfert de force)
         end
     end
 end)

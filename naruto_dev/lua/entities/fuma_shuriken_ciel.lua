@@ -71,7 +71,7 @@ if SERVER then
 
             if self.Poussee > 0 and ent:IsPlayer() then
                 local dir = (ent:GetPos() - pos):GetNormalized()
-                ent:SetVelocity(dir * self.Poussee * attenuation + Vector(0, 0, 250))
+                -- aucune projection de la cible (pas de transfert de force)
             end
         end
 

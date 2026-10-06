@@ -72,7 +72,7 @@ if SERVER then
         local vel = ent:GetVelocity()
         local boost = (voulu - Vector(vel.x, vel.y, 0)) * math.min(dt * 4, 1)
         boost.z = 0
-        ent:SetVelocity(boost)
+        -- aucune projection de la cible (pas de transfert de force)
     end
 
     function ENT:Think()

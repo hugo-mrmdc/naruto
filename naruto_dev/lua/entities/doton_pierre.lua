@@ -59,11 +59,7 @@ if SERVER then
             hit:TakeDamageInfo(dmg)
 
             local vel = self.Dir * self.Recul + Vector(0, 0, self.Souleve)
-            if hit.loco then
-                hit.loco:SetVelocity(hit.loco:GetVelocity() + vel)   -- NextBot
-            else
-                hit:SetVelocity(vel)
-            end
+            -- aucune projection de la cible (pas de transfert de force)
         end
 
         -- la particule se joue AU SOL, sous le point d'impact (300 unités au plus)

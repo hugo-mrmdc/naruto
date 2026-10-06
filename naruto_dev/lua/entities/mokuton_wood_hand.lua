@@ -34,6 +34,8 @@ if SERVER then
     function ENT:Initialize()
         self:SetModel(self.Model)
         self:SetMoveType(MOVETYPE_NONE)
+        -- boîte de collision du modèle dégénérée (mins > maxs) : "backwards mins/maxs" ; on en pose une valide (non solide)
+        self:SetCollisionBounds(Vector(-8, -8, 0), Vector(8, 8, 8))
         self:SetSolid(SOLID_NONE)
         self:DrawShadow(false)
         self:SetModelScale(self.Echelle, 0)
@@ -80,6 +82,8 @@ if SERVER then
             dmg:SetDamagePosition(ent:WorldSpaceCenter())
             ent:TakeDamageInfo(dmg)
 
+            -- petit bump vers le haut (Souleve, réglé dans _na_niveaux_techniques.lua) ; voulu, donné à la main
+            -- (le fichier sv_sans_force.lua ne retire que la force des dégâts, pas cette vitesse)
             local vel = Vector(0, 0, self.Souleve)
             if ent.loco then
                 ent.loco:SetVelocity(ent.loco:GetVelocity() + vel)   -- NextBot

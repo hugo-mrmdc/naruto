@@ -1,7 +1,7 @@
 --========================================================
 -- Taijutsu : Enchaînement aérien (SERVEUR)
 --
---   1. Coup de pied relevé (m_attack_hand_lowkicktokickup) : la cible touchée
+--   1. Coup de pied relevé (m_attack_hand_backkick) : la cible touchée
 --      devant le lanceur est envoyée en l'air.
 --   2. Au sommet, la cible reste suspendue (étourdie, animation
 --      M_Beaten_SpinBlowOff) et le lanceur la rejoint.
@@ -32,7 +32,9 @@ local DELAI_IMPACT   = 0.35   -- lancer de l'anim 1 -> la cible décolle
 local DELAI_SOMMET   = 0.45   -- décollage -> le lanceur rejoint la cible
 local DELAI_FINAL    = 0.5    -- rejoint la cible -> coup de talon
 
-local ANIM_LANCER    = "m_attack_hand_lowkicktokickup"
+local ANIM_LANCER    = "m_attack_hand_backkick"
+local ANIM_VITESSE   = 2      -- vitesse de lecture de l'animation (2 = deux fois plus vite)
+local ANIM_COUPE     = 0.35   -- l'animation contient 2 coups de pied : on la coupe après le premier (secondes réelles)
 local ANIM_FINAL     = "m_attack_aerial_hand_turnheeldropkick"
 local ANIM_CIBLE     = "M_Beaten_SpinBlowOff"
 local DISTANCE_COTE  = 70     -- à quelle distance de la cible le lanceur se place
@@ -194,6 +196,7 @@ local function Frapper(ply)
     -- sur place et annulerait l'élan. Le vrai stun arrive au sommet (Sommet) et garde la même anim.
     cible:SetNW2String("NA_EtourdiAnim", ANIM_CIBLE)
     cible:SetNW2Bool("NA_EtourdiUneFois", true)
+    cible:SetNW2Int("NA_EtourdiAnimId", cible:GetNW2Int("NA_EtourdiAnimId", 0) + 1)
     cible:SetNW2Bool("NA_Etourdi", true)
 
     if NA_Projeter then NA_Projeter(cible) end   -- sous stun souple : emportée ; stun ferme : ne bouge pas (sv_etourdissement.lua)
@@ -226,7 +229,7 @@ net.Receive("taijutsu_combo_cast", function(_, ply)
     pret[ply] = CurTime() + recharge
     if NA_CD then NA_CD.Set(ply, "taijutsu_combo", recharge) end   -- recharge visible dans la barre
 
-    NA_AnimJutsu(ply, ANIM_LANCER)   -- animation + pas de coups pendant sa durée (_na_mudra.lua)
+    NA_AnimJutsu(ply, ANIM_LANCER, ANIM_COUPE, ANIM_VITESSE)   -- animation + pas de coups pendant sa durée (_na_mudra.lua)
 
     timer.Simple(Niv(ply, "delai_impact", DELAI_IMPACT), function() Frapper(ply) end)
 end)

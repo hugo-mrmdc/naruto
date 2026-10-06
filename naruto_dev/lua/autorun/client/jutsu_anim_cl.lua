@@ -113,6 +113,9 @@ local function playSequenceOn(ply, seqName, coupe, vitesse)
     if not IsValid(ply) then return false end
     if type(seqName) ~= "string" or seqName == "" then return false end
 
+    -- l'animation d'atterrissage (sv_chute_accroupi.lua) ne coupe jamais une animation de jutsu en cours
+    if seqName == "nrp_base_land" and (ply.NA_JutsuPrioFin or 0) > CurTime() then return false end
+
     local seq = ply:LookupSequence(seqName)
     if not seq or seq < 0 then
         warnMissing(ply, seqName)
@@ -122,6 +125,8 @@ local function playSequenceOn(ply, seqName, coupe, vitesse)
     vitesse = vitesse or 1
     local duree = ply:SequenceDuration(seq) / vitesse
     if coupe and coupe > 0 then duree = math.min(duree, coupe) end
+    ply.NA_JutsuPrioT = CurTime()                 -- dernière animation demandée : prioritaire sur l'anim de stun
+    ply.NA_JutsuPrioFin = CurTime() + math.min(duree, 3)
     local jeton = (ply.NA_AnimJeton or 0) + 1
     ply.NA_AnimJeton = jeton
 

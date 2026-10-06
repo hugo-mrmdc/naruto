@@ -43,6 +43,8 @@ hook.Add("OnPlayerHitGround", "NA_AnimAtterrissage", function(ply, dansLEau, sur
     if ply:GetNW2Bool("NA_Wings", false) or (ply:GetNWBool("MokutonRide", false) or ply:GetNWBool("InkutonRide", false)) then return end
     -- frappe terrestre Senju lancée en l'air : son animation ne doit pas être masquée par celle d'atterrissage
     if ply:GetNW2Float("NA_FrappeFin", 0) > CurTime() then return end
+    -- jamais par-dessus une technique : animation de jutsu / mudras en cours, ou technique canalisée
+    if ply:GetNW2Float("NA_MudraFin", 0) > CurTime() or ply:GetNW2Bool("NA_Canalise", false) then return end
 
     -- message réseau du système d'animation de l'addon (jutsu_anim_sv.lua)
     net.Start("Jutsu_Anim_Play")

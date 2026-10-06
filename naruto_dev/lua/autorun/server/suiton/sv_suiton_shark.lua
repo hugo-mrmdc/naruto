@@ -144,12 +144,7 @@ local function Projeter(ent, dir, recul, souleve)
     local v = Vector(dir.x, dir.y, 0)
     v:Normalize()
     v = v * recul + Vector(0, 0, souleve)
-    if ent.loco then
-        ent.loco:SetVelocity(ent.loco:GetVelocity() + v)   -- NextBot (faux joueur)
-    else
-        if ent:IsPlayer() then ent:SetGroundEntity(NULL) end
-        ent:SetVelocity(v)
-    end
+    -- aucune projection de la cible (pas de transfert de force)
 end
 
 -- impact sur une cible : dégâts, explosion d'eau AU SOL sous la cible (chez tous les clients) + la nuée

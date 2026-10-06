@@ -60,6 +60,14 @@ if SERVER then
                 local seq = perso ~= "" and self:LookupSequence(perso) or -1
                 if seq < 0 then seq = self:LookupSequence("act_stunning") end
                 if seq and seq >= 0 then
+                    -- nouvelle animation de stun demandée (NA_EtourdiAnimId) : la dernière demandée est prioritaire, on la rejoue
+                    local id = self:GetNW2Int("NA_EtourdiAnimId", 0)
+                    if self.AnimIdVu ~= id then
+                        self.AnimIdVu = id
+                        self.AnimStunFinie = nil
+                        self:ResetSequence(seq)
+                        self.DebutAnimStun = CurTime()
+                    end
                     if self:GetSequence() ~= seq and not self.AnimStunFinie then
                         self:ResetSequence(seq)
                         self.DebutAnimStun = CurTime()

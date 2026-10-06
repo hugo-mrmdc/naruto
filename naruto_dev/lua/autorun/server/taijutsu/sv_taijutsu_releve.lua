@@ -20,6 +20,7 @@ local DEGATS_ENVOL = 25     -- 2e coup : dégâts + la cible monte en l'air
 local PORTEE       = 140    -- distance max de la frappe
 local ANGLE        = 60     -- demi-angle du cône devant le lanceur (degrés)
 local LANCER       = 220   -- vitesse verticale donnée à la cible
+local RECUL        = 130   -- petite poussée horizontale, dans le sens du coup (0 = monte tout droit)
 
 local RECHARGE     = 14
 local CHAKRA_COUT  = 20
@@ -70,6 +71,7 @@ end
 local function AnimCible(cible)
     cible:SetNW2String("NA_EtourdiAnim", ANIM_CIBLE)
     cible:SetNW2Bool("NA_EtourdiUneFois", true)
+    cible:SetNW2Int("NA_EtourdiAnimId", cible:GetNW2Int("NA_EtourdiAnimId", 0) + 1)
     cible:SetNW2Bool("NA_Etourdi", true)
 
     local t0 = CurTime()
@@ -97,6 +99,7 @@ local function Frapper(ply, envol)
     avant:Normalize()
     local seuil = math.cos(math.rad(ANGLE))
     local lancer = Niv(ply, "lancer", LANCER)
+    local recul = Niv(ply, "recul", RECUL)
 
     for _, ent in ipairs(ents.FindInSphere(ply:WorldSpaceCenter(), portee)) do
         if not EstCible(ent, ply) then continue end
@@ -109,7 +112,10 @@ local function Frapper(ply, envol)
         dmg:SetDamage(envol and Niv(ply, "degats_envol", DEGATS_ENVOL) or Niv(ply, "degats", DEGATS))
         dmg:SetAttacker(ply)
         dmg:SetInflictor(ply)
-        dmg:SetDamageType(DMG_CLUB)
+        -- les dégâts ne poussent pas : sans force explicite le moteur en déduit une depuis la position du lanceur
+        -- (c'était ce qui envoyait la cible très loin) ; seul le lancer vertical ci-dessous la déplace
+        dmg:SetDamageType(bit.bor(DMG_CLUB, DMG_PREVENT_PHYSICS_FORCE))
+        dmg:SetDamageForce(vector_origin)
         dmg:SetDamagePosition(ent:WorldSpaceCenter())
         ent:TakeDamageInfo(dmg)
         ent:EmitSound(SON_IMPACT, 75, math.random(95, 110))
@@ -123,7 +129,17 @@ local function Frapper(ply, envol)
             if ent.loco then
                 Soulever(ent, lancer)   -- NextBot
             else
-                ent:SetVelocity(Vector(0, 0, lancer))
+                -- SetVelocity AJOUTE à la vitesse actuelle : on retire d'abord celle de la cible (course, élan du
+                -- coup précédent), donc on FIXE exactement la vitesse voulue (monte + petite poussée, recul). Détachée du
+                -- sol, sinon le sol mange la poussée. Refait au tick suivant : le moteur / un autre script ne l'écrase pas.
+                local voulue = Vector(0, 0, lancer) + avant * recul
+                local function Envoyer()
+                    if not IsValid(ent) or (ent:IsPlayer() and not ent:Alive()) then return end
+                    ent:SetGroundEntity(NULL)
+                    ent:SetVelocity(ent:IsPlayer() and (voulue - ent:GetVelocity()) or voulue)   -- joueur : AJOUTE ; PNJ : remplace
+                end
+                Envoyer()
+                timer.Simple(0, Envoyer)
             end
         end
     end

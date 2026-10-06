@@ -38,9 +38,7 @@ if SERVER then
     function ENT:Bump(ent)
         local v = self.Dir * self.Pousse
         v.z = self.Soulevee
-        -- un joueur au sol ne décolle pas toujours : on le décolle d'abord
-        if ent:IsPlayer() then ent:SetGroundEntity(NULL) end
-        ent:SetVelocity(v)
+        -- aucune projection de la cible (pas de transfert de force)
     end
 
     function ENT:Think()

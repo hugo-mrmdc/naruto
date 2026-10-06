@@ -54,8 +54,7 @@ local function Expulser(ply)
             dmg:SetDamagePosition(ent:WorldSpaceCenter())
             ent:TakeDamageInfo(dmg)
 
-            if ent:IsPlayer() then ent:SetGroundEntity(NULL) end
-            ent:SetVelocity(dir * pousse + Vector(0, 0, souleve))
+            -- aucune projection de la cible (pas de transfert de force)
         end
     end
 

@@ -233,11 +233,7 @@ local function Frapper(ply)
         ent:TakeDamageInfo(dmg)
 
         local vel = dir * RECUL + Vector(0, 0, SOULEVE)
-        if ent.loco then
-            ent.loco:SetVelocity(ent.loco:GetVelocity() + vel)   -- NextBot
-        else
-            ent:SetVelocity(vel)
-        end
+        -- aucune projection de la cible (pas de transfert de force)
     end
 
     ply:EmitSound("naruto_sound/jutsu/doton/earth12.wav", 85, 80)

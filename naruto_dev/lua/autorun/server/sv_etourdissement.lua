@@ -51,6 +51,9 @@ end
 function NA_Etourdir(ent, duree, anim, uneFois, souple)
     if not IsValid(ent) or duree <= 0 then return end
     if anim then
+        if ent:GetNW2String("NA_EtourdiAnim", "") ~= anim then   -- anim différente : la dernière demandée est prioritaire, le client la relance
+            ent:SetNW2Int("NA_EtourdiAnimId", ent:GetNW2Int("NA_EtourdiAnimId", 0) + 1)
+        end
         ent:SetNW2String("NA_EtourdiAnim", anim)
         ent:SetNW2Bool("NA_EtourdiUneFois", uneFois and true or false)
     elseif not NA_EstEtourdi(ent) then

@@ -73,11 +73,7 @@ local function Impulsion(ply, rayon, degats, recul, souleve)
         sortie.z = 0
         if sortie:LengthSqr() < 1 then sortie = VectorRand() sortie.z = 0 end
         local vel = sortie:GetNormalized() * recul + Vector(0, 0, souleve)
-        if ent.loco then
-            ent.loco:SetVelocity(ent.loco:GetVelocity() + vel)   -- NextBot
-        else
-            ent:SetVelocity(vel)
-        end
+        -- aucune projection de la cible (pas de transfert de force)
 
         ent:EmitSound(SON_IMPACT, 75, math.random(95, 110), 0.6)
     end

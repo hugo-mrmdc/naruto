@@ -81,7 +81,7 @@ if SERVER then
             dmg:SetDamagePosition(ent:WorldSpaceCenter())
             ent:TakeDamageInfo(dmg)
 
-            ent:SetVelocity(Vector(0, 0, self.Projection) + self.Direction * 150)
+            -- aucune projection de la cible (pas de transfert de force)
             ent:EmitSound("naruto_sound/jutsu/jishaku/jishaku3.wav", 75, math.random(90, 110), 0.8)
         end
 

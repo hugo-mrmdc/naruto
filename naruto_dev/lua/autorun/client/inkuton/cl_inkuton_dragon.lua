@@ -132,6 +132,29 @@ end)
 local MODELE_DRAGON = "models/inkuton/dragoninkuton.mdl"
 
 local function DessinerDragon(self)
+    -- Le prop est interpolé (~0.1 s de retard), pas le joueur : on dessine le dragon à partir de la position du
+    -- cavalier, avec l'angle envoyé par le serveur (lissé), pour qu'ils restent collés même en tournant.
+    local rider = self:GetNWEntity("InkutonRider")
+    if IsValid(rider) then
+        -- même rotation lissée que le serveur, calculée à CHAQUE image à partir du regard du cavalier (fluide)
+        if not self.NA_Yaw then self.NA_Yaw, self.NA_Pitch = rider:EyeAngles().y, 0 end
+        if self.NA_Frame ~= FrameNumber() then   -- DrawModel peut être appelé plusieurs fois par image
+            self.NA_Frame = FrameNumber()
+            local dt  = math.min(FrameTime(), 0.05)
+            local eye = rider:EyeAngles()
+            self.NA_Yaw   = math.ApproachAngle(self.NA_Yaw, eye.y, 500 * dt)
+            self.NA_Pitch = math.ApproachAngle(self.NA_Pitch, math.Clamp(eye.p, -60, 60), 350 * dt)
+        end
+        local off = self:GetNWVector("InkutonOff")
+        local ang = Angle(self.NA_Pitch, self.NA_Yaw, 0)
+        self:SetRenderAngles(ang)
+        self:SetRenderOrigin(rider:GetPos() - ang:Forward() * off.x - ang:Up() * off.z)
+    elseif self.NA_Yaw then
+        self.NA_Yaw, self.NA_Pitch = nil, nil
+        self:SetRenderAngles(nil)
+        self:SetRenderOrigin(nil)
+    end
+
     render.SuppressEngineLighting(true)
     render.ResetModelLighting(0.6, 0.6, 0.6)
     render.SetModelLighting(BOX_TOP, 1, 1, 1)
@@ -139,7 +162,7 @@ local function DessinerDragon(self)
     render.SuppressEngineLighting(false)
 end
 
-timer.Create("InkutonDragon_Eclairage", 0.5, 0, function()
+timer.Create("InkutonDragon_Eclairage", 0.1, 0, function()
     for _, ent in ipairs(ents.FindByClass("prop_dynamic")) do
         if ent.RenderOverride ~= DessinerDragon and string.lower(ent:GetModel() or "") == MODELE_DRAGON then
             ent.RenderOverride = DessinerDragon

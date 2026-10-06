@@ -131,7 +131,7 @@ if SERVER then
         elseif IsValid(hit) then
             -- objet du décor : on lui donne juste un coup
             local phys = hit:GetPhysicsObject()
-            if IsValid(phys) then phys:ApplyForceOffset(self.Direction * 2000, tr.HitPos) end
+            -- aucune projection de la cible (pas de transfert de force)
         else
             self:EmitSound("geams/solve_jutsu/meiton/solve_meiton_give_chakra.wav", 70, 120)
         end

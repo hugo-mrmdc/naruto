@@ -270,6 +270,7 @@ local function StopRide(ply)
         ply.NA_DashsEnLair = 0
 
         ply:SetNWBool("MokutonRide", false)
+        ply:SetNWBool("MokutonFige", false)
     end
 
     state[ply] = nil
@@ -337,7 +338,13 @@ local function SpawnRide(ply)
     ply:SetSolid(SOLID_BBOX)
     ply:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
 
-    ply:SetMoveType(MOVETYPE_NONE)
+    ply:SetMoveType(MOVETYPE_FLY)   -- vol géré par mokuton/mokuton_fly.lua (SetupMove), collisions du moteur
+    ply:SetGravity(0)
+    ply:SetNWFloat("MokutonVit", FLY_SPEED)
+
+    -- Le client redessine le dragon à la position du cavalier (mokuton_dragon_cl.lua) : le prop est interpolé, pas le joueur
+    dragon:SetNWEntity("MokutonRider", ply)
+    dragon:SetNWVector("MokutonOff", Vector(PLAYER_OFFSET_FWD, 0, PLAYER_OFFSET_UP))
     ply:SetNWBool("MokutonRide", true)
 end
 
@@ -384,6 +391,7 @@ local function Lancer(ply, st)
     dragon:SetAngles(ang)
 
     projectiles[dragon] = { owner = ply, dir = ang:Forward(), debut = CurTime(), fin = CurTime() + DASH_DUREE, touches = {} }
+    dragon:SetNWEntity("MokutonRider", NULL)   -- le client le dessine de nouveau à sa vraie position
     st.dragon = nil   -- il n'appartient plus au cavalier : StopRide ne le supprime pas
 
     StopRide(ply)     -- le joueur descend (position libre, pas de dégâts de chute)
@@ -398,6 +406,7 @@ end
 local function Charge(ply, st)
     if st.chargePrevue or not IsValid(st.dragon) then return end
     st.chargePrevue = true
+    ply:SetNWBool("MokutonFige", true)   -- le cavalier s'arrête pendant l'animation de lancement
 
     NA_AnimJutsu(ply, ANIM_DASH)   -- animation + pas de coups pendant (_na_mudra.lua)
     timer.Simple(DASH_DELAI, function()
@@ -481,50 +490,12 @@ hook.Add("Think", "MokutonDragon_Move", function()
         st.yaw   = math.ApproachAngle(st.yaw, targetYaw, TURN_RATE * dt)
         st.pitch = math.ApproachAngle(st.pitch, targetPitch, PITCH_RATE * dt)
 
-        -- Velocity
+        -- Le VOL lui-même (vitesse, montée, murs) est fait par le moteur de mouvement du joueur, prédit côté client
+        -- (mokuton/mokuton_fly.lua) : c'est ce qui le rend fluide. Ici on ne fait que poser le dragon sous le
+        -- cavalier pour les captures, la gueule et le lancer. Son affichage est calculé par le client.
         local ang = Angle(st.pitch, st.yaw, 0)
-        local fwd, up = ang:Forward(), ang:Up()   -- calculés une fois (avant : 3 fois Forward et 2 fois Up)
-        local vel = fwd * FLY_SPEED
-
-        if ply:KeyDown(IN_JUMP) then
-            vel.z = vel.z + (ply:OnGround() and TAKEOFF_BOOST or FLY_UP_SPEED)
-        end
-
-        if ply:KeyDown(IN_DUCK) then
-            vel.z = vel.z - FLY_UP_SPEED
-        end
-
-        -- Position voulue du joueur sur le dos
-        local desiredPos =
-            st.dragon:GetPos()
-            + vel * dt
-            + fwd * PLAYER_OFFSET_FWD
-            + up  * PLAYER_OFFSET_UP
-
-        -- ✅ Anti-travers-murs : trace hull (hitbox joueur)
-        local tr = util.TraceHull({
-            start  = ply:GetPos(),
-            endpos = desiredPos,
-            mins   = ply:OBBMins(),
-            maxs   = ply:OBBMaxs(),
-            filter = st.filtre,
-            mask   = MASK_PLAYERSOLID
-        })
-
-        local finalPos = desiredPos
-        if tr.Hit then
-            finalPos = tr.HitPos + tr.HitNormal * 2
-        end
-
-        -- ✅ Dragon suit la position RÉELLE du joueur (weld behavior)
-        local dragonPos =
-            finalPos
-            - fwd * PLAYER_OFFSET_FWD
-            - up  * PLAYER_OFFSET_UP
-
-        st.dragon:SetPos(dragonPos)
+        st.dragon:SetPos(ply:GetPos() - ang:Forward() * PLAYER_OFFSET_FWD - ang:Up() * PLAYER_OFFSET_UP)
         st.dragon:SetAngles(ang)
-        ply:SetPos(finalPos)
 
         -- ✅ Maintien de la cible dans la bouche (si grab)
         if IsValid(st.grabbed) then
@@ -611,11 +582,7 @@ hook.Add("Think", "MokutonDragon_Projectiles", function()
             ent:TakeDamageInfo(dmg)
 
             local vel = p.dir * DASH_RECUL + Vector(0, 0, DASH_SOULEVE)
-            if ent.loco then
-                ent.loco:SetVelocity(ent.loco:GetVelocity() + vel)   -- NextBot
-            else
-                ent:SetVelocity(vel)
-            end
+            -- aucune projection de la cible (pas de transfert de force)
             ent:EmitSound("naruto_sound/jutsu/senju/senju2.wav", 85, math.random(85, 100))
         end
     end

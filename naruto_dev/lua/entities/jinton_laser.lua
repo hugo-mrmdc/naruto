@@ -42,26 +42,30 @@ ENT.Intervalle  = 0.25
 -- Début et fin du laser pour un joueur (même calcul des deux côtés)
 --   osFrais = true : le squelette du joueur vient d'être calculé (client, juste
 --   après son affichage) -> position exacte de la main
+-- Client, joueur local : direction du regard EXACTE de cette image (angles de la dernière commande), pas celle que
+-- renvoie le jeu pour le joueur, qui a un temps de retard : le laser était en retard sur le viseur.
+local vueLocale
+
 local function Extremites(ply, osFrais)
     local portee = GetGlobal2Float("NA_JintonLaserPortee", 1500)
     local oeil = ply:EyePos()
-    local dir = ply:GetAimVector()
+    local dir = (CLIENT and vueLocale and ply == LocalPlayer()) and vueLocale:Forward() or ply:GetAimVector()
 
     -- point visé : là où le regard touche un mur (le laser traverse les personnes)
     local tr = util.TraceLine({ start = oeil, endpos = oeil + dir * portee, mask = MASK_SOLID_BRUSHONLY })
     local fin = tr.HitPos
 
-    -- départ : la main choisie (OS_MAIN), sinon un peu devant les yeux
-    local depart = oeil + dir * 20
-    local os = ply:LookupBone(OS_MAIN)
+    -- départ (secours, et serveur) : un point fixe par rapport au regard : devant, un peu à gauche, sous les yeux.
+    -- Le SERVEUR ne connaît pas la vraie main (il ne joue pas l'animation du laser, que seul le client force) : il part
+    -- de ce point, sur la même ligne vers le point visé ; seul le client dessine depuis la main.
+    local angVue = dir:Angle()
+    local depart = oeil + dir * 30 - angVue:Right() * 14 - angVue:Up() * 16
+
+    -- Client : la vraie main (OS_MAIN), position exacte du squelette de cette image (comme à l'origine).
+    local os = osFrais and ply:LookupBone(OS_MAIN)
     if os then
-        local p
-        if osFrais then
-            local m = ply:GetBoneMatrix(os)
-            p = m and m:GetTranslation()
-        else
-            p = ply:GetBonePosition(os)
-        end
+        local m = ply:GetBoneMatrix(os)
+        local p = m and m:GetTranslation()
         if p and p ~= ply:GetPos() then depart = p end
     end
     return depart, fin, tr.Hit
@@ -132,6 +136,10 @@ if SERVER then
 end
 
 if CLIENT then
+    hook.Add("CreateMove", "JintonLaser_Vue", function(cmd)
+        vueLocale = cmd:GetViewAngles()
+    end)
+
     function ENT:Initialize()
         self:SetRenderBounds(Vector(-4000, -4000, -4000), Vector(4000, 4000, 4000))
     end

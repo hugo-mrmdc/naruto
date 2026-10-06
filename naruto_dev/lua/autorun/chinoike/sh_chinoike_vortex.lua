@@ -54,5 +54,5 @@ hook.Add("SetupMove", "ChinoikeVortex_Aspiration", function(ply, mv)
         end
     end
 
-    if vel then mv:SetVelocity(vel) end
+    -- aucune aspiration (pas de transfert de force)
 end)

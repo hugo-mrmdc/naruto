@@ -56,7 +56,7 @@ if SERVER then
         local vel = ent:GetVelocity()
         local boost = (voulu - Vector(vel.x, vel.y, 0)) * math.min(dt * 6, 1)
         boost.z = ent:IsOnGround() and 40 or 0   -- décolle du sol pour ne pas frotter
-        ent:SetVelocity(boost)
+        -- aucune projection de la cible (pas de transfert de force)
     end
 
     function ENT:Think()

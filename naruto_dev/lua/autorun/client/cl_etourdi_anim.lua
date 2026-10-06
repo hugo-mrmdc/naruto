@@ -10,8 +10,23 @@
 local ANIM = "act_stunning"
 --========================================================
 
+-- La DERNIÈRE animation demandée est prioritaire :
+--  * une nouvelle animation de stun (NW2Int "NA_EtourdiAnimId" change) relance l'anim, même si c'est la même
+--  * une animation de jutsu jouée sur un joueur étourdi (Jutsu_Anim_Play, jutsu_anim_cl.lua) prend la main
+--    pendant sa durée (ply.NA_JutsuPrioFin), sauf si un stun a redemandé la sienne après
+local function Prioritaire(ply)
+    local id = ply:GetNW2Int("NA_EtourdiAnimId", 0)
+    if ply.NA_EtourdiAnimIdVu ~= id then
+        ply.NA_EtourdiAnimIdVu = id
+        ply.NA_EtourdiReqT = CurTime()
+        ply.NA_EtourdiDebut = nil   -- repart de zéro
+    end
+    return (ply.NA_JutsuPrioFin or 0) > CurTime() and (ply.NA_JutsuPrioT or 0) >= (ply.NA_EtourdiReqT or 0)
+end
+
 local function SeqEtourdi(ply)
     if not IsValid(ply) or not ply:Alive() or not ply:GetNW2Bool("NA_Etourdi", false) then return end
+    if Prioritaire(ply) then return end   -- une animation de jutsu plus récente passe devant
     -- une technique peut imposer sa propre animation (NW2String "NA_EtourdiAnim", ex : prison aqueuse)
     local perso = ply:GetNW2String("NA_EtourdiAnim", "")
     local seq = ply:LookupSequence(perso ~= "" and perso or ANIM)

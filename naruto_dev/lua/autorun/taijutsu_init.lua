@@ -11,6 +11,7 @@ if SERVER then
     include("autorun/server/taijutsu/sv_taijutsu_pied.lua")
     AddCSLuaFile("autorun/client/taijutsu/cl_taijutsu_descendant.lua")
     include("autorun/server/taijutsu/sv_taijutsu_descendant.lua")
+    -- sh_senju_pied.lua (hook SetupMove du plongeon, partagé avec Senju) est un autorun : il se charge seul
     AddCSLuaFile("autorun/client/taijutsu/cl_taijutsu_combo.lua")
     include("autorun/server/taijutsu/sv_taijutsu_combo.lua")
     AddCSLuaFile("autorun/client/taijutsu/cl_taijutsu_releve.lua")

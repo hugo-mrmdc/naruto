@@ -74,7 +74,7 @@ if SERVER then
         local boost = manque * math.min(dt * 6, 1)
         boost.z = ent:IsOnGround() and 40 or 0   -- décolle du sol pour ne pas frotter
 
-        ent:SetVelocity(boost)
+        -- aucune projection de la cible (pas de transfert de force)
     end
 
     function ENT:Blesser()

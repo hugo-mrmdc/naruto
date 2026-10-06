@@ -112,7 +112,7 @@ if SERVER then
                 dmg:SetDamagePosition(ent:WorldSpaceCenter())
                 ent:TakeDamageInfo(dmg)
 
-                if ent:IsPlayer() then ent:SetVelocity(Vector(0, 0, 180)) end
+                -- aucune projection de la cible (pas de transfert de force)
             end
 
             if GetConVar("developer"):GetInt() > 0 then

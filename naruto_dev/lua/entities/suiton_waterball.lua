@@ -61,7 +61,7 @@ if SERVER then
 
             -- projection : dans le sens de la boule, un peu vers le haut
             if self.Recul > 0 then
-                hit:SetVelocity(self.Dir * self.Recul + Vector(0, 0, self.Recul * 0.35))
+                -- aucune projection de la cible (pas de transfert de force)
             end
         end
 

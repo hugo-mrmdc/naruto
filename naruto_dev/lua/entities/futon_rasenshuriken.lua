@@ -90,12 +90,7 @@ if SERVER then
             dir.z = 0
             if dir:LengthSqr() < 1 then dir = self.Dir end
             dir:Normalize()
-            if ent:IsPlayer() then
-                ent:SetVelocity(dir * self.Poussee * coef + Vector(0, 0, self.Souleve * coef))
-            else
-                local phys = ent:GetPhysicsObject()
-                if IsValid(phys) then phys:SetVelocity(dir * self.Poussee * coef + Vector(0, 0, self.Souleve * coef)) end
-            end
+            -- aucune projection de la cible (pas de transfert de force)
         end
 
         self:Remove()

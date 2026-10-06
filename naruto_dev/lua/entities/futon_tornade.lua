@@ -85,11 +85,7 @@ if SERVER then
                 local sortie = d
                 if sortie:LengthSqr() < 1 then sortie = self.Dir end
                 sortie = sortie:GetNormalized() * self.Recul + Vector(0, 0, self.Souleve)
-                if ent.loco then
-                    ent.loco:SetVelocity(ent.loco:GetVelocity() + sortie)   -- NextBot
-                else
-                    ent:SetVelocity(sortie)
-                end
+                -- aucune projection de la cible (pas de transfert de force)
             end
         end
     end

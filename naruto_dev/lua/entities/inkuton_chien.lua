@@ -69,7 +69,7 @@ if SERVER then
             dmg:SetInflictor(self)
             dmg:SetDamageType(DMG_SLASH)
             dmg:SetDamagePosition(tr.HitPos)
-            dmg:SetDamageForce(self.Direction * 3000)
+            dmg:SetDamageForce(vector_origin)   -- pas de projection : la cible ne bouge pas
             hit:TakeDamageInfo(dmg)
             ParticleEffectAttach(self.FX_CIBLE, PATTACH_ABSORIGIN_FOLLOW, hit, 0)   -- effet sur la cible touchée
         end

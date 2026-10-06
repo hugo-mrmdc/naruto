@@ -92,6 +92,24 @@ if SERVER then
         end
     end
 
+    -- Vitesse actuelle d'une cible (NextBot : celle de son déplacement)
+    local function Vitesse(ent)
+        if ent.loco then return ent.loco:GetVelocity() end
+        return ent:GetVelocity()
+    end
+
+    -- Retire la vitesse AJOUTÉE depuis v0 si elle ressemble à une poussée (plus que le mouvement normal d'un tick)
+    local function AnnulerPoussee(ent, v0)
+        if not IsValid(ent) then return end
+        local delta = Vitesse(ent) - v0
+        if delta:Length() < 60 then return end
+        if ent.loco then
+            ent.loco:SetVelocity(ent.loco:GetVelocity() - delta)
+        else
+            ent:SetVelocity(-delta)   -- pour un joueur, SetVelocity AJOUTE
+        end
+    end
+
     function ENT:Initialize()
         self:SetModel(self.Model)
         self:SetMoveType(MOVETYPE_NONE)
@@ -117,8 +135,17 @@ if SERVER then
                 d:SetDamage(self.Degats)
                 d:SetAttacker(ply)
                 d:SetInflictor(self)
-                d:SetDamageType(DMG_SLASH)
+                -- sans force explicite le moteur en déduit une depuis la position du moine et décale la cible :
+                -- force nulle = elle ne bouge pas
+                d:SetDamageType(bit.bor(DMG_SLASH, DMG_PREVENT_PHYSICS_FORCE))
+                d:SetDamageForce(vector_origin)
+                local v0 = Vitesse(c)
                 c:TakeDamageInfo(d)
+                -- le coup ne doit faire QUE des dégâts : toute poussée ajoutée par autre chose (le moteur, un autre
+                -- script sur les dégâts) est annulée tout de suite et encore juste après
+                AnnulerPoussee(c, v0)
+                timer.Simple(0, function() AnnulerPoussee(c, v0) end)
+                timer.Simple(0.1, function() AnnulerPoussee(c, v0) end)
                 local p = c:GetPos()   -- l'effet se joue au sol, sous l'ennemi
                 self:SetNW2Vector("ImpactPos", util.TraceLine({ start = p + Vector(0, 0, 20), endpos = p - Vector(0, 0, 500), mask = MASK_SOLID_BRUSHONLY }).HitPos)
                 self:SetNW2Int("Impact", self:GetNW2Int("Impact", 0) + 1)

@@ -108,7 +108,7 @@ local function Atterrir(ply)
         dir.z = 0
         if dir:LengthSqr() < 1 then dir = ply:GetForward() end
         local v = dir:GetNormalized() * proj + Vector(0, 0, haut)
-        if NA_Propulser then NA_Propulser(ent, v) else ent:SetVelocity(v) end
+        -- aucune projection de la cible (pas de transfert de force)
 
         -- étourdi un instant après la projection : il reste suspendu STUN secondes (sv_etourdissement.lua)
         if stun > 0 and NA_Etourdir then

@@ -74,11 +74,7 @@ local function Frapper(ply)
 
         if dir:LengthSqr() < 1 then dir = avant end
         local vel = dir:GetNormalized() * Niv(ply, "recul", RECUL) + Vector(0, 0, Niv(ply, "souleve", SOULEVE))
-        if ent.loco then
-            ent.loco:SetVelocity(ent.loco:GetVelocity() + vel)   -- NextBot
-        else
-            ent:SetVelocity(vel)
-        end
+        -- aucune projection de la cible (pas de transfert de force)
 
         if NA_Etourdir then NA_Etourdir(ent, Niv(ply, "etourdi", ETOURDI), nil, nil, true) end   -- stun souple : un taijutsu peut encore l'emporter   -- sv_etourdissement.lua
         net.Start("taijutsu_pied_fx")

@@ -113,11 +113,7 @@ local function Frapper(ply)
         direction.z = 0
         if direction:LengthSqr() < 1 then direction = ply:GetAimVector() end
         local vel = direction:GetNormalized() * recul + Vector(0, 0, souleve)
-        if ent.loco then
-            ent.loco:SetVelocity(ent.loco:GetVelocity() + vel)   -- NextBot
-        else
-            ent:SetVelocity(vel)
-        end
+        -- aucune projection de la cible (pas de transfert de force)
 
         ent:EmitSound(SON_IMPACT, 75, math.random(95, 110), 0.8)
     end

@@ -435,15 +435,15 @@ local TECHNIQUES = {
       dmg = "Vol pendant 20 s" },
 
     -- ===== TAIJUTSU =====
-    { cat = "Taijutsu", name = "Coup de pied tournoyant", key = "", id = "taijutsu_pied", rang = "C", icone = "ui/icon/taijutsu_pied_ardent.png", court = "Pied", cooldown = 8,
+    { cat = "Taijutsu", name = "Coup de pied tournoyant", key = "", id = "taijutsu_pied", rang = "C", icone = "ui/icon/taijutsu_bourasque_exaltante.png", court = "Pied", cooldown = 8,
       desc = "Un coup de pied circulaire au corps à corps : blesse, repousse et étourdit 1,5 seconde les ennemis devant toi. Coûte 10 de chakra.",
       dmg = "28 dégâts + projection + étourdissement" },
 
-    { cat = "Taijutsu", name = "Coup de pied descendant", key = "", id = "taijutsu_descendant", rang = "C", icone = "ui/icon/taijutsu_fureur_dragon.png", court = "Descendant", cooldown = 6,
-      desc = "Un coup de pied descendant au corps à corps : inflige des dégâts aux ennemis devant toi. Coûte 8 de chakra.",
+    { cat = "Taijutsu", name = "Coup de pied plongeant", key = "", id = "taijutsu_descendant", rang = "C", icone = "ui/icon/taijutsu_pied_ardent.png", court = "Plongeant", cooldown = 10,
+      desc = "Tu bondis puis fonces vers le sol dans la direction où tu regardes : à l'atterrissage, l'impact blesse les ennemis autour de toi sans les repousser. Coûte 15 de chakra.",
       dmg = "35 dégâts" },
 
-    { cat = "Taijutsu", name = "Enchaînement aérien", key = "", id = "taijutsu_combo", rang = "B", icone = "ui/icon/taijutsu_tornade_jade.png", court = "Aérien", cooldown = 18,
+    { cat = "Taijutsu", name = "Enchaînement aérien", key = "", id = "taijutsu_combo", rang = "B", icone = "ui/icon/taijutsu_ombre_feuille_morte.png", court = "Aérien", cooldown = 18,
       desc = "Un coup de pied relevé envoie en l'air l'ennemi devant toi, puis tu le rejoins et l'écrases au sol d'un coup de talon plongeant. Coûte 30 de chakra.",
       dmg = "15 + 40 dégâts + projection en l'air puis au sol" },
 

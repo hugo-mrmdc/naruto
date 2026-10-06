@@ -74,11 +74,7 @@ if SERVER then
 
             -- bump : projeté dans le sens du tir et vers le haut
             local vel = self.Dir * self.Recul + Vector(0, 0, self.Souleve)
-            if hit.loco then
-                hit.loco:SetVelocity(hit.loco:GetVelocity() + vel)   -- NextBot
-            else
-                hit:SetVelocity(vel)
-            end
+            -- aucune projection de la cible (pas de transfert de force)
         end
 
         -- le bump se joue AU SOL, au milieu de la personne touchée : on descend jusqu'au sol (300 unités au plus)

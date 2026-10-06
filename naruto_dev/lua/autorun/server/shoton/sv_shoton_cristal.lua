@@ -50,7 +50,7 @@ end
 
 local function Emprisonner(ply, cible)
     local duree = Niv(ply, "duree", DUREE)
-    if NA_Etourdir then NA_Etourdir(cible, duree) end
+    if NA_Etourdir then NA_Etourdir(cible, duree, nil, nil, false) end   -- stun LOURD (ferme) : rien ne déplace la cible dans le cristal
     local ent = ents.Create("shoton_cristal")
     if not IsValid(ent) then return end
     ent:SetOwner(ply)

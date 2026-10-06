@@ -208,7 +208,10 @@ if SERVER then
         dmg:SetDamage(self.Degats)
         dmg:SetAttacker(IsValid(lanceur) and lanceur or self)
         dmg:SetInflictor(self)
-        dmg:SetDamageType(DMG_CLUB)
+        -- Sans force explicite, le moteur en déduit une depuis la position de la roue (au sol, à côté de la cible) et
+        -- la pousse sur le côté : force nulle, seul le soulèvement ci-dessous déplace la cible.
+        dmg:SetDamageType(bit.bor(DMG_CLUB, DMG_PREVENT_PHYSICS_FORCE))
+        dmg:SetDamageForce(vector_origin)
         dmg:SetDamagePosition(ou)
         ent:TakeDamageInfo(dmg)
 
@@ -220,8 +223,18 @@ if SERVER then
 
         ImpactSol(ent:GetPos())   -- au pied de la cible touchée
 
-        -- la roue envoie la cible devant elle
-        ent:SetVelocity(self.Direction * self.Poussee + Vector(0, 0, self.Soulevement))
+        -- la roue soulève la cible
+        local vel = Vector(0, 0, self.Soulevement)   -- seulement vers le haut, aucune poussée horizontale
+        if ent.loco then
+            ent.loco:SetVelocity(ent.loco:GetVelocity() + vel)   -- NextBot
+        elseif ent:IsPlayer() then
+            -- SetVelocity AJOUTE à la vitesse actuelle : on retire d'abord la vitesse en cours (aucun décalage sur
+            -- le côté), et on décolle du sol (sinon une petite poussée est mangée par le sol)
+            ent:SetGroundEntity(NULL)
+            ent:SetVelocity(vel - ent:GetVelocity())
+        else
+            ent:SetVelocity(vel)
+        end
         ent:EmitSound("geams/solve_jutsu/meiton/solve_meiton_give_chakra.wav", 70, 100)
     end
 
@@ -313,12 +326,14 @@ if SERVER then
 
         -- 1) avance ; un mur arrête l'aller (la roue revient) ou le retour (elle disparaît)
         local nouvelle = pos + self.Direction * self.Vitesse * dt
-        local demi = rayon * 0.4
-        -- La partie enterrée ne doit pas bloquer la trace contre le terrain.
-        local basTrace = math.max(-rayon * 0.3, 1 - rayon * self.HauteurSolFraction)
+        -- Détection de mur à HAUTEUR DU MILIEU de la roue (la roue est collée au sol, centre au niveau du sol), avec une
+        -- petite boîte et peu d'avance : une colline qui monte devant elle reste sous cette hauteur, la roue la grimpe
+        -- (le calcul de hauteur plus bas la recolle au sol). Seul un vrai mur, ou une pente quasi verticale, l'arrête.
+        -- Avant : une grosse boîte posée sur le sol heurtait n'importe quelle colline, la roue faisait demi-tour ou disparaissait.
+        local haut = Vector(0, 0, rayon * 0.5)
         local tr = util.TraceHull({
-            start = pos, endpos = nouvelle,
-            mins = Vector(-demi, -demi, basTrace), maxs = Vector(demi, demi, math.max(basTrace + 1, rayon * 0.6)),
+            start = pos + haut, endpos = nouvelle + haut + self.Direction * 10,
+            mins = Vector(-6, -6, -6), maxs = Vector(6, 6, 6),
             mask = MASK_SOLID,
             filter = Traversable,
         })

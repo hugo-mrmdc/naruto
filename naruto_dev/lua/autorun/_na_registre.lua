@@ -111,7 +111,7 @@ NA_DELAI_APRES = NA_DELAI_APRES or {
     katon_grosse_boule = 0.4,          -- Grosse boule de feu (rang B)
 
     -- Taijutsu
-    taijutsu_descendant = 0.4,         -- Coup de pied descendant (rang C)
+    taijutsu_descendant = 0.4,         -- Coup de pied plongeant (rang C)
     taijutsu_combo = 0.4,              -- Enchaînement aérien (rang B)
     taijutsu_pied = 0.4,               -- Coup de pied tournoyant (rang C)
     taijutsu_releve = 0.4,             -- Coup de pied relevé (rang B)

@@ -408,7 +408,7 @@ function SWEP:CompterCoup(owner, ent)
                 dir.z = 0
                 if dir:LengthSqr() < 1 then dir = owner:GetForward() end
                 dir:Normalize()
-                cible:SetVelocity(dir * (cfg.recul or 0) * attenuation + Vector(0, 0, cfg.reculHaut or 0))
+                -- aucune projection de la cible (pas de transfert de force)
             end
         end
 
@@ -483,7 +483,7 @@ function SWEP:Think()
                 local dir = owner:GetAimVector()
                 dir.z = 0
                 dir:Normalize()
-                ent:SetVelocity(dir * (a.recul or 0) + Vector(0, 0, a.reculHaut or 0))
+                -- aucune projection de la cible (pas de transfert de force)
             end
 
             if Debug() then
@@ -579,7 +579,7 @@ function SWEP:LancerSpecial(owner, s)
 
                 if ent:IsPlayer() and (s.recul or 0) > 0 then
                     local dir = (ent:GetPos() - pos):GetNormalized()
-                    ent:SetVelocity(dir * s.recul * attenuation + Vector(0, 0, s.reculHaut or 0))
+                    -- aucune projection de la cible (pas de transfert de force)
                 end
             end
 

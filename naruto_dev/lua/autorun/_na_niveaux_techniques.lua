@@ -27,7 +27,7 @@
 --
 -- "hitbox" = DEMI-taille de la zone qui touche (plus grand = plus facile à toucher).
 -- Branchée dans les techniques qui ont une hitbox :
---   katon_boule (18), katon_saut (18), suiton_requin (18), mokuton_arche (40, visée),
+--   katon_boule (18), katon_saut (18), suiton_requin (18), _arche (40, visée),
 --   fuma_tp (16, joueurs/PNJ seulement), fuma_jugement (18, le fil),
 --   jinton_cube (20, visée), jinton_laser (45), salamandre_poison (6)
 --   (entre parenthèses : valeur actuelle dans le fichier serveur)
@@ -556,9 +556,9 @@ NA_NIV_TECH.doton_pics = {
 }
 
 --========================================================
--- MOKUTON
+-- 
 --========================================================
--- Arche (server/mokuton/mokuton_arche_sv.lua)
+-- Arche (server//_arche_sv.lua)
 NA_NIV_TECH.mokuton_arche = {
     [1] = {
         degats = 20, recharge = 2, hitbox = 40,
@@ -594,7 +594,7 @@ NA_NIV_TECH.mokuton_protection = {
 
 -- Mains de bois (server/mokuton/mokuton_wood_hand_sv.lua)
 NA_NIV_TECH.mokuton_wood_hand = {
-    [1] = { degats = 30, chakra = 30, recharge = 12, rayon = 200, souleve = 350, portee = 900, echelle = 1, duree_mudra = 0.5 },
+    [1] = { degats = 30, chakra = 30, recharge = 12, rayon = 200, souleve = 50, portee = 900, echelle = 1, duree_mudra = 0.5 },
     [2] = { degats = 35, recharge = 11 },
     [3] = { degats = 40, recharge = 10 },
     [4] = { degats = 46, rayon = 220, portee = 1000 },
@@ -792,7 +792,7 @@ NA_NIV_TECH.kami_roue = {
     [1] = {
         degats = 30, chakra = 30, recharge = 10,
         vitesse = 1500, duree_vie = 1, echelle = 0.6, ecart = 28, devant = 50,
-        intervalle = 0.6, poussee = 350, soulevement = 200,
+        intervalle = 0.6, poussee = 0, soulevement = 300,
         duree_mudra = 0.0, delai_roues = 0.8,
     },
     [2] = { degats = 33 },
@@ -972,46 +972,46 @@ NA_NIV_TECH.hyuga_paume = {
 --   etourdi = secondes d'étourdissement de la cible
 NA_NIV_TECH.taijutsu_pied = {
     [1] = {
-        degats = 28, chakra = 10, recharge = 8, portee = 130, recul = 350, souleve = 60,
+        degats = 60, chakra = 10, recharge = 8, portee = 130, recul = 350, souleve = 60,
         etourdi = 1.5, delai_impact = 0.4,
     },
-    [2] = { degats = 31 },
-    [3] = { degats = 34, recharge = 7, etourdi = 1.8 },
-    [4] = { degats = 38 },
-    [5] = { degats = 42, chakra = 8, recharge = 6, etourdi = 2.2 },
+    [2] = { degats = 63 },
+    [3] = { degats = 70, recharge = 7, etourdi = 1.8 },
+    [4] = { degats = 75 },
+    [5] = { degats = 80, chakra = 8, recharge = 6, etourdi = 2.2 },
 }
 
--- Coup de pied descendant (server/taijutsu/sv_taijutsu_descendant.lua) : dégâts seulement
+-- Coup de pied plongeant (server/taijutsu/sv_taijutsu_descendant.lua) : saut, plongeon, impact au sol
 NA_NIV_TECH.taijutsu_descendant = {
-    [1] = { degats = 35, chakra = 8, recharge = 6, portee = 130, delai_impact = 0.4 },
-    [2] = { degats = 39 },
-    [3] = { degats = 43, recharge = 5.5 },
-    [4] = { degats = 48 },
-    [5] = { degats = 54, chakra = 6, recharge = 5 },
+    [1] = { degats = 63, chakra = 15, recharge = 10, rayon = 180, saut = 450, vitesse = 1300, delai_plongee = 0.35 },
+    [2] = { degats = 70 },
+    [3] = { degats = 75, recharge = 9, rayon = 200 },
+    [4] = { degats = 88 },
+    [5] = { degats = 95, chakra = 12, recharge = 8, rayon = 220 },
 }
 
 -- Enchaînement aérien (server/taijutsu/sv_taijutsu_combo.lua)
 --   degats = 1er coup, degats_final = coup de talon, lancer = hauteur de l'envol
 NA_NIV_TECH.taijutsu_combo = {
     [1] = {
-        degats = 15, degats_final = 40, chakra = 30, recharge = 18, portee = 150,
+        degats = 83, degats_final = 83, chakra = 30, recharge = 18, portee = 150,
         lancer = 450, delai_impact = 0.35, delai_sommet = 0.45, delai_final = 0.5,
     },
-    [2] = { degats = 17, degats_final = 45 },
-    [3] = { degats = 19, degats_final = 50, recharge = 16 },
-    [4] = { degats = 21, degats_final = 56 },
-    [5] = { degats = 24, degats_final = 64, chakra = 25, recharge = 14 },
+    [2] = { degats = 94, degats_final = 94 },
+    [3] = { degats = 103, degats_final = 103, recharge = 16 },
+    [4] = { degats = 110, degats_final = 110 },
+    [5] = { degats = 120, degats_final = 120, chakra = 25, recharge = 14 },
 }
 
 -- Coup de pied relevé (server/taijutsu/sv_taijutsu_releve.lua) : 2 coups dans l'animation
 --   degats = 1er coup (dégâts seulement), degats_envol = 2e coup (dégâts + la cible monte), lancer = vitesse verticale,
 --   delai_impact / delai_envol = secondes entre le lancement de l'animation et chaque coup
 NA_NIV_TECH.taijutsu_releve = {
-    [1] = { degats = 25, degats_envol = 25, chakra = 20, recharge = 14, portee = 140, lancer = 220, delai_impact = 0.3, delai_envol = 0.7 },
-    [2] = { degats = 28, degats_envol = 28 },
-    [3] = { degats = 31, degats_envol = 31, recharge = 12 },
-    [4] = { degats = 34, degats_envol = 34, lancer = 240 },
-    [5] = { degats = 38, degats_envol = 38, chakra = 16, recharge = 10 },
+    [1] = { degats = 100, degats_envol = 60, chakra = 20, recharge = 14, portee = 140, lancer = 220, delai_impact = 0.3, delai_envol = 0.7 },
+    [2] = { degats = 110, degats_envol = 65 },
+    [3] = { degats = 120, degats_envol = 70, recharge = 12 },
+    [4] = { degats = 130, degats_envol = 80, lancer = 240 },
+    [5] = { degats = 140, degats_envol = 100, chakra = 16, recharge = 10 },
 }
 
 -- 32 Points du Hakke (server/hyuga/sv_hyuga_32points.lua)
