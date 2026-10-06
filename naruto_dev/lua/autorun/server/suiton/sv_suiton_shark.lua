@@ -25,8 +25,8 @@ local MODELE        = "models/suiton/shark_solve_geams.mdl"
 
 -- requin principal
 local DEGATS        = 25    -- dégâts du requin principal quand il touche sa cible (la nuée en fait en plus : 1 par requin)
-local RECUL         = 600   -- bump : vitesse horizontale donnée à la cible, dans le sens du requin (comme le Wind Ball)
-local SOULEVE       = 250   -- bump : vitesse verticale
+local RECUL         = 150  -- bump : vitesse horizontale donnée à la cible, dans le sens du requin (comme le Wind Ball)
+local SOULEVE       = 120  -- bump : vitesse verticale
 local STUN          = 1     -- secondes d'étourdissement, en l'air
 local DELAI_STUN    = 0.3   -- le stun commence après ce délai : le temps que le bump la lance en l'air (le stun annule la vitesse)
 local MAIN_SPEED    = 15    -- unités par tick serveur

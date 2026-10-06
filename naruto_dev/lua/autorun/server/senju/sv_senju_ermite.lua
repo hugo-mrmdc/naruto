@@ -112,7 +112,7 @@ hook.Add("Think", "SenjuErmite_Tick", function()
         if not Actif(ply) then continue end
 
         local reste = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX) - Niv(ply, "chakra", CHAKRA_SEC) * dt
-        ply:SetNW2Float("NA_Chakra", math.Clamp(reste, 0, CHAKRA_MAX))
+        ply:SetNW2Float("NA_Chakra", math.Clamp(reste, 0, NA_ChakraMax(ply)))
 
         if reste <= 0 then
             Arreter(ply, "Chakra épuisé : l'Ermite naturel s'éteint")

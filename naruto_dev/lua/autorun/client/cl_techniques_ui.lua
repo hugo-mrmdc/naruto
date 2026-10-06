@@ -447,6 +447,10 @@ local TECHNIQUES = {
       desc = "Un coup de pied relevé envoie en l'air l'ennemi devant toi, puis tu le rejoins et l'écrases au sol d'un coup de talon plongeant. Coûte 30 de chakra.",
       dmg = "15 + 40 dégâts + projection en l'air puis au sol" },
 
+    { cat = "Taijutsu", name = "Coup de pied relevé", key = "", id = "taijutsu_releve", rang = "B", icone = "ui/icon/taijutsu_tornade_jade.png", court = "Relevé", cooldown = 14,
+      desc = "Deux coups de pied au corps à corps : le premier inflige des dégâts aux ennemis devant toi, le second les inflige aussi et les envoie en l'air. Coûte 20 de chakra.",
+      dmg = "25 + 25 dégâts + projection en l'air au 2e coup" },
+
     -- ===== ARMES =====
     --[[{ cat = "Armes", name = "Zabuza", key = "Clic gauche / droit",
       desc = "Kubikiribocho. Clic gauche pour trancher, clic droit pour la double explosion." },

@@ -43,10 +43,15 @@ if SERVER then
         -- lisent les animations d'étourdissement (cl_etourdi_anim.lua pour les
         -- vrais joueurs, na_faux_joueur.lua pour le mannequin d'entraînement).
         ent:SetNW2Bool("NA_Etourdi", true)
+        -- anim de stun de base : on efface celle qu'un autre stun (taijutsu...) aurait laissée
+        ent:SetNW2String("NA_EtourdiAnim", "")
+        ent:SetNW2Bool("NA_EtourdiUneFois", false)
 
         if ent:IsPlayer() then
             ent:Freeze(true)
             ent:SetVelocity(-ent:GetVelocity())
+            cube.PositionTenue = ent:GetPos()   -- fixé sur place (stun ferme), comme les PNJ
+            if ent:GetMoveType() == MOVETYPE_WALK then ent:SetMoveType(MOVETYPE_NONE) end   -- ni poussée ni gravité
         else
             cube.PositionTenue = ent:GetPos()
             if ent:IsNPC() then
@@ -59,6 +64,7 @@ if SERVER then
     local function Maintenir(ent, cube)
         if ent:IsPlayer() then
             ent:SetVelocity(-ent:GetVelocity())
+            if cube.PositionTenue then ent:SetPos(cube.PositionTenue) end
         elseif cube.PositionTenue then
             ent:SetPos(cube.PositionTenue)
             ent:SetVelocity(vector_origin)
@@ -76,6 +82,8 @@ if SERVER then
         if NA_EstEtourdi and NA_EstEtourdi(ent) then return end
 
         ent:SetNW2Bool("NA_Etourdi", false)
+        ent:SetNW2String("NA_EtourdiAnim", "")
+        ent:SetNW2Bool("NA_EtourdiUneFois", false)
 
         if ent:IsPlayer() then
             ent:Freeze(false)
@@ -158,6 +166,8 @@ if SERVER then
         end
         ply:Freeze(false)
         ply:SetNW2Bool("NA_Etourdi", false)
+        ply:SetNW2String("NA_EtourdiAnim", "")
+        ply:SetNW2Bool("NA_EtourdiUneFois", false)
     end)
 end
 

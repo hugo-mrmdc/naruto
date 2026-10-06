@@ -80,7 +80,7 @@ local function Frapper(ply)
             ent:SetVelocity(vel)
         end
 
-        if NA_Etourdir then NA_Etourdir(ent, Niv(ply, "etourdi", ETOURDI)) end   -- sv_etourdissement.lua
+        if NA_Etourdir then NA_Etourdir(ent, Niv(ply, "etourdi", ETOURDI), nil, nil, true) end   -- stun souple : un taijutsu peut encore l'emporter   -- sv_etourdissement.lua
         net.Start("taijutsu_pied_fx")
             net.WriteVector(ent:WorldSpaceCenter() + Vector(0, 0, 20))   -- un peu plus haut que le torse
         net.Broadcast()

@@ -62,9 +62,10 @@ hook.Add("HUDPaint", "NA_Chakra_HUD", function()
     -- Le HUD de vie et de chakra (cl_hud_vie.lua) affiche déjà le chakra
     if NA_HUD_VIE_ACTIF then return end
 
-    local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
+    local chakraMax = NA_ChakraMax and NA_ChakraMax(ply) or CHAKRA_MAX   -- selon le rang (_na_rangs.lua)
+    local chakra = ply:GetNW2Float("NA_Chakra", chakraMax)
     local running = ply:GetNW2Bool("NA_ChakraRun", false)
-    local frac = math.Clamp(chakra / CHAKRA_MAX, 0, 1)
+    local frac = math.Clamp(chakra / chakraMax, 0, 1)
 
     -- apparition / disparition en douceur
     local want = (CACHER_PLEIN and frac >= 1 and not running) and 0 or 1

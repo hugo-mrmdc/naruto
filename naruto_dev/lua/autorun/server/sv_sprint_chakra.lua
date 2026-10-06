@@ -20,7 +20,6 @@ local VITESSE_CHAKRA  = 650   -- double Shift
 local SAUT_NORMAL     = 200   -- hauteur de saut normale
 local SAUT_CHAKRA     = 200   -- hauteur de saut en course de chakra
 
-local CHAKRA_MAX      = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local CHAKRA_COUT     = 0    -- chakra dépensé par seconde de course de chakra
 local CHAKRA_REGEN    = 0     -- régénération AUTOMATIQUE par seconde (0 = aucune : on recharge avec R)
 local CHAKRA_DELAI    = 1.5   -- secondes d'attente avant que la régénération automatique reprenne
@@ -44,11 +43,11 @@ local chakraRun = {}
 local nextRegen = {}
 
 local function GetChakra(ply)
-    return ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
+    return ply:GetNW2Float("NA_Chakra", NA_ChakraMax(ply))
 end
 
 local function SetChakra(ply, value)
-    ply:SetNW2Float("NA_Chakra", math.Clamp(value, 0, CHAKRA_MAX))
+    ply:SetNW2Float("NA_Chakra", math.Clamp(value, 0, NA_ChakraMax(ply)))
 end
 
 local function ApplySpeeds(ply, chakra)
@@ -125,7 +124,7 @@ end)
 local function PeutRecharger(ply, now)
     if not ply:KeyDown(IN_RELOAD) then return false end
     if ply:InVehicle() then return false end   -- au sol OU en saut : les deux marchent
-    if GetChakra(ply) >= CHAKRA_MAX then return false end
+    if GetChakra(ply) >= NA_ChakraMax(ply) then return false end
     if (ply.NA_RechargeBloquee or 0) > now then return false end   -- vient de prendre un coup
     if ply:GetNW2Bool("NA_Etourdi", false) then return false end
     if ply:GetNW2Bool("NA_Vol", false) or ply:GetNW2Bool("NA_Wings", false) then return false end
@@ -187,7 +186,7 @@ local function MettreAJour(ply, now, dt)
     if (nextRegen[ply] or 0) > now then return end
     if ply:GetNW2Bool("NA_Ketsuryugan", false) or ply:GetNW2Bool("NA_ArmureOs", false) or ply:GetNW2Bool("NA_SenjuErmite", false) then return end
     local cur = GetChakra(ply)
-    if cur < CHAKRA_MAX then
+    if cur < NA_ChakraMax(ply) then
         SetChakra(ply, cur + CHAKRA_REGEN * dt)
     end
 end
@@ -218,7 +217,7 @@ hook.Add("PlayerSpawn", "NA_Sprint_Setup", function(ply)
     chakraRun[ply] = nil
     nextRegen[ply] = 0
     ply:SetNW2Bool("NA_Run", false)
-    SetChakra(ply, CHAKRA_MAX)
+    SetChakra(ply, NA_ChakraMax(ply))
 
     -- le modèle du joueur est posé un peu après l'apparition par d'autres scripts :
     -- on applique les vitesses juste après pour ne pas se faire écraser

@@ -4,7 +4,7 @@
 --   1. Coup de pied relevé (m_attack_hand_lowkicktokickup) : la cible touchée
 --      devant le lanceur est envoyée en l'air.
 --   2. Au sommet, la cible reste suspendue (étourdie, animation
---      m_ni_def_ninjutsu_aerial_palmrotation_loop) et le lanceur la rejoint.
+--      M_Beaten_SpinBlowOff) et le lanceur la rejoint.
 --   3. Coup de talon plongeant (m_attack_aerial_hand_turnheeldropkick) : dégâts
 --      et la cible est écrasée au sol.
 --========================================================
@@ -12,6 +12,8 @@
 if not SERVER then return end
 
 util.AddNetworkString("taijutsu_combo_cast")
+util.AddNetworkString("taijutsu_hitb_fx")   -- particule d'impact (cl_taijutsu_hitfx.lua)
+util.AddNetworkString("taijutsu_sol_fx")    -- poussière quand la cible retouche le sol
 
 --========================================================
 -- RÉGLAGES -> c'est ICI qu'on change les valeurs
@@ -32,7 +34,7 @@ local DELAI_FINAL    = 0.5    -- rejoint la cible -> coup de talon
 
 local ANIM_LANCER    = "m_attack_hand_lowkicktokickup"
 local ANIM_FINAL     = "m_attack_aerial_hand_turnheeldropkick"
-local ANIM_CIBLE     = "m_ni_def_ninjutsu_aerial_palmrotation_loop"
+local ANIM_CIBLE     = "M_Beaten_SpinBlowOff"
 local DISTANCE_COTE  = 70     -- à quelle distance de la cible le lanceur se place
 --========================================================
 
@@ -71,6 +73,12 @@ local function TrouverCible(ply)
     return meilleure
 end
 
+local function ParticuleImpact(cible)
+    net.Start("taijutsu_hitb_fx")
+        net.WriteVector(cible:WorldSpaceCenter())
+    net.Broadcast()
+end
+
 local function Degats(ply, cible, montant)
     local dmg = DamageInfo()
     dmg:SetDamage(montant)
@@ -79,12 +87,12 @@ local function Degats(ply, cible, montant)
     dmg:SetDamageType(DMG_CLUB)
     dmg:SetDamagePosition(cible:WorldSpaceCenter())
     cible:TakeDamageInfo(dmg)
+    ParticuleImpact(cible)
 end
 
 local function Liberer(ply, cible)
     enCours[ply] = nil
     if IsValid(cible) then
-        if cible:IsPlayer() then cible:SetNW2String("NA_EtourdiAnim", "") end
         if NA_Liberer then NA_Liberer(cible) end
     end
     if IsValid(ply) and ply:GetMoveType() == MOVETYPE_NONE then ply:SetMoveType(MOVETYPE_WALK) end
@@ -103,6 +111,20 @@ local function Final(ply, cible)
     else
         cible:SetVelocity(vel)
     end
+
+    -- poussière quand la cible retouche le sol
+    local t0 = CurTime()
+    local id = "TaijutsuCombo_Sol_" .. cible:EntIndex()
+    timer.Create(id, 0.05, 0, function()
+        if not IsValid(cible) or CurTime() - t0 > 2 then timer.Remove(id) return end
+        if CurTime() - t0 < 0.1 then return end
+        local au_sol = cible.loco and cible.loco:IsOnGround() or cible:IsOnGround()
+        if not au_sol then return end
+        timer.Remove(id)
+        net.Start("taijutsu_sol_fx")
+            net.WriteVector(cible:GetPos())
+        net.Broadcast()
+    end)
 end
 
 -- Étape 2 : au sommet, la cible reste suspendue et le lanceur la rejoint
@@ -112,8 +134,7 @@ local function Sommet(ply, cible)
     end
 
     local delai = Niv(ply, "delai_final", DELAI_FINAL)
-    if NA_Etourdir then NA_Etourdir(cible, delai + 0.3) end   -- suspendue en l'air (sv_etourdissement.lua)
-    if cible:IsPlayer() then cible:SetNW2String("NA_EtourdiAnim", ANIM_CIBLE) end
+    if NA_Etourdir then NA_Etourdir(cible, delai + 0.3, ANIM_CIBLE, true, true) end   -- suspendue en l'air, anim jouée une fois (sv_etourdissement.lua)
 
     -- le lanceur se place à côté de la cible, face à elle
     local pos = cible:GetPos()
@@ -121,12 +142,20 @@ local function Sommet(ply, cible)
     dir.z = 0
     if dir:LengthSqr() < 1 then dir = ply:GetForward() end
     dir:Normalize()
-    local dest = pos - dir * DISTANCE_COTE
-    local tr = util.TraceHull({
-        start = pos, endpos = dest,
-        mins = ply:OBBMins(), maxs = ply:OBBMaxs(), filter = { ply, cible },
-    })
-    ply:SetPos(tr.HitPos)
+    -- place libre à DISTANCE_COTE de la cible : on essaie d'abord derrière lanceur->cible, puis sur les
+    -- côtés, puis de l'autre côté (mur, décor...). Jamais dans la cible ni dans le décor.
+    local dest
+    for _, rot in ipairs({ 0, 45, -45, 90, -90, 135, -135, 180 }) do
+        local d = Angle(0, rot, 0):Forward()
+        local v = Vector(dir.x * d.x - dir.y * d.y, dir.x * d.y + dir.y * d.x, 0)   -- dir tourné de rot degrés
+        local essai = pos - v * DISTANCE_COTE
+        local tr = util.TraceHull({
+            start = pos, endpos = essai,
+            mins = ply:OBBMins(), maxs = ply:OBBMaxs(), filter = { ply, cible },
+        })
+        if not tr.Hit and not tr.StartSolid then dest = essai break end
+    end
+    ply:SetPos(dest or pos - dir * DISTANCE_COTE)
     ply:SetEyeAngles(Angle(0, dir:Angle().y, 0))
     ply:SetVelocity(-ply:GetVelocity())
     ply:SetMoveType(MOVETYPE_NONE)   -- reste en l'air le temps du coup
@@ -161,6 +190,13 @@ local function Frapper(ply)
 
     Degats(ply, cible, Niv(ply, "degats", DEGATS))
 
+    -- l'animation de la cible démarre dès l'impact. Pas de NA_Etourdir ici : il la figerait
+    -- sur place et annulerait l'élan. Le vrai stun arrive au sommet (Sommet) et garde la même anim.
+    cible:SetNW2String("NA_EtourdiAnim", ANIM_CIBLE)
+    cible:SetNW2Bool("NA_EtourdiUneFois", true)
+    cible:SetNW2Bool("NA_Etourdi", true)
+
+    if NA_Projeter then NA_Projeter(cible) end   -- sous stun souple : emportée ; stun ferme : ne bouge pas (sv_etourdissement.lua)
     local vel = Vector(0, 0, Niv(ply, "lancer", LANCER))
     local delaiSommet = Niv(ply, "delai_sommet", DELAI_SOMMET)
     if cible.loco then

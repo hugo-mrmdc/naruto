@@ -306,7 +306,8 @@ hook.Add("HUDPaint", "NA_HudVie", function()
     local dt = FrameTime()
 
     local vie, vieMax = math.max(ply:Health(), 0), math.max(ply:GetMaxHealth(), 1)
-    local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
+    local chakraMax = NA_ChakraMax and NA_ChakraMax(ply) or CHAKRA_MAX   -- selon le rang (_na_rangs.lua)
+    local chakra = ply:GetNW2Float("NA_Chakra", chakraMax)
 
     affVie = affVie and Lerp(math.min(dt * VITESSE_BARRE, 1), affVie, vie) or vie
     affChakra = affChakra and Lerp(math.min(dt * VITESSE_BARRE, 1), affChakra, chakra) or chakra
@@ -341,7 +342,7 @@ hook.Add("HUDPaint", "NA_HudVie", function()
         surface.SetDrawColor(235, 245, 255, 200)
         surface.DrawTexturedRectUV(bx, by1, bw * frac, bh, 0, 0, frac, 1)
     end
-    Barre("bar_chakra_back.png", "bar_chakra.png", bx, by2, bw, bh, math.Clamp(affChakra / CHAKRA_MAX, 0, 1))
+    Barre("bar_chakra_back.png", "bar_chakra.png", bx, by2, bw, bh, math.Clamp(affChakra / chakraMax, 0, 1))
 
     -- 3. portrait par-dessus le début des barres
     DessinerPortrait(ply, px, py, tp)
@@ -354,7 +355,7 @@ hook.Add("HUDPaint", "NA_HudVie", function()
     if bouclier > 0 then texteVie = texteVie .. string.format("  (+%d)", math.ceil(bouclier)) end
     Texte(texteVie, "NA.Hud.Valeur", finBarres + 10 * k, by1 + bh / 2,
         TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, bouclier > 0 and Color(225, 240, 255) or color_white)
-    Texte(string.format("%d / %d", math.Round(chakra), CHAKRA_MAX), "NA.Hud.Valeur", finBarres + 10 * k, by2 + bh / 2,
+    Texte(string.format("%d / %d", math.Round(chakra), chakraMax), "NA.Hud.Valeur", finBarres + 10 * k, by2 + bh / 2,
         TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, ply:GetNW2Bool("NA_ChakraRun", false) and Color(150, 215, 255) or color_white)
 
     -- 5. faim, sous les barres à droite du portrait

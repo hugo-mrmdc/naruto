@@ -249,7 +249,7 @@ NA_NIV_TECH.katon_grosse_boule = {
 -- Requin d'eau (sv_suiton_shark.lua) : degats = dégâts du requin principal quand il touche (la nuée fait 1 par requin en plus), stun = secondes d'étourdissement en l'air, recul / souleve = bump (vitesse horizontale / verticale, comme le Wind Ball)
 NA_NIV_TECH.suiton_requin = {
     [1] = {
-        recharge = 5, hitbox = 18, degats = 150, stun = 1, recul = 600, souleve = 250,
+        recharge = 5, hitbox = 18, degats = 150, stun = 1, recul = 10, souleve = 120,
         swarm_count = 10, swarm_radius = 250, swarm_speed = 15, mid_radius = 40, swarm_life = 1,
         main_speed = 15, detect = 450,   -- detect = distance à laquelle le requin repère une cible et se met à la suivre
     },
@@ -356,7 +356,7 @@ NA_NIV_TECH.futon_tornade = {
 -- Ouragan de vent (sv_futon_ouragan.lua) : une grosse tornade qui avance ; dégâts + bump à chaque ennemi traversé (une fois chacun)
 --   degats = dégâts, rayon, vitesse, duree_vie = secondes (portée = vitesse x durée), pousse = bump horizontal, souleve = bump vertical, devant = distance de départ
 NA_NIV_TECH.futon_ouragan = {
-    [1] = { degats = 124, rayon = 110, vitesse = 500, duree_vie = 3, pousse = 450, souleve = 250, devant = 70, chakra = 40, recharge = 12, duree_mudra = 0.4 },
+    [1] = { degats = 124, rayon = 110, vitesse = 500, duree_vie = 3, pousse = 10, souleve = 120, devant = 70, chakra = 40, recharge = 12, duree_mudra = 0.4 },
     [2] = { degats = 136 },
     [3] = { degats = 142, chakra = 36, rayon = 120 },
     [4] = { degats = 153, recharge = 10, duree_vie = 3.5 },
@@ -1001,6 +1001,17 @@ NA_NIV_TECH.taijutsu_combo = {
     [3] = { degats = 19, degats_final = 50, recharge = 16 },
     [4] = { degats = 21, degats_final = 56 },
     [5] = { degats = 24, degats_final = 64, chakra = 25, recharge = 14 },
+}
+
+-- Coup de pied relevé (server/taijutsu/sv_taijutsu_releve.lua) : 2 coups dans l'animation
+--   degats = 1er coup (dégâts seulement), degats_envol = 2e coup (dégâts + la cible monte), lancer = vitesse verticale,
+--   delai_impact / delai_envol = secondes entre le lancement de l'animation et chaque coup
+NA_NIV_TECH.taijutsu_releve = {
+    [1] = { degats = 25, degats_envol = 25, chakra = 20, recharge = 14, portee = 140, lancer = 220, delai_impact = 0.3, delai_envol = 0.7 },
+    [2] = { degats = 28, degats_envol = 28 },
+    [3] = { degats = 31, degats_envol = 31, recharge = 12 },
+    [4] = { degats = 34, degats_envol = 34, lancer = 240 },
+    [5] = { degats = 38, degats_envol = 38, chakra = 16, recharge = 10 },
 }
 
 -- 32 Points du Hakke (server/hyuga/sv_hyuga_32points.lua)

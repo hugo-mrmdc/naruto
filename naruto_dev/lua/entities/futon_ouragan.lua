@@ -17,8 +17,8 @@ ENT.Degats    = 60
 ENT.Rayon     = 110
 ENT.Vitesse   = 500
 ENT.DureeVie  = 3
-ENT.Pousse    = 450      -- vitesse horizontale donnée à la cible (bump)
-ENT.Soulevee  = 250      -- vitesse verticale donnée à la cible
+ENT.Pousse    = 150      -- vitesse horizontale donnée à la cible (bump)
+ENT.Soulevee  = 120     -- vitesse verticale donnée à la cible
 ENT.FX        = "atg_projection1"
 
 if SERVER then

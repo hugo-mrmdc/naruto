@@ -10,6 +10,7 @@
 if not SERVER then return end
 
 util.AddNetworkString("taijutsu_descendant_cast")
+util.AddNetworkString("taijutsu_descendant_fx")   -- particule d'impact (cl_taijutsu_hitfx.lua)
 
 --========================================================
 -- RÉGLAGES -> c'est ICI qu'on change les valeurs
@@ -66,6 +67,9 @@ local function Frapper(ply)
         dmg:SetDamagePosition(ent:WorldSpaceCenter())
         ent:TakeDamageInfo(dmg)
         ent:EmitSound(SON_IMPACT, 75, math.random(95, 110))
+        net.Start("taijutsu_descendant_fx")
+            net.WriteVector(ent:WorldSpaceCenter())
+        net.Broadcast()
     end
 end
 

@@ -326,6 +326,32 @@ local function Ouvrir()
     scene.Paint = function() end
     fermer:MoveToFront()
 
+    -- Promotion au rang suivant (points de compétence : _na_rangs.lua)
+    local promo = vgui.Create("DButton", frame)
+    promo:SetText("")
+    promo:SetSize(300 * S, 44 * S)
+    promo:SetPos(sX + sW / 2 - promo:GetWide() / 2, sY + sH * 0.285)
+    promo.Paint = function(pan, w, h)
+        local rang = NA_Rang(LocalPlayer())
+        if rang >= NA_RANG.MAX then return end
+        local suivant = NA_RANG.Donnees(rang + 1)
+        local possible = NA_Points(LocalPlayer()) >= suivant.cout
+        local lum = (possible and pan:IsHovered()) and 255 or (possible and 225 or 120)
+        Image(DOSSIER .. "btn_base_long.png", 0, 0, w, h, 255, lum)
+        draw.SimpleText("DEVENIR " .. string.upper(suivant.nom) .. " : " .. suivant.cout .. (possible and "" or " (INSUFFISANT)"),
+            "NA.Bib.Petit", w / 2, h / 2, possible and Color(30, 20, 20) or Color(150, 40, 35),
+            TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+    promo.DoClick = function()
+        local rang = NA_Rang(LocalPlayer())
+        if rang >= NA_RANG.MAX then return end
+        if NA_Points(LocalPlayer()) < NA_RANG.Donnees(rang + 1).cout then return end
+        net.Start("NA_Promotion")
+        net.SendToServer()
+    end
+    promo.Think = function(pan) pan:SetVisible(NA_Rang(LocalPlayer()) < NA_RANG.MAX) end
+    promo:MoveToFront()   -- au-dessus de la scène
+
     local Construire
 
     local function Titre(pan, texte)
@@ -334,6 +360,10 @@ local function Ouvrir()
             TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color(0, 0, 0, 200))
         draw.SimpleTextOutlined(NA_Points(LocalPlayer()) .. " POINTS DE COMPÉTENCE", "NA.Bib.Points", w / 2, sH * 0.2,
             C_OR, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color(0, 0, 0, 200))
+        local rang = NA_Rang(LocalPlayer())
+        local d = NA_RANG.Donnees(rang)
+        draw.SimpleTextOutlined("RANG " .. string.upper(d.nom) .. "  -  " .. d.vie .. " PV  -  " .. d.chakra .. " CHAKRA",
+            "NA.Bib.Petit", w / 2, sH * 0.255, C_CREME, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 200))
     end
 
     -- Grille des emblèmes de l'onglet
@@ -572,8 +602,9 @@ local function Ouvrir()
             -- technique d'avant à débloquer d'abord (nil = rien ne bloque)
             local function Manque()
                 if NA_Niveau(LocalPlayer(), tech.id) > 0 then return nil end
-                local ok, prec = NA_NIV.DeblocagePossible(LocalPlayer(), tech.id)
+                local ok, prec, rangReq = NA_NIV.DeblocagePossible(LocalPlayer(), tech.id)
                 if ok then return nil end
+                if rangReq then return nil, NA_RANG.Nom(rangReq) end
                 local t = NA_TechniqueParId and NA_TechniqueParId(prec)
                 return t and t.name or prec
             end
@@ -581,14 +612,16 @@ local function Ouvrir()
             b.Paint = function(pan, w, h)
                 local niv = NA_Niveau(LocalPlayer(), tech.id)
                 local cout = NA_NIV.Cout(niv)
-                local manque = Manque()
-                local possible = cout and not manque and NA_Points(LocalPlayer()) >= cout
+                local manque, rangManque = Manque()
+                local possible = cout and not manque and not rangManque and NA_Points(LocalPlayer()) >= cout
                 local lum = (possible and pan:IsHovered()) and 255 or (possible and 225 or 120)
                 Image(DOSSIER .. "btn_base_long.png", 0, 0, w, h, 255, lum)
 
                 local txt, col
                 if not cout then
                     txt, col = "NIVEAU MAX", Color(60, 45, 30)
+                elseif rangManque then
+                    txt, col = "RANG REQUIS : " .. string.upper(rangManque), Color(150, 40, 35)
                 elseif manque then
                     txt, col = "DÉBLOQUE D'ABORD : " .. string.upper(manque), Color(60, 45, 30)
                 elseif possible then
@@ -602,7 +635,8 @@ local function Ouvrir()
             b.DoClick = function()
                 local niv = NA_Niveau(LocalPlayer(), tech.id)
                 local cout = NA_NIV.Cout(niv)
-                if not cout or Manque() or NA_Points(LocalPlayer()) < cout then
+                local manque, rangManque = Manque()
+                if not cout or manque or rangManque or NA_Points(LocalPlayer()) < cout then
                     return
                 end
                 net.Start("NA_Ameliorer")

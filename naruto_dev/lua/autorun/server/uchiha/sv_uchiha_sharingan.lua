@@ -140,7 +140,7 @@ hook.Add("Think", "UchihaSharingan_Chakra", function()
     for _, ply in ipairs(player.GetAll()) do
         if not Actif(ply) then continue end
         local reste = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX) - Niv(ply, "chakra", CHAKRA_SEC) * dt
-        ply:SetNW2Float("NA_Chakra", math.Clamp(reste, 0, CHAKRA_MAX))
+        ply:SetNW2Float("NA_Chakra", math.Clamp(reste, 0, NA_ChakraMax(ply)))
         if reste <= 0 then Arreter(ply, "Chakra épuisé : le Sharingan s'éteint") end
     end
 end)

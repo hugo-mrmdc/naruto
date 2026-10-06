@@ -99,7 +99,7 @@ local function GetChakra(ply)
 end
 
 local function SetChakra(ply, v)
-    ply:SetNW2Float("NA_Chakra", math.Clamp(v, 0, CHAKRA_MAX))
+    ply:SetNW2Float("NA_Chakra", math.Clamp(v, 0, NA_ChakraMax(ply)))
 end
 
 ----------------------------------------------------------

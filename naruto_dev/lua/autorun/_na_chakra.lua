@@ -12,4 +12,4 @@
 
 if SERVER then AddCSLuaFile() end
 
-NA_CHAKRA_MAX = 500   -- chakra maximum
+NA_CHAKRA_MAX = 500   -- chakra maximum de base (le vrai maximum dépend du rang : NA_ChakraMax(ply), _na_rangs.lua)

@@ -16,7 +16,14 @@ local function SeqEtourdi(ply)
     local perso = ply:GetNW2String("NA_EtourdiAnim", "")
     local seq = ply:LookupSequence(perso ~= "" and perso or ANIM)
     if (not seq or seq < 0) and perso ~= "" then seq = ply:LookupSequence(ANIM) end
-    if seq and seq >= 0 then return seq end
+    if seq and seq >= 0 then
+        -- animation "une fois" terminée : on rend la main à l'animation normale (pas de figeage)
+        -- (le début mémorisé doit être celui de CETTE séquence : sinon une anim imposée en plein stun,
+        -- par ex. taijutsu pendant un cube Jinton, serait vue comme déjà terminée)
+        if ply.NA_EtourdiDebut and ply.NA_EtourdiSeq == seq and ply:GetNW2Bool("NA_EtourdiUneFois", false)
+            and CurTime() - ply.NA_EtourdiDebut >= ply:SequenceDuration(seq) then return end
+        return seq
+    end
 end
 
 hook.Add("CalcMainActivity", "NA_Etourdi_Anim", function(ply)
@@ -43,11 +50,25 @@ end)
 -- forcée à chaque image : aucune autre animation ne la remplace pendant l'étourdissement
 hook.Add("UpdateAnimation", "NA_Etourdi_Anim_Force", function(ply)
     local seq = SeqEtourdi(ply)
-    if not seq then return end
-    if ply:GetSequence() ~= seq then
+    if not seq then
+        -- le début n'est oublié qu'à la fin du stun (sinon l'anim "une fois" repartirait)
+        if not ply:GetNW2Bool("NA_Etourdi", false) then ply.NA_EtourdiDebut = nil end
+        return
+    end
+    if ply:GetSequence() ~= seq or not ply.NA_EtourdiDebut then
         ply:SetSequence(seq)
         ply:SetCycle(0)
+        ply.NA_EtourdiDebut = CurTime()
+        ply.NA_EtourdiSeq = seq
     end
-    ply:SetPlaybackRate(1)
+    if ply:GetNW2Bool("NA_EtourdiUneFois", false) then
+        -- animation imposée : jouée UNE fois (puis SeqEtourdi rend la main)
+        local duree = ply:SequenceDuration(seq)
+        local cycle = duree > 0 and (CurTime() - ply.NA_EtourdiDebut) / duree or 0
+        ply:SetCycle(math.min(cycle, 1))
+        ply:SetPlaybackRate(0)
+    else
+        ply:SetPlaybackRate(1)
+    end
     return true
 end)

@@ -55,13 +55,25 @@ if SERVER then
     function ENT:RunBehaviour()
         while true do
             if self:GetNW2Bool("NA_Etourdi", false) then
-                local seq = self:LookupSequence("act_stunning")
+                -- une technique peut imposer sa propre animation (NW2String "NA_EtourdiAnim")
+                local perso = self:GetNW2String("NA_EtourdiAnim", "")
+                local seq = perso ~= "" and self:LookupSequence(perso) or -1
+                if seq < 0 then seq = self:LookupSequence("act_stunning") end
                 if seq and seq >= 0 then
-                    self:ResetSequence(seq)
+                    if self:GetSequence() ~= seq and not self.AnimStunFinie then
+                        self:ResetSequence(seq)
+                        self.DebutAnimStun = CurTime()
+                    end
+                    if not self:GetNW2Bool("NA_EtourdiUneFois", false) then
+                        self.DebutAnimStun = nil
+                        self:SetPlaybackRate(1)
+                    end
                 else
                     self:StartActivity(ACT_HL2MP_IDLE)
                 end
             else
+                self.AnimStunFinie = nil
+                if self.DebutAnimStun then self.DebutAnimStun = nil self:SetPlaybackRate(1) end
                 self:StartActivity(ACT_HL2MP_IDLE)
             end
             coroutine.wait(0.2)
@@ -150,6 +162,22 @@ if SERVER then
 
     function ENT:Think()
         self:SuivreMouvement()
+
+        -- animation de stun "jouée une fois" : avancée à la main puis figée sur la dernière image
+        if self.DebutAnimStun then
+            local duree = self:SequenceDuration()
+            local cycle = duree > 0 and (CurTime() - self.DebutAnimStun) / duree or 1
+            if cycle >= 1 then
+                -- terminée : on rend la main à l'animation normale (pas de figeage)
+                self.DebutAnimStun = nil
+                self.AnimStunFinie = true
+                self:SetPlaybackRate(1)
+                self:StartActivity(ACT_HL2MP_IDLE)
+            else
+                self:SetCycle(cycle)
+                self:SetPlaybackRate(0)
+            end
+        end
 
         -- retour à fond après REGEN_DELAI secondes sans coup
         if self.RegenDelai > 0 and self:Health() < self.VieMax and CurTime() - self.DernierCoup > self.RegenDelai then

@@ -74,7 +74,7 @@ NA_NIV.LIGNEES = {
     { "bakuton_oiseaux", "bakuton_mignons", "bakuton_araignees", "bakuton_meute", "bakuton_dragon", "bakuton_bombe" },
     { "futton_vapeur", "futton_tornade", "futton_cage","futton_projectile", "futton_prison", "futton_monde" },
     { "hyoton_dome", "hyoton_pics", "hyoton_vague", "hyoton_loup", "hyoton_prison" },
-    { "taijutsu_pied", "taijutsu_descendant", "taijutsu_combo" },
+    { "taijutsu_pied", "taijutsu_descendant", "taijutsu_combo", "taijutsu_releve" },
     { "shoton_cristal", "shoton_armure", "shoton_rockets", "shoton_chute", "shoton_pics" },
 }
 --========================================================
@@ -108,12 +108,16 @@ end
 -- La technique est-elle débloquée ? (les techniques sans niveau le sont toujours)
 function NA_Debloquee(ply, id)
     if not NA_NIV.Existe(id) then return true end
+    if NA_RangOk and not NA_RangOk(ply, id) then return false end   -- rang trop faible (_na_rangs.lua)
     return NA_Niveau(ply, id) >= 1
 end
 
 -- Peut-on débloquer "id" ? Il faut que la technique d'avant soit débloquée.
--- Renvoie true, ou false + l'id de la technique qui manque.
+-- Il faut aussi avoir le rang ninja requis (_na_rangs.lua).
+-- Renvoie true, ou false + l'id de la technique qui manque,
+-- ou false + nil + l'index du rang requis.
 function NA_NIV.DeblocagePossible(ply, id)
+    if NA_RangOk and not NA_RangOk(ply, id) then return false, nil, NA_RANG.RangRequis(id) end
     local prec = avant[id]
     if prec and NA_Niveau(ply, prec) < 1 then return false, prec end
     return true
@@ -187,6 +191,8 @@ local function Sauver(ply)
     ply:SetPData("na_niveaux", util.TableToJSON(t))
     ply:SetPData("na_points", NA_Points(ply))
 end
+
+NA_NIV.Sauver = Sauver
 
 local function Charger(ply)
     local t = util.JSONToTable(ply:GetPData("na_niveaux", "") or "") or {}
