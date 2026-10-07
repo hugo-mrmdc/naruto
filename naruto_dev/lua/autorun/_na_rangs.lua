@@ -63,7 +63,7 @@ NA_RANG_TECH = {
     salamandre_poison = "C", salamandre_tornade = "A", salamandre_corps = "B", fuma_tp = "C",
     fuma_jugement = "B", fuma_aura = "B", fuma_ciel = "A", fuma_invisibilite = "C", kami_circle = "B",
     kami_shuriken = "C", kami_bouclier = "B", kami_ailes = "A", kami_roue = "B", jinton_cube = "C",
-    jinton_bouclier = "C", jinton_laser = "A", kaguya_armure = "C", kaguya_legion = "A", kaguya_danse = "C",
+    jinton_bouclier = "C", jinton_cubes = "B", jinton_cage = "B", jinton_laser = "A", kaguya_armure = "C", kaguya_legion = "A", kaguya_danse = "C",
     senju_renfo = "B", senju_soin = "B", senju_frappe = "B", senju_pied = "A", senju_ermite = "S",
     chinoike_ketsuryugan = "C", chinoike_genjutsu = "C", chinoike_pluie = "B", chinoike_vortex = "B",
     hyuga_byakugan = "C", hyuga_paume = "C", hyuga_32points = "B", hyuga_64points = "A",

@@ -62,7 +62,7 @@ NA_NIV.LIGNEES = {
     { "salamandre_poison", "salamandre_dome", "salamandre_corps", "salamandre_tornade" },
     { "fuma_tp", "fuma_invisibilite", "fuma_aura", "fuma_jugement", "fuma_ciel" },
     { "kami_shuriken", "kami_circle", "kami_bouclier", "kami_ailes", "kami_roue" },
-    { "jinton_cube", "jinton_bouclier", "jinton_laser" },
+    { "jinton_cube", "jinton_bouclier", "jinton_cubes", "jinton_cage", "jinton_laser" },
     { "kiminari_frappe", "kiminari_prison", "kiminari_laser", "kiminari_boulets" },
     { "jiton_sarcophage", "jiton_emergence", "jiton_vortex", "jiton_tornade", "jiton_nuage" },
     { "kaguya_armure", "kaguya_danse", "kaguya_legion" },

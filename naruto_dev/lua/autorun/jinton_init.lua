@@ -23,6 +23,9 @@ if SERVER then
     resource.AddFile("models/justu/jinton/sphereonoki.mdl")
     resource.AddFile("materials/ui/icon/jinton_bulle_poussiere.png")
     resource.AddFile("models/justu/jinton/cylindreonokisolve.mdl")
+    for _, ext in ipairs({ "mdl", "vvd", "phy", "dx80.vtx", "dx90.vtx" }) do
+        resource.AddFile("models/justu/jinton/cubeonokisolve." .. ext)   -- petits cubes lancés
+    end
     resource.AddFile("materials/ui/icon/jinton_rayon_dissolution.png")
 
     AddCSLuaFile("autorun/client/jinton/cl_jinton_cube.lua")
@@ -31,6 +34,12 @@ if SERVER then
     AddCSLuaFile("autorun/client/jinton/cl_jinton_bouclier.lua")
     include("autorun/server/jinton/sv_jinton_bouclier.lua")
 
+    AddCSLuaFile("autorun/client/jinton/cl_jinton_cubes.lua")
+    include("autorun/server/jinton/sv_jinton_cubes.lua")
+
+    AddCSLuaFile("autorun/client/jinton/cl_jinton_cage.lua")
+    include("autorun/server/jinton/sv_jinton_cage.lua")
+
     AddCSLuaFile("autorun/client/jinton/cl_jinton_laser.lua")
     include("autorun/server/jinton/sv_jinton_laser.lua")
 end
@@ -38,5 +47,7 @@ end
 if CLIENT then
     include("autorun/client/jinton/cl_jinton_cube.lua")
     include("autorun/client/jinton/cl_jinton_bouclier.lua")
+    include("autorun/client/jinton/cl_jinton_cubes.lua")
+    include("autorun/client/jinton/cl_jinton_cage.lua")
     include("autorun/client/jinton/cl_jinton_laser.lua")
 end

@@ -9,6 +9,8 @@
 local PCF = {
     "argano3", "atg_particules", "patlick_atgparticules", "atg_particules_prison_aqueuse", "atg_faris",
     "kami_particles", "solve_futon", "solve_new_katon", "solve_jinton_geams", "patlick_atgsuiton", "solve_kami_geams",
+    "solve_doton", "solve_raiton", "solve_futon_rework_geams", "solve_inkuton_geams", "julio", "atg_particules2", "solve_impact_autoattack",
+    "atg_farisv2", "atg_particules4", "solve_jinton_02",
 }
 for _, f in ipairs(PCF) do game.AddParticles("particles/" .. f .. ".pcf") end
 

@@ -24,6 +24,7 @@ local CHAKRA_COUT  = 20     -- chakra au lancement (0 = gratuit)
 local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.8    -- incantation avant l'apparition de la zone
 local ANIM_APPEL   = "nrp_ninjutsu_defend_mudwall"
+local ANIM_VITESSE = 2      -- vitesse de lecture de l'animation (1 = normale, 2 = deux fois plus vite)
 --========================================================
 
 -- réglages par niveau (_na_niveaux_techniques.lua) : Niv(joueur, "stat", VALEUR)
@@ -84,7 +85,7 @@ net.Receive("katon_dome", function(_, ply)
 
     casting[ply] = true
 
-    NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant (_na_mudra.lua)
+    NA_AnimJutsu(ply, ANIM_APPEL, nil, ANIM_VITESSE)   -- animation + pas de coups pendant (_na_mudra.lua)
     ply:EmitSound("base/mudra_sound_geams.wav", 75, 100)
 
     if NA_Mudra then NA_Mudra(ply, mudra) end   -- pas de coups pendant les mudras (_na_mudra.lua)

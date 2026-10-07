@@ -102,19 +102,19 @@ NA_DELAI_APRES = NA_DELAI_APRES or {
     -- de la liste prend la valeur de son rang (NA_DELAI_RANG ci-dessus).
 
     -- Katon
-    katon_boule = 0.4,                 -- Boule de feu (rang C)
-    katon_dome = 0.4,                  -- Dôme de feu (rang C)
+    katon_boule = 1.5,                 -- Boule de feu (rang C)
+    katon_dome = 1,                  -- Dôme de feu (rang C)
     katon_souffle = 0.4,               -- Souffle katon (rang C)
-    katon_tornade = 0.4,               -- Tornade de feu (rang B)
+    katon_tornade = 0.8,               -- Tornade de feu (rang B)
     katon_nuee = 1,                  -- Nuée ardente (rang A)
-    katon_meteore = 0.6,               -- Météore (rang S)
-    katon_grosse_boule = 0.4,          -- Grosse boule de feu (rang B)
+    katon_meteore = 1,               -- Météore (rang S)
+    katon_grosse_boule = 0.6,          -- Grosse boule de feu (rang B)
 
     -- Taijutsu
     taijutsu_descendant = 0.4,         -- Coup de pied plongeant (rang C)
     taijutsu_combo = 0.4,              -- Enchaînement aérien (rang B)
-    taijutsu_pied = 0.4,               -- Coup de pied tournoyant (rang C)
-    taijutsu_releve = 0.4,             -- Coup de pied relevé (rang B)
+    taijutsu_pied = 0.6,               -- Coup de pied tournoyant (rang C)
+    taijutsu_releve = 0.6,             -- Coup de pied relevé (rang B)
 
     -- Uchiha
     katon_saut = 0.4,                  -- Boule de feu sautée (rang C)
@@ -163,18 +163,18 @@ NA_DELAI_APRES = NA_DELAI_APRES or {
     futton_projectile = 0.4,           -- Projectile de vapeur (rang B)
 
     -- Suiton
-    suiton_requin = 0.4,               -- Requin d'eau (rang B)
+    suiton_requin = 0.6,               -- Requin d'eau (rang B)
     suiton_tsunami = 0.6,              -- Tsunami (rang S)
     suiton_ocean = 0.4,                -- Océan (rang A)
-    suiton_pluie = 0.4,                -- Pluie suiton (rang B)
-    suiton_waterball = 0.4,            -- Boule d'eau (rang C)
-    suiton_prison = 0.4,               -- Prison aqueuse (rang C)
-    suiton_bulle = 0.4,                -- Bulles (rang C)
+    suiton_pluie = 1,                -- Pluie suiton (rang B)
+    suiton_waterball = 0.5,            -- Boule d'eau (rang C)
+    suiton_prison = 0.6,               -- Prison aqueuse (rang C)
+    suiton_bulle = 0.7,                -- Bulles (rang C)
 
     -- Futon
-    futon_windslash = 0.4,             -- Wind Slash (rang C)
-    futon_tornade = 0.4,               -- Tornade (rang C)
-    futon_windball = 0.4,              -- Wind Ball (rang C)
+    futon_windslash = 0.6,             -- Wind Slash (rang C)
+    futon_tornade = 0.7,               -- Tornade (rang C)
+    futon_windball = 0.7,              -- Wind Ball (rang C)
     futon_ouragan = 0.4,               -- Ouragan de vent (rang B)
     futon_grand_ouragan = 0.4,         -- Grand ouragan (rang A)
     futon_rasenshuriken = 0.6,         -- Rasenshuriken (rang S)
@@ -229,6 +229,8 @@ NA_DELAI_APRES = NA_DELAI_APRES or {
     -- Jinton
     jinton_cube = 0.4,                 -- Cube de confinement (rang C)
     jinton_bouclier = 0.4,             -- Bouclier Jinton (rang C)
+    jinton_cage = 0.4,                 -- Cage Jinton (rang B)
+    jinton_cubes = 0.4,                -- Cubes Jinton (rang B)
     jinton_laser = 0.4,                -- Rayon de dissolution (rang A)
 
     -- Kaguya

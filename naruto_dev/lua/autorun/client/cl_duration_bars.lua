@@ -15,7 +15,7 @@ local DUREES = {}
 for _, id in ipairs({
     "katon_dome", "katon_souffle", "katon_tornade","katon_nuee", "futon_grand_ouragan", "katon_dragons", "suiton_prison", "raiton_zone", "suiton_pluie", "suiton_tsunami", "suiton_ocean", "doton_seisme", "doton_dragon", "doton_taupe", "doton_golem",
     "mokuton_protection", "mokuton_golem", "salamandre_dome", "salamandre_corps", "salamandre_tornade",
-    "fuma_invisibilite", "fuma_aura", "kami_circle", "kami_bouclier", "jinton_bouclier", "jinton_laser",
+    "fuma_invisibilite", "fuma_aura", "kami_circle", "kami_bouclier", "jinton_bouclier", "jinton_cage", "jinton_laser",
     "kaguya_danse", "kaguya_legion", "chinoike_pluie", "chinoike_vortex", "hyuga_tourbillon",
     "kiminari_prison", "jiton_emergence", "jiton_nuage", "jiton_vortex", "senju_renfo", "senju_soin",
     "inkuton_moine", "bakuton_dragon", "futton_vapeur", "futton_cage", "futton_monde",

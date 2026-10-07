@@ -46,6 +46,20 @@ local function Niv(ply, stat, base) return NA_Stat(ply, "taijutsu_combo", stat, 
 local enCours = {}
 local pret    = {}
 
+-- Pendant toute la technique : ni coups de poing (NA_Mudra, _na_mudra.lua) ni autre jutsu (NA_Canalise, _na_registre.lua)
+local function Verrouiller(ply)
+    ply:SetNW2Bool("NA_Canalise", true)
+end
+
+-- Rend la main quand l'animation en cours (donc le verrou des coups, NA_MudraFin) est finie
+local function Deverrouiller(ply)
+    if not IsValid(ply) then return end
+    local reste = math.max(ply:GetNW2Float("NA_MudraFin", 0) - CurTime(), 0)
+    timer.Simple(reste, function()
+        if IsValid(ply) and not enCours[ply] then ply:SetNW2Bool("NA_Canalise", false) end
+    end)
+end
+
 local function EstCible(ent, lanceur)
     if not IsValid(ent) or ent == lanceur then return false end
     if ent:IsPlayer() then return ent:Alive() end
@@ -98,6 +112,7 @@ local function Liberer(ply, cible)
         if NA_Liberer then NA_Liberer(cible) end
     end
     if IsValid(ply) and ply:GetMoveType() == MOVETYPE_NONE then ply:SetMoveType(MOVETYPE_WALK) end
+    Deverrouiller(ply)   -- attend la fin de l'animation en cours avant de rendre les jutsus
 end
 
 -- Étape 3 : coup de talon, la cible est écrasée au sol
@@ -151,9 +166,16 @@ local function Sommet(ply, cible)
         local d = Angle(0, rot, 0):Forward()
         local v = Vector(dir.x * d.x - dir.y * d.y, dir.x * d.y + dir.y * d.x, 0)   -- dir tourné de rot degrés
         local essai = pos - v * DISTANCE_COTE
+        -- décor seulement (props, joueurs, PNJ ignorés), hull un peu plus étroite et relevée : une cible
+        -- fixée au sol (stun lourd) ne doit pas faire échouer le trace sur le sol ou une marche
+        local haut = Vector(0, 0, 8)
+        local mins, maxs = ply:OBBMins(), ply:OBBMaxs()
+        mins.x, mins.y, maxs.x, maxs.y = mins.x * 0.8, mins.y * 0.8, maxs.x * 0.8, maxs.y * 0.8
+        maxs.z = maxs.z - 8
         local tr = util.TraceHull({
-            start = pos, endpos = essai,
-            mins = ply:OBBMins(), maxs = ply:OBBMaxs(), filter = { ply, cible },
+            start = pos + haut, endpos = essai + haut,
+            mins = mins, maxs = maxs, filter = { ply, cible },
+            mask = MASK_PLAYERSOLID_BRUSHONLY,
         })
         if not tr.Hit and not tr.StartSolid then dest = essai break end
     end
@@ -163,6 +185,7 @@ local function Sommet(ply, cible)
     ply:SetMoveType(MOVETYPE_NONE)   -- reste en l'air le temps du coup
 
     NA_AnimJutsu(ply, ANIM_FINAL)
+    NA_Mudra(ply, delai + 0.2)   -- pas de coups jusqu'au coup de talon
     timer.Simple(delai, function() Final(ply, cible) end)
 end
 
@@ -191,6 +214,7 @@ local function Frapper(ply)
     if not cible then return Liberer(ply) end
 
     Degats(ply, cible, Niv(ply, "degats", DEGATS))
+    NA_Mudra(ply, Niv(ply, "delai_sommet", DELAI_SOMMET) + 0.2)   -- pas de coups jusqu'à ce que le lanceur rejoigne la cible
 
     -- l'animation de la cible démarre dès l'impact. Pas de NA_Etourdir ici : il la figerait
     -- sur place et annulerait l'élan. Le vrai stun arrive au sommet (Sommet) et garde la même anim.
@@ -230,6 +254,8 @@ net.Receive("taijutsu_combo_cast", function(_, ply)
     if NA_CD then NA_CD.Set(ply, "taijutsu_combo", recharge) end   -- recharge visible dans la barre
 
     NA_AnimJutsu(ply, ANIM_LANCER, ANIM_COUPE, ANIM_VITESSE)   -- animation + pas de coups pendant sa durée (_na_mudra.lua)
+    Verrouiller(ply)
+    NA_Mudra(ply, Niv(ply, "delai_impact", DELAI_IMPACT) + 0.1)
 
     timer.Simple(Niv(ply, "delai_impact", DELAI_IMPACT), function() Frapper(ply) end)
 end)
@@ -237,6 +263,7 @@ end)
 hook.Add("PlayerDeath", "TaijutsuCombo_Mort", function(ply)
     if ply:GetMoveType() == MOVETYPE_NONE then ply:SetMoveType(MOVETYPE_WALK) end
     enCours[ply] = nil
+    ply:SetNW2Bool("NA_Canalise", false)
 end)
 hook.Add("PlayerDisconnected", "TaijutsuCombo_Nettoyage", function(ply)
     enCours[ply] = nil

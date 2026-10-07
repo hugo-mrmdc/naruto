@@ -15,6 +15,7 @@
 if not SERVER then return end
 
 util.AddNetworkString("jinton_bouclier_cast")
+util.AddNetworkString("jinton_bouclier_fx")   -- particule d'explosion collée à un joueur / une cible (cl_jinton_bouclier.lua)
 
 --========================================================
 -- RÉGLAGES -> c'est ICI qu'on change les valeurs
@@ -81,12 +82,20 @@ local function DessinerCylindre(base, rayon, hauteur, duree, couleur)
     end
 end
 
+-- La particule est jouée côté client et recalée sur l'entité à chaque image (voir cl_jinton_bouclier.lua)
+local function FXColle(ent)
+    net.Start("jinton_bouclier_fx")
+        net.WriteEntity(ent)
+        net.WriteString(EXPLO_FX)
+    net.Broadcast()
+end
+
 -- Explosion de fin : particule, son du tick du cube, dégâts dans un cylindre
 local function Exploser(ply)
     local base = ply:GetPos()
     local centre = base + Vector(0, 0, Niv(ply, "explo_hauteur", EXPLO_HAUTEUR) / 2)
 
-    ParticleEffect(EXPLO_FX, ply:WorldSpaceCenter(), Angle(0, 0, 0))
+    FXColle(ply)   -- suit le lanceur s'il bouge
     ply:EmitSound(EXPLO_SON, 85, 100)
 
     local portee = math.sqrt(Niv(ply, "explo_rayon", EXPLO_RAYON) ^ 2 + (Niv(ply, "explo_hauteur", EXPLO_HAUTEUR) / 2) ^ 2) + 40
@@ -105,7 +114,7 @@ local function Exploser(ply)
             dmg:SetDamageType(DMG_BLAST)
             dmg:SetDamagePosition(ent:WorldSpaceCenter())
             ent:TakeDamageInfo(dmg)
-            ParticleEffect(EXPLO_FX, ent:WorldSpaceCenter(), Angle(0, 0, 0))
+            FXColle(ent)   -- collée à la cible touchée
         end
     end
 
@@ -239,7 +248,10 @@ hook.Add("KeyPress", "JintonBouclier_ExploserE", function(ply, key)
     ply.NA_ExploRestantes = (ply.NA_ExploRestantes or 1) - 1
     if ply.NA_ExploRestantes > 0 then
         ply.NA_ExploProchaine = CurTime() + DELAI_EXPLO
-        Exploser(ply)
+        -- hors du hook : dans KeyPress (prédit) le moteur n'envoie ni particule ni son au joueur lui-même
+        timer.Simple(0, function()
+            if IsValid(ply) and ply:Alive() then Exploser(ply) end
+        end)
     else
         NA_JintonBouclierFin(ply, false, true)
     end

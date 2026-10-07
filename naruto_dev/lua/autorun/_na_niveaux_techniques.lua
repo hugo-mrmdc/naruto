@@ -175,7 +175,7 @@ NA_NIV_TECH.katon_saut = {
 NA_NIV_TECH.katon_dome = {
     [1] = {
         degats = 6, chakra = 20, recharge = 10,
-        duree = 5, rayon = 300, intervalle = 0.5, duree_mudra = 0.8,
+        duree = 5, rayon = 300, intervalle = 0.5, duree_mudra = 0.5,
         brulure_duree = 4, brulure_dps = 4,
     },
     [2] = { degats = 7 },
@@ -294,7 +294,7 @@ NA_NIV_TECH.suiton_pluie = {
 NA_NIV_TECH.suiton_waterball = {
     [1] = {
         degats = 60, chakra = 20, recharge = 6,
-        vitesse = 1400, duree_vie = 2, hitbox = 26, echelle = 0.5, recul = 350, duree_mudra = 0.6,
+        vitesse = 1400, duree_vie = 2, hitbox = 26, echelle = 0.5, recul = 350, duree_mudra = 0.4,
     },
     [2] = { degats = 70 },
     [3] = { degats = 80, recharge = 5.5, hitbox = 25 },
@@ -333,7 +333,7 @@ NA_NIV_TECH.suiton_bulle = {
 NA_NIV_TECH.futon_windslash = {
     [1] = {
         degats = 60, chakra = 20, recharge = 5,
-        vitesse = 1800, duree_vie = 1.5, hitbox = 40, hitbox_haut = 15, echelle = 0.6, roulis = 0, duree_mudra = 0.5,
+        vitesse = 1800, duree_vie = 1.5, hitbox = 40, hitbox_haut = 15, echelle = 0.6, roulis = 0, duree_mudra = 0.4,
     },
     [2] = { degats = 64 },
     [3] = { degats = 73, recharge = 4.5, hitbox = 45 },
@@ -345,7 +345,7 @@ NA_NIV_TECH.futon_windslash = {
 NA_NIV_TECH.futon_tornade = {
     [1] = {
         degats = 66, chakra = 30, recharge = 12,
-        duree = 2, vitesse = 1200, rayon = 130, hauteur = 250, intervalle = 0.25, recul = 300, souleve = 220, duree_mudra = 0.8,
+        duree = 2, vitesse = 1200, rayon = 130, hauteur = 250, intervalle = 0.25, recul = 300, souleve = 220, duree_mudra = 0.5,
     },
     [2] = { degats = 74 },
     [3] = { degats = 86, recharge = 11, duree = 2 },
@@ -830,6 +830,32 @@ NA_NIV_TECH.jinton_bouclier = {
     [5] = { degats = 120, chakra = 20, recharge = 16 },
 }
 
+-- Cube Jinton (sv_jinton_cubes.lua) : degats = dégâts à chaque cible dans le cube ; portee = portée max du point visé
+NA_NIV_TECH.jinton_cubes = {
+    [1] = {
+        degats = 110, chakra = 35, recharge = 14,
+        portee = 900, taille = 0.5, taille_max = 3.2,
+        duree_mudra = 0.5,
+    },
+    [2] = { degats = 130 },
+    [3] = { degats = 170, recharge = 13, portee = 1000 },
+    [4] = { degats = 200 },
+    [5] = { degats = 220, chakra = 30, recharge = 11, portee = 1100, taille_max = 3.6 },
+}
+
+-- Cage Jinton (sv_jinton_cage.lua) : degats = PAR tick et PAR cible dans le cube ; portee = portée max du point visé
+NA_NIV_TECH.jinton_cage = {
+    [1] = {
+        degats = 25, chakra = 45, recharge = 22,
+        portee = 800, echelle = 6, duree = 4, intervalle = 0.5, resistance = 50,
+        duree_mudra = 0.5,
+    },
+    [2] = { degats = 28, duree = 5 },
+    [3] = { degats = 32, recharge = 20, portee = 900 },
+    [4] = { degats = 36, duree = 7 },
+    [5] = { degats = 42, chakra = 38, recharge = 17, portee = 1000, duree = 10 },
+}
+
 -- Rayon de dissolution (sv_jinton_laser.lua)
 NA_NIV_TECH.jinton_laser = {
     [1] = {
@@ -988,7 +1014,7 @@ NA_NIV_TECH.taijutsu_descendant = {
     [3] = { degats = 75, recharge = 9, rayon = 200 },
     [4] = { degats = 88 },
     [5] = { degats = 95, chakra = 12, recharge = 8, rayon = 220 },
-}
+    }
 
 -- Enchaînement aérien (server/taijutsu/sv_taijutsu_combo.lua)
 --   degats = 1er coup, degats_final = coup de talon, lancer = hauteur de l'envol
@@ -1489,13 +1515,13 @@ NA_NIV_TECH.hyoton_prison = {
 }
 
 -- Cristal (server/shoton/sv_shoton_cristal.lua) : un projectile invisible avance, le premier ennemi touché est enfermé dans un cristal (stun)
---   duree = secondes de stun, portee = distance max du projectile, vitesse = unités/s, rayon = demi-largeur de sa hitbox
+--   duree = secondes de stun, degats = dégâts à l'impact, portee = distance max du projectile, vitesse = unités/s, rayon = demi-largeur de sa hitbox
 NA_NIV_TECH.shoton_cristal = {
-    [1] = { duree = 3, portee = 900, vitesse = 1500, rayon = 30, chakra = 40, recharge = 18, duree_mudra = 0.3 },
-    [2] = { duree = 3.5 },
-    [3] = { duree = 4, chakra = 36 },
-    [4] = { duree = 4.5, recharge = 15 },
-    [5] = { duree = 5, chakra = 32, recharge = 1 },
+    [1] = { duree = 1.7, degats = 40, portee = 900, vitesse = 1500, rayon = 30, chakra = 40, recharge = 18, duree_mudra = 0.3 },
+    [2] = { duree = 2, degats = 50 },
+    [3] = { duree = 2.3, degats = 60, chakra = 36 },
+    [4] = { duree = 2.7, degats = 65, recharge = 15 },
+    [5] = { duree = 3, degats = 80, chakra = 32, recharge = 1 },
 }
 
 -- Armure de cristal (server/shoton/sv_shoton_armure.lua) : armure rose pendant "duree" secondes

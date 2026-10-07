@@ -177,7 +177,7 @@ Charger()
 ----------------------------------------------------------
 Bar.Selection = Bar.Selection or nil
 
-local DELAI_BARRE = 0.1   -- secondes minimum entre deux changements de barre
+local DELAI_BARRE = 0.2   -- secondes minimum entre deux changements de barre
 local dernierChange = 0
 
 function Bar.Changer()

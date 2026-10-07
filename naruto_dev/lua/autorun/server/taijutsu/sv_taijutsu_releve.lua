@@ -40,6 +40,20 @@ local function Niv(ply, stat, base) return NA_Stat(ply, "taijutsu_releve", stat,
 local enCours = {}
 local pret    = {}
 
+-- Pendant toute la technique : ni coups de poing (NA_Mudra, _na_mudra.lua) ni autre jutsu (NA_Canalise, _na_registre.lua)
+local function Verrouiller(ply)
+    ply:SetNW2Bool("NA_Canalise", true)
+end
+
+-- Rend la main quand l'animation (donc le verrou des coups, NA_MudraFin) est finie
+local function Deverrouiller(ply)
+    if not IsValid(ply) then return end
+    local reste = math.max(ply:GetNW2Float("NA_MudraFin", 0) - CurTime(), 0)
+    timer.Simple(reste, function()
+        if IsValid(ply) and not enCours[ply] then ply:SetNW2Bool("NA_Canalise", false) end
+    end)
+end
+
 local function EstCible(ent, lanceur)
     if not IsValid(ent) or ent == lanceur then return false end
     if ent:IsPlayer() then return ent:Alive() end
@@ -164,16 +178,22 @@ net.Receive("taijutsu_releve_cast", function(_, ply)
     if NA_CD then NA_CD.Set(ply, "taijutsu_releve", recharge) end   -- recharge visible dans la barre
 
     NA_AnimJutsu(ply, ANIM_APPEL)   -- animation + pas de coups pendant sa durée (_na_mudra.lua)
+    Verrouiller(ply)
+    NA_Mudra(ply, Niv(ply, "delai_envol", DELAI_ENVOL) + 0.1)   -- les coups restent bloqués au moins jusqu'au 2e coup
 
     -- coup 1 : dégâts seulement ; coup 2 : dégâts + envol
     timer.Simple(Niv(ply, "delai_impact", DELAI_IMPACT), function() Frapper(ply, false) end)
     timer.Simple(Niv(ply, "delai_envol", DELAI_ENVOL), function()
         enCours[ply] = nil
         Frapper(ply, true)
+        Deverrouiller(ply)
     end)
 end)
 
-hook.Add("PlayerDeath", "TaijutsuReleve_Mort", function(ply) enCours[ply] = nil end)
+hook.Add("PlayerDeath", "TaijutsuReleve_Mort", function(ply)
+    enCours[ply] = nil
+    ply:SetNW2Bool("NA_Canalise", false)
+end)
 hook.Add("PlayerDisconnected", "TaijutsuReleve_Nettoyage", function(ply)
     enCours[ply] = nil
     pret[ply] = nil

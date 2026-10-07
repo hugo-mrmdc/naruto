@@ -17,6 +17,7 @@ util.AddNetworkString("shoton_cristal_brise")
 -- RÉGLAGES (valeurs par niveau : _na_niveaux_techniques.lua)
 --========================================================
 local DUREE        = 3      -- durée du stun (secondes)
+local DEGATS       = 20     -- dégâts infligés à l'impact
 local PORTEE       = 900    -- distance maximale parcourue par le projectile invisible
 local VITESSE      = 1500   -- vitesse du projectile (unités/s)
 local RAYON        = 30     -- demi-largeur de sa hitbox
@@ -51,6 +52,15 @@ end
 local function Emprisonner(ply, cible)
     local duree = Niv(ply, "duree", DUREE)
     if NA_Etourdir then NA_Etourdir(cible, duree, nil, nil, false) end   -- stun LOURD (ferme) : rien ne déplace la cible dans le cristal
+
+    local dmg = DamageInfo()
+    dmg:SetDamage(Niv(ply, "degats", DEGATS))
+    dmg:SetAttacker(ply)
+    dmg:SetInflictor(ply)
+    dmg:SetDamageType(DMG_GENERIC)
+    dmg:SetDamagePosition(cible:WorldSpaceCenter())
+    cible:TakeDamageInfo(dmg)
+    if not IsValid(cible) or (cible:IsPlayer() and not cible:Alive()) then return end
     local ent = ents.Create("shoton_cristal")
     if not IsValid(ent) then return end
     ent:SetOwner(ply)
