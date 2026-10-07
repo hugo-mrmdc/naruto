@@ -30,13 +30,14 @@ local CHAKRA_COUT    = 30
 local CHAKRA_MAX     = NA_CHAKRA_MAX or 100
 local DELAI_IMPACT   = 0.35   -- lancer de l'anim 1 -> la cible décolle
 local DELAI_SOMMET   = 0.45   -- décollage -> le lanceur rejoint la cible
-local DELAI_FINAL    = 0.5    -- rejoint la cible -> coup de talon
+local DELAI_FINAL    = 0.33   -- rejoint la cible -> coup de talon
 
 local ANIM_LANCER    = "m_attack_hand_backkick"
 local ANIM_VITESSE   = 2      -- vitesse de lecture de l'animation (2 = deux fois plus vite)
 local ANIM_COUPE     = 0.35   -- l'animation contient 2 coups de pied : on la coupe après le premier (secondes réelles)
 local ANIM_FINAL     = "m_attack_aerial_hand_turnheeldropkick"
-local ANIM_CIBLE     = "M_Beaten_SpinBlowOff"
+local ANIM_FINAL_VITESSE = 1.5   -- vitesse de lecture de la 2e animation (le délai du coup de talon est réduit d'autant)
+local ANIM_CIBLE     = "a_p1011_v00_c00_dmgspin01_1"
 local DISTANCE_COTE  = 70     -- à quelle distance de la cible le lanceur se place
 --========================================================
 
@@ -144,16 +145,25 @@ local function Final(ply, cible)
     end)
 end
 
--- Étape 2 : au sommet, la cible reste suspendue et le lanceur la rejoint
-local function Sommet(ply, cible)
-    if not IsValid(ply) or not ply:Alive() or not IsValid(cible) or (cible:IsPlayer() and not cible:Alive()) then
-        return Liberer(ply, cible)
-    end
+-- Un NextBot (faux joueur d'entraînement) reste collé au sol quand on lui donne de la
+-- vitesse vers le haut : on le soulève donc image par image jusqu'à la hauteur
+-- qu'atteindrait un joueur au sommet.
+local function Soulever(cible, vitesse, duree)
+    local g = GetConVar("sv_gravity"):GetFloat()
+    local haut = vitesse * duree - 0.5 * g * duree * duree
+    local depart = cible:GetPos()
+    local t0 = CurTime()
+    local id = "TaijutsuCombo_Haut_" .. cible:EntIndex()
+    timer.Create(id, 0, 0, function()
+        if not IsValid(cible) then timer.Remove(id) return end
+        local k = math.min((CurTime() - t0) / duree, 1)
+        cible:SetPos(depart + Vector(0, 0, haut * (1 - (1 - k) * (1 - k))))   -- freine vers le sommet
+        if k >= 1 then timer.Remove(id) end
+    end)
+end
 
-    local delai = Niv(ply, "delai_final", DELAI_FINAL)
-    if NA_Etourdir then NA_Etourdir(cible, delai + 0.3, ANIM_CIBLE, true, true) end   -- suspendue en l'air, anim jouée une fois (sv_etourdissement.lua)
-
-    -- le lanceur se place à côté de la cible, face à elle
+-- le lanceur se place à côté de la cible, face à elle, et reste en l'air
+local function Rejoindre(ply, cible)
     local pos = cible:GetPos()
     local dir = pos - ply:GetPos()
     dir.z = 0
@@ -183,27 +193,24 @@ local function Sommet(ply, cible)
     ply:SetEyeAngles(Angle(0, dir:Angle().y, 0))
     ply:SetVelocity(-ply:GetVelocity())
     ply:SetMoveType(MOVETYPE_NONE)   -- reste en l'air le temps du coup
-
-    NA_AnimJutsu(ply, ANIM_FINAL)
-    NA_Mudra(ply, delai + 0.2)   -- pas de coups jusqu'au coup de talon
-    timer.Simple(delai, function() Final(ply, cible) end)
 end
 
--- Un NextBot (faux joueur d'entraînement) reste collé au sol quand on lui donne de la
--- vitesse vers le haut : on le soulève donc image par image jusqu'à la hauteur
--- qu'atteindrait un joueur au sommet.
-local function Soulever(cible, vitesse, duree)
-    local g = GetConVar("sv_gravity"):GetFloat()
-    local haut = vitesse * duree - 0.5 * g * duree * duree
-    local depart = cible:GetPos()
-    local t0 = CurTime()
-    local id = "TaijutsuCombo_Haut_" .. cible:EntIndex()
-    timer.Create(id, 0, 0, function()
-        if not IsValid(cible) then timer.Remove(id) return end
-        local k = math.min((CurTime() - t0) / duree, 1)
-        cible:SetPos(depart + Vector(0, 0, haut * (1 - (1 - k) * (1 - k))))   -- freine vers le sommet
-        if k >= 1 then timer.Remove(id) end
-    end)
+-- Partagé avec le rang A (sv_taijutsu_rafale.lua)
+NA_TaijutsuAir = { Rejoindre = Rejoindre, Soulever = Soulever, EstCible = EstCible, Degats = Degats, Liberer = Liberer, TrouverCible = TrouverCible }
+
+-- Étape 2 : au sommet, la cible reste suspendue et le lanceur la rejoint
+local function Sommet(ply, cible)
+    if not IsValid(ply) or not ply:Alive() or not IsValid(cible) or (cible:IsPlayer() and not cible:Alive()) then
+        return Liberer(ply, cible)
+    end
+
+    local delai = Niv(ply, "delai_final", DELAI_FINAL)
+    if NA_Etourdir then NA_Etourdir(cible, delai + 0.3, ANIM_CIBLE, true, true) end   -- suspendue en l'air, anim jouée une fois (sv_etourdissement.lua)
+
+    Rejoindre(ply, cible)
+    NA_AnimJutsu(ply, ANIM_FINAL, 0, ANIM_FINAL_VITESSE)
+    NA_Mudra(ply, delai + 0.2)   -- pas de coups jusqu'au coup de talon
+    timer.Simple(delai, function() Final(ply, cible) end)
 end
 
 -- Étape 1 : coup de pied relevé, la cible décolle

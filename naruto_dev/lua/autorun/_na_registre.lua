@@ -115,6 +115,7 @@ NA_DELAI_APRES = NA_DELAI_APRES or {
     taijutsu_combo = 0.4,              -- Enchaînement aérien (rang B)
     taijutsu_pied = 0.6,               -- Coup de pied tournoyant (rang C)
     taijutsu_releve = 0.6,             -- Coup de pied relevé (rang B)
+    taijutsu_rafale = 0.4,             -- Rafale aérienne (rang A)
 
     -- Uchiha
     katon_saut = 0.4,                  -- Boule de feu sautée (rang C)

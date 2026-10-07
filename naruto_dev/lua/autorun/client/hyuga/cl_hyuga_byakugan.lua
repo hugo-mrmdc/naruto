@@ -36,16 +36,17 @@ end)
 ----------------------------------------------------------
 -- Vision à travers les murs (joueur local uniquement)
 ----------------------------------------------------------
-local ALPHA_CIBLE = 60   -- transparence du modèle des cibles (0 = invisible, 255 = normal)
+local ALPHA_CIBLE = 180  -- transparence du modèle des cibles (0 = invisible, 255 = normal)
 
 local cibles = {}
 local transparents = {}   -- ent -> { couleur = Color, rendermode = number } (valeurs à restaurer)
 
 local function AppliquerTransparence(ent)
     if transparents[ent] then return end
-    transparents[ent] = { couleur = ent:GetColor(), rendermode = ent:GetRenderMode() }
+    local c = ent:GetColor()
+    c = Color(c.r, c.g, c.b, c.a)   -- copie : GetColor peut renvoyer la table interne, que SetColor modifierait (l'alpha d'origine serait perdu)
+    transparents[ent] = { couleur = c, rendermode = ent:GetRenderMode() }
     ent:SetRenderMode(RENDERMODE_TRANSALPHA)
-    local c = transparents[ent].couleur
     ent:SetColor(Color(c.r, c.g, c.b, ALPHA_CIBLE))
 end
 
@@ -135,6 +136,14 @@ local function OsValides(ent)
     return valides
 end
 
+-- bleu -> rouge selon les coups reçus (NW2Float posé par sv_hyuga_byakugan.lua)
+local function CouleurTenketsu(ent)
+    local r = 0
+    if CurTime() <= ent:GetNW2Float("NA_TenketsuFin", 0) then r = ent:GetNW2Float("NA_TenketsuRatio", 0) end
+    if r <= 0 then return COULEUR_TENKETSU end
+    return Color(Lerp(r, COULEUR_TENKETSU.r, 255), Lerp(r, COULEUR_TENKETSU.g, 30), Lerp(r, COULEUR_TENKETSU.b, 30))
+end
+
 hook.Add("PostDrawTranslucentRenderables", "HyugaByakugan_Tenketsu", function()
     local ply = LocalPlayer()
     if not IsValid(ply) or not ply:GetNW2Bool("NA_Byakugan", false) or #cibles == 0 then return end
@@ -144,10 +153,11 @@ hook.Add("PostDrawTranslucentRenderables", "HyugaByakugan_Tenketsu", function()
 
     for _, ent in ipairs(cibles) do
         if IsValid(ent) then
+            local couleur = CouleurTenketsu(ent)
             for os in pairs(OsValides(ent)) do
                 local pos = ent:GetBonePosition(os)
                 if pos then
-                    render.DrawSprite(pos, TAILLE_TENKETSU, TAILLE_TENKETSU, COULEUR_TENKETSU)
+                    render.DrawSprite(pos, TAILLE_TENKETSU, TAILLE_TENKETSU, couleur)
                 end
             end
         end

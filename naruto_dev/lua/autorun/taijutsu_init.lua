@@ -16,6 +16,8 @@ if SERVER then
     include("autorun/server/taijutsu/sv_taijutsu_combo.lua")
     AddCSLuaFile("autorun/client/taijutsu/cl_taijutsu_releve.lua")
     include("autorun/server/taijutsu/sv_taijutsu_releve.lua")
+    AddCSLuaFile("autorun/client/taijutsu/cl_taijutsu_rafale.lua")
+    include("autorun/server/taijutsu/sv_taijutsu_rafale.lua")   -- après le combo (utilise NA_TaijutsuAir)
 end
 
 if CLIENT then
@@ -24,4 +26,5 @@ if CLIENT then
     include("autorun/client/taijutsu/cl_taijutsu_descendant.lua")
     include("autorun/client/taijutsu/cl_taijutsu_combo.lua")
     include("autorun/client/taijutsu/cl_taijutsu_releve.lua")
+    include("autorun/client/taijutsu/cl_taijutsu_rafale.lua")
 end

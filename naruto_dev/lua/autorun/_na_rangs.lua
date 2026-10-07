@@ -71,6 +71,7 @@ NA_RANG_TECH = {
     kiminari_laser = "B", kiminari_boulets = "A", jiton_sarcophage = "C", jiton_emergence = "C",
     jiton_vortex = "B", jiton_tornade = "B", jiton_nuage = "A", taijutsu_pied = "C",
     taijutsu_descendant = "C", taijutsu_combo = "B", taijutsu_releve = "B",
+    taijutsu_rafale = "A",
 }
 
 --========================================================

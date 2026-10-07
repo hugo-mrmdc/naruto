@@ -335,10 +335,10 @@ local TECHNIQUES = {
     { cat = "Jinton", name = "Bouclier Jinton", key = "", id = "jinton_bouclier", rang = "C", icone = "ui/icon/jinton_bulle_poussiere.png", court = "Bouclier", cooldown = 20,
       desc = "Une sphère de poussière t'entoure pendant 10 secondes : un bouclier égal à 20 % de ta vie max encaisse les dégâts à ta place. Appuie sur E pour le faire exploser avant la fin. Coûte 25 de chakra.",
       dmg = "Bouclier de 20 % de la vie" },
-    { cat = "Jinton", name = "Cube Jinton", key = "", id = "jinton_cubes", rang = "B", icone = "ui/icon/jinton_cube_confinement.png", court = "Cube", cooldown = 14,
+    { cat = "Jinton", name = "Cube Jinton", key = "", id = "jinton_cubes", rang = "B", icone = "ui/icon/cubeExpen.png", court = "Cube", cooldown = 14,
       desc = "Un cube apparaît là où tu regardes (portée max 900) et grossit sur place : tout ennemi dans le cube quand il a fini de grandir prend de gros dégâts. Coûte 35 de chakra.",
       dmg = "120 à chaque cible dans le cube" },
-    { cat = "Jinton", name = "Cage Jinton", key = "", id = "jinton_cage", rang = "B", icone = "ui/icon/jinton_cube_confinement.png", court = "Cage", cooldown = 22,
+    { cat = "Jinton", name = "Cage Jinton", key = "", id = "jinton_cage", rang = "B", icone = "ui/icon/cagejinton.png", court = "Cage", cooldown = 22,
       desc = "Un très grand cube apparaît là où tu regardes (portée max 800). Ceux qui sont dedans à son apparition ne peuvent plus en sortir pendant 4 secondes et prennent des dégâts à chaque tick ; personne d'autre ne peut y entrer. Aucun jutsu lancé depuis l'extérieur du cube ne blesse ceux qui sont dedans. Toi, tu entres et sors comme tu veux, et dans le cube tu subis 50 % de dégâts en moins. Coûte 45 de chakra.",
       dmg = "25 par tick (toutes les 0,5 s) et par cible" },
     { cat = "Jinton", name = "Rayon de dissolution", key = "", id = "jinton_laser", rang = "A", icone = "ui/icon/jinton_rayon_dissolution.png", court = "Rayon", cooldown = 30,
@@ -456,6 +456,10 @@ local TECHNIQUES = {
     { cat = "Taijutsu", name = "Coup de pied relevé", key = "", id = "taijutsu_releve", rang = "B", icone = "ui/icon/taijutsu_tornade_jade.png", court = "Relevé", cooldown = 14,
       desc = "Deux coups de pied au corps à corps : le premier inflige des dégâts aux ennemis devant toi, le second les inflige aussi et les envoie en l'air. Coûte 20 de chakra.",
       dmg = "25 + 25 dégâts + projection en l'air au 2e coup" },
+
+    { cat = "Taijutsu", name = "Rafale aérienne", key = "", id = "taijutsu_rafale", rang = "A", icone = "ui/icon/taijutsu_fureur_dragon.png", court = "Rafale", cooldown = 22,
+      desc = "Un coup de pied envoie l'ennemi devant toi en l'air, tu le rejoins et l'enchaînes de cinq coups aériens, deux fois de suite : le dernier l'écrase au sol. Coûte 40 de chakra.",
+      dmg = "40 + 9 x 40 + 70 dégâts + projection en l'air puis au sol" },
 
     -- ===== ARMES =====
     --[[{ cat = "Armes", name = "Zabuza", key = "Clic gauche / droit",

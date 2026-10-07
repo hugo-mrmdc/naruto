@@ -28,7 +28,7 @@ local CHAKRA_MAX   = NA_CHAKRA_MAX or 100
 local DELAI_IMPACT = 0.3     -- lancement de l'anim -> 1er coup
 local DELAI_ENVOL  = 0.7     -- lancement de l'anim -> 2e coup (à régler selon l'animation)
 local ANIM_APPEL   = "m_attack_hand_lowkicktokickup"
-local ANIM_CIBLE   = "M_Beaten_SpinBlowOff"   -- animation de la cible projetée
+local ANIM_CIBLE   = "a_p1011_v00_c00_dmgspin01_1"   -- animation de la cible projetée
 local DUREE_ANIM_MAX = 3                      -- sécurité : on rend la main à la cible après ce délai
 
 local SON_IMPACT   = "dimix/sond/taijutsu/hit6.wav"

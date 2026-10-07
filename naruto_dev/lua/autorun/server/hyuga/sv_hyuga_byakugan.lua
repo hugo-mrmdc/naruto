@@ -133,6 +133,37 @@ hook.Add("Think", "HyugaByakugan_Chakra", function()
 end)
 
 ----------------------------------------------------------
+-- Boost Hyuga : tenketsu abîmés
+-- Byakugan actif, chaque coup de poing / taijutsu / technique Hyuga (tous en DMG_CLUB, attaquant = le joueur)
+-- abîme les tenketsu de la cible : ils virent au rouge (cl_hyuga_byakugan.lua) et tes dégâts de ce type
+-- augmentent contre elle, jusqu'à TENKETSU_MAX coups. Sans coup pendant TENKETSU_DUREE, ils guérissent.
+-- Réseau (sur la cible) : NW2Float "NA_TenketsuRatio" (0 à 1), NW2Float "NA_TenketsuFin" (CurTime de guérison)
+----------------------------------------------------------
+local TENKETSU_MAX    = 10     -- coups pour des tenketsu entièrement rouges
+local TENKETSU_BONUS  = 0.05   -- dégâts en plus par coup déjà porté (10 coups = +50 %)
+local TENKETSU_DUREE  = 5      -- secondes sans coup avant que les tenketsu guérissent
+
+local function Tenketsu(ent)
+    if CurTime() > ent:GetNW2Float("NA_TenketsuFin", 0) then return 0 end
+    return math.Round(ent:GetNW2Float("NA_TenketsuRatio", 0) * TENKETSU_MAX)
+end
+
+hook.Add("EntityTakeDamage", "HyugaByakugan_Tenketsu", function(cible, dmg)
+    local ply = dmg:GetAttacker()
+    if not (IsValid(ply) and ply:IsPlayer() and Actif(ply)) or cible == ply then return end
+    if not dmg:IsDamageType(DMG_CLUB) then return end
+    if not (cible:IsPlayer() or cible:IsNPC() or cible:IsNextBot()) then return end
+
+    local coups = Tenketsu(cible)
+    dmg:ScaleDamage(1 + coups * Niv(ply, "tenketsu_bonus", TENKETSU_BONUS))
+
+    cible:SetNW2Float("NA_TenketsuRatio", math.min(coups + 1, TENKETSU_MAX) / TENKETSU_MAX)
+    cible:SetNW2Float("NA_TenketsuFin", CurTime() + TENKETSU_DUREE)
+end)
+
+hook.Add("PlayerDeath", "HyugaByakugan_TenketsuGuerison", function(ply) ply:SetNW2Float("NA_TenketsuFin", 0) end)
+
+----------------------------------------------------------
 -- Nettoyage
 ----------------------------------------------------------
 hook.Add("PlayerDeath", "HyugaByakugan_Mort", function(ply)

@@ -847,7 +847,7 @@ NA_NIV_TECH.jinton_cubes = {
 NA_NIV_TECH.jinton_cage = {
     [1] = {
         degats = 25, chakra = 45, recharge = 22,
-        portee = 800, echelle = 6, duree = 4, intervalle = 0.5, resistance = 50,
+        portee = 800, echelle = 6, duree = 4, intervalle = 1.5, resistance = 50,
         duree_mudra = 0.5,
     },
     [2] = { degats = 28, duree = 5 },
@@ -1021,12 +1021,22 @@ NA_NIV_TECH.taijutsu_descendant = {
 NA_NIV_TECH.taijutsu_combo = {
     [1] = {
         degats = 83, degats_final = 83, chakra = 30, recharge = 18, portee = 150,
-        lancer = 450, delai_impact = 0.35, delai_sommet = 0.45, delai_final = 0.5,
+        lancer = 450, delai_impact = 0.35, delai_sommet = 0.45, delai_final = 0.33,
     },
     [2] = { degats = 94, degats_final = 94 },
     [3] = { degats = 103, degats_final = 103, recharge = 16 },
     [4] = { degats = 110, degats_final = 110 },
     [5] = { degats = 120, degats_final = 120, chakra = 25, recharge = 14 },
+}
+
+-- Rafale aérienne (server/taijutsu/sv_taijutsu_rafale.lua)
+--   degats = chacun des 4 premiers coups, degats_final = dernier coup (écrasement)
+NA_NIV_TECH.taijutsu_rafale = {
+    [1] = { degats = 30, degats_final = 23, chakra = 40, recharge = 22, lancer = 450, delai_sommet = 0.45 },
+    [2] = { degats = 33, degats_final = 28 },
+    [3] = { degats = 38, degats_final = 32, recharge = 20 },
+    [4] = { degats = 42, degats_final = 38 },
+    [5] = { degats = 48, degats_final = 43, chakra = 34, recharge = 17 },
 }
 
 -- Coup de pied relevé (server/taijutsu/sv_taijutsu_releve.lua) : 2 coups dans l'animation

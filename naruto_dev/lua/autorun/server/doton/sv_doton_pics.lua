@@ -113,7 +113,7 @@ local function Frapper(ply, cible)
     cible:TakeDamageInfo(dmg)
 
     local stun = Niv(ply, "stun", STUN)
-    if NA_Etourdir then NA_Etourdir(cible, stun) end   -- sv_etourdissement.lua
+    if NA_Etourdir then NA_Etourdir(cible, stun, nil, nil, false) end   -- stun LOURD (ferme) : un taijutsu ne peut pas l'emporter (sv_etourdissement.lua)
     Petrifier(cible, stun)
 
     -- particule au sol, sous la cible touchée

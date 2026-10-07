@@ -91,7 +91,7 @@ if SERVER then
             if ent:IsPlayer() then
                 -- accélération ajoutée à la vitesse du joueur (SetVelocity s'additionne)
                 local force = self.ForceAttraction * attenuation
-                -- aucune projection de la cible (pas de transfert de force)
+                ent:SetVelocity((dir * force + tangente * self.Tourbillon) * dt)
             else
                 -- PNJ / nextbots : on les fait glisser à vitesse fixe, sans traverser les murs
                 local vitesse = self.VitesseAttractionPNJ * attenuation
