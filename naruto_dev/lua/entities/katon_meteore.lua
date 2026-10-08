@@ -49,7 +49,7 @@ if SERVER then
         net.Broadcast()
         sound.Play("geams/solve_jutsu/katon/solve_katon_fireball_01.wav", pos, 140, 80, 1)
         sound.Play("geams/solve_jutsu/katon/solve_katon_arena_start.wav", pos, 120, 60, 1)
-        util.ScreenShake(pos, 25, 40, 2.5, self.Rayon * 6)
+        util.ScreenShake(pos, 15, 30, 1.5, self.Rayon * 3)
 
         for _, ent in ipairs(ents.FindInSphere(pos + Vector(0, 0, 60), self.Rayon)) do
             if not EstCible(ent, owner) then continue end

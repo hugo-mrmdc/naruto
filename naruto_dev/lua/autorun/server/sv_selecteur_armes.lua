@@ -70,6 +70,7 @@ net.Receive("NA_EpeeDos", function(_, ply)
     if not reinit then
         pos, ang, echelle = net.ReadVector(), net.ReadAngle(), net.ReadFloat()
     end
+    local bone = not reinit and net.ReadString() or ""   -- os d'attache ("" = celui de l'arme)
     if not IsValid(ply) or not EstEpee(classe) then return end
 
     ply.NA_DosEpees = ply.NA_DosEpees or {}
@@ -81,6 +82,7 @@ net.Receive("NA_EpeeDos", function(_, ply)
             x = B(pos.x), y = B(pos.y), z = B(pos.z),
             p = math.NormalizeAngle(ang.p), ya = math.NormalizeAngle(ang.y), r = math.NormalizeAngle(ang.r),
             s = math.Clamp(echelle, 0.1, 3),
+            o = (#bone <= 40 and string.match(bone, "^ValveBiped%.Bip01_[%w_]+$")) and bone or nil,
         }
     end
     ply:SetNW2String("NA_EpeeDos", next(ply.NA_DosEpees) and util.TableToJSON(ply.NA_DosEpees) or "")

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Naruto RP - Chargement</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#08080c;font-family:Roboto,"Segoe UI",Arial,sans-serif;color:#fff}
+  .slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.4s ease;transform:scale(1)}
+  .slide.on{opacity:1;animation:zoom 7s linear forwards}
+  @keyframes zoom{to{transform:scale(1.07)}}
+  .shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.65),transparent 28%,transparent 50%,rgba(0,0,0,.75))}
+  h1{position:absolute;top:5vh;width:100%;margin:0;text-align:center;font-size:7vh;font-weight:900;letter-spacing:.3vh;text-shadow:0 .3vh 1vh #000}
+  .bas{position:absolute;left:50%;bottom:8vh;width:60vw;max-width:900px;transform:translateX(-50%)}
+  .ligne{display:flex;justify-content:space-between;font-weight:700;font-size:2.4vh;margin-bottom:1.2vh;text-shadow:0 0 6px #000}
+  .pct{color:#ffc878}
+  .barre{height:1.2vh;border-radius:1vh;background:rgba(255,255,255,.18);box-shadow:0 0 0 .3vh rgba(0,0,0,.65);overflow:hidden}
+  .rempli{height:100%;width:0;border-radius:1vh;background:linear-gradient(90deg,#ff8c1e,#ffc878);transition:width .4s ease}
+  .info{margin-top:2.4vh;text-align:center;font-size:2vh;color:#e6e6e6;text-shadow:0 0 6px #000;min-height:3vh}
+</style>
+</head>
+<body>
+<div id="slides"></div>
+<div class="shade"></div>
+<h1>NARUTO RP</h1>
+<div class="bas">
+  <div class="ligne"><span id="statut">Connexion...</span><span class="pct" id="pct">0 %</span></div>
+  <div class="barre"><div class="rempli" id="barre"></div></div>
+  <div class="info" id="conseil"></div>
+</div>
+<script>
+// Images : à côté de la page (hébergement web), sinon fichiers locaux du jeu
+var NOMS = ["load1.png","load2.png","load3.png","load4.png"];
+var CONSEILS = [
+  "Le chakra se régénère quand tu te reposes.",
+  "Les mudras s'enchaînent plus vite avec de l'entraînement.",
+  "Chaque clan possède ses propres techniques.",
+  "Monte en rang pour débloquer de nouvelles techniques.",
+  "Le sprint consomme du chakra : garde toujours une réserve.",
+  "Mieux vaut esquiver que subir : utilise ton dash."
+];
+
+var conteneur = document.getElementById("slides"), slides = [];
+NOMS.forEach(function(n){
+  var d = document.createElement("div"); d.className = "slide";
+  var img = new Image();
+  img.onload = function(){ d.style.backgroundImage = "url(" + img.src + ")"; d.dataset.ok = 1; };
+  img.onerror = function(){
+    if (img.src.indexOf("asset://") === 0) return;
+    img.src = "asset://garrysmod/materials/ui/loadMenu/" + n;
+  };
+  img.src = n;
+  conteneur.appendChild(d); slides.push(d);
+});
+var cur = -1;
+function suivant(){
+  var ok = slides.filter(function(s){ return s.dataset.ok; });
+  if (!ok.length) return;
+  if (cur >= 0) slides[cur].classList.remove("on");
+  var courante = slides[cur];
+  var i = ok.indexOf(courante); i = (i + 1) % ok.length;
+  var s = ok[i]; s.classList.remove("on"); void s.offsetWidth; s.classList.add("on");
+  cur = slides.indexOf(s);
+}
+setInterval(suivant, 6000); setTimeout(suivant, 300); setTimeout(suivant, 1500);
+
+var ci = Math.floor(Math.random() * CONSEILS.length), elC = document.getElementById("conseil");
+function conseil(){ elC.textContent = CONSEILS[ci]; ci = (ci + 1) % CONSEILS.length; }
+conseil(); setInterval(conseil, 6000);
+
+// --- Callbacks appelés par GMod ---
+var total = 0, restants = 0, statutTxt = "Connexion...";
+function maj(){
+  var p = total > 0 ? Math.min(100, Math.round((total - restants) / total * 100)) : 0;
+  document.getElementById("barre").style.width = p + "%";
+  document.getElementById("pct").textContent = p + " %";
+  document.getElementById("statut").textContent = statutTxt;
+}
+function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode){
+  if (servername) document.querySelector("h1").textContent = servername;
+}
+function SetFilesTotal(t){ total = t; maj(); }
+function SetFilesNeeded(n){ restants = n; maj(); }
+function DownloadingFile(f){ statutTxt = "Téléchargement : " + String(f).split("/").pop(); maj(); }
+function SetStatusChanged(s){ statutTxt = s; maj(); }
+maj();
+</script>
+</body>
+</html>

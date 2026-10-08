@@ -243,12 +243,13 @@ local function EnvoyerDosEpee(classe)
             net.WriteVector(Vector(p.x, p.y, p.z))
             net.WriteAngle(Angle(p.p, p.ya, p.r))
             net.WriteFloat(p.s)
+            net.WriteString(p.o or "")
         end
     net.SendToServer()
 end
 
-local function SauverDosEpee(classe, pos, ang, echelle)
-    PlacementsDos[classe] = { x = pos.x, y = pos.y, z = pos.z, p = ang.p, ya = ang.y, r = ang.r, s = echelle }
+local function SauverDosEpee(classe, pos, ang, echelle, os)
+    PlacementsDos[classe] = { x = pos.x, y = pos.y, z = pos.z, p = ang.p, ya = ang.y, r = ang.r, s = echelle, o = os }
     file.Write(FICHIER_DOS, util.TableToJSON(PlacementsDos, true))
 end
 
@@ -256,6 +257,13 @@ local function OublierDosEpee(classe)
     PlacementsDos[classe] = nil
     file.Write(FICHIER_DOS, util.TableToJSON(PlacementsDos, true))
 end
+
+-- Utilisé par l'éditeur de placement d'arme (cl_arme_placer.lua, bouton "Ajuster" de l'arme)
+NA_DosEpeeJoueur = {
+    get    = function(classe) return PlacementsDos[classe] end,
+    save   = function(classe, pos, ang, echelle, os) SauverDosEpee(classe, pos, ang, echelle, os) EnvoyerDosEpee(classe) end,
+    forget = function(classe) OublierDosEpee(classe) EnvoyerDosEpee(classe) end,
+}
 
 local function EnvoyerEquipement(slot, it)
     if slot == "armure" and it.modelPath then
@@ -796,7 +804,7 @@ NA_EditeurCameraActive = false   -- lu par thirdpersonne.lua
 local vueEditeur = { os = "ValveBiped.Bip01_Head1", angle = 0, distance = 40 }
 
 hook.Add("CalcView", "NA_EditeurAccessoire_Vue", function(ply, pos, ang, fov)
-    if not NA_EditeurCameraActive then return end
+    if not NA_EditeurCameraActive or NA_ArmePlacerActif then return end   -- NA_ArmePlacerActif : cl_arme_placer.lua a sa propre caméra
 
     local bone = ply:LookupBone(vueEditeur.os) or ply:LookupBone("ValveBiped.Bip01_Head1")
     local centre = bone and ply:GetBonePosition(bone) or ply:EyePos()
@@ -1307,7 +1315,14 @@ local function OuvrirMenu()
             if it then IconeProgressive(b, it, equipSize) b:SetTooltip(it.item .. " · " .. Rarete(it).nom) end
             b.DoRightClick = function() Desequiper(e.id) end b.DoDoubleClick = b.DoRightClick
             if it and (e.id == "masque" or e.id == "accessoire" or (e.id == "arme" and it.classe)) then
-                local ajuster = Bouton(groupe, "Ajuster", 0, 25 * S + equipSize, equipSize, 28 * S, function() OuvrirEditeur(e.id) end)
+                local ajuster = Bouton(groupe, "Ajuster", 0, 25 * S + equipSize, equipSize, 28 * S, function()
+                    if e.id == "arme" then
+                        FermerMenu()
+                        RunConsoleCommand("na_arme_placer_joueur", it.classe)
+                    else
+                        OuvrirEditeur(e.id)
+                    end
+                end)
                 ajuster:SetFont("NA.Inv.Petit")
                 b.DoMiddleClick = ajuster.DoClick
             end

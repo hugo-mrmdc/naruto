@@ -67,7 +67,8 @@ SWEP.Anims = {
 --                0.8 = plus lente ; absente = SWEP.VitesseAnim)
 --   optionnels :
 --                portee (remplace celle de SWEP.Frappe), recul / reculHaut (projette la cible),
---                delai / dureeFrappe (remplacent ceux de SWEP.Frappe)
+--                delai / dureeFrappe (remplacent ceux de SWEP.Frappe),
+--                touche (particule sur l'ennemi touché) + delaiTouche (s entre les dégâts et la particule)
 SWEP.Combo = {
     { anim = "nrp_sword_slashhorizon",         duree = 1.0, degats = 40 },
     { anim = "nrp_sword_turnslashingshoulder", duree = 1.1, degats = 40 },
@@ -318,6 +319,7 @@ function SWEP:PrimaryAttack()
         reculHaut  = coup.reculHaut,
         impact     = coup.impact,
         touche     = coup.touche,
+        delaiTouche = coup.delaiTouche,
         touches    = {},
     }
 end
@@ -458,13 +460,19 @@ function SWEP:Think()
 
             if a.touche then
                 -- sur le torse de l'ennemi touché (os de colonne, sinon centre du corps)
-                local torse = ent:LookupBone("ValveBiped.Bip01_Spine2")
-                local pos = torse and ent:GetBonePosition(torse) or ent:WorldSpaceCenter()
-                if pos:DistToSqr(ent:GetPos()) < 1 then pos = ent:WorldSpaceCenter() end   -- os pas calculé côté serveur
-                net.Start("NA_Arme_Touche")
-                    net.WriteString(a.touche)
-                    net.WriteVector(pos)
-                net.Broadcast()
+                -- a.delaiTouche = secondes entre le coup (les dégâts) et la particule
+                local nom = a.touche
+                local function Particule()
+                    if not IsValid(ent) then return end
+                    local torse = ent:LookupBone("ValveBiped.Bip01_Spine2")
+                    local pos = torse and ent:GetBonePosition(torse) or ent:WorldSpaceCenter()
+                    if pos:DistToSqr(ent:GetPos()) < 1 then pos = ent:WorldSpaceCenter() end   -- os pas calculé côté serveur
+                    net.Start("NA_Arme_Touche")
+                        net.WriteString(nom)
+                        net.WriteVector(pos)
+                    net.Broadcast()
+                end
+                if (a.delaiTouche or 0) > 0 then timer.Simple(a.delaiTouche, Particule) else Particule() end
             end
 
             if a.impact then
@@ -659,7 +667,7 @@ end
 
 -- Modèle posé sur un os de la main : décalage dans le repère de l'os, puis rotation
 local function DessinerEnMain(m, ply, nomOs, cfg)
-    local os = ply:LookupBone(nomOs)
+    local os = ply:LookupBone(isstring(cfg.os) and cfg.os or nomOs)
     if not os then return end
     -- os recalculés maintenant : sur une animation forcée (double saut, coup en l'air) le cache
     -- d'os peut être périmé, et l'arme partait alors ailleurs que dans la main
@@ -722,7 +730,8 @@ net.Receive("NA_Arme_Anim", function()
         ply:AddVCDSequenceToGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD, seq, 0, true)
         ply:AnimSetGestureWeight(GESTURE_SLOT_ATTACK_AND_RELOAD, 0)
         -- l'emplacement de geste correspond au calque d'animation du même numéro
-        if vitesse > 0 and vitesse ~= 1 then
+        -- toujours réglée (même à 1) : sinon le coup suivant garde la vitesse du coup précédent
+        if vitesse > 0 then
             ply:SetLayerPlaybackRate(GESTURE_SLOT_ATTACK_AND_RELOAD, vitesse)
         end
 
@@ -876,6 +885,7 @@ local function PlacementPerso(ply, classe)
                 pos = Vector(p.x or 0, p.y or 0, p.z or 0),
                 ang = Angle(p.p or 0, p.ya or 0, p.r or 0),
                 echelle = p.s,
+                os = (p.o and p.o ~= "") and p.o or nil,
             }
         end
         cacheDos[ply] = c
@@ -884,12 +894,12 @@ local function PlacementPerso(ply, classe)
 end
 
 local function DessinerDos(ply, m, cfg, classe)
-    local os = OsDuDos(ply, cfg.os or "ValveBiped.Bip01_Spine4")
+    local perso = PlacementPerso(ply, classe)
+    local os = OsDuDos(ply, (perso and perso.os) or cfg.os or "ValveBiped.Bip01_Spine4")
     if not os then return end
     local mat = ply:GetBoneMatrix(os)
     if not mat then return end
 
-    local perso = PlacementPerso(ply, classe)
     local echelle = (perso and perso.echelle) or cfg.echelle or 1
     if m.NA_Echelle ~= echelle then
         m:SetModelScale(echelle, 0)

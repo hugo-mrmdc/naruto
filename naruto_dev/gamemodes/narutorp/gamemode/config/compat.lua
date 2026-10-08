@@ -27,6 +27,7 @@ NRP.Config.Compat = {
     PlayerWeapons = {
         hand = true,
         hiramekarei = true,
+        katana_basique = true,
         kabutowari = true,
         shibuki = true,
         shuriken_fuma = true,
