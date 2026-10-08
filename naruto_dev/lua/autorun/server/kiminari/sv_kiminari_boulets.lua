@@ -187,7 +187,7 @@ net.Receive("kiminari_boulets_cast", function(_, ply)
     local cout = NA_Stat(ply, "kiminari_boulets", "chakra", CHAKRA_COUT)
     if cout > 0 then
         if chakra < cout then
-            ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
+            -- (pas de message)
             return
         end
         ply:SetNW2Float("NA_Chakra", chakra - cout)

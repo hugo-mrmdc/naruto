@@ -20,21 +20,25 @@ util.AddNetworkString("taijutsu_rafale_cast")
 --========================================================
 local DEGATS        = 40     -- dégâts du coup de pied et des 4 premiers coups
 local DEGATS_FINAL  = 70     -- dégâts du dernier coup
-local LANCER        = 450    -- vitesse verticale donnée à la cible
+local LANCER        = 1300   -- vitesse verticale donnée à la cible
 local ECRASER       = 1400   -- vitesse vers le bas du dernier coup
 
 local RECHARGE      = 22
 local CHAKRA_COUT   = 40
 local CHAKRA_MAX    = NA_CHAKRA_MAX or 100
 
-local DELAI_IMPACT  = 0.22   -- début du coup de pied -> la cible décolle
-local DELAI_SOMMET  = 0.45   -- décollage -> le lanceur rejoint la cible
+local DELAI_IMPACT  = 0.15   -- début du coup de pied -> la cible décolle
+local DELAI_SOMMET  = 0.1    -- décollage -> le lanceur rejoint la cible
 local INTERVALLE    = 0.22   -- durée de chaque coup de la rafale (l'animation est coupée à ce moment)
 local DELAI_TOUCHE  = 0.09   -- début d'un coup de la rafale -> il touche
 
 local ANIM_VITESSE  = 2      -- vitesse de lecture des animations du lanceur (délais ci-dessus à réduire d'autant)
 local ANIM_LANCER   = "m_attack_aerial_kunai_kick"
+local ANIM_DEPART_LANCER  = 0.25   -- secondes de l'animation sautées au début (élan trop lent)
+local ANIM_VITESSE_LANCER = 3   -- vitesse du coup de pied de lancement (impact DELAI_IMPACT à réduire d'autant)
 local ANIM_CIBLE    = "M_Beaten_SpinBlowOff"
+local ANIM_CHUTE    = "m_beaten_fall_behind_loop"   -- anim de la cible pendant qu'elle est écrasée vers le sol (en boucle)
+local CHUTE_MAX     = 3      -- durée max (secondes) de l'anim de chute si la cible ne touche pas le sol
 
 local TOURS          = 2      -- nombre de fois que la série d'animations est jouée (seul le tout dernier coup écrase)
 
@@ -46,6 +50,14 @@ local ANIMS = {
     "m_attack_aerial_armhammer",
     "m_attack_aerial_chakrafist_b_turnkick",
 }
+
+-- la série complète au 1er tour ; aux tours suivants la 1re animation est retirée
+local SERIE = {}
+for tour = 1, TOURS do
+    for i, anim in ipairs(ANIMS) do
+        if tour == 1 or i > 1 then SERIE[#SERIE + 1] = anim end
+    end
+end
 --========================================================
 
 local ID = "taijutsu_rafale"
@@ -66,12 +78,31 @@ local function Valide(ply, cible)
     return false
 end
 
+-- La cible tombe avec l'animation de chute en boucle, libérée dès qu'elle touche le sol
+local function ChuteCible(cible)
+    if not NA_Etourdir then return end
+    NA_Etourdir(cible, CHUTE_MAX, ANIM_CHUTE, false, true)   -- stun souple : la chute n'est pas bloquée
+    if NA_Projeter then NA_Projeter(cible, CHUTE_MAX) end
+
+    local t0 = CurTime()
+    local id = "TaijutsuRafale_Chute_" .. cible:EntIndex()
+    timer.Create(id, 0.05, 0, function()
+        if not IsValid(cible) then timer.Remove(id) return end
+        local dt = CurTime() - t0
+        local au_sol = cible.loco and cible.loco:IsOnGround() or cible:IsOnGround()
+        if dt > CHUTE_MAX or (dt > 0.2 and au_sol) then
+            timer.Remove(id)
+            if NA_Liberer then NA_Liberer(cible) end
+        end
+    end)
+end
+
 -- Coup n de la rafale : animation, puis dégâts ; le dernier écrase la cible au sol
 local function Coup(ply, cible, n)
     if not Valide(ply, cible) then return end
 
-    local final = n == #ANIMS * TOURS
-    NA_AnimJutsu(ply, ANIMS[(n - 1) % #ANIMS + 1], INTERVALLE, ANIM_VITESSE)
+    local final = n == #SERIE
+    NA_AnimJutsu(ply, SERIE[n], INTERVALLE, ANIM_VITESSE)
 
     timer.Simple(DELAI_TOUCHE, function()
         if not Valide(ply, cible) then return end
@@ -82,7 +113,9 @@ local function Coup(ply, cible, n)
 
         Fin(ply, cible)
         local vel = Vector(0, 0, -Niv(ply, "ecraser", ECRASER))
+        ChuteCible(cible)
         if cible.loco then cible.loco:SetVelocity(vel) else cible:SetVelocity(vel) end   -- NextBot : loco
+        NA_TaijutsuAir.PoussiereSol(cible)   -- même poussière que le rang B quand la cible retouche le sol
     end)
 
     if not final then timer.Simple(INTERVALLE, function() Coup(ply, cible, n + 1) end) end
@@ -92,7 +125,7 @@ end
 local function Sommet(ply, cible)
     if not Valide(ply, cible) then return end
 
-    local duree = #ANIMS * TOURS * INTERVALLE
+    local duree = #SERIE * INTERVALLE
     if NA_Etourdir then NA_Etourdir(cible, duree + 0.3, ANIM_CIBLE, true, true) end   -- stun souple, anim jouée une fois
     NA_TaijutsuAir.Rejoindre(ply, cible)
     NA_Mudra(ply, duree + 0.2)   -- pas de coups d'arme pendant la rafale
@@ -122,11 +155,12 @@ net.Receive("taijutsu_rafale_cast", function(_, ply)
     if not IsValid(ply) or not ply:Alive() or enCours[ply] then return end
     if not NA_Debloquee(ply, ID) then return end   -- technique pas encore débloquée (F6)
     if (pret[ply] or 0) > CurTime() then return end
+    if not NA_TaiPoings(ply) then return end
 
     local cout = Niv(ply, "chakra", CHAKRA_COUT)
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
     if chakra < cout then
-        ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
+        -- (pas de message)
         return
     end
     ply:SetNW2Float("NA_Chakra", chakra - cout)
@@ -138,7 +172,7 @@ net.Receive("taijutsu_rafale_cast", function(_, ply)
     enCours[ply] = true
     ply:SetNW2Bool("NA_Canalise", true)   -- pas d'autre jutsu pendant la technique
 
-    NA_AnimJutsu(ply, ANIM_LANCER, DELAI_IMPACT + 0.1, ANIM_VITESSE)
+    NA_AnimJutsu(ply, ANIM_LANCER, DELAI_IMPACT + 0.1, ANIM_VITESSE_LANCER, ANIM_DEPART_LANCER)
     NA_Mudra(ply, DELAI_IMPACT + 0.1)
     timer.Simple(DELAI_IMPACT, function() Lancer(ply) end)
 end)

@@ -116,6 +116,22 @@ local function Liberer(ply, cible)
     Deverrouiller(ply)   -- attend la fin de l'animation en cours avant de rendre les jutsus
 end
 
+-- poussière quand la cible retouche le sol (partagée avec la rafale aérienne, rang A)
+local function PoussiereSol(cible)
+    local t0 = CurTime()
+    local id = "TaijutsuCombo_Sol_" .. cible:EntIndex()
+    timer.Create(id, 0.05, 0, function()
+        if not IsValid(cible) or CurTime() - t0 > 2 then timer.Remove(id) return end
+        if CurTime() - t0 < 0.1 then return end
+        local au_sol = cible.loco and cible.loco:IsOnGround() or cible:IsOnGround()
+        if not au_sol then return end
+        timer.Remove(id)
+        net.Start("taijutsu_sol_fx")
+            net.WriteVector(cible:GetPos())
+        net.Broadcast()
+    end)
+end
+
 -- Étape 3 : coup de talon, la cible est écrasée au sol
 local function Final(ply, cible)
     if not IsValid(ply) or not ply:Alive() or not IsValid(cible) then return Liberer(ply, cible) end
@@ -130,19 +146,7 @@ local function Final(ply, cible)
         cible:SetVelocity(vel)
     end
 
-    -- poussière quand la cible retouche le sol
-    local t0 = CurTime()
-    local id = "TaijutsuCombo_Sol_" .. cible:EntIndex()
-    timer.Create(id, 0.05, 0, function()
-        if not IsValid(cible) or CurTime() - t0 > 2 then timer.Remove(id) return end
-        if CurTime() - t0 < 0.1 then return end
-        local au_sol = cible.loco and cible.loco:IsOnGround() or cible:IsOnGround()
-        if not au_sol then return end
-        timer.Remove(id)
-        net.Start("taijutsu_sol_fx")
-            net.WriteVector(cible:GetPos())
-        net.Broadcast()
-    end)
+    PoussiereSol(cible)
 end
 
 -- Un NextBot (faux joueur d'entraînement) reste collé au sol quand on lui donne de la
@@ -196,7 +200,7 @@ local function Rejoindre(ply, cible)
 end
 
 -- Partagé avec le rang A (sv_taijutsu_rafale.lua)
-NA_TaijutsuAir = { Rejoindre = Rejoindre, Soulever = Soulever, EstCible = EstCible, Degats = Degats, Liberer = Liberer, TrouverCible = TrouverCible }
+NA_TaijutsuAir = { Rejoindre = Rejoindre, Soulever = Soulever, EstCible = EstCible, Degats = Degats, Liberer = Liberer, TrouverCible = TrouverCible, PoussiereSol = PoussiereSol }
 
 -- Étape 2 : au sommet, la cible reste suspendue et le lanceur la rejoint
 local function Sommet(ply, cible)
@@ -246,11 +250,12 @@ net.Receive("taijutsu_combo_cast", function(_, ply)
     if not NA_Debloquee(ply, "taijutsu_combo") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() or enCours[ply] then return end
     if (pret[ply] or 0) > CurTime() then return end
+    if not NA_TaiPoings(ply) then return end
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
     local cout = Niv(ply, "chakra", CHAKRA_COUT)
     if chakra < cout then
-        ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
+        -- (pas de message)
         return
     end
     ply:SetNW2Float("NA_Chakra", chakra - cout)

@@ -91,7 +91,7 @@ net.Receive("jinton_cage_cast", function(_, ply)
     local cout = NA_Stat(ply, "jinton_cage", "chakra", CHAKRA_COUT)
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
     if cout > 0 then
-        if chakra < cout then return Refus(ply, "Pas assez de chakra") end
+        if chakra < cout then return end
         ply:SetNW2Float("NA_Chakra", chakra - cout)
     end
 

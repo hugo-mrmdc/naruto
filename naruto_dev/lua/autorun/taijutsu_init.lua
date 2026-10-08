@@ -8,6 +8,7 @@ if SERVER then
 
     AddCSLuaFile("autorun/client/taijutsu/cl_taijutsu_hitfx.lua")
     AddCSLuaFile("autorun/client/taijutsu/cl_taijutsu_pied.lua")
+    include("autorun/server/taijutsu/sv_taijutsu_poings.lua")   -- avant les techniques (NA_TaiPoings)
     include("autorun/server/taijutsu/sv_taijutsu_pied.lua")
     AddCSLuaFile("autorun/client/taijutsu/cl_taijutsu_descendant.lua")
     include("autorun/server/taijutsu/sv_taijutsu_descendant.lua")

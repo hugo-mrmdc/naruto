@@ -27,7 +27,7 @@ local DUREE         = 0.4    -- secondes pendant lesquelles la vitesse est tenue
                               --  il est bien plus court qu'en l'air)
 local GLISSE        = true    -- true = plus aucun frottement au sol pendant le dash
 local SAUT          = 0       -- petit décollage du sol (0 = reste collé)
-local RECHARGE      = 0.9     -- secondes entre deux dashs
+local RECHARGE      = 6       -- secondes entre deux dashs
 local COUT_CHAKRA   = 0       -- chakra dépensé par dash (0 = gratuit)
 local CHAKRA_MAX    = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 
@@ -37,6 +37,11 @@ local LAIR_A_PLAT   = true    -- true = le dash en l'air coupe la chute (dash bi
 local LAIR_SAUT     = 0       -- petit décollage du dash en l'air (remplace SAUT)
 local EN_ACCROUPI   = false   -- true = dash possible accroupi
 local ARRETE_COURSE = false   -- true = le dash coupe la course de chakra
+
+-- Particules du dash (posées sur le joueur pendant la poussée, visibles par tous)
+--   FX_DASH : traînée / souffle (solve_impact_autoattack.pcf)
+local FX_DASH       = { "dash_geams_solve" }
+local PCF           = { "particles/solve_impact_autoattack.pcf" }
 
 local SON           = "player/suit_sprint.wav"   -- "" = pas de son
 
@@ -77,6 +82,8 @@ end)
 
 if SERVER then
     util.AddNetworkString("na_dash")
+    util.AddNetworkString("na_dash_fx")
+    for _, f in ipairs(PCF) do game.AddParticles(f) end
 
     local pret = {}
 
@@ -133,6 +140,8 @@ if SERVER then
         end
 
         pret[ply] = CurTime() + RECHARGE
+        ply:SetNW2Float("NA_DashTotal", RECHARGE)
+        ply:SetNW2Float("NA_DashPret", pret[ply])   -- lu par le HUD des recharges (cl_hud_recharges.lua)
         if COUT_CHAKRA > 0 then
             ply:SetNW2Float("NA_Chakra", math.max(ply:GetNW2Float("NA_Chakra", CHAKRA_MAX) - COUT_CHAKRA, 0))
         end
@@ -141,6 +150,7 @@ if SERVER then
         local dir, nom = Direction(ply)
         local enLair = not ply:IsOnGround()
         ply.NA_DashsEnLair = enLair and (ply.NA_DashsEnLair or 0) + 1 or 0
+        ply:SetNW2Bool("NA_DashLairUtilise", ply.NA_DashsEnLair >= DASH_EN_LAIR)
 
         -- on remplace la vitesse horizontale au lieu de l'ajouter, sinon le
         -- dash s'additionne à la course et part beaucoup trop loin
@@ -165,6 +175,11 @@ if SERVER then
             end)
         end
 
+        net.Start("na_dash_fx")
+            net.WriteEntity(ply)
+            net.WriteVector(dir)   -- les particules s'orientent dans la direction du dash
+        net.Broadcast()
+
         local anim = ANIMS[nom]
         if anim and anim ~= "" then
             net.Start("Jutsu_Anim_Play")
@@ -180,10 +195,13 @@ if SERVER then
     -- en retouchant le sol, les dashs en l'air sont de nouveau disponibles
     hook.Add("OnPlayerHitGround", "NA_Dash_Atterrissage", function(ply)
         ply.NA_DashsEnLair = 0
+        ply:SetNW2Bool("NA_DashLairUtilise", false)
     end)
 
     hook.Add("PlayerSpawn", "NA_Dash_Spawn", function(ply)
         ply.NA_DashsEnLair = 0
+        ply:SetNW2Bool("NA_DashLairUtilise", false)
+        ply:SetNW2Float("NA_DashPret", 0)
         ply:SetNW2Float("NA_DashFin", 0)
         ply:SetFriction(1)
     end)
@@ -197,6 +215,50 @@ end
 ----------------------------------------------------------
 local appuye = false
 local prochain = 0
+
+for _, f in ipairs(PCF) do game.AddParticles(f) end
+for _, n in ipairs(FX_DASH) do PrecacheParticleSystem(n) end
+
+-- Particules orientées dans la direction du dash et qui suivent le joueur pendant la poussée
+local fxActifs = {}   -- { ent, dir (Angle), fin, fx = { particules } }
+
+net.Receive("na_dash_fx", function()
+    local ent = net.ReadEntity()
+    local dir = net.ReadVector()
+    if not IsValid(ent) then return end
+
+    local fx = {}
+    for _, n in ipairs(FX_DASH) do
+        local p = ent:CreateParticleEffect(n, 0)
+        if p then fx[#fx + 1] = p end
+    end
+    fxActifs[#fxActifs + 1] = { ent = ent, ang = dir:Angle(), fin = CurTime() + DUREE, fx = fx }
+end)
+
+hook.Add("Think", "NA_Dash_Particules", function()
+    for i = #fxActifs, 1, -1 do
+        local a = fxActifs[i]
+        local fin = not IsValid(a.ent) or CurTime() > a.fin
+        local pos = not fin and a.ent:GetPos()
+        local f, r, u
+        if not fin then f, r, u = a.ang:Forward(), a.ang:Right(), a.ang:Up() end
+
+        -- une particule qui a fini d'elle-même devient NULL : on l'écarte sans y toucher
+        local vivantes = 0
+        for _, p in ipairs(a.fx) do
+            if IsValid(p) then
+                if fin then
+                    p:StopEmission()
+                else
+                    p:SetControlPoint(0, pos)
+                    p:SetControlPointOrientation(0, f, r, u)
+                    vivantes = vivantes + 1
+                end
+            end
+        end
+        if fin or vivantes == 0 then table.remove(fxActifs, i) end
+    end
+end)
 
 hook.Add("Think", "NA_Dash_Touche", function()
     if not ACTIF then return end

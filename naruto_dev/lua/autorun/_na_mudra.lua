@@ -81,9 +81,11 @@ util.AddNetworkString("Jutsu_Anim_Play")
 -- coupe (optionnelle) : secondes après lesquelles l'animation est coupée
 -- (nil ou 0 = animation entière). Le blocage des coups s'arrête en même temps.
 -- vitesse (optionnelle) : vitesse de lecture (2 = deux fois plus vite ; nil = normale)
-function NA_AnimJutsu(ply, seq, coupe, vitesse)
+-- depart (optionnel) : secondes de l'animation d'origine sautées au début (élan trop lent)
+function NA_AnimJutsu(ply, seq, coupe, vitesse, depart)
     if not IsValid(ply) or not seq or seq == "" then return end
     coupe = tonumber(coupe) or 0
+    depart = math.max(tonumber(depart) or 0, 0)
     vitesse = math.max(tonumber(vitesse) or 1, 0.1)
 
     net.Start("Jutsu_Anim_Play")
@@ -91,12 +93,13 @@ function NA_AnimJutsu(ply, seq, coupe, vitesse)
         net.WriteString(seq)
         net.WriteFloat(coupe)
         net.WriteFloat(vitesse)
+        net.WriteFloat(depart)
     net.Broadcast()
 
     NA_SonJutsu(ply, 3)
 
     local id = ply:LookupSequence(seq)
-    local duree = ((id and id >= 0) and ply:SequenceDuration(id) or ANIM_DUREE_DEFAUT) / vitesse
+    local duree = math.max((((id and id >= 0) and ply:SequenceDuration(id) or ANIM_DUREE_DEFAUT) - depart) / vitesse, 0.05)
     if coupe > 0 then duree = math.min(duree, coupe) end
     NA_Mudra(ply, math.Clamp(duree, 0, ANIM_DUREE_MAX))
 end

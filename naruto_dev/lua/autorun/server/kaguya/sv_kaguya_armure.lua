@@ -124,7 +124,7 @@ net.Receive("kaguya_armure_cast", function(_, ply)
 
     if (pret[ply] or 0) > CurTime() then return end
     if ply:GetNW2Float("NA_Chakra", CHAKRA_MAX) < Niv(ply, "chakra_mini", CHAKRA_MINI) then
-        ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
+        -- (pas de message)
         return
     end
 

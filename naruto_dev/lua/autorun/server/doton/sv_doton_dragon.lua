@@ -84,7 +84,7 @@ net.Receive("doton_dragon_cast", function(_, ply)
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
     if cout > 0 then
         if chakra < cout then
-            ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
+            -- (pas de message)
             return
         end
         ply:SetNW2Float("NA_Chakra", chakra - cout)

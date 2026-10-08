@@ -42,7 +42,7 @@ hook.Add("Think", "NA_TPS_ToggleV", function()
         return
     end
 
-    local down = (NA_ToucheBas and NA_ToucheBas("camera") or input.IsKeyDown(KEY_V))
+    local down = (NA_ToucheBas and NA_ToucheBas("camera") or input.IsKeyDown(KEY_C))
     if down and not wasDownV then
         camFront = not camFront
     end

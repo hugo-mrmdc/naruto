@@ -216,7 +216,7 @@ net.Receive("inkuton_singes_cast", function(_, ply)
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
     if cout > 0 then
         if chakra < cout then
-            Refuser("Pas assez de chakra")
+            Refuser()
             return
         end
         ply:SetNW2Float("NA_Chakra", chakra - cout)

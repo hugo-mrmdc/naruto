@@ -163,11 +163,12 @@ net.Receive("taijutsu_releve_cast", function(_, ply)
     if not NA_Debloquee(ply, "taijutsu_releve") then return end   -- technique pas encore débloquée (F6)
     if not IsValid(ply) or not ply:Alive() or enCours[ply] then return end
     if (pret[ply] or 0) > CurTime() then return end
+    if not NA_TaiPoings(ply) then return end
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
     local cout = Niv(ply, "chakra", CHAKRA_COUT)
     if chakra < cout then
-        ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
+        -- (pas de message)
         return
     end
     ply:SetNW2Float("NA_Chakra", chakra - cout)

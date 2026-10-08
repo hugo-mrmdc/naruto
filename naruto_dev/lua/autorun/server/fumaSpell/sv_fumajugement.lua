@@ -69,7 +69,7 @@ net.Receive("fuma_jugement_cast", function(_, ply)
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
     if NA_Stat(ply, "fuma_jugement", "chakra", CHAKRA_COUT) > 0 then
-        if chakra < NA_Stat(ply, "fuma_jugement", "chakra", CHAKRA_COUT) then return Refus(ply, "Pas assez de chakra") end
+        if chakra < NA_Stat(ply, "fuma_jugement", "chakra", CHAKRA_COUT) then return end
         ply:SetNW2Float("NA_Chakra", chakra - NA_Stat(ply, "fuma_jugement", "chakra", CHAKRA_COUT))
     end
 

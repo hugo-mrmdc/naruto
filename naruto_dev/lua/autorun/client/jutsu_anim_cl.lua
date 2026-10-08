@@ -109,7 +109,7 @@ local UPPER_BODY_SEQUENCES = {
     nrp_ninjutsu_defend_dragonflamebombs_start = true,
 }
 
-local function playSequenceOn(ply, seqName, coupe, vitesse)
+local function playSequenceOn(ply, seqName, coupe, vitesse, depart)
     if not IsValid(ply) then return false end
     if type(seqName) ~= "string" or seqName == "" then return false end
 
@@ -123,7 +123,9 @@ local function playSequenceOn(ply, seqName, coupe, vitesse)
     end
 
     vitesse = vitesse or 1
-    local duree = ply:SequenceDuration(seq) / vitesse
+    depart = math.max(depart or 0, 0)   -- secondes de l'animation sautées au début
+    local seqDuree = math.max(ply:SequenceDuration(seq), 0.001)
+    local duree = (seqDuree - depart) / vitesse
     if coupe and coupe > 0 then duree = math.min(duree, coupe) end
     ply.NA_JutsuPrioT = CurTime()                 -- dernière animation demandée : prioritaire sur l'anim de stun
     ply.NA_JutsuPrioFin = CurTime() + math.min(duree, 3)
@@ -135,13 +137,13 @@ local function playSequenceOn(ply, seqName, coupe, vitesse)
     if not ply:OnGround() and ply:GetMoveType() == MOVETYPE_WALK
         and not ply:GetNW2Bool("NA_Vol", false) and not ply:GetNW2Bool("NA_Wings", false) then
         ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
-        ply.NA_JutsuAir = { seq = seq, debut = CurTime(), duree = duree, vitesse = vitesse, jeton = jeton, upperBody = UPPER_BODY_SEQUENCES[seqName] or false, yawOffset = 0 }
+        ply.NA_JutsuAir = { seq = seq, debut = CurTime() - depart / vitesse, duree = seqDuree / vitesse, vitesse = vitesse, jeton = jeton, upperBody = UPPER_BODY_SEQUENCES[seqName] or false, yawOffset = 0 }
         ply.NA_AnimFin = CurTime() + math.min(duree, 3)
         return true
     end
     ply.NA_JutsuAir = nil
 
-    ply:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, seq, 0, true)
+    ply:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, seq, math.Clamp(depart / seqDuree, 0, 0.99), true)
     if vitesse ~= 1 then ply:SetLayerPlaybackRate(GESTURE_SLOT_CUSTOM, vitesse) end
 
     -- fin prévue de cette animation (3 s max, comme NA_AnimJutsu) : le souffle katon
@@ -228,7 +230,8 @@ net.Receive("Jutsu_Anim_Play", function()
     local seqName = net.ReadString()
     local coupe = (net.BytesLeft() or 0) >= 4 and net.ReadFloat() or 0
     local vitesse = (net.BytesLeft() or 0) >= 4 and net.ReadFloat() or 1
-    playSequenceOn(ply, seqName, coupe, vitesse)
+    local depart = (net.BytesLeft() or 0) >= 4 and net.ReadFloat() or 0
+    playSequenceOn(ply, seqName, coupe, vitesse, depart)
 end)
 
 -- ✅ API propre: Jutsu.Play("nom_sequence")

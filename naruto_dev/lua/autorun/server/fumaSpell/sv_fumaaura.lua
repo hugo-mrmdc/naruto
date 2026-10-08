@@ -64,7 +64,7 @@ net.Receive("fuma_aura_cast", function(_, ply)
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
     if NA_Stat(ply, "fuma_aura", "chakra", CHAKRA_COUT) > 0 then
         if chakra < NA_Stat(ply, "fuma_aura", "chakra", CHAKRA_COUT) then
-            ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
+            -- (pas de message)
             return
         end
         ply:SetNW2Float("NA_Chakra", chakra - NA_Stat(ply, "fuma_aura", "chakra", CHAKRA_COUT))

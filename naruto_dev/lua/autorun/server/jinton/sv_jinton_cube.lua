@@ -128,7 +128,7 @@ net.Receive("jinton_cube_cast", function(_, ply)
 
     local chakra = ply:GetNW2Float("NA_Chakra", CHAKRA_MAX)
     if NA_Stat(ply, "jinton_cube", "chakra", CHAKRA_COUT) > 0 then
-        if chakra < NA_Stat(ply, "jinton_cube", "chakra", CHAKRA_COUT) then return Refus(ply, "Pas assez de chakra") end
+        if chakra < NA_Stat(ply, "jinton_cube", "chakra", CHAKRA_COUT) then return end
         ply:SetNW2Float("NA_Chakra", chakra - NA_Stat(ply, "jinton_cube", "chakra", CHAKRA_COUT))
     end
 

@@ -481,7 +481,7 @@ local TECHNIQUES = {
       dmg = "18 chakra par seconde" },
 
     -- ===== DIVERS =====
-    { cat = "Divers", name = "Caméra 3e personne", key = KEY_V,
+    { cat = "Divers", name = "Caméra 3e personne", key = KEY_C,
       desc = "Bascule la vue devant / derrière le personnage." },
     { cat = "Divers", name = "Menu / inventaire", key = KEY_F4,
       desc = "Ouvre ton menu personnel." },

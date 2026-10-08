@@ -135,7 +135,7 @@ local function Demarrer(ply)
     if cout > 0 then
         if chakra < cout then
             enMudra[ply] = nil
-            ply:PrintMessage(HUD_PRINTCENTER, "Pas assez de chakra")
+            -- (pas de message)
             return
         end
         ply:SetNW2Float("NA_Chakra", chakra - cout)

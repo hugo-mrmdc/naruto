@@ -1032,7 +1032,7 @@ NA_NIV_TECH.taijutsu_combo = {
 -- Rafale aérienne (server/taijutsu/sv_taijutsu_rafale.lua)
 --   degats = chacun des 4 premiers coups, degats_final = dernier coup (écrasement)
 NA_NIV_TECH.taijutsu_rafale = {
-    [1] = { degats = 30, degats_final = 23, chakra = 40, recharge = 22, lancer = 450, delai_sommet = 0.45 },
+    [1] = { degats = 30, degats_final = 23, chakra = 40, recharge = 22, lancer = 1300, delai_sommet = 0.1 },
     [2] = { degats = 33, degats_final = 28 },
     [3] = { degats = 38, degats_final = 32, recharge = 20 },
     [4] = { degats = 42, degats_final = 38 },
