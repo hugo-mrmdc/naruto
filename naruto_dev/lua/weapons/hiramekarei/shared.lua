@@ -10,6 +10,7 @@ SWEP.PrintName = "Hiramekarei"
 SWEP.Author    = "hiramekarei"
 SWEP.Category  = "Naruto"
 SWEP.Spawnable = true
+SWEP.Rarete    = "legendaire"
 
 SWEP.ViewModel  = "models/weapon/hiramekarei/atg_hiramekarei_solo.mdl"
 SWEP.WorldModel = "models/weapon/hiramekarei/atg_hiramekarei_solo.mdl"

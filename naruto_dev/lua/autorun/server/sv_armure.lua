@@ -48,7 +48,7 @@ net.Receive("NA_UnequipArmure", function(_, ply)
 
     ply.NA_Tenue = nil
     -- tenue par défaut : celle de sv_playerskin.lua
-    Appliquer(ply, NA_TENUE_DEFAUT or "models/tenue/senju/senju_a.mdl")
+    Appliquer(ply, NA_TENUE_DEFAUT or "models/tenue/senju/genin/senju_a.mdl")
 end)
 
 hook.Add("PlayerDisconnected", "NA_Armure_Nettoyage", function(ply)

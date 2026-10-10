@@ -403,6 +403,7 @@ function SWEP:CompterCoup(owner, ent)
             dmg:SetInflictor(self)
             dmg:SetDamageType(DMG_BLAST)
             dmg:SetDamagePosition(pos)
+            dmg:SetDamageForce(vector_origin)   -- sans force, le moteur ne projette pas la cible
             cible:TakeDamageInfo(dmg)
 
             if cible:IsPlayer() and ((cfg.recul or 0) > 0 or (cfg.reculHaut or 0) > 0) then
@@ -457,6 +458,12 @@ function SWEP:Think()
             dmg:SetDamageForce(owner:GetAimVector() * 2000)
             ent:TakeDamageInfo(dmg)
             self:CompterCoup(owner, ent)
+
+            -- SWEP.SoinCoup = % des PV max rendus au porteur à chaque coup touché
+            if self.SoinCoup then
+                local max = owner:GetMaxHealth()
+                owner:SetHealth(math.min(owner:Health() + math.max(1, max * self.SoinCoup / 100), max))
+            end
 
             if a.touche then
                 -- sur le torse de l'ennemi touché (os de colonne, sinon centre du corps)
@@ -583,6 +590,7 @@ function SWEP:LancerSpecial(owner, s)
                 dmg:SetInflictor(self)
                 dmg:SetDamageType(DMG_BLAST)
                 dmg:SetDamagePosition(pos)
+                dmg:SetDamageForce(vector_origin)   -- sans force, le moteur ne projette pas la cible
                 ent:TakeDamageInfo(dmg)
 
                 if ent:IsPlayer() and (s.recul or 0) > 0 then

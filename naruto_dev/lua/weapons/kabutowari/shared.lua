@@ -10,6 +10,7 @@ SWEP.PrintName = "Kabutowari"
 SWEP.Author    = "kabutowari"
 SWEP.Category  = "Naruto"
 SWEP.Spawnable = true
+SWEP.Rarete    = "legendaire"
 
 SWEP.ViewModel  = "models/weapon/kabutowari/atg_kabutowari_hache.mdl"
 SWEP.WorldModel = "models/weapon/kabutowari/atg_kabutowari_hache.mdl"

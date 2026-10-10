@@ -7,7 +7,7 @@
 -- connecté (MODELE_DEFAUT s'il n'y en a aucun).
 --========================================================
 
-local MODELE_DEFAUT = "models/tenue/senju/senju_a.mdl"
+local MODELE_DEFAUT = "models/tenue/senju/genin/senju_a.mdl"
 
 hook.Add("PlayerSpawn", "NA_Bots_Modele", function(bot)
     if not bot:IsBot() then return end

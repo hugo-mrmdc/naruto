@@ -406,14 +406,35 @@ function AjouterEpee(recherche)
     end
 
     local e = trouvees[1]
-    if DejaPossedee(e.classe) then return Refus(e.nom .. " est déjà dans ton inventaire.") end
+    if DejaPossedee(e.classe) then return end
 
     local libre = CaseLibre()
     if not libre then return Refus("Inventaire plein.") end
 
     AjouterItem(libre, e.nom, 1, nil, "arme", nil, e.modele, nil, nil, nil, nil, e.rarete)
     Inventaire[libre].classe = e.classe
-    notification.AddLegacy(e.nom .. " ajoutée à l'inventaire (F4 pour l'équiper).", NOTIFY_GENERIC, 3)
+    if NA_NotifItem then
+        NA_NotifItem(e.nom, e.rarete, e.modele)
+    else
+        notification.AddLegacy(e.nom .. " ajoutée à l'inventaire (F4 pour l'équiper).", NOTIFY_GENERIC, 3)
+    end
+end
+
+-- Tenue du catalogue NA_TENUES (_na_zadmin.lua) rangée dans l'inventaire F4 (menu admin)
+function AjouterTenue(modele)
+    local t
+    for _, v in ipairs(NA_TENUES or {}) do if v.modele == modele then t = v end end
+    if not t then return end
+    if SlotsEquipement.armure and SlotsEquipement.armure.modelPath == modele then return end
+    for i = 1, NB_CASES do
+        if Inventaire[i].modelPath == modele then return end
+    end
+
+    local libre = CaseLibre()
+    if not libre then return Refus("Inventaire plein.") end
+
+    AjouterItem(libre, t.nom, 1, nil, "armure", nil, t.modele, nil, nil, nil, nil, t.rarete)
+    if NA_NotifItem then NA_NotifItem(t.nom, t.rarete, t.modele) end
 end
 
 concommand.Add("ajouter_epee", function(_, _, args)
@@ -591,15 +612,138 @@ local function CreerIconeTenue(parent, it, marge, taille)
 end
 
 ----------------------------------------------------------
+-- Icône du katana de base : rendu dans une texture, puis cadrage mesuré
+----------------------------------------------------------
+KATANA = {}   -- repart de zéro à chaque rechargement du fichier
+local RES_KATANA = 512   -- rendu 2x plus grand que l'affichage : réduit en douceur, sans pixels
+
+local function RendreKatana(ent, rt, dir, centre, dist, mesurer)
+    render.PushRenderTarget(rt)
+    render.OverrideAlphaWriteEnable(true, true)
+    render.Clear(0, 0, 0, 0, true, true)
+    cam.Start3D(centre + dir * dist, (-dir):Angle(), 30, 0, 0, RES_KATANA, RES_KATANA)
+        render.SuppressEngineLighting(true)
+        render.SetModelLighting(BOX_TOP, 1.4, 1.35, 1.3)
+        render.SetModelLighting(BOX_FRONT, 1.1, 1.05, 1)
+        render.SetModelLighting(BOX_RIGHT, 0.8, 0.8, 0.8)
+        render.SetModelLighting(BOX_LEFT, 0.8, 0.8, 0.8)
+        render.SetModelLighting(BOX_BACK, 0.6, 0.6, 0.6)
+        render.SetModelLighting(BOX_BOTTOM, 0.5, 0.5, 0.5)
+        ent:DrawModel()
+        render.SuppressEngineLighting(false)
+    cam.End3D()
+
+    local m
+    if mesurer then
+        render.CapturePixels()
+        local n, sx, sy, sxx, syy, sxy = 0, 0, 0, 0, 0, 0
+        local pts = {}
+        for y = 0, RES_KATANA - 1, 4 do
+            for x = 0, RES_KATANA - 1, 4 do
+                local _, _, _, a = render.ReadPixel(x, y)
+                if a > 20 then
+                    n = n + 1
+                    sx, sy = sx + x, sy + y
+                    sxx, syy, sxy = sxx + x * x, syy + y * y, sxy + x * y
+                    pts[n] = { x, y }
+                end
+            end
+        end
+        if n > 8 then
+            local mx, my = sx / n, sy / n
+            local cxx, cyy, cxy = sxx / n - mx * mx, syy / n - my * my, sxy / n - mx * my
+            local theta = 0.5 * math.atan2(2 * cxy, cxx - cyy)   -- axe principal, repère image (y vers le bas)
+            local ux, uy = math.cos(theta), math.sin(theta)
+            local pmin, pmax, qmin, qmax = math.huge, -math.huge, math.huge, -math.huge
+            for _, q in ipairs(pts) do
+                local dx, dy = q[1] - mx, q[2] - my
+                local pa, pb = dx * ux + dy * uy, -dx * uy + dy * ux
+                pmin, pmax = math.min(pmin, pa), math.max(pmax, pa)
+                qmin, qmax = math.min(qmin, pb), math.max(qmax, pb)
+            end
+            -- centre de la boîte alignée sur l'axe
+            local pc, qc = (pmin + pmax) / 2, (qmin + qmax) / 2
+            m = { alpha = math.deg(theta), long = pmax - pmin, epais = qmax - qmin,
+                  cx = mx + ux * pc - uy * qc, cy = my + uy * pc + ux * qc }
+        end
+    end
+    render.OverrideAlphaWriteEnable(false)
+    render.PopRenderTarget()
+    return m
+end
+
+function PreparerKatana(modele)
+    if KATANA.lance then return end
+    KATANA.lance = true
+    hook.Add("PostRender", "NA_IconeKatana", function()
+        hook.Remove("PostRender", "NA_IconeKatana")
+        local ent = ClientsideModel(modele, RENDERGROUP_OPAQUE)
+        if not IsValid(ent) then KATANA.echec = true return end
+        ent:SetNoDraw(true)
+        ent:SetupBones()
+        local rt = GetRenderTargetEx("NA_IconeKatana" .. RES_KATANA, RES_KATANA, RES_KATANA, RT_SIZE_NO_CHANGE,
+            MATERIAL_RT_DEPTH_SEPARATE, bit.bor(2, 256), 0, IMAGE_FORMAT_RGBA8888)
+        local mini, maxi = ent:GetModelBounds()
+        local centre = (mini + maxi) * 0.5
+        local dist = (maxi - mini):Length() * 0.5 / math.tan(math.rad(15)) * 1.25
+        -- on garde la vue où la lame paraît la plus longue
+        local meilleur, dirMeilleure
+        for _, dir in ipairs({ Vector(1, 0, 0), Vector(0, 1, 0), Vector(0, 0, 1) }) do
+            local m = RendreKatana(ent, rt, dir, centre, dist, true)
+            if m and (not meilleur or m.long > meilleur.long) then meilleur, dirMeilleure = m, dir end
+        end
+        if not meilleur then ent:Remove() KATANA.echec = true return end
+        RendreKatana(ent, rt, dirMeilleure, centre, dist, false)   -- la dernière vue testée n'est pas forcément la bonne
+        ent:Remove()
+        KATANA.m = meilleur
+        KATANA.mat = CreateMaterial("NA_IconeKatanaMat" .. RES_KATANA, "UnlitGeneric", {
+            ["$basetexture"] = rt:GetName(), ["$translucent"] = 1, ["$vertexalpha"] = 1, ["$vertexcolor"] = 1 })
+    end)
+end
+
+function DessinerKatana(w, h)
+    local m = KATANA.m
+    if not (m and KATANA.mat) then return end
+    -- lame à 45° vers le haut à droite ; tient dans 60 % de la case
+    local rot = m.alpha + 45
+    local c, sn = math.cos(math.rad(45)), math.sin(math.rad(45))
+    local sc = (math.min(w, h) * 0.6) / ((m.long + m.epais) * c)
+    local ox, oy = (m.cx - RES_KATANA / 2) * sc, (m.cy - RES_KATANA / 2) * sc
+    local r = math.rad(rot)
+    local rx, ry = ox * math.cos(r) + oy * math.sin(r), -ox * math.sin(r) + oy * math.cos(r)
+    surface.SetMaterial(KATANA.mat)
+    surface.SetDrawColor(255, 255, 255, 255)
+    render.PushFilterMag(TEXFILTER.ANISOTROPIC)
+    render.PushFilterMin(TEXFILTER.ANISOTROPIC)
+    surface.DrawTexturedRectRotated(w / 2 - rx, h / 2 - ry, RES_KATANA * sc, RES_KATANA * sc, rot)
+    render.PopFilterMin()
+    render.PopFilterMag()
+end
+
+----------------------------------------------------------
 -- Icône d'un objet : image si elle existe, sinon icône du modèle 3D
 ----------------------------------------------------------
 local function CreerIcone(parent, it, taille)
     -- Réserver une marge autour du modèle dans le fond coloré.
-    local marge = math.ceil(taille * 0.21)
+    local marge = math.ceil(taille * 0.12)
 
     -- tenue : rendu 3D avec la tête et les cheveux du joueur
     if it.type == "armure" and it.modelPath and not it.image then
-        return CreerIconeTenue(parent, it, marge, taille)
+        return CreerIconeTenue(parent, it, math.ceil(taille * 0.26), taille)   -- le corps entier doit rester dans le cadre
+    end
+
+    -- katana de base : sa pose par défaut est tordue et ses bornes sont fausses. Il est rendu une fois
+    -- dans une texture, mesuré pixel par pixel (axe de la lame, taille), puis dessiné incliné à 45°
+    if it.classe == "katana_basique" and it.modelPath and not it.image then
+        PreparerKatana(it.modelPath)
+        if not KATANA.echec then
+            local p = vgui.Create("DPanel", parent)
+            p:SetPos(marge, marge)
+            p:SetSize(taille - marge * 2, taille - marge * 2)
+            p:SetMouseInputEnabled(false)
+            p.Paint = function(_, w, h) DessinerKatana(w, h) end
+            return p
+        end
     end
 
     if it.image then
@@ -691,7 +835,7 @@ local function CreerApercu(parent)
     ap:SetLookAt(Vector(0, 0, 40.5))
     ap:SetColor(ply:GetColor())
     ap:SetDirectionalLight(BOX_TOP, Color(255, 245, 230))
-    ap:SetAmbientLight(Color(150, 140, 130))
+    ap:SetAmbientLight(Color(190, 180, 170))
 
     -- Cadrer le corps sur toute la hauteur du panneau (le FOV est horizontal)
     function ap:PerformLayout(w, h)
@@ -1233,7 +1377,14 @@ local function OuvrirMenu()
                 DessinerCase(w, h, it, p:IsHovered(), selectionSlot == i)
             end
             b.PaintOver = function(_, w, h)
-                if it.item and (it.quantite or 0) > 1 then draw.SimpleText("x" .. it.quantite, "NA.Inv.Qte", w * 0.83, h * 0.13, blanc, TEXT_ALIGN_RIGHT) end
+                if it.item and (it.quantite or 0) > 1 then
+                    local txt = "x" .. it.quantite
+                    surface.SetFont("NA.Inv.Qte")
+                    local tw, th = surface.GetTextSize(txt)
+                    local bw, bh = tw + 10, th + 2
+                    draw.RoundedBox(4, w * 0.8 - bw, h * 0.8 - bh, bw, bh, Color(0, 0, 0, 220))
+                    draw.SimpleText(txt, "NA.Inv.Qte", w * 0.8 - 5, h * 0.8 - bh / 2, blanc, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+                end
             end
             if it.item then IconeProgressive(b, it, taille, defil) b:SetTooltip(it.item .. " · " .. Rarete(it).nom) end
             b.DoClick = function() selection, selectionSlot, selectionEquip = it.item and it or nil, i, nil ActualiserDetails() end
@@ -1397,12 +1548,11 @@ concommand.Add("test_items", function()
     AjouterItem(1, "Potion de Vie", 5, "ui/inventory/fer_etoiles.png", "objet")
     AjouterItem(2, "Katana Légendaire", 1, "ui/inventory/fer_etoiles.png", "arme")
 
-    AjouterItem(3, "Tenue Senju", 1, nil, "armure", nil, "models/tenue/senju/senju_a.mdl")
-    AjouterItem(4, "Tenue Fuma", 1, nil, "armure", nil, "models/tenue/m_fuma_tkj.mdl")
+    AjouterItem(3, "Tenue Senju", 1, nil, "armure", nil, "models/tenue/senju/genin/senju_a.mdl")
+    AjouterItem(4, "Tenue Fuma", 1, nil, "armure", nil, "models/tenue/fuma/jonin/m_fuma_tkj.mdl")
     AjouterItem(5, "Tenue Salamandre Chef", 1, nil, "armure", nil, "models/salamandre/eclypse_salamandre_chef.mdl")
     AjouterItem(14, "Tenue salamandre chunin", 1, nil, "armure", nil, "models/salamandre/m_chunin1_salamandre.mdl")
     AjouterItem(15, "Tenue salamandre chunin", 1, nil, "armure", nil, "models/salamandre/m_chunin2_salamandre.mdl")
-    AjouterItem(16, "Tenue salamandre", 1, nil, "armure", nil, "models/salamandre/goro_salamandre_m.mdl")
 
     AjouterItem(6, "Masque ANBU", 1, nil, "accessoire", "masque",
         "models/accessory/mask_hanzou.mdl", "ValveBiped.Bip01_Head1", Vector(1.7, 0, 2), Angle(-90, -90, 0), 1)

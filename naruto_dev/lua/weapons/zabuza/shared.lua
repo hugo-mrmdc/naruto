@@ -10,6 +10,7 @@ SWEP.PrintName = "Kubikiribocho"
 SWEP.Author    = "zabuza"
 SWEP.Category  = "Naruto"
 SWEP.Spawnable = true
+SWEP.Rarete    = "legendaire"
 
 SWEP.ViewModel  = "models/weapon/kubikiribocho/kubikiribocho.mdl"
 SWEP.WorldModel = "models/weapon/kubikiribocho/kubikiribocho.mdl"
@@ -42,11 +43,12 @@ SWEP.Anims = {
 }
 
 SWEP.Combo = {
-    { anim = "nrp_sword_slashhorizon",         vitesseAnim = 1.0, duree = 1.0, degats = 40, touche = "izox_hit_type_one_basic" },
-    { anim = "nrp_sword_turnslashingshoulder", vitesseAnim = 1.0, duree = 1.1, degats = 40, touche = "izox_hit_type_one_basic" },
-    { anim = "nrp_sword_slashing",             vitesseAnim = 1.0, duree = 1.3, degats = 40, touche = "izox_hit_type_one_basic" },
+    { anim = "nrp_sword_slashhorizon",         vitesseAnim = 2.5, duree = 0.6, degats = 100, touche = "izox_hit_type_one_basic" },
+    { anim = "nrp_sword_turnslashingshoulder", vitesseAnim = 2.5, duree = 0.6, degats = 100, touche = "izox_hit_type_one_basic" },
+    { anim = "nrp_sword_slashing",             vitesseAnim = 2.0, duree = 1, degats = 120, touche = "izox_hit_type_one_basic" },
 }
 SWEP.ComboReset = 2.0
+SWEP.SoinCoup   = 1   -- % des PV max rendus à chaque coup touché
 
 SWEP.Frappe = { portee = 80, largeur = 35, hauteur = 40, delai = 0, duree = 0.6 }
 SWEP.SonSwing = Sound("fuma/swing1.wav")

@@ -24,7 +24,7 @@ local CHAKRA_COUT     = 0    -- chakra dépensé par seconde de course de chakra
 local CHAKRA_REGEN    = 0     -- régénération AUTOMATIQUE par seconde (0 = aucune : on recharge avec R)
 local CHAKRA_DELAI    = 1.5   -- secondes d'attente avant que la régénération automatique reprenne
 
-local CHAKRA_RECHARGE = 30    -- chakra récupéré par seconde en maintenant R
+local CHAKRA_RECHARGE = 5    -- % du chakra MAX récupéré par seconde en maintenant R (plus le rang est haut, plus on recharge)
 local RECHARGE_COUPURE = 1    -- un coup reçu coupe la recharge : secondes avant de pouvoir recharger
 local CHAKRA_MINIMUM  = 10    -- chakra requis pour démarrer une course de chakra
 
@@ -154,7 +154,7 @@ local function MettreAJour(ply, now, dt)
         ply:SetNW2Bool("NA_RechargeChakra", recharge)
     end
     if recharge then
-        SetChakra(ply, GetChakra(ply) + CHAKRA_RECHARGE * dt)
+        SetChakra(ply, GetChakra(ply) + NA_ChakraMax(ply) * CHAKRA_RECHARGE / 100 * dt)
         return
     end
 

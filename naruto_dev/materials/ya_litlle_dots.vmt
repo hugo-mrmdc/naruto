@@ -1,0 +1,9 @@
+"UnlitGeneric"
+{
+	"$basetexture" "Ya_litlle_dots"
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+	"$translucent" "1"	
+	"$additive" 1
+}
+

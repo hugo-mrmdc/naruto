@@ -32,8 +32,8 @@ NRP.Config.Character = {
         male = {
             name = "Homme",
             models = {
-                { model = "models/tenue/senju/senju_a.mdl", name = "Tenue Senju" },
-                { model = "models/tenue/m_fuma_tkj.mdl", name = "Tenue Fuma" },
+                { model = "models/tenue/senju/genin/senju_a.mdl", name = "Tenue Senju" },
+                { model = "models/tenue/fuma/jonin/m_fuma_tkj.mdl", name = "Tenue Fuma" },
                 { model = "models/player/group01/male_02.mdl", name = "Civil 1", hasHead = true },
                 { model = "models/player/group01/male_07.mdl", name = "Civil 2", hasHead = true },
             },
@@ -41,7 +41,7 @@ NRP.Config.Character = {
         female = {
             name = "Femme",
             models = {
-                { model = "models/tenue/senju/senju_a.mdl", name = "Tenue Senju" },
+                { model = "models/tenue/senju/genin/senju_a.mdl", name = "Tenue Senju" },
                 { model = "models/player/group01/female_01.mdl", name = "Civile 1", hasHead = true },
                 { model = "models/player/group01/female_02.mdl", name = "Civile 2", hasHead = true },
                 { model = "models/player/group03/female_06.mdl", name = "Civile 3", hasHead = true },

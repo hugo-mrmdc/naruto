@@ -17,9 +17,11 @@
 local NB_EMPLACEMENTS = 6
 local NB_BARRES       = 2
 local TOUCHE_BARRE    = KEY_M  -- change de barre
-local TAILLE          = 96     -- taille d'un emplacement à l'écran (px)
-local ECART           = 14     -- espace entre deux emplacements
-local MARGE_BAS       = 18     -- distance depuis le bas de l'écran
+local TAILLE_BASE      = 86     -- taille d'un emplacement (px à 1080p, mise à l'échelle selon l'écran)
+local ECART_BASE      = 14     -- espace entre deux emplacements
+local MARGE_BAS_BASE  = 18     -- distance depuis le bas de l'écran
+local GAUCHE_MIN_BASE = 640    -- bord gauche libre à droite du HUD de vie (texte des barres compris), px à 1080p
+local TAILLE, ECART, MARGE_BAS = TAILLE_BASE, ECART_BASE, MARGE_BAS_BASE
 local FICHIER         = "naruto_skillbar.txt"
 
 -- Taille de l'icône par rapport au cadre. Mesuré dans les images :
@@ -42,12 +44,18 @@ local DECK_L, DECK_H = 52, 42
 local DECK_CX, DECK_CY = 26 / 52, 20.5 / 42
 local DECK_NUM_DX, DECK_NUM_DY = 0, 0
 
--- tailles de texte proportionnelles aux emplacements
-surface.CreateFont("NA.Skill.Nom",   { font = "Roboto", size = math.Round(TAILLE * 0.2), weight = 700 })
-surface.CreateFont("NA.Skill.Touche", { font = "Roboto", size = math.Round(TAILLE * 0.2), weight = 800 })
-surface.CreateFont("NA.Skill.Vide",  { font = "Roboto", size = math.Round(TAILLE * 0.36), weight = 500 })
-surface.CreateFont("NA.Skill.Deck", { font = "Roboto", size = math.Round(TAILLE * 0.3), weight = 800 })
-surface.CreateFont("NA.Skill.CD",    { font = "Roboto", size = math.Round(TAILLE * 0.3), weight = 800 })
+-- Tout est proportionnel à la hauteur de l'écran (référence 1080p) ; polices refaites si la résolution change
+local function MettreALEchelle()
+    local k = math.Clamp(ScrH() / 1080, 0.5, 2.5)
+    TAILLE, ECART, MARGE_BAS = math.Round(TAILLE_BASE * k), math.Round(ECART_BASE * k), math.Round(MARGE_BAS_BASE * k)
+    surface.CreateFont("NA.Skill.Nom",   { font = "Roboto", size = math.Round(TAILLE * 0.2), weight = 700 })
+    surface.CreateFont("NA.Skill.Touche", { font = "Roboto", size = math.Round(TAILLE * 0.2), weight = 800 })
+    surface.CreateFont("NA.Skill.Vide",  { font = "Roboto", size = math.Round(TAILLE * 0.36), weight = 500 })
+    surface.CreateFont("NA.Skill.Deck", { font = "Roboto", size = math.Round(TAILLE * 0.3), weight = 800 })
+    surface.CreateFont("NA.Skill.CD",    { font = "Roboto", size = math.Round(TAILLE * 0.3), weight = 800 })
+end
+MettreALEchelle()
+hook.Add("OnScreenSizeChanged", "NA_SkillBar_Echelle", MettreALEchelle)
 
 -- Couleur par famille de technique
 local COULEURS = {
@@ -372,15 +380,16 @@ hook.Add("HUDPaint", "NA_SkillBar_HUD", function()
     if not IsValid(ply) or not ply:Alive() then return end
 
     local total = NB_EMPLACEMENTS * TAILLE + (NB_EMPLACEMENTS - 1) * ECART
-    local x = ScrW() / 2 - total / 2
+    local h = math.Round(TAILLE * 0.5)
+    local l = math.Round(h * DECK_L / DECK_H)
+    -- centrée, mais jamais sur le HUD de vie : le losange (à gauche des cases) reste à droite de ses barres
+    local x = math.max(ScrW() / 2 - total / 2, math.Round(GAUCHE_MIN_BASE * ScrH() / 1080) + l + ECART)
     local y = ScrH() - TAILLE - MARGE_BAS
 
     for i = 1, NB_EMPLACEMENTS do
         DessinerEmplacement(x + (i - 1) * (TAILLE + ECART), y, TAILLE, i, Bar.Slots[i])
     end
     -- losange à GAUCHE des cases, centré sur leur hauteur : le numéro de la barre ACTIVE est écrit dedans
-    local h = math.Round(TAILLE * 0.5)
-    local l = math.Round(h * DECK_L / DECK_H)
     local dx, dy = x - ECART - l, y + TAILLE / 2 - h / 2
     surface.SetMaterial(MAT_DECK)
     surface.SetDrawColor(255, 255, 255, 255)

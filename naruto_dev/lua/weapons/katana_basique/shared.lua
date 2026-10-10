@@ -46,9 +46,12 @@ SWEP.Anims = {
 --   dureeFrappe  = secondes pendant lesquelles la zone de frappe reste active
 --   delaiTouche  = secondes entre le hit (dégâts) et la particule "touche"
 SWEP.Combo = {
-     { anim = "solve_kenjutsu_3mfncmb00 (3mfnbod1) retarget", vitesseAnim = 1.2, duree = 0.5, degats = 30, delai = 0.15, dureeFrappe = 0.3, delaiTouche = 0.1, touche = "izox_hit_type_one_basic" },
-    { anim = "solve_kenjutsu_3mfncmb01 (3mfnbod1) retarget", vitesseAnim = 1.2, duree = 0.5, degats = 30, delai = 0.15, dureeFrappe = 0.3, delaiTouche = 0.1, touche = "izox_hit_type_one_basic" },
-     { anim = "solve_kenjutsu_3mfncmb06 (3mfnbod1) retarget", vitesseAnim = 1.5, duree = 0.8, degats = 30, delai = 0.15, dureeFrappe = 0.3, delaiTouche = 0.1, touche = "izox_hit_type_one_basic" },
+    { anim = "m_sd_attack_2edgesword_cmb_01", vitesseAnim = 1.5, duree = 0.5, degats = 30, delai = 0.15, dureeFrappe = 0.3, delaiTouche = 0.1, touche = "izox_hit_type_one_basic" },
+    { anim = "m_sd_attack_2edgesword_cmb_03", vitesseAnim = 1.5, duree = 0.8, degats = 30, delai = 0.15, dureeFrappe = 0.3, delaiTouche = 0.1, touche = "izox_hit_type_one_basic" },
+     
+    { anim = "solve_kenjutsu_3mfncmb00 (3mfnbod1) retarget", vitesseAnim = 0.8, duree = 0.5, degats = 30, delai = 0.15, dureeFrappe = 0.3, delaiTouche = 0.1, touche = "izox_hit_type_one_basic" },
+    --{ anim = "solve_kenjutsu_3mfncmb01 (3mfnbod1) retarget", vitesseAnim = 1.2, duree = 0.5, degats = 30, delai = 0.15, dureeFrappe = 0.3, delaiTouche = 0.1, touche = "izox_hit_type_one_basic" },
+    --{ anim = "m_sd_attack_2edgesword_cmb_05", vitesseAnim = 1.5, duree = 0.8, degats = 30, delai = 0.15, dureeFrappe = 0.3, delaiTouche = 0.1, touche = "izox_hit_type_one_basic" },
     --{ anim = "solve_kenjutsu_3mfncmb00 (3mfnbod1) retarget", vitesseAnim = 1.2, duree = 0.7, degats = 40, delai = 0.25, dureeFrappe = 0.4, delaiTouche = 0.2, touche = "izox_hit_type_one_basic" },
    -- { anim = "solve_kenjutsu_3mfncmr00 (3mfnbod1) retarget", vitesseAnim = 1.2, duree = 0.7, degats = 40, delai = 0.25, dureeFrappe = 0.4, delaiTouche = 0.2, touche = "izox_hit_type_one_basic" },
    -- { anim = "nrp_sword_turnslashing_left", vitesseAnim = 1.5, duree = 0.5, degats = 30, delai = 0.15, dureeFrappe = 0.3, delaiTouche = 0.1, touche = "izox_hit_type_one_basic" },

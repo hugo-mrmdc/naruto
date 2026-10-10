@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	// Remplacement du matériau "Material" absent des addons : texture unie verte (couleur de la veste)
+	"$basetexture" "atg_playermodels/tenues/chunin_senju_m/material_vert"
+	"$lightwarptexture" "atg/shared/toon"
+	"$nocull" "1"
+	"$nodecal" "1"
+}

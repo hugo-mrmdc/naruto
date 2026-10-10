@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+    "$basetexture" "atg_playermodels/tenues/senju_chunin_jayx/main"
+    "$lightwarptexture" "atg/shared/toon"
+    "$nocull" "1"
+    "$nodecal" "1"
+}

@@ -188,7 +188,8 @@ function NA_PeauCorps(ent, p)
     if p.visage == 0 then return end
 
     local peau = Mat("corps_" .. Cle(p.peau), "VertexLitGeneric", {
-        ["$basetexture"] = "models/debug/debugwhite", ["$color2"] = Teinte(p.peau),
+        ["$basetexture"] = "models/debug/debugwhite", ["$lightwarptexture"] = TOON,   -- même ombrage "toon" que le visage
+        ["$color2"] = Teinte(p.peau),
     })
     for i, chemin in ipairs(ent:GetMaterials()) do
         if string.lower(string.match(chemin, "[^/\\]+$") or "") == "mat_skin" then

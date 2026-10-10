@@ -860,7 +860,7 @@ NA_NIV_TECH.jinton_cage = {
 NA_NIV_TECH.jinton_laser = {
     [1] = {
         degats = 20, chakra = 40, recharge = 30, hitbox = 45,
-        intervalle = 0.25, duree = 15, duree_mudra = 0.6,
+        intervalle = 0.5, duree = 15, duree_mudra = 0.6,
     },
     [2] = { degats = 22 },
     [3] = { degats = 24, recharge = 28, hitbox = 50 },
@@ -1015,6 +1015,59 @@ NA_NIV_TECH.taijutsu_descendant = {
     [4] = { degats = 88 },
     [5] = { degats = 95, chakra = 12, recharge = 8, rayon = 220 },
     }
+
+-- Estoc perforant (server/kenjutsu/sv_kenjutsu_perforant.lua) : dash qui blesse tout sur son passage
+--   rayon = zone blessante autour du lanceur, duree_dash x vitesse = distance, delai_elan = avant le départ
+NA_NIV_TECH.kenjutsu_perforant = {
+    [1] = { degats = 60, chakra = 12, recharge = 9, rayon = 90, etourdi = 1.3, vitesse = 1400, duree_dash = 0.25, delai_elan = 0.2 },
+    [2] = { degats = 75 },
+    [3] = { degats = 85, recharge = 8, rayon = 100 },
+    [4] = { degats = 95 },
+    [5] = { degats = 105, chakra = 10, recharge = 7, rayon = 110 },
+}
+
+-- Tourbillon de lame (server/kenjutsu/sv_kenjutsu_tourbillon.lua) : coup circulaire autour du lanceur
+--   rayon = portée du coup, delai_impact = secondes avant que le coup touche
+NA_NIV_TECH.kenjutsu_tourbillon = {
+    [1] = { degats = 60, chakra = 15, recharge = 10, rayon = 170, delai_impact = 0.35 },
+    [2] = { degats = 70 },
+    [3] = { degats = 80, recharge = 9, rayon = 185 },
+    [4] = { degats = 90 },
+    [5] = { degats = 95, chakra = 12, recharge = 8, rayon = 200 },
+}
+
+-- Triple lame (server/kenjutsu/sv_kenjutsu_triple.lua) : 3 coups circulaires dans l'animation
+--   degats = par coup, rayon = portée de chaque coup, delai_coup1..3 = secondes avant chaque coup
+NA_NIV_TECH.kenjutsu_triple = {
+    [1] = { degats = 28, chakra = 25, recharge = 16, rayon = 180, delai_coup1 = 0.3, delai_coup2 = 0.7, delai_coup3 = 1.1 },
+    [2] = { degats = 31 },
+    [3] = { degats = 35, recharge = 14, rayon = 195 },
+    [4] = { degats = 39 },
+    [5] = { degats = 44, chakra = 20, recharge = 12, rayon = 210 },
+}
+
+-- Aller-retour (server/kenjutsu/sv_kenjutsu_allerretour.lua) : l'animation est jouée "tours" fois, un coup par tour
+--   degats = par tour, portee/angle = cône devant le lanceur, etourdi = secondes d'étourdissement,
+--   delai_impact = secondes après le début d'un tour avant le coup
+NA_NIV_TECH.kenjutsu_allerretour = {
+    [1] = { degats = 60, chakra = 25, recharge = 16, portee = 500, rayon = 35, etourdi = 1.2, delai_impact = 0.3, tours = 2 },
+    [2] = { degats = 70 },
+    [3] = { degats = 80, recharge = 1, rayon = 40, etourdi = 1.5 },
+    [4] = { degats =  90},
+    [5] = { degats = 100, chakra = 20, recharge = 1, portee = 500, rayon = 45, etourdi = 1.5 },
+}
+
+-- Tornade de lame (server/kenjutsu/sv_kenjutsu_tornade.lua + entities/kenjutsu_tornade.lua)
+--   degats = par ennemi traversé, vitesse x duree_vie = distance, hitbox/hitbox_haut = zone qui touche,
+--   souleve = projection droit vers le haut de l'ennemi touché, etourdi = secondes d'étourdissement,
+--   delai_lancer = secondes d'animation avant que la tornade parte
+NA_NIV_TECH.kenjutsu_tornade = {
+    [1] = { degats = 250, chakra = 40, recharge = 25, vitesse = 1000, duree_vie = 1.0, hitbox = 120, hitbox_haut = 130, souleve = 500, etourdi = 0.4, nombre = 3, ecart = 18, delai_lancer = 0.35 },
+    [2] = { degats = 280 },
+    [3] = { degats = 300, recharge = 22, duree_vie = 1.2, hitbox = 135 },
+    [4] = { degats = 330 },
+    [5] = { degats = 360, chakra = 32, recharge = 1, duree_vie = 1.5, hitbox = 150 },
+}
 
 -- Enchaînement aérien (server/taijutsu/sv_taijutsu_combo.lua)
 --   degats = 1er coup, degats_final = coup de talon, lancer = hauteur de l'envol

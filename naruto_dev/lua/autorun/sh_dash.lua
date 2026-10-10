@@ -73,6 +73,7 @@ hook.Add("SetupMove", "NA_Dash_Maintien", function(ply, mv)
 
     local vel = mv:GetVelocity()
     vel.x, vel.y = vitesse.x, vitesse.y
+    if vitesse.z ~= 0 then vel.z = vitesse.z end   -- dash incliné (kenjutsu_perforant) : tient aussi la hauteur
     mv:SetVelocity(vel)
 
     -- pendant le dash, les touches de déplacement ne freinent pas la glissade

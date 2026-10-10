@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+    "$basetexture" "atg_playermodels/tenues/outfit_senju_chef/txt_pota4"
+    "$lightwarptexture" "atg/shared/toon"
+    "$nocull" "1"
+    "$nodecal" "1"
+}

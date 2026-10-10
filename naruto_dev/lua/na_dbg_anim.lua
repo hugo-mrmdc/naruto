@@ -4,7 +4,7 @@ for _, m in ipairs({
     "models/player/wiltos/anim_base.mdl",
     "models/player/wiltos/anim_base_male.mdl",
     "models/m_anm.mdl",
-    "models/tenue/senju/senju_a.mdl",
+    "models/tenue/senju/genin/senju_a.mdl",
 }) do
     local c = ClientsideModel(m)
     if IsValid(c) then

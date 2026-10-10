@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "atg/other/senju_chef_a/genin_g_neutre_white"
+	"$lightwarptexture" "atg/shared/toon"
+    	"$nocull" "1"
+    	"$nodecal" "1"
+}

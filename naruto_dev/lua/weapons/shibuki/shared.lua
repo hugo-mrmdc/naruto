@@ -16,6 +16,7 @@ SWEP.PrintName = "Shibuki"
 SWEP.Author    = "shibuki"
 SWEP.Category  = "Naruto"
 SWEP.Spawnable = true
+SWEP.Rarete    = "legendaire"
 
 SWEP.ViewModel  = "models/weapon/shibuki/shibuki.mdl"
 SWEP.WorldModel = "models/weapon/shibuki/shibuki.mdl"

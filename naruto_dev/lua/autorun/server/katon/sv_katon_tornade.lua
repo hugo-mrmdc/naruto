@@ -25,6 +25,7 @@ local CHAKRA_COUT  = 30     -- chakra au lancement (0 = gratuit)
 local CHAKRA_MAX   = NA_CHAKRA_MAX or 100   -- réglé dans autorun/_na_chakra.lua
 local DUREE_MUDRA  = 0.8    -- incantation avant l'apparition de la tornade
 local DISTANCE     = 400    -- distance max devant le lanceur où elle apparaît
+local TAILLE_VISEE = 35     -- demi-taille de la boîte de visée : un ennemi dedans est visé
 local ANIM_APPEL   = "nrp_ninjutsu_defend_mudwall"
 --========================================================
 
@@ -55,6 +56,19 @@ local function Poser(ply)
         filter = ply, mask = MASK_SOLID_BRUSHONLY,
     })
     local pos = sol.Hit and sol.HitPos or ply:GetPos()
+
+    -- ennemi dans la ligne de visée (boîte lancée jusqu'au décor, comme la Chute de cristal Shoton) : la tornade se pose sous lui
+    local oeil = ply:GetShootPos()
+    local vise = util.TraceLine({ start = oeil, endpos = oeil + ply:GetAimVector() * DISTANCE, filter = ply, mask = MASK_SOLID_BRUSHONLY })
+    local t = Vector(TAILLE_VISEE, TAILLE_VISEE, TAILLE_VISEE)
+    local suivi, dMin = nil, math.huge
+    for _, ent in ipairs(NA_FindAlongRay(oeil, vise.HitPos, t)) do   -- _na_visee.lua
+        if NA_InkutonEstCible and NA_InkutonEstCible(ent, ply) then
+            local d = oeil:DistToSqr(ent:WorldSpaceCenter())
+            if d < dMin then suivi, dMin = ent, d end
+        end
+    end
+    if suivi then pos = suivi:GetPos() end
 
     local zone = ents.Create("katon_tornade")
     if not IsValid(zone) then return end

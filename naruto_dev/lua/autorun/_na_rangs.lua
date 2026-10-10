@@ -33,9 +33,14 @@ NA_RANG = NA_RANG or {}
 --   cout   = points de compétence pour ATTEINDRE ce rang (le premier est gratuit)
 NA_RANG.LISTE = {
     { id = "genin",  nom = "Genin",  lettre = "C", vie = 700, chakra = 500,  cout = 0  },
-    { id = "chunin", nom = "Chûnin", lettre = "B", vie = 150, chakra = 700,  cout = 5  },
-    { id = "jonin",  nom = "Jônin",  lettre = "A", vie = 2400, chakra = 900,  cout = 10 },
-    { id = "kage",   nom = "Kage",   lettre = "S", vie = 6000, chakra = 1200, cout = 20 },
+    { id = "geninConf",  nom = "geninConf",  lettre = "C", vie = 900, chakra = 800,  cout = 0  },
+    { id = "tkc",  nom = "tkc",  lettre = "B", vie = 1300, chakra = 1200,  cout = 0  },
+    { id = "chunin", nom = "Chûnin", lettre = "B", vie = 1600, chakra = 1400,  cout = 5  },
+    { id = "chuninConf",  nom = "chuninConf",  lettre = "B", vie = 2000, chakra = 1600,  cout = 0  },
+    { id = "tkj",  nom = "tkj",  lettre = "A", vie = 2700, chakra = 2000,  cout = 10 },
+    { id = "jonin",  nom = "Jônin",  lettre = "A", vie = 3300, chakra = 3000,  cout = 10 },
+     { id = "cmj",  nom = "cmj",  lettre = "S", vie = 4000, chakra = 3000,  cout = 10 },
+    { id = "kage",   nom = "Kage",   lettre = "S", vie = 6000, chakra = 4500, cout = 20 },
 }
 
 -- Valeur des lettres de technique
@@ -70,7 +75,7 @@ NA_RANG_TECH = {
     hyuga_tourbillon = "A", uchiha_sharingan = "C", kiminari_frappe = "C", kiminari_prison = "C",
     kiminari_laser = "B", kiminari_boulets = "A", jiton_sarcophage = "C", jiton_emergence = "C",
     jiton_vortex = "B", jiton_tornade = "B", jiton_nuage = "A", taijutsu_pied = "C",
-    taijutsu_descendant = "C", taijutsu_combo = "B", taijutsu_releve = "B",
+    taijutsu_descendant = "C", kenjutsu_perforant = "C", kenjutsu_tourbillon = "C", kenjutsu_triple = "B", kenjutsu_allerretour = "B", kenjutsu_tornade = "A", taijutsu_combo = "B", taijutsu_releve = "B",
     taijutsu_rafale = "A",
 }
 

@@ -449,6 +449,27 @@ local TECHNIQUES = {
       desc = "Tu bondis puis fonces vers le sol dans la direction où tu regardes : à l'atterrissage, l'impact blesse les ennemis autour de toi sans les repousser. Coûte 15 de chakra.",
       dmg = "35 dégâts" },
 
+    -- ===== KENJUTSU =====
+    { cat = "Kenjutsu", name = "Estoc perforant", key = "", id = "kenjutsu_perforant", rang = "C", icone = "ui/icon/kenjutsu_estoc_fulminant.png", court = "Estoc", cooldown = 9,
+      desc = "Arme blanche en main, tu t'élances d'un coup d'estoc : tu fonces droit devant toi et blesses tous les ennemis traversés, puis ta lame éclate au sol. Coûte 12 de chakra.",
+      dmg = "45 dégâts + étourdissement" },
+
+    { cat = "Kenjutsu", name = "Tourbillon de lame", key = "", id = "kenjutsu_tourbillon", rang = "C", icone = "ui/icon/kenjutsu_tourbillon_fendeur.png", court = "Tourbillon", cooldown = 10,
+      desc = "Arme blanche en main, tu fais un tour sur toi-même d'un coup circulaire qui blesse tous les ennemis autour de toi. Coûte 15 de chakra.",
+      dmg = "38 dégâts" },
+
+    { cat = "Kenjutsu", name = "Triple lame", key = "", id = "kenjutsu_triple", rang = "B", icone = "ui/icon/kenjutsu_barrage_rasant.png", court = "Triple", cooldown = 16,
+      desc = "Arme blanche en main, tu enchaînes trois coups de sabre en tournant : chacun blesse tous les ennemis autour de toi. Coûte 25 de chakra.",
+      dmg = "3 x 28 dégâts" },
+
+    { cat = "Kenjutsu", name = "Aller-retour", key = "", id = "kenjutsu_allerretour", rang = "B", icone = "ui/icon/kenjutsu_coupe_eclair.png", court = "Aller-retour", cooldown = 16,
+      desc = "Arme blanche en main, tu fonces sur l'ennemi devant toi, le traverses et repasses de l'autre côté : chaque passage blesse et étourdit 1,2 seconde les ennemis touchés. Coûte 25 de chakra.",
+      dmg = "2 x 35 dégâts + étourdissement" },
+
+    { cat = "Kenjutsu", name = "Tornade de lame", key = "", id = "kenjutsu_tornade", rang = "A", icone = "ui/icon/kenjutsu_kesa_giri.png", court = "Tornade", cooldown = 25,
+      desc = "Arme blanche en main, un grand coup de sabre montant lance une tornade droit devant toi : elle file au ras du sol et blesse, projette en l'air et étourdit brièvement chaque ennemi qu'elle traverse. Coûte 40 de chakra.",
+      dmg = "60 dégâts + projection en l'air + étourdissement" },
+
     { cat = "Taijutsu", name = "Enchaînement aérien", key = "", id = "taijutsu_combo", rang = "B", icone = "ui/icon/taijutsu_ombre_feuille_morte.png", court = "Aérien", cooldown = 18,
       desc = "Un coup de pied relevé envoie en l'air l'ennemi devant toi, puis tu le rejoins et l'écrases au sol d'un coup de talon plongeant. Coûte 30 de chakra.",
       dmg = "15 + 40 dégâts + projection en l'air puis au sol" },
@@ -568,7 +589,7 @@ local ONGLETS = {
       desc = "Cette catégorie répertorie les techniques héritées par le sang" },
     { nom = "Clan",          icone = "clan.png",            cats = { "Salamandre", "Fuma", "Kami", "Kaguya", "Chinoike", "Hyuga", "Senju", "Uchiha" },
       desc = "Cette catégorie répertorie les techniques secrètes des clans" },
-    { nom = "Arts Ninja",    icone = "kentai.png",    cats = { "Taijutsu", "Armes", "Déplacement", "Divers" },
+    { nom = "Arts Ninja",    icone = "kentai.png",    cats = { "Taijutsu", "Kenjutsu", "Armes", "Déplacement", "Divers" },
       desc = "Cette catégorie répertorie toutes les techniques des arts ninja" },
     { nom = "Sub Jutsu",     icone = "sub.png" },
     { nom = "Jutsu Class",   icone = "classe.png" },

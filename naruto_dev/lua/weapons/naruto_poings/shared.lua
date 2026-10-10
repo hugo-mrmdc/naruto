@@ -39,9 +39,9 @@ SWEP.VitesseAnim = 1.5
 
 -- Combo : trois coups de poing, le dernier repousse la cible
 SWEP.Combo = {
-    { anim = "nrp2_attacks_punch1", vitesseAnim = 1.5, duree = 0.4, degats = 15, touche = "izox_hit_type_one_basic" },
-    { anim = "nrp2_attacks_punch2", vitesseAnim = 1.5, duree = 0.4, degats = 18, touche = "izox_hit_type_one_basic" },
-    { anim = "nrp2_attacks_punch3", vitesseAnim = 1.5, duree = 0.6, degats = 25, recul = 350, reculHaut = 100, touche = "izox_hit_type_one_basic" },
+    { anim = "nrp2_attacks_punch1", vitesseAnim = 2, duree = 0.3, degats = 15, touche = "izox_hit_type_one_basic" },
+    { anim = "nrp2_attacks_punch2", vitesseAnim = 2, duree = 0.3, degats = 15, touche = "izox_hit_type_one_basic" },
+    { anim = "nrp2_attacks_punch3", vitesseAnim = 2, duree = 0.5, degats = 25, recul = 350, reculHaut = 100, touche = "izox_hit_type_one_basic" },
 }
 -- Combo pendant les ailes de papier Kami (en vol) : deux coups aériens
 -- Par coup : "delaiEffet" = quand la particule "effet" apparaît (s après le début du coup),

@@ -75,6 +75,7 @@ NA_NIV.LIGNEES = {
     { "futton_vapeur", "futton_tornade", "futton_cage","futton_projectile", "futton_prison", "futton_monde" },
     { "hyoton_dome", "hyoton_pics", "hyoton_vague", "hyoton_loup", "hyoton_prison" },
     { "taijutsu_pied", "taijutsu_descendant", "taijutsu_combo", "taijutsu_releve", "taijutsu_rafale" },
+    { "kenjutsu_perforant", "kenjutsu_tourbillon", "kenjutsu_triple", "kenjutsu_allerretour", "kenjutsu_tornade" },
     { "shoton_cristal", "shoton_armure", "shoton_rockets", "shoton_chute", "shoton_pics" },
 }
 --========================================================

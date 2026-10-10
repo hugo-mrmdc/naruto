@@ -117,6 +117,13 @@ NA_DELAI_APRES = NA_DELAI_APRES or {
     taijutsu_releve = 0.6,             -- Coup de pied relevé (rang B)
     taijutsu_rafale = 0.4,             -- Rafale aérienne (rang A)
 
+    -- Kenjutsu
+    kenjutsu_perforant = 0.4,          -- Estoc perforant (rang C)
+    kenjutsu_tourbillon = 0.5,         -- Tourbillon de lame (rang C)
+    kenjutsu_triple = 0.8,             -- Triple lame (rang B)
+    kenjutsu_allerretour = 0.8,        -- Aller-retour (rang B)
+    kenjutsu_tornade = 1,              -- Tornade de lame (rang A)
+
     -- Uchiha
     katon_saut = 0.4,                  -- Boule de feu sautée (rang C)
     katon_dragons = 0.4,               -- Dragons de feu (rang B)
@@ -433,6 +440,10 @@ function NA_Lancer(id)
     local ok, err = pcall(fn)
     if not ok then
         MsgC(Color(255, 80, 80), "[Techniques] erreur en lançant " .. id .. " : " .. tostring(err) .. "\n")
+        return false
+    end
+    if err == false then   -- le lancer a renvoyé false (ex. pas de cible) : rien n'est démarré
+        NA_DernierRefus[id] = CurTime()
         return false
     end
 

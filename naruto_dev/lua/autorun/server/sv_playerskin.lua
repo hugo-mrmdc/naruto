@@ -15,7 +15,7 @@ if not SERVER then return end
 --========================================================
 -- RÉGLAGES
 --========================================================
-local TENUE_DEFAUT   = "models/tenue/senju/senju_a.mdl"
+local TENUE_DEFAUT   = "models/tenue/senju/genin/senju_a.mdl"
 local COULEUR_CORPS  = Color(255, 210, 180)     -- teinte appliquée au modèle du joueur
 
 -- Tête : PAS de teinte sur toute la tête (elle colorait aussi le blanc des yeux) ;

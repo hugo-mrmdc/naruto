@@ -10,6 +10,7 @@ SWEP.PrintName = "Shuriken Fuma"
 SWEP.Author    = "fuma"
 SWEP.Category  = "Naruto"
 SWEP.Spawnable = true
+SWEP.Rarete    = "legendaire"
 
 SWEP.ViewModel  = "models/fumaSpell/acc/foc_arme_shuriken_fuma.mdl"
 SWEP.WorldModel = "models/fumaSpell/acc/foc_arme_shuriken_fuma.mdl"

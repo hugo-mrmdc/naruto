@@ -137,7 +137,7 @@ local function playSequenceOn(ply, seqName, coupe, vitesse, depart)
     if not ply:OnGround() and ply:GetMoveType() == MOVETYPE_WALK
         and not ply:GetNW2Bool("NA_Vol", false) and not ply:GetNW2Bool("NA_Wings", false) then
         ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
-        ply.NA_JutsuAir = { seq = seq, debut = CurTime() - depart / vitesse, duree = seqDuree / vitesse, vitesse = vitesse, jeton = jeton, upperBody = UPPER_BODY_SEQUENCES[seqName] or false, yawOffset = 0 }
+        ply.NA_JutsuAir = { seq = seq, debut = CurTime() - depart / vitesse, duree = (coupe and coupe > 0) and math.min(seqDuree / vitesse, coupe + depart / vitesse) or seqDuree / vitesse, vitesse = vitesse, jeton = jeton, upperBody = UPPER_BODY_SEQUENCES[seqName] or false, yawOffset = 0 }
         ply.NA_AnimFin = CurTime() + math.min(duree, 3)
         return true
     end
